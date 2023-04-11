@@ -543,7 +543,7 @@ onUnmounted(() => {
                 <!-- AxiomAI is being introduced. -->
                 <div class="text-gray-800 w-full md:max-w-2xl lg:max-w-3xl md:h-full md:flex md:flex-col px-6 dark:text-gray-100">
                   <h1 class="text-4xl font-semibold text-center mt-6 sm:mt-[20vh] ml-auto mr-auto mb-10 sm:mb-16 flex gap-2 items-center justify-center">
-                    AxiomAI-preview
+                    AxiomAI
                   </h1><div class="md:flex items-start text-center gap-3.5">
                     <div class="flex flex-col mb-8 md:mb-auto gap-3.5 flex-1">
                       <h2 class="flex gap-3 items-center m-auto text-lg font-normal md:flex-col md:gap-2">

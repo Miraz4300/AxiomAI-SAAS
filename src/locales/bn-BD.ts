@@ -27,7 +27,7 @@ export default {
     failed: 'ব্যর্থ হয়েছে',
     register: 'নিবন্ধন',
     login: 'লগইন',
-    notLoggedIn: 'লগইন / নিবন্ধন',
+    notLoggedIn: 'Login / Register',
     logOut: 'লগআউট',
     unauthorizedTips: 'অ্যাক্সেস পেতে, দয়া করে আপনার শংসাপত্র আগে যাচাই করুন।',
     email: 'Email',

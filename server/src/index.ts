@@ -353,7 +353,7 @@ router.post('/user-register', async (req, res) => {
     }
     else {
       await sendVerifyMail(username, await getUserVerifyUrl(username))
-      res.send({ status: 'Success', message: 'Registration is successful, you need to go to email verification', data: null })
+      res.send({ status: 'Success', message: 'An email for verification has been sent to your email address. Please ensure to check your spam folder as well.', data: null })
     }
   }
   catch (error) {
@@ -400,9 +400,9 @@ router.post('/user-login', async (req, res) => {
       || user.status !== Status.Normal
       || user.password !== md5(password)) {
       if (user != null && user.status === Status.PreVerify)
-        throw new Error('Please verify in the mailbox')
+        throw new Error('Please verify your email address first')
       if (user != null && user.status === Status.AdminVerify)
-        throw new Error('Please wait for the admin to activate')
+        throw new Error('Please wait for the admin to activate your account')
       throw new Error('User does not exist or incorrect password.')
     }
     const config = await getCacheConfig()
@@ -444,7 +444,7 @@ router.post('/verify', async (req, res) => {
     const username = await checkUserVerify(token)
     const user = await getUser(username)
     if (user != null && user.status === Status.Normal) {
-      res.send({ status: 'Fail', message: 'The email exists', data: null })
+      res.send({ status: 'Fail', message: 'The email address provided is already registered/exists in our system.', data: null })
       return
     }
     const config = await getCacheConfig()
@@ -452,7 +452,7 @@ router.post('/verify', async (req, res) => {
     if (config.siteConfig.registerReview) {
       await verifyUser(username, Status.AdminVerify)
       await sendVerifyMailAdmin(process.env.ROOT_USER, username, await getUserVerifyUrlAdmin(username))
-      message = 'Verify successfully, Please wait for the admin to activate'
+      message = 'Verify successfully, Please wait for the admin to activate your account'
     }
     else {
       await verifyUser(username, Status.Normal)
@@ -472,7 +472,7 @@ router.post('/verifyadmin', async (req, res) => {
     const username = await checkUserVerifyAdmin(token)
     const user = await getUser(username)
     if (user != null && user.status === Status.Normal) {
-      res.send({ status: 'Fail', message: 'The email has been opened.', data: null })
+      res.send({ status: 'Fail', message: 'This email has been opened.', data: null })
       return
     }
     await verifyUser(username, Status.Normal)

@@ -2,8 +2,8 @@ version: '3'
 
 services:
   app:
-    image: miraz4300/axiomai:experimental
-    container_name: AxiomAI
+    image: miraz4300/axiomnode:latest
+    container_name: AxiomNode
     restart: unless-stopped
     ports:
       - 10829:10829
@@ -85,6 +85,8 @@ services:
 
   database:
     image: mongo
+    container_name: AxiomDB
+    restart: always
     ports:
       - '27017:27017'
     expose:
@@ -95,19 +97,6 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: AxiomDB
       MONGO_INITDB_DATABASE: axiomai
-
-  mongo-gui:
-    container_name: mongo-gui
-    image: ugleiton/mongo-gui
-    restart: always
-    ports:
-      - '4321:4321'
-    environment:
-      - MONGO_URL=mongodb://root:AxiomDB@database:27017
-    links:
-      - database
-    depends_on:
-      - database
 
 volumes:
   mongodb: {}

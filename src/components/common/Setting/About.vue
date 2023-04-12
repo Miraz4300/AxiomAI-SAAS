@@ -18,7 +18,7 @@ import pkg from '@/../package.json'
     </div>
     <p>
       <a class="text-[#0083A0] dark:text-[#00B2DB]">Environment:</a> Production <br>
-      <a class="text-[#0083A0] dark:text-[#00B2DB]">Version:</a> {{ pkg.version }} - production
+      <a class="text-[#0083A0] dark:text-[#00B2DB]">Version:</a> {{ pkg.version }}
     </p>
     <div class="grid grid-cols-4 gap-4">
       <div class="col-span-3">

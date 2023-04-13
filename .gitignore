@@ -30,3 +30,6 @@ coverage
 
 # Environment variables files
 /server/.env
+
+# PWA Development
+dev-dist

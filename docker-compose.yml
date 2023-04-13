@@ -12,18 +12,18 @@ services:
     environment:
       TZ: Asia/Dhaka
 
-      # OpenAI API Key - https://platform.openai.com/overview
-      OPENAI_API_KEY: 
-      
-      # Change this to an `accessToken` extracted from the ChatGPT site's `https://chat.openai.com/api/auth/session` response
-      OPENAI_ACCESS_TOKEN: 
-
-      # OpenAI API Base URL | Default: https://api.openai.com
+      # OpenAI API Base URL | Default: https://api.openai.com | Available: https://api.hypere.app/
       OPENAI_API_BASE_URL: 
+
+      # OpenAI API Key - https://platform.openai.com/overview | When using https://api.hypere.app/ get api key from https://discord.gg/ftSSNcPQgM
+      OPENAI_API_KEY:   
       
       # OpenAI API Model - https://platform.openai.com/docs/models | Default: gpt-3.5-turbo
       OPENAI_API_MODEL: 
       
+      # Change this to an `accessToken` extracted from the ChatGPT site's `https://chat.openai.com/api/auth/session` response
+      OPENAI_ACCESS_TOKEN: 
+
       # Reverse Proxy - Available when using accessToken | Default: https://bypass.churchless.tech/api/conversation
       API_REVERSE_PROXY: 
 
@@ -74,8 +74,8 @@ services:
       # Password salt
       PASSWORD_MD5_SALT: tastysalt
       
-      # User register email verify
-      SMTP_HOST: smtp.email.domain.com
+      # # Mail Settings
+      SMTP_HOST: smtp.mailgun.org
       SMTP_PORT: 465
       SMTP_TSL: true
       SMTP_USERNAME: ${SMTP_USERNAME}

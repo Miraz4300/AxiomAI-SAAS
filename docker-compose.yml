@@ -12,10 +12,10 @@ services:
     environment:
       TZ: Asia/Dhaka
 
-      # OpenAI API Base URL | Default: https://api.openai.com | Available: https://api.hypere.app/
+      # OpenAI API Base URL | Default: https://api.openai.com | Available: https://api.hypere.app
       OPENAI_API_BASE_URL: 
 
-      # OpenAI API Key - https://platform.openai.com/overview | When using https://api.hypere.app/ get api key from https://discord.gg/ftSSNcPQgM
+      # OpenAI API Key - https://platform.openai.com/overview | When using https://api.hypere.app get api key from https://discord.gg/ftSSNcPQgM
       OPENAI_API_KEY:   
       
       # OpenAI API Model - https://platform.openai.com/docs/models | Default: gpt-3.5-turbo

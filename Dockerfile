@@ -8,7 +8,7 @@ RUN pnpm install
 COPY /server /app
 RUN pnpm build
 
-# Final image
+# Build Final image
 FROM node:lts-alpine
 RUN npm install pnpm -g
 WORKDIR /app

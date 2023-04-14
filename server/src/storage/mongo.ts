@@ -7,11 +7,11 @@ dotenv.config()
 
 const url = process.env.MONGODB_URL
 const client = new MongoClient(url)
-const chatCol = client.db('axiomai').collection('chat')
-const roomCol = client.db('axiomai').collection('chat_room')
-const userCol = client.db('axiomai').collection('user')
-const configCol = client.db('axiomai').collection('config')
-const usageCol = client.db('axiomai').collection('chat_usage')
+const chatCol = client.db('axiomdb').collection('chat')
+const roomCol = client.db('axiomdb').collection('chat_room')
+const userCol = client.db('axiomdb').collection('user')
+const configCol = client.db('axiomdb').collection('config')
+const usageCol = client.db('axiomdb').collection('chat_usage')
 
 /**
  * Insert Chat Message

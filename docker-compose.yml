@@ -52,7 +52,7 @@ services:
       DISABLE_DEBUG: 
       
       # MONGODB_URL=mongodb://username:password@hostname:port
-      MONGODB_URL: 'mongodb://root:AxiomDB@database:27017'
+      MONGODB_URL: 'mongodb://root:104382009@database:27017'
 
       # JWT secret key | Empty key will disable authentication system
       AUTH_SECRET_KEY: 
@@ -95,8 +95,8 @@ services:
       - mongodb:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: AxiomDB
-      MONGO_INITDB_DATABASE: axiomai
+      MONGO_INITDB_ROOT_PASSWORD: 104382009
+      MONGO_INITDB_DATABASE: axiomdb
 
 volumes:
   mongodb: {}

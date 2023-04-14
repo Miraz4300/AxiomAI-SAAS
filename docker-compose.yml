@@ -16,7 +16,7 @@ services:
       OPENAI_API_BASE_URL: 
 
       # OpenAI API Key - https://platform.openai.com/overview | When using https://api.hypere.app get api key from https://discord.gg/ftSSNcPQgM
-      OPENAI_API_KEY:   
+      OPENAI_API_KEY: 
       
       # OpenAI API Model - https://platform.openai.com/docs/models | Default: gpt-3.5-turbo
       OPENAI_API_MODEL: 
@@ -78,8 +78,8 @@ services:
       SMTP_HOST: smtp.mailgun.org
       SMTP_PORT: 465
       SMTP_TSL: true
-      SMTP_USERNAME: ${SMTP_USERNAME}
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_USERNAME: $${SMTP_USERNAME}
+      SMTP_PASSWORD: $${SMTP_PASSWORD}
     links:
       - database
 

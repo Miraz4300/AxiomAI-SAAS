@@ -78,8 +78,8 @@ services:
       SMTP_HOST: smtp.mailgun.org
       SMTP_PORT: 465
       SMTP_TSL: true
-      SMTP_USERNAME: $${SMTP_USERNAME}
-      SMTP_PASSWORD: $${SMTP_PASSWORD}
+      SMTP_USERNAME: 'SMTP_USERNAME'
+      SMTP_PASSWORD: 'SMTP_PASSWORD'
     links:
       - database
 

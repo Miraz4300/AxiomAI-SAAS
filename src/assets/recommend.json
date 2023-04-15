@@ -2,7 +2,7 @@
   {
     "key": "Prompts Engineering",
     "desc": "Build-in prompts help to act AxiomAI as different character/role/persona",
-    "downloadUrl": "https://blob-2.miraz-hossain.me/axiomai/prompts.json",
+    "downloadUrl": "/src/assets/prompts.json",
     "url": "https://axiomai-miraz-hossain.me"
   }
 ]

@@ -56,6 +56,10 @@ export default {
     clearHistoryConfirm: 'আপনি কি চ্যাটের ইতিহাস মুছে ফেলার ব্যাপারে নিশ্চিত?',
     preview: 'পূর্বরূপ',
     showRawText: 'Raw Text',
+    usageEstimate: 'Estimate',
+    usagePrompt: 'Prompt',
+    usageResponse: 'Response',
+    usageTotal: 'Total token cost',
   },
   setting: {
     setting: 'সেটিংস',

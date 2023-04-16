@@ -56,6 +56,10 @@ export default {
     clearHistoryConfirm: 'Are you sure to clear chat history?',
     preview: 'Preview',
     showRawText: 'Raw Text',
+    usageEstimate: 'Estimate',
+    usagePrompt: 'Prompt',
+    usageResponse: 'Response',
+    usageTotal: 'Total token cost',
   },
   setting: {
     setting: 'Setting',

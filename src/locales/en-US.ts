@@ -59,7 +59,7 @@ export default {
     usageEstimate: 'Estimate',
     usagePrompt: 'Prompt:',
     usageResponse: 'Response:',
-    usageTotal: 'Total token cost',
+    usageTotal: 'Total token cost:',
   },
   setting: {
     setting: 'Setting',

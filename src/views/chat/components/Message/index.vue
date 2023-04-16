@@ -42,8 +42,6 @@ const asRawText = ref(props.inversion)
 
 const messageRef = ref<HTMLElement>()
 
-const url_openai_token = 'https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them'
-
 const options = computed(() => {
   const common = [
     {
@@ -117,8 +115,7 @@ function handleRegenerate() {
               {{ usage.estimated ? t('chat.usageEstimate') : '' }}
               {{ t('chat.usagePrompt') }} {{ usage.prompt_tokens }}
               + {{ t('chat.usageResponse') }} {{ usage.completion_tokens }}
-              = {{ t('chat.usageTotal') }}<a :href="url_openai_token" target="_blank">:</a>
-              {{ usage.total_tokens }}
+              = {{ t('chat.usageTotal') }} {{ usage.total_tokens }}
             </span>
           </NPopover>
         </template>

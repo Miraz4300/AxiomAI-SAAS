@@ -108,7 +108,7 @@ function handleRegenerate() {
             <template #trigger>
               <span>
                 <span>[</span>
-                <span>{{ usage.estimated ? '~' : '' }}</span>
+                <span>{{ usage.estimated ? '' : '' }}</span>
                 <span>{{ usage.prompt_tokens }}+{{ usage.completion_tokens }}={{ usage.total_tokens }}</span>
                 <span>]</span>
               </span>
@@ -117,7 +117,7 @@ function handleRegenerate() {
               {{ usage.estimated ? t('chat.usageEstimate') : '' }}
               {{ t('chat.usagePrompt') }} {{ usage.prompt_tokens }}
               + {{ t('chat.usageResponse') }} {{ usage.completion_tokens }}
-              = {{ t('chat.usageTotal') }}<a :href="url_openai_token" target="_blank">(?)</a>
+              = {{ t('chat.usageTotal') }}<a :href="url_openai_token" target="_blank">:</a>
               {{ usage.total_tokens }}
             </span>
           </NPopover>

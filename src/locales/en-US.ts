@@ -57,8 +57,8 @@ export default {
     preview: 'Preview',
     showRawText: 'Raw Text',
     usageEstimate: 'Estimate',
-    usagePrompt: 'Prompt',
-    usageResponse: 'Response',
+    usagePrompt: 'Prompt:',
+    usageResponse: 'Response:',
     usageTotal: 'Total token cost',
   },
   setting: {

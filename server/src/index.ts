@@ -434,17 +434,15 @@ router.post('/user-login', async (req, res) => {
       throw new Error('Username or password is empty')
 
     const user = await getUser(username)
-    if (user == null
-      || user.status !== Status.Normal
-      || user.password !== md5(password)) {
-      if (user.password !== md5(password))
-        throw new Error('User does not exist or incorrect password.')
-      if (user != null && user.status === Status.PreVerify)
-        throw new Error('Please verify your email address first')
-      if (user != null && user.status === Status.AdminVerify)
-        throw new Error('Please wait for the admin to activate your account')
+    if (user == null || user.password !== md5(password))
+      throw new Error('User does not exist or incorrect password.')
+    if (user.status === Status.PreVerify)
+      throw new Error('Please verify your email address first')
+    if (user != null && user.status === Status.AdminVerify)
+      throw new Error('Please wait for the admin to activate your account')
+    if (user.status !== Status.Normal)
       throw new Error('Account status abnormal.')
-    }
+
     const config = await getCacheConfig()
     const token = jwt.sign({
       name: user.name ? user.name : user.email,

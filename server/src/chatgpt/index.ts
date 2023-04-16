@@ -92,6 +92,8 @@ export async function initApi() {
 }
 
 async function chatReplyProcess(options: RequestOptions) {
+  const config = await getCacheConfig()
+  const model = isNotEmptyString(config.apiModel) ? config.apiModel : 'gpt-3.5-turbo'
   const { message, lastContext, process, systemMessage, temperature, top_p } = options
   try {
     let options: SendMessageOptions = { timeoutMs }

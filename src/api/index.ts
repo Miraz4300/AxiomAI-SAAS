@@ -35,6 +35,9 @@ export function fetchChatAPIProcess<T = any>(
   const authStore = useAuthStore()
 
   let data: Record<string, any> = {
+    roomId: params.roomId,
+    uuid: params.uuid,
+    regenerate: params.regenerate || false,
     prompt: params.prompt,
     options: params.options,
   }
@@ -50,8 +53,7 @@ export function fetchChatAPIProcess<T = any>(
 
   return post<T>({
     url: '/chat-process',
-    data: { roomId: params.roomId, uuid: params.uuid, regenerate: params.regenerate || false, prompt: params.prompt, options: params.options, systemMessage: settingStore.systemMessage, ...data },
-    signal: params.signal,
+    data,
     onDownloadProgress: params.onDownloadProgress,
   })
 }

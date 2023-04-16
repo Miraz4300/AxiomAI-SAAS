@@ -422,11 +422,13 @@ router.post('/user-login', async (req, res) => {
     if (user == null
       || user.status !== Status.Normal
       || user.password !== md5(password)) {
+      if (user.password !== md5(password))
+        throw new Error('User does not exist or incorrect password.')
       if (user != null && user.status === Status.PreVerify)
         throw new Error('Please verify your email address first')
       if (user != null && user.status === Status.AdminVerify)
         throw new Error('Please wait for the admin to activate your account')
-      throw new Error('User does not exist or incorrect password.')
+      throw new Error('Account status abnormal.')
     }
     const config = await getCacheConfig()
     const token = jwt.sign({
@@ -500,7 +502,7 @@ router.post('/verifyadmin', async (req, res) => {
     }
     await verifyUser(username, Status.Normal)
     await sendNoticeMail(username)
-    res.send({ status: 'Success', message: 'Activate successfully', data: null })
+    res.send({ status: 'Success', message: 'Account has been activated', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

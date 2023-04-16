@@ -109,7 +109,7 @@ function handleRegenerate() {
               <span>
                 <span>[</span>
                 <span>{{ usage.estimated ? '' : '' }}</span>
-                <span>{{ usage.prompt_tokens }}+{{ usage.completion_tokens }}={{ usage.total_tokens }}</span>
+                <span>{{ usage.total_tokens }} Tokens</span>
                 <span>]</span>
               </span>
             </template>

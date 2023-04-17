@@ -18,12 +18,14 @@ function goHome() {
           500 Internal Server Error
         </h2>
         <p class="text-base text-center text-slate-500 dark:text-slate-500">
-          Don't worry, you will be automatically redirected when everything comes online.
+          Don't worry, we're working to resolve the issue as quickly as possible.
         </p>
+        <br>
         <div class="flex items-center justify-center text-center">
           <Icon500 class="w-[300px]" />
         </div>
       </header>
+      <br>
       <NButton type="primary" @click="goHome">
         Back to Home
       </NButton>

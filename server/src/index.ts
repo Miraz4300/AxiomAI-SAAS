@@ -243,14 +243,14 @@ router.post('/chat', auth, async (req, res) => {
         await updateChat(message._id as unknown as string,
           response.data.text,
           response.data.id,
-          response.data.detail.usage as UsageResponse,
+          response.data.detail?.usage as UsageResponse,
           previousResponse)
       }
       else {
         await updateChat(message._id as unknown as string,
           response.data.text,
           response.data.id,
-          response.data.detail.usage as UsageResponse)
+          response.data.detail?.usage as UsageResponse)
       }
 
       if (response.data.usage) {
@@ -258,7 +258,7 @@ router.post('/chat', auth, async (req, res) => {
           roomId,
           message._id,
           response.data.id,
-          response.data.detail.usage as UsageResponse)
+          response.data.detail?.usage as UsageResponse)
       }
     }
     res.send(response)
@@ -330,22 +330,22 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
         await updateChat(message._id as unknown as string,
           result.data.text,
           result.data.id,
-          result.data.detail.usage as UsageResponse,
+          result.data.detail?.usage as UsageResponse,
           previousResponse)
       }
       else {
         await updateChat(message._id as unknown as string,
           result.data.text,
           result.data.id,
-          result.data.detail.usage as UsageResponse)
+          result.data.detail?.usage as UsageResponse)
       }
 
-      if (result.data.detail.usage) {
+      if (result.data.detail?.usage) {
         await insertChatUsage(req.headers.userId as string,
           roomId,
           message._id,
           result.data.id,
-          result.data.detail.usage as UsageResponse)
+          result.data.detail?.usage as UsageResponse)
       }
     }
     catch (error) {
@@ -527,7 +527,7 @@ router.post('/verifyadmin', async (req, res) => {
 
 router.post('/setting-base', rootAuth, async (req, res) => {
   try {
-    const { apiKey, apiModel, apiBaseUrl, accessToken, timeoutMs, socksProxy, socksAuth, httpsProxy } = req.body as Config
+    const { apiKey, apiModel, apiBaseUrl, accessToken, timeoutMs, reverseProxy, socksProxy, socksAuth, httpsProxy } = req.body as Config
 
     if (apiKey == null && accessToken == null)
       throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable.')
@@ -537,6 +537,7 @@ router.post('/setting-base', rootAuth, async (req, res) => {
     thisConfig.apiModel = apiModel
     thisConfig.apiBaseUrl = apiBaseUrl
     thisConfig.accessToken = accessToken
+    thisConfig.reverseProxy = reverseProxy
     thisConfig.timeoutMs = timeoutMs
     thisConfig.socksProxy = socksProxy
     thisConfig.socksAuth = socksAuth

@@ -150,10 +150,23 @@ async function fetchBalance() {
     'Authorization': `Bearer ${OPENAI_API_KEY}`,
     'Content-Type': 'application/json',
   }
+  let socksAgent
+  let httpsAgent
+  if (isNotEmptyString(config.socksProxy)) {
+    socksAgent = new SocksProxyAgent({
+      hostname: config.socksProxy.split(':')[0],
+      port: parseInt(config.socksProxy.split(':')[1]),
+      userId: isNotEmptyString(config.socksAuth) ? config.socksAuth.split(':')[0] : undefined,
+      password: isNotEmptyString(config.socksAuth) ? config.socksAuth.split(':')[1] : undefined,
+    })
+  }
+  else if (isNotEmptyString(config.httpsProxy)) {
+    httpsAgent = new HttpsProxyAgent(config.httpsProxy)
+  }
 
   try {
     // Get API limits
-    let response = await fetch(urlSubscription, { headers })
+    let response = await fetch(urlSubscription, { agent: socksAgent === undefined ? httpsAgent : socksAgent, headers })
     if (!response.ok) {
       console.error('Your account has been blocked, please login to OpenAI to view it.')
       return
@@ -162,7 +175,7 @@ async function fetchBalance() {
     const totalAmount = subscriptionData.hard_limit_usd
 
     // Get the amount used
-    response = await fetch(urlUsage, { headers })
+    response = await fetch(urlUsage, { agent: socksAgent === undefined ? httpsAgent : socksAgent, headers })
     const usageData = await response.json()
     const totalUsage = usageData.total_usage / 100
 
@@ -171,7 +184,8 @@ async function fetchBalance() {
 
     return Promise.resolve(balance.toFixed(3))
   }
-  catch {
+  catch (error) {
+    global.console.error(error)
     return Promise.resolve('-')
   }
 }

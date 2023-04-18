@@ -34,7 +34,7 @@ export default {
     password: 'Password',
     passwordConfirm: 'Confirm Password',
     resetPassword: 'Reset Password',
-    resetPasswordMail: 'Send Reset Password Mail',
+    resetPasswordMail: 'Submit',
   },
   chat: {
     newChatButton: 'New Chat',

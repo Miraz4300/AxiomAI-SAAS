@@ -17,6 +17,7 @@ import {
   deleteChatRoom,
   existsChatRoom,
   getChat,
+  getChatRoom,
   getChatRooms,
   getChats,
   getUser,
@@ -26,13 +27,15 @@ import {
   renameChatRoom,
   updateChat,
   updateConfig,
+  updateRoomPrompt,
   updateUserInfo,
+  updateUserPassword,
   verifyUser,
 } from './storage/mongo'
 import { limiter } from './middleware/limiter'
 import { isEmail, isNotEmptyString } from './utils/is'
-import { sendNoticeMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
-import { checkUserVerify, checkUserVerifyAdmin, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
+import { sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
+import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
 import { rootAuth } from './middleware/rootAuth'
 
 dotenv.config()
@@ -60,6 +63,7 @@ router.get('/chatrooms', auth, async (req, res) => {
         uuid: r.roomId,
         title: r.title,
         isEdit: false,
+        prompt: r.prompt,
       })
     })
     res.send({ status: 'Success', message: null, data: result })
@@ -89,6 +93,22 @@ router.post('/room-rename', auth, async (req, res) => {
     const { title, roomId } = req.body as { title: string; roomId: number }
     const room = await renameChatRoom(userId, title, roomId)
     res.send({ status: 'Success', message: null, data: room })
+  }
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Rename error', data: null })
+  }
+})
+
+router.post('/room-prompt', auth, async (req, res) => {
+  try {
+    const userId = req.headers.userId as string
+    const { prompt, roomId } = req.body as { prompt: string; roomId: number }
+    const success = await updateRoomPrompt(userId, roomId, prompt)
+    if (success)
+      res.send({ status: 'Success', message: 'Saved successfully', data: null })
+    else
+      res.send({ status: 'Fail', message: 'Saved Failed', data: null })
   }
   catch (error) {
     console.error(error)
@@ -271,7 +291,11 @@ router.post('/chat', auth, async (req, res) => {
 router.post('/chat-process', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
-  const { roomId, uuid, regenerate, prompt, options = {}, systemMessage, temperature, top_p } = req.body as RequestProps
+  let { roomId, uuid, regenerate, prompt, options = {}, systemMessage, temperature, top_p } = req.body as RequestProps
+  const userId = req.headers.userId as string
+  const room = await getChatRoom(userId, roomId)
+  if (room != null && isNotEmptyString(room.prompt))
+    systemMessage = room.prompt
 
   let lastResponse
   let result
@@ -455,6 +479,43 @@ router.post('/user-login', async (req, res) => {
       root: username.toLowerCase() === process.env.ROOT_USER,
     }, config.siteConfig.loginSalt.trim())
     res.send({ status: 'Success', message: 'Login successfully', data: { token } })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/user-send-reset-mail', async (req, res) => {
+  try {
+    const { username } = req.body as { username: string }
+    if (!username || !isEmail(username))
+      throw new Error('Please enter a correctly formatted email address.')
+
+    const user = await getUser(username)
+    if (user == null || user.status !== Status.Normal)
+      throw new Error('Account status abnormal.')
+    await sendResetPasswordMail(username, await getUserResetPasswordUrl(username))
+    res.send({ status: 'Success', message: 'Reset email has been sent', data: null })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/user-reset-password', async (req, res) => {
+  try {
+    const { username, password, sign } = req.body as { username: string; password: string; sign: string }
+    if (!username || !password || !isEmail(username))
+      throw new Error('Username or password is empty')
+    if (!sign || !checkUserResetPassword(sign, username))
+      throw new Error('The link is invalid, please resend.')
+    const user = await getUser(username)
+    if (user == null || user.status !== Status.Normal)
+      throw new Error('Account status abnormal.')
+
+    updateUserPassword(user._id.toString(), md5(password))
+
+    res.send({ status: 'Success', message: 'Password reset successful', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

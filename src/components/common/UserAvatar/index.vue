@@ -1,11 +1,19 @@
 <script setup lang='ts'>
-import { computed } from 'vue'
-import { NAvatar } from 'naive-ui'
-import { useUserStore } from '@/store'
+import { computed, ref } from 'vue'
+import { NAvatar, NButton } from 'naive-ui'
+import { useAuthStore, useUserStore } from '@/store'
 import defaultAvatar from '@/assets/avatar.jpg'
 import { isString } from '@/utils/is'
+import Permission from '@/views/chat/layout/Permission.vue'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
 
 const userStore = useUserStore()
+const authStore = useAuthStore()
+const needPermission = ref(false)
+
+const { isMobile } = useBasicLayout()
+if (!!authStore.session?.auth && !authStore.token)
+  needPermission.value = isMobile.value
 
 const userInfo = computed(() => userStore.userInfo)
 </script>
@@ -29,9 +37,14 @@ const userInfo = computed(() => userStore.userInfo)
       <h2 v-if="userInfo.name" class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
         {{ userInfo.name }}
       </h2>
-      <h2 v-else class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
-        {{ $t('common.notLoggedIn') }}
-      </h2>
+      <NButton
+        v-else tag="a" text
+        @click="needPermission = true"
+      >
+        <span class="text-lg text-[#ff69b4] dark:text-white">
+          {{ $t('common.notLoggedIn') }}
+        </span>
+      </NButton>
       <p class="overflow-hidden text-xs text-gray-500 text-ellipsis whitespace-nowrap">
         <span
           v-if="isString(userInfo.description) && userInfo.description !== ''"
@@ -39,5 +52,6 @@ const userInfo = computed(() => userStore.userInfo)
         />
       </p>
     </div>
+    <Permission :visible="needPermission" />
   </div>
 </template>

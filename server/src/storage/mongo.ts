@@ -77,11 +77,26 @@ export async function deleteChatRoom(userId: string, roomId: number) {
   return result
 }
 
+export async function updateRoomPrompt(userId: string, roomId: number, prompt: string) {
+  const query = { userId, roomId }
+  const update = {
+    $set: {
+      prompt,
+    },
+  }
+  const result = await roomCol.updateOne(query, update)
+  return result.modifiedCount > 0
+}
+
 export async function getChatRooms(userId: string) {
   const cursor = await roomCol.find({ userId, status: { $ne: Status.Deleted } })
   const rooms = []
   await cursor.forEach(doc => rooms.push(doc))
   return rooms
+}
+
+export async function getChatRoom(userId: string, roomId: number) {
+  return await roomCol.findOne({ userId, roomId, status: { $ne: Status.Deleted } }) as ChatRoom
 }
 
 export async function existsChatRoom(userId: string, roomId: number) {
@@ -157,6 +172,12 @@ export async function createUser(email: string, password: string): Promise<UserI
 export async function updateUserInfo(userId: string, user: UserInfo) {
   const result = userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { name: user.name, description: user.description, avatar: user.avatar } })
+  return result
+}
+
+export async function updateUserPassword(userId: string, password: string) {
+  const result = userCol.updateOne({ _id: new ObjectId(userId) }
+    , { $set: { password, updateTime: new Date().toLocaleString() } })
   return result
 }
 

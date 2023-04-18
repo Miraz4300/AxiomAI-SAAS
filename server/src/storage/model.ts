@@ -19,6 +19,7 @@ export class UserInfo {
   verifyTime?: string
   avatar?: string
   description?: string
+  updateTime?: string
   constructor(email: string, password: string) {
     this.name = email
     this.email = email
@@ -26,6 +27,7 @@ export class UserInfo {
     this.status = Status.PreVerify
     this.createTime = new Date().toLocaleString()
     this.verifyTime = null
+    this.updateTime = new Date().toLocaleString()
   }
 }
 
@@ -34,10 +36,12 @@ export class ChatRoom {
   roomId: number
   userId: string
   title: string
+  prompt: string
   status: Status = Status.Normal
   constructor(userId: string, title: string, roomId: number) {
     this.userId = userId
     this.title = title
+    this.prompt = undefined
     this.roomId = roomId
   }
 }

@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
@@ -14,10 +14,12 @@ import { useUsingContext } from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useChatStore, usePromptStore } from '@/store'
+import { useAuthStore, useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 import { debounce } from '@/utils/functions/debounce'
+import IconPrompt from '@/icons/prompt.vue'
+const Prompt = defineAsyncComponent(() => import('@/components/common/Setting/prompt.vue'))
 
 let controller = new AbortController()
 
@@ -26,6 +28,7 @@ const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 const route = useRoute()
 const dialog = useDialog()
 const ms = useMessage()
+const authStore = useAuthStore()
 
 const chatStore = useChatStore()
 
@@ -45,6 +48,7 @@ const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
+const showPrompt = ref(false)
 
 let loadingms: MessageReactive
 let allmsg: MessageReactive
@@ -545,8 +549,9 @@ onUnmounted(() => {
     <HeaderComponent
       v-if="isMobile"
       :using-context="usingContext"
-      @export="handleExport"
-      @toggle-using-context="toggleUsingContext"
+      :show-prompt="showPrompt"
+      @export="handleExport" @toggle-using-context="toggleUsingContext"
+      @toggle-show-prompt="showPrompt = true"
     />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
@@ -646,6 +651,11 @@ onUnmounted(() => {
               <SvgIcon icon="ri:download-2-line" />
             </span>
           </HoverButton>
+          <HoverButton v-if="!isMobile" @click="showPrompt = true">
+            <span class="text-xl text-[#4f555e] dark:text-white">
+              <IconPrompt class="w-[20px] m-auto" />
+            </span>
+          </HoverButton>
           <HoverButton v-if="!isMobile" @click="toggleUsingContext">
             <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
               <SvgIcon icon="ri:chat-history-line" />
@@ -656,6 +666,7 @@ onUnmounted(() => {
               <NInput
                 ref="inputRef"
                 v-model:value="prompt"
+                :disabled="authStore.token === undefined"
                 type="textarea"
                 :placeholder="placeholder"
                 :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
@@ -676,5 +687,6 @@ onUnmounted(() => {
         </div>
       </div>
     </footer>
+    <Prompt v-if="showPrompt" v-model:roomId="uuid" v-model:visible="showPrompt" />
   </div>
 </template>

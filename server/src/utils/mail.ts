@@ -34,7 +34,7 @@ export async function sendResetPasswordMail(toMail: string, verifyUrl: string) {
   let mailHtml = fs.readFileSync(mailTemplatePath, 'utf8')
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
-  sendMail(toMail, `${config.siteConfig.siteTitle} Reset password`, mailHtml, config.mailConfig)
+  sendMail(toMail, `${config.siteConfig.siteTitle} - Reset password`, mailHtml, config.mailConfig)
 }
 
 export async function sendNoticeMail(toMail: string) {

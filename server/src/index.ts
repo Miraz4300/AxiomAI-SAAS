@@ -418,7 +418,7 @@ router.post('/user-register', async (req, res) => {
     }
     else {
       await sendVerifyMail(username, await getUserVerifyUrl(username))
-      res.send({ status: 'Success', message: 'An email for verification has been sent to your email address. Please ensure to check your spam folder as well.', data: null })
+      res.send({ status: 'Success', message: 'A verification email has been sent to your email address. Kindly check your spam folder as well', data: null })
     }
   }
   catch (error) {
@@ -495,7 +495,7 @@ router.post('/user-send-reset-mail', async (req, res) => {
     if (user == null || user.status !== Status.Normal)
       throw new Error('Account status abnormal.')
     await sendResetPasswordMail(username, await getUserResetPasswordUrl(username))
-    res.send({ status: 'Success', message: 'Reset email has been sent', data: null })
+    res.send({ status: 'Success', message: 'A link to reset your password has been sent to your email', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

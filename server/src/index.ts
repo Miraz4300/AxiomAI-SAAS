@@ -27,12 +27,13 @@ import {
   updateChat,
   updateConfig,
   updateUserInfo,
+  updateUserPassword,
   verifyUser,
 } from './storage/mongo'
 import { limiter } from './middleware/limiter'
 import { isEmail, isNotEmptyString } from './utils/is'
-import { sendNoticeMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
-import { checkUserVerify, checkUserVerifyAdmin, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
+import { sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
+import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
 import { rootAuth } from './middleware/rootAuth'
 
 dotenv.config()
@@ -455,6 +456,43 @@ router.post('/user-login', async (req, res) => {
       root: username.toLowerCase() === process.env.ROOT_USER,
     }, config.siteConfig.loginSalt.trim())
     res.send({ status: 'Success', message: 'Login successfully', data: { token } })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/user-send-reset-mail', async (req, res) => {
+  try {
+    const { username } = req.body as { username: string }
+    if (!username || !isEmail(username))
+      throw new Error('Please enter a correctly formatted email address.')
+
+    const user = await getUser(username)
+    if (user == null || user.status !== Status.Normal)
+      throw new Error('Account status abnormal.')
+    await sendResetPasswordMail(username, await getUserResetPasswordUrl(username))
+    res.send({ status: 'Success', message: 'Reset email has been sent', data: null })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/user-reset-password', async (req, res) => {
+  try {
+    const { username, password, sign } = req.body as { username: string; password: string; sign: string }
+    if (!username || !password || !isEmail(username))
+      throw new Error('Username or password is empty')
+    if (!sign || !checkUserResetPassword(sign, username))
+      throw new Error('The link is invalid, please resend.')
+    const user = await getUser(username)
+    if (user == null || user.status !== Status.Normal)
+      throw new Error('Account status abnormal.')
+
+    updateUserPassword(user._id.toString(), md5(password))
+
+    res.send({ status: 'Success', message: 'Password reset successful', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

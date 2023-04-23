@@ -1,4 +1,4 @@
-# Back-end: express.js
+# Back-end: AxiomNode
 FROM node:lts-alpine as backend
 RUN npm install pnpm -g
 WORKDIR /app
@@ -8,7 +8,7 @@ RUN pnpm install
 COPY /server /app
 RUN pnpm build
 
-# Build Final image
+# Build Final Image
 FROM node:lts-alpine
 RUN npm install pnpm -g
 WORKDIR /app

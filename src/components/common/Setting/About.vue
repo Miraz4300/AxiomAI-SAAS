@@ -10,9 +10,8 @@ import pkg from '@/../package.json'
     <div class="p-2 space-y-2 rounded-md bg-neutral-200 dark:bg-stone-700">
       <center>
         <p>
-          AxiomAI is an advanced language model based on GPT-3 that provides cutting-edge natural language processing
-          capabilities to businesses.
-          With AxiomAI, businesses can unlock new opportunities for data analysis, decision-making, and innovation.
+          AxiomAI uses deep learning techniques to understand natural language and generate responses in real-time, built on the GPT-3.5 architecture.
+          With its advanced natural language processing capabilities, AxiomAI can engage in sophisticated conversations and provide intelligent responses to a wide range of queries.
         </p>
       </center>
     </div>

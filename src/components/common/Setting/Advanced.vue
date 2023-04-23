@@ -38,7 +38,7 @@ function handleReset() {
       </div>
       <div class="flex flex-wrap items-center gap-4">
         <span class="flex-shrink-0 w-[100px]" />
-        <div class="w-[350px]  text-gray-500">
+        <div class="w-[380px]  text-gray-500">
           {{ $t('setting.temperature_info') }}
         </div>
       </div>
@@ -54,7 +54,7 @@ function handleReset() {
       </div>
       <div class="flex flex-wrap items-center gap-4">
         <span class="flex-shrink-0 w-[100px]" />
-        <div class="w-[350px]  text-gray-500">
+        <div class="w-[380px]  text-gray-500">
           {{ $t('setting.top_p_info') }}
         </div>
       </div>

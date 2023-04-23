@@ -10,7 +10,7 @@ const chatStore = useChatStore()
 const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActive)
 const ms = useMessage()
 const testing = ref(false)
-const title = `Prompt For [${currentChatHistory.value?.title}]`
+const title = `Prompt For - ${currentChatHistory.value?.title}`
 interface Props {
   visible: boolean
   roomId: string

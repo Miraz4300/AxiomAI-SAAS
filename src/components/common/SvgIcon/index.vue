@@ -1,9 +1,10 @@
 <script setup lang='ts'>
 import { computed, useAttrs } from 'vue'
+import type { IconifyIcon } from '@iconify/vue'
 import { Icon } from '@iconify/vue'
 
 interface Props {
-  icon?: string
+  icon: string | IconifyIcon
 }
 
 defineProps<Props>()

@@ -19,6 +19,7 @@ import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 import { debounce } from '@/utils/functions/debounce'
 import IconPrompt from '@/icons/prompt.vue'
+
 const Prompt = defineAsyncComponent(() => import('@/components/common/Setting/prompt.vue'))
 
 let controller = new AbortController()
@@ -500,7 +501,7 @@ const searchOptions = computed(() => {
 })
 
 // value inverse rendering key
-const renderOption = (option: { label: string }) => {
+function renderOption(option: { label: string }) {
   for (const i of promptTemplate.value) {
     if (i.value === option.label)
       return [i.key]

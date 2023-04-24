@@ -1,6 +1,6 @@
 {
   "name": "axiomai",
-  "version": "1.9.8-prod",
+  "version": "2.0.0-prod",
   "private": false,
   "description": "AxiomAI",
   "author": "Miraz4300 <miraz4300@gmail.com>",
@@ -36,7 +36,7 @@
     "@antfu/eslint-config": "^0.38.5",
     "@commitlint/cli": "^17.6.1",
     "@commitlint/config-conventional": "^17.6.1",
-    "@iconify/vue": "^4.1.1",
+    "@iconify/vue": "^4.1.0",
     "@types/crypto-js": "^4.1.1",
     "@types/katex": "^0.16.0",
     "@types/markdown-it": "^12.2.3",

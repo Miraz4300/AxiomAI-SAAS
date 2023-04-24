@@ -677,6 +677,9 @@ onUnmounted(() => {
           </NButton>
         </div>
       </div>
+      <div class="text-center text-xs text-black/60 dark:text-white/50 mt-2">
+        AxiomAI may produce inaccurate information about people, places, or facts. <a href="https://axiomai.s3.us-west-002.backblazeb2.com/bKash.png" target="_blank" rel="noreferrer" class="underline">Donate</a> to keep the server fully operational.
+      </div>
     </footer>
   </div>
 </template>

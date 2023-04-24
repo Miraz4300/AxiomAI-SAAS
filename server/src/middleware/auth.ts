@@ -3,7 +3,7 @@ import { getCacheConfig } from '../storage/config'
 import { getUserById } from '../storage/mongo'
 import { Status } from '../storage/model'
 
-const auth = async (req, res, next) => {
+async function auth(req, res, next) {
   const config = await getCacheConfig()
   if (config.siteConfig.loginEnabled) {
     try {

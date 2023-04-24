@@ -18,7 +18,8 @@ function goHome() {
           500 Internal Server Error
         </h2>
         <p class="text-base text-center text-slate-500 dark:text-slate-500">
-          Don't worry, we're working to resolve the issue as quickly as possible.
+          Don't worry, we're working to resolve the issue as quickly as possible.<br>
+          you can check the realtime server status <a class="text-blue-600 dark:text-blue-500" href="https://axiomai.statuspage.io" target="_blank">here</a>
         </p>
         <br>
         <div class="flex items-center justify-center text-center">

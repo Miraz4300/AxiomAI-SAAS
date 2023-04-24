@@ -23,7 +23,6 @@ declare namespace Chat {
 	  uuid: number
 	  loading?: boolean
 	  all?: boolean
-	  prompt?: string
 	}
   
 	interface ChatState {

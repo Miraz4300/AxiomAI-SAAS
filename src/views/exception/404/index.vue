@@ -10,22 +10,21 @@ function goHome() {
 </script>
 
 <template>
-  <div class="flex h-full dark:bg-neutral-800">
-    <div class="px-4 m-auto space-y-4 text-center max-[400px]">
-      <h1 class="text-4xl text-slate-800 dark:text-neutral-200">
-        Error Code: 404 Not Found
+  <div class="flex flex-col items-center justify-center h-screen text-center bg-[#D1D1D1] dark:bg-[#202020] text-black dark:text-white">
+    <div class="flex items-center">
+      <h1 class="mr-5 pr-5 border-r-2 border-black dark:border-gray-500 h-14 text-2xl font-medium pt-2.5">
+        404
       </h1>
-      <p class="text-base text-slate-500 dark:text-neutral-400">
-        We're sorry, but the page you're looking for no longer exists.
-      </p>
-      <div class="flex items-center justify-center text-center">
-        <div class="w-[300px]">
-          <img src="../../../icons/404.svg" alt="404">
-        </div>
+      <div>
+        <h2 class="text-sm font-normal leading-1">
+          This page could not be found.
+        </h2>
       </div>
-      <NButton type="primary" @click="goHome">
-        Back to Home
-      </NButton>
     </div>
+    <br>
+    <br>
+    <NButton type="primary" ghost @click="goHome">
+      Back to Home
+    </NButton>
   </div>
 </template>

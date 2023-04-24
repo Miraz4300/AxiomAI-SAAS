@@ -4,6 +4,7 @@ import { NButton, NInput, NModal, NSpace, useMessage } from 'naive-ui'
 import { t } from '@/locales'
 import { fetchUpdateChatRoomPrompt } from '@/api'
 import { useChatStore } from '@/store'
+
 const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
 const chatStore = useChatStore()
@@ -44,7 +45,7 @@ async function handleSaveChatRoomPrompt() {
 
 <template>
   <NModal
-    v-model:show="show" :auto-focus="false" class="custom-card" preset="card" :style="{ width: '600px' }" :title="title" size="huge"
+    v-model:show="show" :auto-focus="false" class="custom-card" preset="card" :style="{ width: '600px' }" :title="title" size="large"
     :bordered="false"
   >
     <!-- <template #header-extra>
@@ -53,7 +54,7 @@ async function handleSaveChatRoomPrompt() {
     <NInput
       :value="currentChatHistory && currentChatHistory.prompt"
       type="textarea"
-      :autosize="{ minRows: 4, maxRows: 10 }" placeholder="Prompt for this room, If empty will use Settings ->  Advanced -> Role" @input="(val) => { if (currentChatHistory) currentChatHistory.prompt = val }"
+      :autosize="{ minRows: 4, maxRows: 10 }" placeholder="Prompt for this room." @input="(val) => { if (currentChatHistory) currentChatHistory.prompt = val }"
     />
     <template #footer>
       <NSpace justify="end">

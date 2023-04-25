@@ -39,10 +39,10 @@ export default defineConfig((env) => {
       port: 4300,
       open: false,
       proxy: {
-        '/api': {
+        '/axiomnode': {
           target: viteEnv.VITE_APP_API_BASE_URL,
           changeOrigin: true,
-          rewrite: path => path.replace('/api/', '/'),
+          rewrite: path => path.replace('/axiomnode/', '/'),
         },
       },
     },

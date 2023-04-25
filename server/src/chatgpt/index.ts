@@ -88,7 +88,7 @@ async function chatReplyProcess(options: RequestOptions) {
   const config = await getCacheConfig()
   const model = isNotEmptyString(config.apiModel) ? config.apiModel : 'gpt-3.5-turbo'
   const { message, lastContext, process, temperature, top_p } = options
-  const systemMessage = 'Your name is AxiomAI, a large language model trained by OpenAI. Follow the user instructions carefully. Respond using markdown.'
+  const systemMessage = 'Your name is AxiomAI, a language model based on the GPT-3.5 architecture and trained by OpenAI. Follow the user instructions carefully. Respond using markdown.'
 
   try {
     let options: SendMessageOptions = { timeoutMs }

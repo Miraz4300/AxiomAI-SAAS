@@ -269,7 +269,7 @@ router.post('/chat', auth, async (req, res) => {
   }
 })
 
-router.post('/chat-process', [auth, limiter], async (req, res) => {
+router.post('/conversation', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
   const { roomId, uuid, regenerate, prompt, options = {}, temperature, top_p } = req.body as RequestProps
@@ -634,7 +634,7 @@ router.post('/mail-test', rootAuth, async (req, res) => {
 })
 
 app.use('', router)
-app.use('/api', router)
+app.use('/axiomnode', router)
 app.set('trust proxy', 1)
 
-app.listen(10829, () => globalThis.console.log('Axiom-Node is running on port 10829'))
+app.listen(10829, () => globalThis.console.log('AxiomNode is running on port 10829'))

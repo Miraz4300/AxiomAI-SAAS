@@ -272,7 +272,7 @@ router.post('/chat', auth, async (req, res) => {
 router.post('/chat-process', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
-  const { roomId, uuid, regenerate, prompt, options = {}, systemMessage, temperature, top_p } = req.body as RequestProps
+  const { roomId, uuid, regenerate, prompt, options = {}, temperature, top_p } = req.body as RequestProps
 
   let lastResponse
   let result
@@ -305,7 +305,6 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
         res.write(firstChunk ? JSON.stringify(chuck) : `\n${JSON.stringify(chuck)}`)
         firstChunk = false
       },
-      systemMessage,
       temperature,
       top_p,
     })

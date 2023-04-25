@@ -102,7 +102,7 @@ router.post('/room-delete', auth, async (req, res) => {
     const userId = req.headers.userId as string
     const { roomId } = req.body as { roomId: number }
     if (!roomId || !await existsChatRoom(userId, roomId)) {
-      res.send({ status: 'Fail', message: 'Unknow room', data: null })
+      res.send({ status: 'Fail', message: 'Unknown room', data: null })
       return
     }
     await deleteChatRoom(userId, roomId)
@@ -188,7 +188,7 @@ router.post('/chat-delete', auth, async (req, res) => {
     const userId = req.headers.userId as string
     const { roomId, uuid, inversion } = req.body as { roomId: number; uuid: number; inversion: boolean }
     if (!roomId || !await existsChatRoom(userId, roomId)) {
-      res.send({ status: 'Fail', message: 'Unknow room', data: null })
+      res.send({ status: 'Fail', message: 'Unknown room', data: null })
       return
     }
     await deleteChat(roomId, uuid, inversion)
@@ -217,7 +217,7 @@ router.post('/chat-clear', auth, async (req, res) => {
     const userId = req.headers.userId as string
     const { roomId } = req.body as { roomId: number }
     if (!roomId || !await existsChatRoom(userId, roomId)) {
-      res.send({ status: 'Fail', message: 'Unknow room', data: null })
+      res.send({ status: 'Fail', message: 'Unknown room', data: null })
       return
     }
     await clearChat(roomId)

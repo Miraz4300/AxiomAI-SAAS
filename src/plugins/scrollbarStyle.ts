@@ -8,9 +8,14 @@ function setupScrollbarStyle() {
       width: ${lightTheme.Scrollbar.common?.scrollbarWidth};
     }
     ::-webkit-scrollbar-thumb {
-      background-color: ${lightTheme.Scrollbar.common?.scrollbarColor};
+      background-color: #525252;
       border-radius: ${lightTheme.Scrollbar.common?.scrollbarBorderRadius};
     }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #737373;
+    }
+
     html.dark ::-webkit-scrollbar {
       background-color: transparent;
       width: ${darkTheme.Scrollbar.common?.scrollbarWidth};
@@ -18,6 +23,10 @@ function setupScrollbarStyle() {
     html.dark ::-webkit-scrollbar-thumb {
       background-color: ${darkTheme.Scrollbar.common?.scrollbarColor};
       border-radius: ${darkTheme.Scrollbar.common?.scrollbarBorderRadius};
+    }
+
+    html.dark ::-webkit-scrollbar-thumb:hover {
+      background-color: ${darkTheme.Scrollbar.common?.scrollbarColorHover};
     }
   `
 

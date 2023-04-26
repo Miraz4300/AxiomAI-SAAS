@@ -21,7 +21,7 @@
 
 	.highlight pre,
 	pre {
-		background-color: #18181b;
+		background-color: #09090B;
 	}
 
 	code.hljs {
@@ -31,32 +31,28 @@
 	.code-block {
 		&-wrapper {
 			position: relative;
-			padding-top: 24px;
+			padding-top: 35px;
 		}
 
 		&-header {
 			position: absolute;
-			top: 5px;
+			top: 0px;
 			right: 0;
 			width: 100%;
-			padding: 0 1rem;
+			height: 25px;
+			padding: 0 1.5rem;
 			display: flex;
 			justify-content: flex-end;
 			align-items: center;
-			color: #9ca3af;
+			background-color: #343541;
+			color: #e5e5e5;
 
 			&__copy {
 				cursor: pointer;
-				margin-left: 0.5rem;
 				user-select: none;
-
-				&:hover {
-					color: #ffffff;
-				}
 			}
 		}
 	}
-
 }
 
 html.dark {

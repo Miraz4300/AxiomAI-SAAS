@@ -8,7 +8,7 @@ import fetch from 'node-fetch'
 import { getCacheConfig, getOriginConfig } from '../storage/config'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
-import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
+import type { ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
 import type { RequestOptions } from './types'
 
 const { HttpsProxyAgent } = httpsProxyAgent
@@ -26,9 +26,7 @@ const ErrorCodeMessage: Record<string, string> = {
 
 const timeoutMs: number = !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 100 * 1000
 
-let apiModel: ApiModel
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
-let model = 'gpt-3.5-turbo'
 
 export async function initApi() {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
@@ -37,10 +35,9 @@ export async function initApi() {
   if (!config.apiKey && !config.accessToken)
     throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
-  if (isNotEmptyString(config.apiKey)) {
+  if (config.apiModel === 'ChatGPTAPI') {
     const OPENAI_API_BASE_URL = config.apiBaseUrl
-    const OPENAI_API_MODEL = config.apiModel
-    model = isNotEmptyString(OPENAI_API_MODEL) ? OPENAI_API_MODEL : 'gpt-3.5-turbo'
+    const model = config.chatModel
 
     const options: ChatGPTAPIOptions = {
       apiKey: config.apiKey,
@@ -66,10 +63,9 @@ export async function initApi() {
     await setupProxy(options)
 
     api = new ChatGPTAPI({ ...options })
-    apiModel = 'ChatGPTAPI'
   }
   else {
-    const model = isNotEmptyString(config.apiModel) ? config.apiModel : 'gpt-3.5-turbo'
+    const model = config.chatModel
     const options: ChatGPTUnofficialProxyAPIOptions = {
       accessToken: config.accessToken,
       apiReverseProxyUrl: isNotEmptyString(config.reverseProxy) ? config.reverseProxy : 'https://ai.fakeopen.com/api/conversation',
@@ -80,27 +76,26 @@ export async function initApi() {
     await setupProxy(options)
 
     api = new ChatGPTUnofficialProxyAPI({ ...options })
-    apiModel = 'ChatGPTUnofficialProxyAPI'
   }
 }
 
 async function chatReplyProcess(options: RequestOptions) {
   const config = await getCacheConfig()
-  const model = isNotEmptyString(config.apiModel) ? config.apiModel : 'gpt-3.5-turbo'
+  const model = config.chatModel
   const { message, lastContext, process, temperature, top_p } = options
   const systemMessage = 'Your name is AxiomAI, a language model based on the GPT-3.5 architecture and trained by OpenAI. Follow the user instructions carefully. Respond using markdown.'
 
   try {
     let options: SendMessageOptions = { timeoutMs }
 
-    if (apiModel === 'ChatGPTAPI') {
+    if (config.apiModel === 'ChatGPTAPI') {
       if (isNotEmptyString(systemMessage))
         options.systemMessage = systemMessage
       options.completionParams = { model, temperature, top_p }
     }
 
     if (lastContext != null) {
-      if (apiModel === 'ChatGPTAPI')
+      if (config.apiModel === 'ChatGPTAPI')
         options.parentMessageId = lastContext.parentMessageId
       else
         options = { ...lastContext }
@@ -236,12 +231,8 @@ async function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPI
   }
 }
 
-function currentModel(): ApiModel {
-  return apiModel
-}
-
 initApi()
 
 export type { ChatContext, ChatMessage }
 
-export { chatReplyProcess, chatConfig, currentModel }
+export { chatReplyProcess, chatConfig }

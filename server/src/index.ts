@@ -383,7 +383,13 @@ router.post('/user-register', async (req, res) => {
 
     const user = await getUser(username)
     if (user != null) {
-      res.send({ status: 'Fail', message: 'The email exists', data: null })
+      if (user.status === Status.PreVerify) {
+        await sendVerifyMail(username, await getUserVerifyUrl(username))
+        throw new Error('A verification email has been sent to your email address. Kindly check your spam folder as well')
+      }
+      if (user.status === Status.AdminVerify)
+        throw new Error('Please wait for the admin to activate your account')
+      res.send({ status: 'Fail', message: 'The email address provided is already registered/exists in our system', data: null })
       return
     }
     const newPassword = md5(password)
@@ -522,7 +528,7 @@ router.post('/verify', async (req, res) => {
     const username = await checkUserVerify(token)
     const user = await getUser(username)
     if (user != null && user.status === Status.Normal) {
-      res.send({ status: 'Fail', message: 'The email address provided is already registered/exists in our system.', data: null })
+      res.send({ status: 'Fail', message: 'The email address provided is already registered/exists in our system', data: null })
       return
     }
     const config = await getCacheConfig()

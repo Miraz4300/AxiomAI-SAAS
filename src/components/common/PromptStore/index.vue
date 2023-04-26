@@ -41,27 +41,27 @@ const exportLoading = ref(false)
 
 const searchValue = ref<string>('')
 
-// Mobile Responsive
+// 移动端自适应相关
 const { isMobile } = useBasicLayout()
 
 const promptStore = usePromptStore()
 
-// Import the recommended list online in Prompt and modify it according to the preferences of the deployer (assets/recommend.json)
+// Prompt在线导入推荐List,根据部署者喜好进行修改(assets/recommend.json)
 const promptRecommendList = PromptRecommend
 const promptList = ref<any>(promptStore.promptList)
 
-// Temporary prompt parameters used for adding or modifying
+// 用于添加修改的临时prompt参数
 const tempPromptKey = ref('')
 const tempPromptValue = ref('')
 
-// Modal mode, rendering different Modal content according to different modes
+// Modal模式，根据不同模式渲染不同的Modal内容
 const modalMode = ref('')
 
-// This is for later modification of the Prompt content, because it needs to be modified for the list without uuid, and considering that there cannot be conflicts between the title and the content, a temporary item is needed to record it
+// 这个是为了后期的修改Prompt内容考虑，因为要针对无uuid的list进行修改，且考虑到不能出现标题和内容的冲突，所以就需要一个临时item来记录一下
 const tempModifiedItem = ref<any>({})
 
-// A Modal is used for adding, modifying and importing. TempPromptKey is used to temporarily modify the content, and the content is clear before switching states.
-function changeShowModal(mode: 'add' | 'modify' | 'local_import', selected = { key: '', value: '' }) {
+// 添加修改导入都使用一个Modal, 临时修改内容占用tempPromptKey,切换状态前先将内容都清楚
+const changeShowModal = (mode: 'add' | 'modify' | 'local_import', selected = { key: '', value: '' }) => {
   if (mode === 'add') {
     tempPromptKey.value = ''
     tempPromptValue.value = ''
@@ -82,7 +82,7 @@ function changeShowModal(mode: 'add' | 'modify' | 'local_import', selected = { k
 // Online import related
 const downloadURL = ref('')
 const downloadDisabled = computed(() => downloadURL.value.trim().length < 1)
-function setDownloadURL(url: string) {
+const setDownloadURL = (url: string) => {
   downloadURL.value = url
 }
 
@@ -90,7 +90,7 @@ function setDownloadURL(url: string) {
 const inputStatus = computed (() => tempPromptKey.value.trim().length < 1 || tempPromptValue.value.trim().length < 1)
 
 // Prompt template related operations
-function addPromptTemplate() {
+const addPromptTemplate = () => {
   for (const i of promptList.value) {
     if (i.key === tempPromptKey.value) {
       message.error(t('store.addRepeatTitleTips'))
@@ -106,7 +106,7 @@ function addPromptTemplate() {
   changeShowModal('add')
 }
 
-function modifyPromptTemplate() {
+const modifyPromptTemplate = () => {
   let index = 0
 
   // Extract the items to be modified through the temporary index
@@ -135,19 +135,19 @@ function modifyPromptTemplate() {
   changeShowModal('modify')
 }
 
-function deletePromptTemplate(row: { key: string; value: string }) {
+const deletePromptTemplate = (row: { key: string; value: string }) => {
   promptList.value = [
     ...promptList.value.filter((item: { key: string; value: string }) => item.key !== row.key),
   ] as never
   message.success(t('common.deleteSuccess'))
 }
 
-function clearPromptTemplate() {
+const clearPromptTemplate = () => {
   promptList.value = []
   message.success(t('common.clearSuccess'))
 }
 
-function importPromptTemplate(from = 'online') {
+const importPromptTemplate = (from = 'online') => {
   try {
     const jsonData = JSON.parse(tempPromptValue.value)
     let key = ''
@@ -196,7 +196,7 @@ function importPromptTemplate(from = 'online') {
 }
 
 // template export
-function exportPromptTemplate() {
+const exportPromptTemplate = () => {
   exportLoading.value = true
   const jsonDataStr = JSON.stringify(promptList.value)
   const blob = new Blob([jsonDataStr], { type: 'application/json' })
@@ -210,7 +210,7 @@ function exportPromptTemplate() {
 }
 
 // Template online import
-async function downloadPromptTemplate() {
+const downloadPromptTemplate = async () => {
   try {
     importLoading.value = true
     const response = await fetch(downloadURL.value)
@@ -238,8 +238,8 @@ async function downloadPromptTemplate() {
   }
 }
 
-// Adaptive related to mobile terminal
-function renderTemplate() {
+/// Adaptive related to mobile terminal
+const renderTemplate = () => {
   const [keyLimit, valueLimit] = isMobile.value ? [10, 30] : [15, 50]
 
   return promptList.value.map((item: { key: string; value: string }) => {
@@ -260,7 +260,7 @@ const pagination = computed(() => {
 })
 
 // table-related
-function createColumns(): DataTableColumns<DataProps> {
+const createColumns = (): DataTableColumns<DataProps> => {
   return [
     {
       title: t('store.title'),

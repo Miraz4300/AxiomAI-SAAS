@@ -3,10 +3,10 @@ import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 import type { RequestProps } from './types'
 import type { ChatContext, ChatMessage } from './chatgpt'
-import { chatConfig, chatReplyProcess, initApi } from './chatgpt'
+import { chatConfig, chatReplyProcess, containsSensitiveWords, initApi, initAuditService } from './chatgpt'
 import { auth } from './middleware/auth'
 import { clearConfigCache, getCacheConfig, getOriginConfig } from './storage/config'
-import type { ChatInfo, ChatOptions, Config, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
+import type { AuditConfig, ChatInfo, ChatOptions, Config, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
 import { Status } from './storage/model'
 import {
   clearChat,
@@ -61,6 +61,7 @@ router.get('/chatrooms', auth, async (req, res) => {
         uuid: r.roomId,
         title: r.title,
         isEdit: false,
+        prompt: r.prompt,
       })
     })
     res.send({ status: 'Success', message: null, data: result })
@@ -278,6 +279,16 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
   let result
   let message: ChatInfo
   try {
+    const config = await getCacheConfig()
+    if (config.auditConfig.enabled || config.auditConfig.customizeEnabled) {
+      const userId = req.headers.userId.toString()
+      const user = await getUserById(userId)
+      if (user.email.toLowerCase() !== process.env.ROOT_USER && await containsSensitiveWords(config.auditConfig, prompt)) {
+        res.send({ status: 'Fail', message: 'Contains sensitive words', data: null })
+        return
+      }
+    }
+
     message = regenerate
       ? await getChat(roomId, uuid)
       : await insertChat(uuid, prompt, roomId, options as ChatOptions)
@@ -376,7 +387,7 @@ router.post('/user-register', async (req, res) => {
           break
       }
       if (!allowSuffix) {
-        res.send({ status: 'Fail', message: 'The email service provider is not allowed', data: null })
+        res.send({ status: 'Fail', message: 'This email address is not allowed', data: null })
         return
       }
     }
@@ -396,7 +407,7 @@ router.post('/user-register', async (req, res) => {
     await createUser(username, newPassword)
 
     if (username.toLowerCase() === process.env.ROOT_USER) {
-      res.send({ status: 'Success', message: 'Register success', data: null })
+      res.send({ status: 'Success', message: 'Registration success', data: null })
     }
     else {
       await sendVerifyMail(username, await getUserVerifyUrl(username))
@@ -535,11 +546,11 @@ router.post('/verify', async (req, res) => {
       return
     }
     const config = await getCacheConfig()
-    let message = 'Verify successfully'
+    let message = 'Verification successful'
     if (config.siteConfig.registerReview) {
       await verifyUser(username, Status.AdminVerify)
       await sendVerifyMailAdmin(process.env.ROOT_USER, username, await getUserVerifyUrlAdmin(username))
-      message = 'Verify successfully, Please wait for the admin to activate your account'
+      message = 'Verification successful, Please wait for the admin to activate your account'
     }
     else {
       await verifyUser(username, Status.Normal)
@@ -559,7 +570,7 @@ router.post('/verifyadmin', async (req, res) => {
     const username = await checkUserVerifyAdmin(token)
     const user = await getUser(username)
     if (user != null && user.status === Status.Normal) {
-      res.send({ status: 'Fail', message: 'This email has been opened.', data: null })
+      res.send({ status: 'Fail', message: 'This email has been opened', data: null })
       return
     }
     await verifyUser(username, Status.Normal)
@@ -637,6 +648,39 @@ router.post('/mail-test', rootAuth, async (req, res) => {
     const user = await getUserById(userId)
     await sendTestMail(user.email, config)
     res.send({ status: 'Success', message: 'Successfully', data: null })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/setting-audit', rootAuth, async (req, res) => {
+  try {
+    const config = req.body as AuditConfig
+
+    const thisConfig = await getOriginConfig()
+    thisConfig.auditConfig = config
+    const result = await updateConfig(thisConfig)
+    clearConfigCache()
+    if (config.enabled)
+      initAuditService(config)
+    res.send({ status: 'Success', message: 'uccessfully', data: result.auditConfig })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/audit-test', rootAuth, async (req, res) => {
+  try {
+    const { audit, text } = req.body as { audit: AuditConfig; text: string }
+    const config = await getCacheConfig()
+    if (audit.enabled)
+      initAuditService(audit)
+    const result = await containsSensitiveWords(audit, text)
+    if (audit.enabled)
+      initAuditService(config.auditConfig)
+    res.send({ status: 'Success', message: result ? 'Contains sensitive words' : '不含敏感词 | Does not contain sensitive words.', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

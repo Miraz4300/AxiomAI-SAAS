@@ -5,6 +5,9 @@ import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import httpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
+import type { AuditConfig } from 'src/storage/model'
+import type { TextAuditService } from '../utils/textAudit'
+import { textAuditServices } from '../utils/textAudit'
 import { getCacheConfig, getOriginConfig } from '../storage/config'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
@@ -24,9 +27,8 @@ const ErrorCodeMessage: Record<string, string> = {
   500: '[OpenAI] Internal Server Error',
 }
 
-const timeoutMs: number = !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 100 * 1000
-
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
+let auditService: TextAuditService
 
 export async function initApi() {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
@@ -86,6 +88,7 @@ async function chatReplyProcess(options: RequestOptions) {
   const systemMessage = 'Your name is AxiomAI, a language model based on the GPT-3.5 architecture and trained by OpenAI. Follow the user instructions carefully. Respond using markdown.'
 
   try {
+    const timeoutMs = (await getCacheConfig()).timeoutMs
     let options: SendMessageOptions = { timeoutMs }
 
     if (config.apiModel === 'ChatGPTAPI') {
@@ -119,9 +122,36 @@ async function chatReplyProcess(options: RequestOptions) {
   }
 }
 
+export function initAuditService(audit: AuditConfig) {
+  if (!audit || !audit.options || !audit.options.apiKey || !audit.options.apiSecret)
+    return
+  const Service = textAuditServices[audit.provider]
+  auditService = new Service(audit.options)
+}
+
+async function containsSensitiveWords(audit: AuditConfig, text: string): Promise<boolean> {
+  if (audit.customizeEnabled && isNotEmptyString(audit.sensitiveWords)) {
+    const textLower = text.toLowerCase()
+    const notSafe = audit.sensitiveWords.split('\n').filter(d => textLower.includes(d.trim().toLowerCase())).length > 0
+    if (notSafe)
+      return true
+  }
+  if (audit.enabled) {
+    if (!auditService)
+      initAuditService(audit)
+    return await auditService.containsSensitiveWords(text)
+  }
+  return false
+}
+let cachedBanlance: number | undefined
+let cacheExpiration = 0
+
 async function fetchBalance() {
-  // Calculate start date and end date
   const now = new Date().getTime()
+  if (cachedBanlance && cacheExpiration > now)
+    return Promise.resolve(cachedBanlance.toFixed(3))
+
+  // Calculate start date and end date
   const startDate = new Date(now - 90 * 24 * 60 * 60 * 1000)
   const endDate = new Date(now + 24 * 60 * 60 * 1000)
 
@@ -177,9 +207,10 @@ async function fetchBalance() {
     const totalUsage = usageData.total_usage / 100
 
     // Calculate the remaining amount
-    const balance = totalAmount - totalUsage
+    cachedBanlance = totalAmount - totalUsage
+    cacheExpiration = now + 60 * 60 * 1000
 
-    return Promise.resolve(balance.toFixed(3))
+    return Promise.resolve(cachedBanlance.toFixed(3))
   }
   catch (error) {
     global.console.error(error)
@@ -235,4 +266,4 @@ initApi()
 
 export type { ChatContext, ChatMessage }
 
-export { chatReplyProcess, chatConfig }
+export { chatReplyProcess, chatConfig, containsSensitiveWords }

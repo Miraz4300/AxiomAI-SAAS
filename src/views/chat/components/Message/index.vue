@@ -1,13 +1,13 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
-import { NDropdown, NPopover } from 'naive-ui'
+import { NDropdown, NPopover, useMessage } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
-import { copyText } from '@/utils/format'
 import { useIconRender } from '@/hooks/useIconRender'
 import { t } from '@/locales'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { copyToClip } from '@/utils/copy'
 
 interface Props {
   dateTime?: string
@@ -35,6 +35,8 @@ const emit = defineEmits<Emit>()
 const { isMobile } = useBasicLayout()
 
 const { iconRender } = useIconRender()
+
+const message = useMessage()
 
 const textRef = ref<HTMLElement>()
 
@@ -70,7 +72,7 @@ const options = computed(() => {
 function handleSelect(key: 'copyText' | 'delete' | 'toggleRenderType') {
   switch (key) {
     case 'copyText':
-      copyText({ text: props.text ?? '' })
+      handleCopy()
       return
     case 'toggleRenderType':
       asRawText.value = !asRawText.value
@@ -83,6 +85,16 @@ function handleSelect(key: 'copyText' | 'delete' | 'toggleRenderType') {
 function handleRegenerate() {
   messageRef.value?.scrollIntoView()
   emit('regenerate')
+}
+
+async function handleCopy() {
+  try {
+    await copyToClip(props.text || '')
+    message.success(t('chat.copied'))
+  }
+  catch (error) {
+    message.error(t('chat.copyfail'))
+  }
 }
 </script>
 

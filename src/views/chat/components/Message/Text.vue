@@ -59,7 +59,7 @@ const text = computed(() => {
 })
 
 function highlightBlock(str: string, lang?: string) {
-  return `<pre class="code-block-wrapper"><div class="code-block-header"><span class="code-block-header__lang">${lang}</span><span class="code-block-header__copy">${t('chat.copyCode')}</span></div><code class="hljs code-block-body ${lang}">${str}</code></pre>`
+  return `<pre class="code-block-wrapper"><div class="code-block-header"><span class="code-block-header__lang">${lang}</span><span class="flex ml-auto gap-2 code-block-header__copy"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-3.5" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>${t('chat.copyCode')}</span></div><code class="hljs code-block-body ${lang}">${str}</code></pre>`
 }
 
 function addCopyEvents() {
@@ -70,16 +70,17 @@ function addCopyEvents() {
         const code = btn.parentElement?.nextElementSibling?.textContent
         if (code) {
           copyToClip(code).then(() => {
-            btn.textContent = (t('chat.copied'))
+            btn.innerHTML = `<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-3.5" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="m5 13 4 4L19 7"/></svg>${t('chat.copied')}`
             setTimeout(() => {
-              btn.textContent = (t('chat.copyCode'))
-            }, 1000)
+              btn.innerHTML = `<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-3.5" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>${t('chat.copyCode')}`
+            }, 2000)
           })
         }
       })
     })
   }
 }
+
 function removeCopyEvents() {
   if (textRef.value) {
     const copyBtn = textRef.value.querySelectorAll('.code-block-header__copy')

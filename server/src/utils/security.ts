@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto'
+import { createHash } from 'crypto'
 import * as dotenv from 'dotenv'
 import { getCacheConfig } from '../storage/config'
 
@@ -21,10 +21,9 @@ export async function getUserVerifyUrl(username: string) {
 function getUserVerify(username: string) {
   return getVerify(username, '')
 }
-
-function getVerify(username: string, _key: string) {
+function getVerify(username: string, key: string) {
   const expired = new Date().getTime() + (12 * 60 * 60 * 1000)
-  const sign = `${username}-${expired}`
+  const sign = `${username}${key}-${expired}`
   return `${sign}-${md5(sign)}`
 }
 

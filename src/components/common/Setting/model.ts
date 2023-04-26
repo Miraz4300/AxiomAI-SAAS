@@ -12,6 +12,7 @@ export class ConfigState {
   balance?: number
   siteConfig?: SiteConfig
   mailConfig?: MailConfig
+  auditConfig?: AuditConfig
 }
 
 // https://platform.openai.com/docs/models/overview
@@ -35,4 +36,26 @@ export class MailConfig {
   smtpTsl?: boolean
   smtpUserName?: string
   smtpPassword?: string
+}
+export type TextAuditServiceProvider = 'baidu' //  | 'ali'
+
+export interface TextAuditServiceOptions {
+  apiKey: string
+  apiSecret: string
+  label?: string
+}
+export enum TextAudioType {
+  None = 0,
+  Request = 1 << 0, // binary 01
+  Response = 1 << 1, // binary 10
+  All = Request | Response, // binary 11
+}
+
+export class AuditConfig {
+  enabled?: boolean
+  provider?: TextAuditServiceProvider
+  options?: TextAuditServiceOptions
+  textType?: TextAudioType
+  customizeEnabled?: boolean
+  sensitiveWords?: string
 }

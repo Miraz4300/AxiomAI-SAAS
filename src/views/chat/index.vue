@@ -468,7 +468,6 @@ async function loadMoreMessage(event: any) {
 }
 
 const handleLoadMoreMessage = debounce(loadMoreMessage, 300)
-
 const handleSyncChat
   = debounce(() => {
     // Brush directly, there is a very small probability of not requesting
@@ -505,7 +504,7 @@ const searchOptions = computed(() => {
 })
 
 // value inverse rendering key
-function renderOption(option: { label: string }) {
+const renderOption = (option: { label: string }) => {
   for (const i of promptTemplate.value) {
     if (i.value === option.label)
       return [i.key]
@@ -534,6 +533,7 @@ onMounted(() => {
   firstLoading.value = true
   handleSyncChat()
 })
+
 watch(() => chatStore.active, (newVal, oldVal) => {
   handleSyncChat()
 })

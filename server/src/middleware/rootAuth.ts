@@ -6,7 +6,7 @@ import { getCacheConfig } from '../storage/config'
 
 dotenv.config()
 
-async function rootAuth(req, res, next) {
+const rootAuth = async (req, res, next) => {
   const config = await getCacheConfig()
   if (config.siteConfig.loginEnabled) {
     try {

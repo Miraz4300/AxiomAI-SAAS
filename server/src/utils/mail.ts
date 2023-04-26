@@ -1,5 +1,5 @@
-import * as fs from 'node:fs'
-import * as path from 'node:path'
+import * as fs from 'fs'
+import * as path from 'path'
 import nodemailer from 'nodemailer'
 import type { MailConfig } from '../storage/model'
 import { getCacheConfig } from '../storage/config'

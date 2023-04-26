@@ -1,7 +1,8 @@
 import { ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
-import { isNotEmptyString } from '../utils/is'
-import { Config, MailConfig, SiteConfig } from './model'
+import type { TextAuditServiceProvider } from 'src/utils/textAudit'
+import { isNotEmptyString, isTextAuditServiceProvider } from '../utils/is'
+import { AuditConfig, Config, MailConfig, SiteConfig, TextAudioType } from './model'
 import { getConfig } from './mongo'
 
 dotenv.config()
@@ -78,7 +79,40 @@ export async function getOriginConfig() {
     else
       config.apiModel = 'ChatGPTAPI'
   }
+
+  if (config.auditConfig === undefined) {
+    config.auditConfig = new AuditConfig(
+      process.env.AUDIT_ENABLED === 'true',
+      isTextAuditServiceProvider(process.env.AUDIT_PROVIDER)
+        ? process.env.AUDIT_PROVIDER as TextAuditServiceProvider
+        : 'baidu',
+      {
+        apiKey: process.env.AUDIT_API_KEY,
+        apiSecret: process.env.AUDIT_API_SECRET,
+        label: process.env.AUDIT_TEXT_LABEL,
+      },
+      getTextAuditServiceOptionFromString(process.env.AUDIT_TEXT_TYPE),
+      false,
+      '',
+    )
+  }
   return config
+}
+
+function getTextAuditServiceOptionFromString(value: string): TextAudioType {
+  if (value === undefined)
+    return TextAudioType.None
+
+  switch (value.toLowerCase()) {
+    case 'request':
+      return TextAudioType.Request
+    case 'response':
+      return TextAudioType.Response
+    case 'all':
+      return TextAudioType.All
+    default:
+      return TextAudioType.None
+  }
 }
 
 export function clearConfigCache() {

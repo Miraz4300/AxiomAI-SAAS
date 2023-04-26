@@ -11,10 +11,13 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
 const emit = defineEmits<Emit>()
+
 interface Emit {
   (e: 'update:visible', visible: boolean): void
 }
+
 const show = computed({
   get: () => props.visible,
   set: (visible: boolean) => emit('update:visible', visible),
@@ -155,8 +158,10 @@ async function handleRegister() {
 
 async function handleSendResetMail() {
   const name = username.value.trim()
+
   if (!name)
     return
+
   try {
     loading.value = true
     const result = await fetchSendResetMail(name)
@@ -169,14 +174,17 @@ async function handleSendResetMail() {
     loading.value = false
   }
 }
+
 async function handleResetPassword() {
   const name = username.value.trim()
   const pwd = password.value.trim()
   const confirmPwd = confirmPassword.value.trim()
+
   if (!name || !pwd || !confirmPwd || pwd !== confirmPwd) {
     ms.error('Passwords don\'t match')
     return
   }
+
   try {
     loading.value = true
     const result = await fetchResetPassword(name, pwd, sign.value)
@@ -232,6 +240,7 @@ async function handleResetPassword() {
               {{ $t('common.register') }}
             </NButton>
           </NTabPane>
+
           <NTabPane name="resetPassword" :tab="$t('common.resetPassword')">
             <NInput v-model:value="username" :disabled="sign !== undefined" type="text" :placeholder="$t('common.email')" class="mb-2" />
             <NInput v-if="!!sign" v-model:value="password" type="password" :placeholder="$t('common.password')" class="mb-2" @input="handlePasswordInput" />

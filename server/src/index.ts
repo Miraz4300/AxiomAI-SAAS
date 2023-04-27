@@ -373,7 +373,7 @@ router.post('/user-register', async (req, res) => {
     const { username, password } = req.body as { username: string; password: string }
     const config = await getCacheConfig()
     if (!config.siteConfig.registerEnabled) {
-      res.send({ status: 'Fail', message: 'Register account is disabled!', data: null })
+      res.send({ status: 'Fail', message: 'Registration is disabled!', data: null })
       return
     }
     if (!isEmail(username)) {

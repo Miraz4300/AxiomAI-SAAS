@@ -328,8 +328,11 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
   finally {
     res.end()
     try {
-      if (result == null || result === undefined || result.status !== 'Success')
+      if (result == null || result === undefined || result.status !== 'Success') {
+        if (result && result.status !== 'Success')
+          lastResponse = { text: result.message }
         result = { data: lastResponse }
+      }
 
       if (result.data === undefined)
         // eslint-disable-next-line no-unsafe-finally
@@ -474,7 +477,7 @@ router.post('/user-login', async (req, res) => {
       userId: user._id,
       root: username.toLowerCase() === process.env.ROOT_USER,
     }, config.siteConfig.loginSalt.trim())
-    res.send({ status: 'Success', message: 'Login successfully', data: { token } })
+    res.send({ status: 'Success', message: 'Login successful', data: { token } })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -527,7 +530,7 @@ router.post('/user-info', auth, async (req, res) => {
     if (user == null || user.status !== Status.Normal)
       throw new Error('User does not exist.')
     await updateUserInfo(userId, { name, avatar, description } as UserInfo)
-    res.send({ status: 'Success', message: 'Update successfully' })
+    res.send({ status: 'Success', message: 'Update successful' })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -586,8 +589,10 @@ router.post('/setting-base', rootAuth, async (req, res) => {
   try {
     const { apiKey, apiModel, chatModel, apiBaseUrl, accessToken, timeoutMs, reverseProxy, socksProxy, socksAuth, httpsProxy } = req.body as Config
 
-    if (apiKey == null && accessToken == null)
-      throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable.')
+    if (apiModel === 'ChatGPTAPI' && !isNotEmptyString(apiKey))
+      throw new Error('Missing OPENAI_API_KEY environment variable.')
+    else if (apiModel === 'ChatGPTUnofficialProxyAPI' && !isNotEmptyString(accessToken))
+      throw new Error('Missing OPENAI_ACCESS_TOKEN environment variable.')
 
     const thisConfig = await getOriginConfig()
     thisConfig.apiKey = apiKey
@@ -664,7 +669,7 @@ router.post('/setting-audit', rootAuth, async (req, res) => {
     clearConfigCache()
     if (config.enabled)
       initAuditService(config)
-    res.send({ status: 'Success', message: 'uccessfully', data: result.auditConfig })
+    res.send({ status: 'Success', message: 'Successfully', data: result.auditConfig })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -680,7 +685,7 @@ router.post('/audit-test', rootAuth, async (req, res) => {
     const result = await containsSensitiveWords(audit, text)
     if (audit.enabled)
       initAuditService(config.auditConfig)
-    res.send({ status: 'Success', message: result ? 'Contains sensitive words' : '不含敏感词 | Does not contain sensitive words.', data: null })
+    res.send({ status: 'Success', message: result ? 'Contains sensitive words' : 'Does not contain sensitive words', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

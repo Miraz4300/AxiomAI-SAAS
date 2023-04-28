@@ -512,10 +512,10 @@ const renderOption = (option: { label: string }) => {
   return []
 }
 
-const placeholder = computed(() => {
+const placeholderText = computed(() => {
   if (isMobile.value)
     return t('chat.placeholderMobile')
-  return t('chat.placeholder')
+  return t('chat.placeholderText')
 })
 
 const buttonDisabled = computed(() => {
@@ -641,18 +641,18 @@ onUnmounted(() => {
       <div class="w-full max-w-screen-xl m-auto">
         <div class="flex items-center justify-between space-x-2">
           <HoverButton @click="handleClear">
-            <span class="text-xl text-[#4f555e] dark:text-white">
+            <span class="text-xl text-black dark:text-white">
               <SvgIcon icon="ri:delete-bin-line" />
             </span>
           </HoverButton>
           <HoverButton v-if="!isMobile" @click="handleExport">
-            <span class="text-xl text-[#4f555e] dark:text-white">
-              <SvgIcon icon="ri:download-2-line" />
+            <span class="text-xl text-black dark:text-white">
+              <SvgIcon icon="mdi:file-export-outline" />
             </span>
           </HoverButton>
           <HoverButton v-if="!isMobile" @click="toggleUsingContext">
             <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
-              <SvgIcon icon="ri:chat-history-line" />
+              <SvgIcon icon="fluent:brain-circuit-24-filled" />
             </span>
           </HoverButton>
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
@@ -662,7 +662,7 @@ onUnmounted(() => {
                 v-model:value="prompt"
                 :disabled="!!authStore.session?.auth && !authStore.token"
                 type="textarea"
-                :placeholder="placeholder"
+                :placeholder="placeholderText"
                 :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
                 @input="handleInput"
                 @focus="handleFocus"

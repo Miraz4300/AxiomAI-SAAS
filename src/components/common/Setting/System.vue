@@ -146,7 +146,7 @@ onMounted(() => {
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.socksAuth') }}</span>
           <div class="flex-1">
-            <NInput :value="config.socksAuth" placeholder="name:pasword" @input="(val) => { config.socksAuth = val }" />
+            <NInput :value="config.socksAuth" placeholder="name:password" @input="(val) => { config.socksAuth = val }" />
           </div>
         </div>
         <div class="flex items-center space-x-4">

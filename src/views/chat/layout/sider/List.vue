@@ -73,7 +73,7 @@ function isActive(uuid: number) {
       <div class="flex flex-col gap-2 text-sm">
         <template v-if="!dataSources.length">
           <div class="flex flex-col items-center mt-4 text-center text-neutral-300">
-            <SvgIcon icon="ri:inbox-line" class="mb-2 text-3xl" />
+            <SvgIcon icon="fluent:mail-inbox-dismiss-28-regular" class="mb-2 text-3xl" />
             <span>{{ $t('common.noData') }}</span>
           </div>
         </template>
@@ -85,7 +85,7 @@ function isActive(uuid: number) {
               @click="handleSelect(item)"
             >
               <span>
-                <SvgIcon icon="ri:message-3-line" />
+                <SvgIcon icon="lucide:message-square" />
               </span>
               <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">
                 <NInput

@@ -45,12 +45,12 @@ const themeOptions: { label: string; key: Theme; icon: string }[] = [
   {
     label: 'Light',
     key: 'light',
-    icon: 'ri:sun-foggy-line',
+    icon: 'line-md:sunny-outline-loop',
   },
   {
     label: 'Dark',
     key: 'dark',
-    icon: 'ri:moon-foggy-line',
+    icon: 'line-md:moon-alt-loop',
   },
 ]
 
@@ -127,13 +127,13 @@ function handleImportButtonClick(): void {
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
         <div class="flex-1">
-          <NInput v-model:value="description" placeholder="" />
+          <NInput v-model:value="description" placeholder="Innovative and strategic problem solver." />
         </div>
       </div>
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
         <div class="flex-1">
-          <NInput v-model:value="avatar" placeholder="" />
+          <NInput v-model:value="avatar" placeholder="https://example.com/avatar/image.png" />
         </div>
       </div>
       <div
@@ -145,7 +145,7 @@ function handleImportButtonClick(): void {
         <div class="flex flex-wrap items-center gap-4">
           <NButton size="small" @click="exportData">
             <template #icon>
-              <SvgIcon icon="ri:download-2-fill" />
+              <SvgIcon icon="ri:upload-2-fill" />
             </template>
             {{ $t('common.export') }}
           </NButton>
@@ -153,14 +153,14 @@ function handleImportButtonClick(): void {
           <input id="fileInput" type="file" style="display:none" @change="importData">
           <NButton size="small" @click="handleImportButtonClick">
             <template #icon>
-              <SvgIcon icon="ri:upload-2-fill" />
+              <SvgIcon icon="ri:download-2-fill" />
             </template>
             {{ $t('common.import') }}
           </NButton>
 
           <NPopconfirm placement="bottom" @positive-click="clearData">
             <template #trigger>
-              <NButton size="small">
+              <NButton size="small" type="error" ghost>
                 <template #icon>
                   <SvgIcon icon="ri:close-circle-line" />
                 </template>

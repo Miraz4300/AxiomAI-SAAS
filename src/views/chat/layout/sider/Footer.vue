@@ -20,14 +20,13 @@ async function handleLogout() {
       <UserAvatar />
     </div>
     <HoverButton v-if="!!authStore.token" :tooltip="$t('common.logOut')" @click="handleLogout">
-      <span class="text-xl text-[#4f555e] dark:text-white">
-        <SvgIcon icon="uil:exit" />
+      <span class="text-xl text-black dark:text-white">
+        <SvgIcon icon="tabler:logout" />
       </span>
     </HoverButton>
-
     <HoverButton v-if="!!authStore.token" :tooltip="$t('setting.setting')" @click="show = true">
-      <span class="text-xl text-[#4f555e] dark:text-white">
-        <SvgIcon icon="ri:settings-4-line" />
+      <span class="text-xl text-black dark:text-white">
+        <SvgIcon icon="ep:setting" />
       </span>
     </HoverButton>
     <Setting v-if="show" v-model:visible="show" />

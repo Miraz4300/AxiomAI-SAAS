@@ -12,7 +12,7 @@ export async function sendVerifyMail(toMail: string, verifyUrl: string) {
   let mailHtml = fs.readFileSync(mailTemplatePath, 'utf8')
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
-  sendMail(toMail, `${config.siteConfig.siteTitle} - Verify your email address`, mailHtml, config.mailConfig)
+  sendMail(toMail, `Verify your email to create your ${config.siteConfig.siteTitle} account`, mailHtml, config.mailConfig)
 }
 
 export async function sendVerifyMailAdmin(toMail: string, verifyName: string, verifyUrl: string) {
@@ -24,7 +24,7 @@ export async function sendVerifyMailAdmin(toMail: string, verifyName: string, ve
   mailHtml = mailHtml.replace(/\${TO_MAIL}/g, verifyName)
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
-  sendMail(toMail, `${config.siteConfig.siteTitle} - Account Application`, mailHtml, config.mailConfig)
+  sendMail(toMail, `Account Application for ${config.siteConfig.siteTitle}`, mailHtml, config.mailConfig)
 }
 
 export async function sendResetPasswordMail(toMail: string, verifyUrl: string) {
@@ -34,7 +34,7 @@ export async function sendResetPasswordMail(toMail: string, verifyUrl: string) {
   let mailHtml = fs.readFileSync(mailTemplatePath, 'utf8')
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
-  sendMail(toMail, `${config.siteConfig.siteTitle} - Reset your account password`, mailHtml, config.mailConfig)
+  sendMail(toMail, `Reset your ${config.siteConfig.siteTitle} account password`, mailHtml, config.mailConfig)
 }
 
 export async function sendNoticeMail(toMail: string) {
@@ -45,7 +45,7 @@ export async function sendNoticeMail(toMail: string) {
   let mailHtml = fs.readFileSync(mailTemplatePath, 'utf8')
   mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
-  sendMail(toMail, `${config.siteConfig.siteTitle} - Account opening`, mailHtml, config.mailConfig)
+  sendMail(toMail, `Account opening verification for ${config.siteConfig.siteTitle} account`, mailHtml, config.mailConfig)
 }
 
 export async function sendTestMail(toMail: string, config: MailConfig) {
@@ -54,7 +54,7 @@ export async function sendTestMail(toMail: string, config: MailConfig) {
 
 async function sendMail(toMail: string, subject: string, html: string, config: MailConfig) {
   const mailOptions = {
-    from: config.smtpUserName,
+    from: `AxiomAI <${config.smtpUserName}>`,
     to: toMail,
     subject,
     html,

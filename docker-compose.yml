@@ -4,7 +4,7 @@ services:
   app:
     networks:
       - axiomnode
-    image: miraz4300/axiomnode:latest
+    image: deepspacelab.azurecr.io/axiomnode:latest
     container_name: AxiomNode
     restart: unless-stopped
     ports:

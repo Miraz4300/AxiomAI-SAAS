@@ -93,7 +93,7 @@ export class UsageResponse {
 
 export class ChatUsage {
   _id: ObjectId
-  userId: string
+  userId: ObjectId
   roomId: number
   chatId: ObjectId
   messageId: string
@@ -102,7 +102,7 @@ export class ChatUsage {
   totalTokens: number
   estimated: boolean
   dateTime: number
-  constructor(userId: string, roomId: number, chatId: ObjectId, messageId: string, usage: UsageResponse) {
+  constructor(userId: ObjectId, roomId: number, chatId: ObjectId, messageId: string, usage: UsageResponse) {
     this.userId = userId
     this.roomId = roomId
     this.chatId = chatId

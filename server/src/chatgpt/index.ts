@@ -146,13 +146,13 @@ async function containsSensitiveWords(audit: AuditConfig, text: string): Promise
   }
   return false
 }
-let cachedBanlance: number | undefined
+let cachedBalance: number | undefined
 let cacheExpiration = 0
 
 async function fetchBalance() {
   const now = new Date().getTime()
-  if (cachedBanlance && cacheExpiration > now)
-    return Promise.resolve(cachedBanlance.toFixed(3))
+  if (cachedBalance && cacheExpiration > now)
+    return Promise.resolve(cachedBalance.toFixed(3))
 
   // Calculate start date and end date
   const startDate = new Date(now - 90 * 24 * 60 * 60 * 1000)
@@ -210,10 +210,10 @@ async function fetchBalance() {
     const totalUsage = usageData.total_usage / 100
 
     // Calculate the remaining amount
-    cachedBanlance = totalAmount - totalUsage
+    cachedBalance = totalAmount - totalUsage
     cacheExpiration = now + 60 * 60 * 1000
 
-    return Promise.resolve(cachedBanlance.toFixed(3))
+    return Promise.resolve(cachedBalance.toFixed(3))
   }
   catch (error) {
     global.console.error(error)

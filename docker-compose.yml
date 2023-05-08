@@ -2,7 +2,9 @@ version: '3'
 
 services:
   app:
-    image: miraz4300/axiomnode:latest
+    networks:
+      - axiomnode
+    image: deepspacelab.azurecr.io/axiomnode:latest
     container_name: AxiomNode
     restart: unless-stopped
     ports:
@@ -87,6 +89,8 @@ services:
       - database
 
   database:
+    networks:
+      - axiomnode
     image: mongo
     container_name: AxiomDB
     restart: always
@@ -103,3 +107,7 @@ services:
 
 volumes:
   mongodb: {}
+
+networks:
+  axiomnode:
+    driver: bridge

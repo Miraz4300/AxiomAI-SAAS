@@ -1,6 +1,7 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
+import { ObjectId } from 'mongodb'
 import type { RequestProps } from './types'
 import type { ChatContext, ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, containsSensitiveWords, initApi, initAuditService } from './chatgpt'
@@ -246,7 +247,7 @@ router.post('/chat', auth, async (req, res) => {
           response.data.text,
           response.data.id,
           response.data.detail?.usage as UsageResponse,
-          previousResponse)
+          previousResponse as [])
       }
       else {
         await updateChat(message._id as unknown as string,
@@ -256,7 +257,7 @@ router.post('/chat', auth, async (req, res) => {
       }
 
       if (response.data.usage) {
-        await insertChatUsage(req.headers.userId as string,
+        await insertChatUsage(new ObjectId(req.headers.userId as string),
           roomId,
           message._id,
           response.data.id,
@@ -345,7 +346,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
           result.data.text,
           result.data.id,
           result.data.detail?.usage as UsageResponse,
-          previousResponse)
+          previousResponse as [])
       }
       else {
         await updateChat(message._id as unknown as string,
@@ -355,7 +356,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
       }
 
       if (result.data.detail?.usage) {
-        await insertChatUsage(req.headers.userId as string,
+        await insertChatUsage(new ObjectId(req.headers.userId),
           roomId,
           message._id,
           result.data.id,
@@ -422,7 +423,7 @@ router.post('/user-register', async (req, res) => {
   }
 })
 
-router.post('/config', auth, async (req, res) => {
+router.post('/config', rootAuth, async (req, res) => {
   try {
     const userId = req.headers.userId.toString()
 

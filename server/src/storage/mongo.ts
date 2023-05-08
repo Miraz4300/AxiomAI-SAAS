@@ -15,6 +15,7 @@ const usageCol = client.db('axiomdb').collection('chat_usage')
 
 /**
  * Insert Chat Message
+ * @param uuid
  * @param text Content prompt or response
  * @param roomId
  * @param options
@@ -28,6 +29,10 @@ export async function insertChat(uuid: number, text: string, roomId: number, opt
 
 export async function getChat(roomId: number, uuid: number) {
   return await chatCol.findOne({ roomId, uuid }) as ChatInfo
+}
+
+export async function getChatByMessageId(messageId: string) {
+  return await chatCol.findOne({ 'options.messageId': messageId }) as ChatInfo
 }
 
 export async function updateChat(chatId: string, response: string, messageId: string, usage: UsageResponse, previousResponse?: []) {
@@ -49,7 +54,7 @@ export async function updateChat(chatId: string, response: string, messageId: st
   await chatCol.updateOne(query, update)
 }
 
-export async function insertChatUsage(userId: string, roomId: number, chatId: ObjectId, messageId: string, usage: UsageResponse) {
+export async function insertChatUsage(userId: ObjectId, roomId: number, chatId: ObjectId, messageId: string, usage: UsageResponse) {
   const chatUsage = new ChatUsage(userId, roomId, chatId, messageId, usage)
   await usageCol.insertOne(chatUsage)
   return chatUsage
@@ -67,8 +72,7 @@ export async function renameChatRoom(userId: string, title: string, roomId: numb
       title,
     },
   }
-  const result = await roomCol.updateOne(query, update)
-  return result
+  return await roomCol.updateOne(query, update)
 }
 
 export async function deleteChatRoom(userId: string, roomId: number) {
@@ -141,7 +145,7 @@ export async function deleteChat(roomId: number, uuid: number, inversion: boolea
       },
     }
   }
-  chatCol.updateOne(query, update)
+  await chatCol.updateOne(query, update)
 }
 
 export async function createUser(email: string, password: string): Promise<UserInfo> {
@@ -155,15 +159,13 @@ export async function createUser(email: string, password: string): Promise<UserI
 }
 
 export async function updateUserInfo(userId: string, user: UserInfo) {
-  const result = userCol.updateOne({ _id: new ObjectId(userId) }
+  return userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { name: user.name, description: user.description, avatar: user.avatar } })
-  return result
 }
 
 export async function updateUserPassword(userId: string, password: string) {
-  const result = userCol.updateOne({ _id: new ObjectId(userId) }
+  return userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { password, updateTime: new Date().toLocaleString() } })
-  return result
 }
 
 export async function getUser(email: string): Promise<UserInfo> {

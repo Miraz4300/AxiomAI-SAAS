@@ -422,7 +422,7 @@ router.post('/user-register', async (req, res) => {
   }
 })
 
-router.post('/config', auth, async (req, res) => {
+router.post('/config', rootAuth, async (req, res) => {
   try {
     const userId = req.headers.userId.toString()
 

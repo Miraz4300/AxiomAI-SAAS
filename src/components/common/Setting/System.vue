@@ -91,6 +91,12 @@ onMounted(() => {
           </div>
         </div>
         <div v-if="isChatGPTAPI" class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.apiBaseUrl') }}</span>
+          <div class="flex-1">
+            <NInput :value="config.apiBaseUrl" placeholder="https://api.openai.com" @input="(val) => { config.apiBaseUrl = val }" />
+          </div>
+        </div>
+        <div v-if="isChatGPTAPI" class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.api') }}</span>
           <div class="flex-1">
             <NInput :value="config.apiKey" placeholder="" @input="(val) => { config.apiKey = val }" />
@@ -98,12 +104,6 @@ onMounted(() => {
           <p>
             {{ $t("setting.balance") }}：{{ config.balance }}
           </p>
-        </div>
-        <div v-if="isChatGPTAPI" class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.apiBaseUrl') }}</span>
-          <div class="flex-1">
-            <NInput :value="config.apiBaseUrl" placeholder="https://api.openai.com" @input="(val) => { config.apiBaseUrl = val }" />
-          </div>
         </div>
         <div v-if="!isChatGPTAPI" class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.accessToken') }}</span>

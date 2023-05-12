@@ -6,12 +6,14 @@ import type { ChatOptions, Config, UsageResponse } from './model'
 dotenv.config()
 
 const url = process.env.MONGODB_URL
+const parsedUrl = new URL(url)
+const dbName = (parsedUrl.pathname && parsedUrl.pathname !== '/') ? parsedUrl.pathname.substring(1) : 'axiomdb'
 const client = new MongoClient(url)
-const chatCol = client.db('axiomdb').collection('chat')
-const roomCol = client.db('axiomdb').collection('chat_room')
-const userCol = client.db('axiomdb').collection('user')
-const configCol = client.db('axiomdb').collection('config')
-const usageCol = client.db('axiomdb').collection('chat_usage')
+const chatCol = client.db(dbName).collection('chat')
+const roomCol = client.db(dbName).collection('chat_room')
+const userCol = client.db(dbName).collection('user')
+const configCol = client.db(dbName).collection('config')
+const usageCol = client.db(dbName).collection('chat_usage')
 
 /**
  * Insert Chat Message

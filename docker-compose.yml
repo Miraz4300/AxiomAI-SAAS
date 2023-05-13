@@ -61,8 +61,11 @@ services:
       AUTH_SECRET_KEY: 
 
       # ----- Only valid after setting AUTH_SECRET_KEY begin ----
-      # Allow anyone register
+      # Allow anyone to signup
       REGISTER_ENABLED: false
+
+      # Enable signup application review
+      REGISTER_REVIEW: false
 
       # The site domain for registration account verification. Don't use '/' at the end.
       SITE_DOMAIN: https://subdomain.domain.com
@@ -83,6 +86,14 @@ services:
       SMTP_TSL: true
       SMTP_USERNAME: 'SMTP_USERNAME'
       SMTP_PASSWORD: 'SMTP_PASSWORD'
+
+      # Audit Settings
+      # Whether to enable the review of sensitive words, because the response result is streaming, so there is no review for the time being | # https://ai.baidu.com/ai-doc/ANTIPORN/Vk3h6xaga
+      AUDIT_ENABLED: false
+      AUDIT_PROVIDER: baidu
+      AUDIT_API_KEY: 
+      AUDIT_API_SECRET: 
+      AUDIT_TEXT_LABEL: 
     links:
       - database
 

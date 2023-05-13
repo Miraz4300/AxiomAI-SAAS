@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app:
-    image: deepspacelab.azurecr.io/axiomnode:latest
+    image: registry.octocarbon.codes/axiomnode:latest
     container_name: AxiomNode
     restart: unless-stopped
     ports:

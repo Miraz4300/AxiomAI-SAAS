@@ -3,9 +3,9 @@ import { computed, ref } from 'vue'
 import { NCard, NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
 import Advanced from './Advanced.vue'
+import Statistics from './Statistics.vue'
 import About from './About.vue'
 import System from './System.vue'
-import Statistics from './Statistics.vue'
 import Mail from './Mail.vue'
 import Audit from './Audit.vue'
 import Site from './Site.vue'
@@ -63,6 +63,15 @@ const show = computed({
             <Advanced />
           </div>
         </NTabPane>
+        <NTabPane name="Statistics" tab="Statistics">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="mdi:chart-box-outline" />
+            <span class="ml-2">{{ $t('setting.statistics') }}</span>
+          </template>
+          <div class="min-h-[100px]">
+            <Statistics />
+          </div>
+        </NTabPane>
         <NTabPane name="About" tab="About">
           <template #tab>
             <SvgIcon class="text-lg" icon="mdi:about-circle-outline" />
@@ -76,15 +85,6 @@ const show = computed({
             <span class="ml-2">{{ $t('setting.config') }}</span>
           </template>
           <System />
-        </NTabPane>
-        <NTabPane name="Statistics" tab="Statistics">
-          <template #tab>
-            <SvgIcon class="text-lg" icon="ri:bar-chart-box-line" />
-            <span class="ml-2">{{ $t('setting.statistics') }}</span>
-          </template>
-          <div class="min-h-[100px]">
-            <Statistics />
-          </div>
         </NTabPane>
         <NTabPane v-if="userStore.userInfo.root" name="MailConfig" tab="MailConfig">
           <template #tab>

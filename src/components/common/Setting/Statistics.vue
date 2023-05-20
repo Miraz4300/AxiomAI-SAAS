@@ -15,8 +15,8 @@ const chartData: ChartData<'bar'> = reactive({
     {
       label: t('setting.statisticsPrompt'),
       data: [],
-      borderColor: '#a1dc95',
-      backgroundColor: '#a1dc95',
+      borderColor: '#00B2DB',
+      backgroundColor: '#00B2DB',
       stack: 'Usage',
     },
     {
@@ -150,6 +150,3 @@ onMounted(() => {
     </div>
   </NSpin>
 </template>
-
-<style>
-</style>

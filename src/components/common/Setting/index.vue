@@ -5,6 +5,7 @@ import General from './General.vue'
 import Advanced from './Advanced.vue'
 import About from './About.vue'
 import System from './System.vue'
+import Statistics from './Statistics.vue'
 import Mail from './Mail.vue'
 import Audit from './Audit.vue'
 import Site from './Site.vue'
@@ -75,6 +76,15 @@ const show = computed({
             <span class="ml-2">{{ $t('setting.config') }}</span>
           </template>
           <System />
+        </NTabPane>
+        <NTabPane name="Statistics" tab="Statistics">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="ri:bar-chart-box-line" />
+            <span class="ml-2">{{ $t('setting.statistics') }}</span>
+          </template>
+          <div class="min-h-[100px]">
+            <Statistics />
+          </div>
         </NTabPane>
         <NTabPane v-if="userStore.userInfo.root" name="MailConfig" tab="MailConfig">
           <template #tab>

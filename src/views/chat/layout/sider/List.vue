@@ -28,10 +28,11 @@ async function handleSyncChatRoom() {
   loadingRoom.value = true
   chatStore.syncHistory(() => {
     loadingRoom.value = false
-    // This is not needed here, but when vue renders, the chat may give priority to rendering and other reasons, so the probability is not refreshed
     if (chatStore.active) {
       const uuid = chatStore.active
-      chatStore.syncChat({ uuid } as Chat.History, undefined, scrollToBottom)
+      chatStore.syncChat({ uuid } as Chat.History, undefined, async () => {
+        await scrollToBottom()
+      })
     }
   })
 }
@@ -40,9 +41,6 @@ async function handleSelect({ uuid }: Chat.History) {
   if (isActive(uuid))
     return
 
-  // It is not necessary here, otherwise each switch is rename
-  // if (chatStore.active)
-  //   chatStore.updateHistory(chatStore.active, { isEdit: false })
   await chatStore.setActive(uuid)
 
   if (isMobile.value)

@@ -144,7 +144,7 @@ export default {
     importError: 'Key value mismatch',
     importRepeatTitle: 'Title repeatedly skipped: {msg}',
     importRepeatContent: 'Content is repeatedly skipped: {msg}',
-    onlineImportWarning: 'Note: Please check the JSON file source!',
-    downloadError: 'Please check the network status and JSON file validity',
+    onlineImportWarning: 'Note: Only support JSON file format. Please insert the JSON file source url! ',
+    downloadError: 'Please check your network and JSON file validity',
   },
 }

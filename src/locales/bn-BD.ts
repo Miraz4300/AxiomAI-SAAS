@@ -98,7 +98,7 @@ export default {
     statisticsPeriodCurrentMonth: 'বর্তমান মাস',
     statisticsPeriodLast30Days: 'শেষ ৩০ দিন',
     statisticsPrompt: 'প্রম্পট',
-    statisticsCompletion: 'উত্তর',
+    statisticsCompletion: 'প্রতিক্রিয়া',
     statisticsTotal: 'মোট',
     smtpHost: 'Host',
     smtpPort: 'Port',
@@ -144,7 +144,7 @@ export default {
     importError: 'মূল মান অমিল',
     importRepeatTitle: 'শিরোনাম বারবার এড়িয়ে গেছে: {msg}',
     importRepeatContent: 'বিষয়বস্তু বারবার এড়িয়ে গেছে: {msg}',
-    onlineImportWarning: 'দ্রষ্টব্য: দয়া করে JSON ফাইলের উৎস পরীক্ষা করুন!',
-    downloadError: 'অনুগ্রহ করে নেটওয়ার্ক স্থিতি এবং JSON ফাইলের বৈধতা পরীক্ষা করুন',
+    onlineImportWarning: 'দ্রষ্টব্য: কেবলমাত্র JSON ফাইল ফরম্যাট সমর্থন করে। অনুগ্রহ করে JSON ফাইলের url প্রবেশ করুন!',
+    downloadError: 'অনুগ্রহ করে আপনার নেটওয়ার্ক এবং JSON ফাইলের বৈধতা পরীক্ষা করুন',
   },
 }

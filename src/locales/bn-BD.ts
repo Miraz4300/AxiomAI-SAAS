@@ -128,6 +128,7 @@ export default {
     auditBaiduLabelLink: 'Goto Label Detail',
     auditCustomizeEnabled: 'Customize',
     auditCustomizeWords: 'Sensitive Words',
+    accessTokenExpiredTime: 'Expired Time',
   },
   store: {
     siderButton: 'প্রম্পট স্টোর',

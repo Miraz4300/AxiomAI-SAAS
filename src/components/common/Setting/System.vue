@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { onMounted, ref, watch } from 'vue'
-import { NButton, NInput, NSelect, NSpin, useMessage } from 'naive-ui'
+import { NButton, NInput, NSelect, NSpin, NTag, useMessage } from 'naive-ui'
 import { ConfigState } from './model'
 import { fetchChatConfig, fetchUpdateBaseSetting } from '@/api'
 import { t } from '@/locales'
@@ -27,9 +27,14 @@ const chatModelOptions = [
   'gpt-4-0314',
   'gpt-4-32k',
   'gpt-4-32k-0314',
+  'text-davinci-002-render-sha-mobile',
+  'gpt-4-mobile',
 ].map((model: string) => {
+  let label = model
+  if (model === 'text-davinci-002-render-sha-mobile')
+    label = 'gpt-3.5-mobile'
   return {
-    label: model,
+    label,
     key: model,
     value: model,
   }
@@ -83,7 +88,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.apiModel') }}</span>
           <div class="flex-1">
             <NSelect
-              style="width: 240px"
+              style="width: 444px"
               :value="config.apiModel"
               :options="apiModelOptions"
               @update-value="(val) => { config.apiModel = val }"
@@ -110,8 +115,17 @@ onMounted(() => {
           <div class="flex-1">
             <NInput :value="config.accessToken" placeholder="" @input="(val) => { config.accessToken = val }" />
           </div>
+        </div>
+        <div v-if="!isChatGPTAPI" class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.accessTokenExpiredTime') }}</span>
+          <div class="flex-1">
+            {{ config.accessTokenExpiredTime }}
+            <NTag v-if="config.accessTokenExpiredTime && config.accessTokenExpiredTime !== '-' && new Date(config.accessTokenExpiredTime as string) < new Date()" :bordered="false" type="warning">
+              {{ new Date(config.accessTokenExpiredTime as string) > new Date() ? '' : 'Expired' }}
+            </NTag>
+          </div>
           <p>
-            <a target="_blank" href="https://chat.openai.com/api/auth/session">Get Token</a>
+            <a target="_blank" href="https://chat.openai.com/api/auth/session">Goto Refresh Token</a>
           </p>
         </div>
         <div v-if="!isChatGPTAPI" class="flex items-center space-x-4">

@@ -127,6 +127,25 @@ async function handlePreviousResponse(next: number) {
       </p>
       <p v-else class="text-xs text-neutral-500 dark:text-gray-500" :class="[inversion ? 'text-right' : 'text-left']">
         <NSpace size="small">
+          {{ new Date(dateTime as string).toLocaleString() }}
+          <template v-if="usage">
+            <NPopover trigger="hover">
+              <template #trigger>
+                <span>
+                  <span>[</span>
+                  <span>{{ usage.estimated ? '' : '' }}</span>
+                  <span>{{ usage.total_tokens }} Tokens</span>
+                  <span>]</span>
+                </span>
+              </template>
+              <span class="text-xs">
+                {{ usage.estimated ? t('chat.usageEstimate') : '' }}
+                {{ t('chat.usagePrompt') }} {{ usage.prompt_tokens }}
+                + {{ t('chat.usageResponse') }} {{ usage.completion_tokens }}
+                = {{ t('chat.usageTotal') }} {{ usage.total_tokens }}
+              </span>
+            </NPopover>
+          </template>
           <NButtonGroup v-if="!inversion && responseCount && responseCount > 1">
             <NButton
               style="cursor: pointer;"
@@ -145,25 +164,6 @@ async function handlePreviousResponse(next: number) {
             </NButton>
           </NButtonGroup>
         </NSpace>
-        {{ new Date(dateTime as string).toLocaleString() }}
-        <template v-if="usage">
-          <NPopover trigger="hover">
-            <template #trigger>
-              <span>
-                <span>[</span>
-                <span>{{ usage.estimated ? '' : '' }}</span>
-                <span>{{ usage.total_tokens }} Tokens</span>
-                <span>]</span>
-              </span>
-            </template>
-            <span class="text-xs">
-              {{ usage.estimated ? t('chat.usageEstimate') : '' }}
-              {{ t('chat.usagePrompt') }} {{ usage.prompt_tokens }}
-              + {{ t('chat.usageResponse') }} {{ usage.completion_tokens }}
-              = {{ t('chat.usageTotal') }} {{ usage.total_tokens }}
-            </span>
-          </NPopover>
-        </template>
       </p>
       <div
         class="flex items-end gap-1 mt-2"

@@ -122,29 +122,12 @@ async function handlePreviousResponse(next: number) {
       <AvatarComponent :image="inversion" />
     </div>
     <div class="overflow-hidden text-sm " :class="[inversion ? 'items-end' : 'items-start']">
-      <p v-if="inversion" class="text-xs text-gray-500" :class="[inversion ? 'text-right' : 'text-left']">
+      <p v-if="inversion" class="text-xs text-neutral-500 dark:text-gray-500" :class="[inversion ? 'text-right' : 'text-left']">
         {{ new Date(dateTime as string).toLocaleString() }}
       </p>
-      <p v-else class="text-xs text-gray-500" :class="[inversion ? 'text-right' : 'text-left']">
-        <NSpace>
+      <p v-else class="text-xs text-neutral-500 dark:text-gray-500" :class="[inversion ? 'text-right' : 'text-left']">
+        <NSpace size="small">
           {{ new Date(dateTime as string).toLocaleString() }}
-          <NButtonGroup v-if="!inversion && responseCount && responseCount > 1">
-            <NButton
-              style="cursor: pointer;"
-              :disabled="indexRef === 1"
-              @click="handlePreviousResponse(-1)"
-            >
-              <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="5 -5 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6" /></svg>
-            </NButton>
-            <span class="text-xs text-gray-500"> {{ indexRef }} / {{ responseCount }}</span>
-            <NButton
-              style="cursor: pointer;"
-              :disabled="indexRef === responseCount"
-              @click="handlePreviousResponse(1)"
-            >
-              <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="-5 -5 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6" /></svg>
-            </NButton>
-          </NButtonGroup>
           <template v-if="usage">
             <NPopover trigger="hover">
               <template #trigger>
@@ -163,6 +146,23 @@ async function handlePreviousResponse(next: number) {
               </span>
             </NPopover>
           </template>
+          <NButtonGroup v-if="!inversion && responseCount && responseCount > 1">
+            <NButton
+              style="cursor: pointer;"
+              :disabled="indexRef === 1"
+              @click="handlePreviousResponse(-1)"
+            >
+              <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="5 -5 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6" /></svg>
+            </NButton>
+            <span class="text-xs text-neutral-500 dark:text-gray-500"> {{ indexRef }} / {{ responseCount }}</span>
+            <NButton
+              style="cursor: pointer;"
+              :disabled="indexRef === responseCount"
+              @click="handlePreviousResponse(1)"
+            >
+              <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="-5 -5 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6" /></svg>
+            </NButton>
+          </NButtonGroup>
         </NSpace>
       </p>
       <div

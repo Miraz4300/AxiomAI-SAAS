@@ -91,6 +91,10 @@ export async function getChatRooms(userId: string) {
   return rooms
 }
 
+export async function getChatRoom(userId: string, roomId: number) {
+  return await roomCol.findOne({ userId, roomId, status: { $ne: Status.Deleted } }) as ChatRoom
+}
+
 export async function existsChatRoom(userId: string, roomId: number) {
   const room = await roomCol.findOne({ roomId, userId })
   return !!room

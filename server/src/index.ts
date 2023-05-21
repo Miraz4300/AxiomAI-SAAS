@@ -64,7 +64,6 @@ router.get('/chatrooms', auth, async (req, res) => {
         uuid: r.roomId,
         title: r.title,
         isEdit: false,
-        prompt: r.prompt,
       })
     })
     res.send({ status: 'Success', message: null, data: result })

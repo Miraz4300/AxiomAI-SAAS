@@ -21,6 +21,8 @@ export class UserInfo {
   avatar?: string
   description?: string
   updateTime?: string
+  config?: UserConfig
+  root?: boolean
   constructor(email: string, password: string) {
     this.name = email
     this.email = email
@@ -29,8 +31,16 @@ export class UserInfo {
     this.createTime = new Date().toLocaleString()
     this.verifyTime = null
     this.updateTime = new Date().toLocaleString()
+    this.root = false
   }
 }
+
+export class UserConfig {
+  chatModel: CHATMODEL
+}
+
+// https://platform.openai.com/docs/models/overview
+export type CHATMODEL = 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-32k' | 'gpt-4-32k-0314' | 'ext-davinci-002-render-sha-mobile' | 'gpt-4-mobile' | 'gpt-4-browsing'
 
 export class ChatRoom {
   _id: ObjectId
@@ -126,7 +136,6 @@ export class Config {
     public accessToken?: string,
     public apiBaseUrl?: string,
     public apiModel?: string,
-    public chatModel?: string,
     public reverseProxy?: string,
     public socksProxy?: string,
     public socksAuth?: string,

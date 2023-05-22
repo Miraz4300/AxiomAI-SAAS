@@ -4,7 +4,7 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
-import { NAutoComplete, NButton, NInput, NSpin, useDialog, useMessage } from 'naive-ui'
+import { NAutoComplete, NButton, NInput, NSelect, NSpin, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
@@ -13,10 +13,12 @@ import { useUsingContext } from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useAuthStore, useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess, fetchChatResponseoHistory } from '@/api'
+import { useAuthStore, useChatStore, usePromptStore, useUserStore } from '@/store'
+import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchUpdateUserChatModel } from '@/api'
 import { t } from '@/locales'
 import { debounce } from '@/utils/functions/debounce'
+import { UserConfig } from '@/components/common/Setting/model'
+import type { CHATMODEL } from '@/components/common/Setting/model'
 
 let controller = new AbortController()
 
@@ -26,7 +28,7 @@ const route = useRoute()
 const dialog = useDialog()
 const ms = useMessage()
 const authStore = useAuthStore()
-
+const userStore = useUserStore()
 const chatStore = useChatStore()
 
 const { isMobile } = useBasicLayout()
@@ -536,6 +538,24 @@ const renderOption = (option: { label: string }) => {
   return []
 }
 
+const chatModelOptions = [
+  'gpt-3.5-turbo',
+  'gpt-4',
+  'gpt-4-32k',
+  'text-davinci-002-render-sha-mobile',
+  'gpt-4-mobile',
+  'gpt-4-browsing',
+].map((model: string) => {
+  let label = model
+  if (model === 'text-davinci-002-render-sha-mobile')
+    label = 'gpt-3.5-mobile'
+  return {
+    label,
+    key: model,
+    value: model,
+  }
+})
+
 const placeholderText = computed(() => {
   if (isMobile.value)
     return t('chat.placeholderMobile')
@@ -552,6 +572,14 @@ const footerClass = computed(() => {
     classes = ['sticky', 'left-0', 'bottom-0', 'right-0', 'p-2', 'pr-3', 'overflow-hidden']
   return classes
 })
+
+async function handleSyncChatModel(chatModel: CHATMODEL) {
+  if (userStore.userInfo.config == null)
+    userStore.userInfo.config = new UserConfig()
+  userStore.userInfo.config.chatModel = chatModel
+  userStore.recordState()
+  await fetchUpdateUserChatModel(chatModel)
+}
 
 onMounted(() => {
   firstLoading.value = true
@@ -585,9 +613,22 @@ onUnmounted(() => {
         >
           <NSpin :show="firstLoading">
             <template v-if="!dataSources.length">
-              <div class="flex items-center justify-center mt-2 text-center text-neutral-300">
+              <div class="flex items-center justify-center mt-2 text-neutral-300">
                 <!-- AxiomAI is being introduced. -->
                 <div class="text-gray-800 w-full md:max-w-2xl lg:max-w-3xl md:h-full md:flex md:flex-col px-6 dark:text-gray-100">
+                  <!-- Model Selection -->
+                  <div style="display: flex; justify-content: center;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                      <SvgIcon style="width: 30px; height: 30px; margin-right: 8px;" class="spin-on-hover" icon="ri:openai-fill" />
+                      <NSelect
+                        style="width: 200px"
+                        :value="userStore.userInfo.config.chatModel"
+                        :options="chatModelOptions"
+                        @update-value="(val) => handleSyncChatModel(val)"
+                      />
+                    </div>
+                  </div>
+                  <!-- Model Selection End -->
                   <h1 class="text-4xl font-semibold text-center mt-6 sm:mt-[20vh] ml-auto mr-auto mb-10 sm:mb-16 flex gap-2 items-center justify-center">
                     AxiomAI
                   </h1><div class="md:flex items-start text-center gap-3.5">
@@ -650,7 +691,7 @@ onUnmounted(() => {
                   @response-history="(ev) => onResponseHistory(index, ev)"
                 />
                 <div class="sticky bottom-0 left-0 flex justify-center">
-                  <NButton v-if="loading" type="warning" @click="handleStop">
+                  <NButton v-if="loading" ghost @click="handleStop">
                     <template #icon>
                       <SvgIcon icon="ri:stop-circle-line" />
                     </template>
@@ -712,3 +753,18 @@ onUnmounted(() => {
     </footer>
   </div>
 </template>
+
+<style>
+.spin-on-hover:hover {
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

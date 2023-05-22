@@ -4,10 +4,10 @@ import * as dotenv from 'dotenv'
 import { ObjectId } from 'mongodb'
 import type { RequestProps } from './types'
 import type { ChatContext, ChatMessage } from './chatgpt'
-import { chatConfig, chatReplyProcess, containsSensitiveWords, initApi, initAuditService } from './chatgpt'
+import { chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './chatgpt'
 import { auth } from './middleware/auth'
 import { clearConfigCache, getCacheConfig, getOriginConfig } from './storage/config'
-import type { AuditConfig, ChatInfo, ChatOptions, Config, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
+import type { AuditConfig, CHATMODEL, ChatInfo, ChatOptions, Config, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
 import { Status } from './storage/model'
 import {
   clearChat,
@@ -24,13 +24,16 @@ import {
   getUser,
   getUserById,
   getUserStatisticsByDay,
+  getUsers,
   insertChat,
   insertChatUsage,
   renameChatRoom,
   updateChat,
   updateConfig,
+  updateUserChatModel,
   updateUserInfo,
   updateUserPassword,
+  updateUserStatus,
   verifyUser,
 } from './storage/mongo'
 import { limiter } from './middleware/limiter'
@@ -347,6 +350,8 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
   let message: ChatInfo
   try {
     const config = await getCacheConfig()
+    const userId = req.headers.userId.toString()
+    const user = await getUserById(userId)
     if (config.auditConfig.enabled || config.auditConfig.customizeEnabled) {
       const userId = req.headers.userId.toString()
       const user = await getUserById(userId)
@@ -385,6 +390,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
       },
       temperature,
       top_p,
+      chatModel: user.config.chatModel,
     })
     // return the whole response including usage
     res.write(`\n${JSON.stringify(result.data)}`)
@@ -543,6 +549,7 @@ router.post('/user-login', async (req, res) => {
       description: user.description,
       userId: user._id,
       root: username.toLowerCase() === process.env.ROOT_USER,
+      config: user.config,
     }, config.siteConfig.loginSalt.trim())
     res.send({ status: 'Success', message: 'Login successful', data: { token } })
   }
@@ -604,6 +611,45 @@ router.post('/user-info', auth, async (req, res) => {
   }
 })
 
+router.post('/user-chat-model', auth, async (req, res) => {
+  try {
+    const { chatModel } = req.body as { chatModel: CHATMODEL }
+    const userId = req.headers.userId.toString()
+
+    const user = await getUserById(userId)
+    if (user == null || user.status !== Status.Normal)
+      throw new Error('User does not exist.')
+    await updateUserChatModel(userId, chatModel)
+    res.send({ status: 'Success', message: 'Update successfully' })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.get('/users', rootAuth, async (req, res) => {
+  try {
+    const page = +req.query.page
+    const size = +req.query.size
+    const data = await getUsers(page, size)
+    res.send({ status: 'Success', message: 'Get successfully', data })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/user-status', rootAuth, async (req, res) => {
+  try {
+    const { userId, status } = req.body as { userId: string; status: Status }
+    await updateUserStatus(userId, status)
+    res.send({ status: 'Success', message: 'Update successfully' })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
 router.post('/verify', async (req, res) => {
   try {
     const { token } = req.body as { token: string }
@@ -654,7 +700,7 @@ router.post('/verifyadmin', async (req, res) => {
 
 router.post('/setting-base', rootAuth, async (req, res) => {
   try {
-    const { apiKey, apiModel, chatModel, apiBaseUrl, accessToken, timeoutMs, reverseProxy, socksProxy, socksAuth, httpsProxy } = req.body as Config
+    const { apiKey, apiModel, apiBaseUrl, accessToken, timeoutMs, reverseProxy, socksProxy, socksAuth, httpsProxy } = req.body as Config
 
     if (apiModel === 'ChatGPTAPI' && !isNotEmptyString(apiKey))
       throw new Error('Missing OPENAI_API_KEY environment variable.')
@@ -664,7 +710,6 @@ router.post('/setting-base', rootAuth, async (req, res) => {
     const thisConfig = await getOriginConfig()
     thisConfig.apiKey = apiKey
     thisConfig.apiModel = apiModel
-    thisConfig.chatModel = chatModel
     thisConfig.apiBaseUrl = apiBaseUrl
     thisConfig.accessToken = accessToken
     thisConfig.reverseProxy = reverseProxy
@@ -674,7 +719,6 @@ router.post('/setting-base', rootAuth, async (req, res) => {
     thisConfig.httpsProxy = httpsProxy
     await updateConfig(thisConfig)
     clearConfigCache()
-    initApi()
     const response = await chatConfig()
     res.send({ status: 'Success', message: 'Successfully', data: response.data })
   }

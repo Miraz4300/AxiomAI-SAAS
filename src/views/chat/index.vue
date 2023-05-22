@@ -538,21 +538,19 @@ const renderOption = (option: { label: string }) => {
   return []
 }
 
+const disabledValues = ['gpt-4', 'gpt-4-browsing']
 const chatModelOptions = [
   'gpt-3.5-turbo',
+  'gpt-3.5-turbo-0301',
   'gpt-4',
-  'gpt-4-32k',
-  'text-davinci-002-render-sha-mobile',
-  'gpt-4-mobile',
   'gpt-4-browsing',
-].map((model: string) => {
-  let label = model
-  if (model === 'text-davinci-002-render-sha-mobile')
-    label = 'gpt-3.5-mobile'
+].map((model) => {
+  const label = model
   return {
     label,
     key: model,
     value: model,
+    disabled: disabledValues.includes(model), // Check if the current model is in the disabledValues array
   }
 })
 
@@ -619,7 +617,7 @@ onUnmounted(() => {
                   <!-- Model Selection -->
                   <div style="display: flex; justify-content: center;">
                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                      <SvgIcon style="width: 30px; height: 30px; margin-right: 8px;" class="spin-on-hover" icon="ri:openai-fill" />
+                      <SvgIcon style="width: 30px; height: 30px; margin-right: 6px;" class="spin-on-hover" icon="ri:openai-fill" />
                       <NSelect
                         style="width: 200px"
                         :value="userStore.userInfo.config.chatModel"

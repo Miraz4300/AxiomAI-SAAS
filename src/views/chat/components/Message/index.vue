@@ -53,7 +53,7 @@ const options = computed(() => {
     {
       label: t('chat.copy'),
       key: 'copyText',
-      icon: iconRender({ icon: 'ri:file-copy-2-line' }),
+      icon: iconRender({ icon: 'ri:file-copy-line' }),
     },
     {
       label: t('common.delete'),
@@ -66,7 +66,7 @@ const options = computed(() => {
     common.unshift({
       label: asRawText.value ? t('chat.preview') : t('chat.showRawText'),
       key: 'toggleRenderType',
-      icon: iconRender({ icon: asRawText.value ? 'ic:outline-code-off' : 'ic:outline-code' }),
+      icon: iconRender({ icon: asRawText.value ? 'ri:file-word-line' : 'ri:file-code-line' }),
     })
   }
 
@@ -122,10 +122,10 @@ async function handlePreviousResponse(next: number) {
       <AvatarComponent :image="inversion" />
     </div>
     <div class="overflow-hidden text-sm " :class="[inversion ? 'items-end' : 'items-start']">
-      <p v-if="inversion" class="text-xs text-neutral-500 dark:text-gray-500" :class="[inversion ? 'text-right' : 'text-left']">
+      <p v-if="inversion" class="text-xs text-neutral-500 dark:text-[#A6AEB9]" :class="[inversion ? 'text-right' : 'text-left']">
         {{ new Date(dateTime as string).toLocaleString() }}
       </p>
-      <p v-else class="text-xs text-neutral-500 dark:text-gray-500" :class="[inversion ? 'text-right' : 'text-left']">
+      <p v-else class="text-xs text-neutral-500 dark:text-[#A6AEB9]" :class="[inversion ? 'text-right' : 'text-left']">
         <NSpace size="small">
           {{ new Date(dateTime as string).toLocaleString() }}
           <template v-if="usage">
@@ -154,7 +154,7 @@ async function handlePreviousResponse(next: number) {
             >
               <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="5 -5 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6" /></svg>
             </NButton>
-            <span class="text-xs text-neutral-500 dark:text-gray-500"> {{ indexRef }} / {{ responseCount }}</span>
+            <span class="text-xs text-neutral-500 dark:text-[#A6AEB9]"> {{ indexRef }} / {{ responseCount }}</span>
             <NButton
               style="cursor: pointer;"
               :disabled="indexRef === responseCount"

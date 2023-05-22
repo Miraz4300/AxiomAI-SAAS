@@ -8,6 +8,7 @@ import About from './About.vue'
 import System from './System.vue'
 import Mail from './Mail.vue'
 import Audit from './Audit.vue'
+import User from './User.vue'
 import Site from './Site.vue'
 import { SvgIcon } from '@/components/common'
 import { useAuthStore, useUserStore } from '@/store'
@@ -47,7 +48,7 @@ const show = computed({
       <NTabs v-model:value="active" type="line" animated>
         <NTabPane name="General" tab="General">
           <template #tab>
-            <SvgIcon class="text-lg" icon="mdi:account-cog-outline" />
+            <SvgIcon class="text-lg" icon="mdi:account-circle-outline" />
             <span class="ml-2">{{ $t('setting.general') }}</span>
           </template>
           <div class="min-h-[100px]">
@@ -99,6 +100,13 @@ const show = computed({
             <span class="ml-2">{{ $t('setting.auditConfig') }}</span>
           </template>
           <Audit />
+        </NTabPane>
+        <NTabPane name="UserConfig" tab="UserConfig">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="mdi:database-cog-outline" />
+            <span class="ml-2">{{ $t('setting.userConfig') }}</span>
+          </template>
+          <User />
         </NTabPane>
         <NTabPane v-if="userStore.userInfo.root" name="SiteConfig" tab="SiteConfig">
           <template #tab>

@@ -63,6 +63,9 @@ export default {
     usagePrompt: 'Prompt:',
     usageResponse: 'Response:',
     usageTotal: 'Total token cost:',
+    deleteUser: 'Delete User',
+    deleteUserConfirm: 'Are you sure to delete this user?',
+    verifiedUser: 'Verified User',
   },
   setting: {
     setting: 'সেটিংস',
@@ -74,6 +77,7 @@ export default {
     siteConfig: 'Site',
     mailConfig: 'Mail',
     auditConfig: 'Audit',
+    userConfig: 'Users',
     avatarLink: 'অবতার',
     name: 'নাম',
     description: 'বর্ণনা',

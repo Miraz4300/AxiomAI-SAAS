@@ -89,7 +89,7 @@ async function chatReplyProcess(options: RequestOptions) {
   const config = await getCacheConfig()
   const model = options.chatModel
   const { message, lastContext, process, temperature, top_p } = options
-  const systemMessage = 'Your name is AxiomAI, a language model based on the GPT-3.5 architecture and trained by OpenAI. Follow the user instructions carefully. Respond using markdown.'
+  const systemMessage = 'You\'re AxiomAI, a large language model trained by OpenAI and developed by Miraz Hossain.'
 
   try {
     const timeoutMs = (await getCacheConfig()).timeoutMs

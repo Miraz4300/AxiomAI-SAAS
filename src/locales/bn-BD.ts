@@ -112,7 +112,6 @@ export default {
     registerMails: 'Register Mails',
     apiBaseUrl: 'Api Base Url',
     apiModel: 'Endpoint',
-    chatModel: 'Model',
     accessToken: 'Access Token',
     loginEnabled: 'Login Enabled',
     loginSalt: 'Login Salt',

@@ -5,7 +5,7 @@ import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 import httpsProxyAgent from 'https-proxy-agent'
 import fetch from 'node-fetch'
-import type { AuditConfig } from 'src/storage/model'
+import type { AuditConfig, CHATMODEL } from 'src/storage/model'
 import jwt_decode from 'jwt-decode'
 import dayjs from 'dayjs'
 import type { TextAuditService } from '../utils/textAudit'
@@ -30,19 +30,19 @@ const ErrorCodeMessage: Record<string, string> = {
   500: '[OpenAI] Internal Server Error',
 }
 
-let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 let auditService: TextAuditService
 
-export async function initApi() {
+export async function initApi(chatModel: CHATMODEL) {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
 
   const config = await getCacheConfig()
   if (!config.apiKey && !config.accessToken)
     throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
+  const model = chatModel as string
+
   if (config.apiModel === 'ChatGPTAPI') {
     const OPENAI_API_BASE_URL = config.apiBaseUrl
-    const model = config.chatModel
 
     const options: ChatGPTAPIOptions = {
       apiKey: config.apiKey,
@@ -69,10 +69,9 @@ export async function initApi() {
 
     await setupProxy(options)
 
-    api = new ChatGPTAPI({ ...options })
+    return new ChatGPTAPI({ ...options })
   }
   else {
-    const model = config.chatModel
     const options: ChatGPTUnofficialProxyAPIOptions = {
       accessToken: config.accessToken,
       apiReverseProxyUrl: isNotEmptyString(config.reverseProxy) ? config.reverseProxy : 'https://ai.fakeopen.com/api/conversation',
@@ -82,13 +81,13 @@ export async function initApi() {
 
     await setupProxy(options)
 
-    api = new ChatGPTUnofficialProxyAPI({ ...options })
+    return new ChatGPTUnofficialProxyAPI({ ...options })
   }
 }
 
 async function chatReplyProcess(options: RequestOptions) {
   const config = await getCacheConfig()
-  const model = config.chatModel
+  const model = options.chatModel
   const { message, lastContext, process, temperature, top_p } = options
   const systemMessage = 'Your name is AxiomAI, a language model based on the GPT-3.5 architecture and trained by OpenAI. Follow the user instructions carefully. Respond using markdown.'
 
@@ -108,7 +107,7 @@ async function chatReplyProcess(options: RequestOptions) {
       else
         options = { ...lastContext }
     }
-
+    const api = await initApi(model)
     const response = await api.sendMessage(message, {
       ...options,
       onProgress: (partialResponse) => {
@@ -305,8 +304,6 @@ async function getMessageById(id: string): Promise<ChatMessage | undefined> {
   }
   else { return undefined }
 }
-
-initApi()
 
 export type { ChatContext, ChatMessage }
 

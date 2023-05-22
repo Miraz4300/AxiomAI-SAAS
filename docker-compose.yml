@@ -20,9 +20,6 @@ services:
       
       # ChatGPTAPI or ChatGPTUnofficialProxyAPI
       OPENAI_API_MODEL: 
-
-      # OpenAI API Model - https://platform.openai.com/docs/models | Default: gpt-3.5-turbo
-      OPENAI_CHAT_MODEL: 
       
       # Change this to an `accessToken` extracted from the ChatGPT site's `https://chat.openai.com/api/auth/session` response
       OPENAI_ACCESS_TOKEN: 

@@ -538,22 +538,6 @@ const renderOption = (option: { label: string }) => {
   return []
 }
 
-const disabledValues = ['gpt-4', 'gpt-4-browsing']
-const chatModelOptions = [
-  'gpt-3.5-turbo',
-  'gpt-3.5-turbo-0301',
-  'gpt-4',
-  'gpt-4-browsing',
-].map((model) => {
-  const label = model
-  return {
-    label,
-    key: model,
-    value: model,
-    disabled: disabledValues.includes(model), // Check if the current model is in the disabledValues array
-  }
-})
-
 const placeholderText = computed(() => {
   if (isMobile.value)
     return t('chat.placeholderMobile')
@@ -621,7 +605,8 @@ onUnmounted(() => {
                       <NSelect
                         style="width: 200px"
                         :value="userStore.userInfo.config.chatModel"
-                        :options="chatModelOptions"
+                        :options="authStore.session?.chatModels"
+                        :disabled="!!authStore.session?.auth && !authStore.token"
                         @update-value="(val) => handleSyncChatModel(val)"
                       />
                     </div>

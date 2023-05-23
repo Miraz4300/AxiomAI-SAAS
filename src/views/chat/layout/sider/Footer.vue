@@ -1,11 +1,15 @@
 <script setup lang='ts'>
 import { defineAsyncComponent, ref } from 'vue'
 import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
-import { useAuthStore } from '@/store'
+import { useAuthStore, useUserStore } from '@/store'
 
 const Setting = defineAsyncComponent(() => import('@/components/common/Setting/index.vue'))
 
+const Admin = defineAsyncComponent(() => import('@/components/admin/index.vue'))
+
 const authStore = useAuthStore()
+
+const userStore = useUserStore()
 
 const show = ref(false)
 
@@ -29,6 +33,7 @@ async function handleLogout() {
         <SvgIcon icon="ep:setting" />
       </span>
     </HoverButton>
-    <Setting v-if="show" v-model:visible="show" />
+    <Setting v-if="!userStore.userInfo.root" v-model:visible="show" />
+    <Admin v-else v-model:visible="show" />
   </footer>
 </template>

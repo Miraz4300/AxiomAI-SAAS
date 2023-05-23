@@ -1,6 +1,6 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { get, post } from '@/utils/request'
-import type { AuditConfig, CHATMODEL, ConfigState, MailConfig, SiteConfig, Status } from '@/components/common/Setting/model'
+import type { AuditConfig, CHATMODEL, ConfigState, KeyConfig, MailConfig, SiteConfig, Status, UserRole } from '@/components/common/Setting/model'
 import { useAuthStore, useSettingStore } from '@/store'
 
 export function fetchChatAPI<T = any>(
@@ -147,6 +147,13 @@ export function fetchGetChatRooms<T = any>() {
   })
 }
 
+export function fetchUpdateUserRole<T = any>(userId: string, roles: UserRole[]) {
+  return post<T>({
+    url: '/user-role',
+    data: { userId, roles },
+  })
+}
+
 export function fetchCreateChatRoom<T = any>(title: string, roomId: number) {
   return post<T>({
     url: '/room-create',
@@ -241,5 +248,26 @@ export function fetchUserStatistics<T = any>(start: number, end: number) {
   return post<T>({
     url: '/statistics/by-day',
     data: { start, end },
+  })
+}
+
+export function fetchGetKeys<T = any>(page: number, size: number) {
+  return get<T>({
+    url: '/setting-keys',
+    data: { page, size },
+  })
+}
+
+export function fetchUpdateApiKeyStatus<T = any>(id: string, status: Status) {
+  return post<T>({
+    url: '/setting-key-status',
+    data: { id, status },
+  })
+}
+
+export function fetchUpsertApiKey<T = any>(keyConfig: KeyConfig) {
+  return post<T>({
+    url: '/setting-key-upsert',
+    data: keyConfig,
   })
 }

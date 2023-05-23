@@ -9,6 +9,7 @@ import System from './System.vue'
 import Mail from './Mail.vue'
 import Audit from './Audit.vue'
 import User from './User.vue'
+import Key from './Keys.vue'
 import Site from './Site.vue'
 import { SvgIcon } from '@/components/common'
 import { useAuthStore, useUserStore } from '@/store'
@@ -107,6 +108,13 @@ const show = computed({
             <span class="ml-2">{{ $t('setting.userConfig') }}</span>
           </template>
           <User />
+        </NTabPane>
+        <NTabPane v-if="userStore.userInfo.root" name="KeysConfig" tab="KeysConfig">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="ri-key-2-line" />
+            <span class="ml-2">{{ $t('setting.keysConfig') }}</span>
+          </template>
+          <Key />
         </NTabPane>
         <NTabPane v-if="userStore.userInfo.root" name="SiteConfig" tab="SiteConfig">
           <template #tab>

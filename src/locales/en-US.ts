@@ -66,6 +66,9 @@ export default {
     deleteUser: 'Delete User',
     deleteUserConfirm: 'Are you sure to delete this user?',
     verifiedUser: 'Verified User',
+    deleteKey: 'Delete Key',
+    editKeyButton: 'Edit Key',
+    deleteKeyConfirm: 'Are you sure to delete this key?',
   },
   setting: {
     setting: 'Setting',
@@ -132,6 +135,10 @@ export default {
     auditCustomizeEnabled: 'Customize',
     auditCustomizeWords: 'Sensitive Words',
     accessTokenExpiredTime: 'Expired Time',
+    keysConfig: 'Keys Manager',
+    userRoles: 'User Role',
+    status: 'Status',
+    chatModels: 'Chat Models',
   },
   store: {
     siderButton: 'Prompt Store',

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
 import { NButton, NDataTable, NTag, useDialog, useMessage } from 'naive-ui'
-import { Status } from './model'
+import { Status, UserRole } from './model'
 import { fetchGetUsers, fetchUpdateUserStatus } from '@/api'
 import { t } from '@/locales'
 const ms = useMessage()
@@ -28,11 +28,11 @@ const columns = [
     width: 220,
   },
   {
-    title: 'administrator',
+    title: 'IsAdmin',
     key: 'status',
     width: 200,
     render(row: any) {
-      if (row.root) {
+      if (row.roles.includes(UserRole.Admin)) {
         return h(
           NTag,
           {
@@ -64,7 +64,7 @@ const columns = [
     width: 200,
     render(row: any) {
       const actions: any[] = []
-      if (row.root)
+      if (row.roles.includes(UserRole.Admin))
         return actions
       if (row.status === Status.Normal) {
         actions.push(h(

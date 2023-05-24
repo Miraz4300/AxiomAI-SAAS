@@ -63,7 +63,8 @@ dataSources.value.forEach((item, index) => {
 })
 
 function fillTextarea(text: string) {
-  prompt.value = text
+  if (authStore.session?.auth && authStore.token)
+    prompt.value = text
 }
 
 function handleSubmit() {

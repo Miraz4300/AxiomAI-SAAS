@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@datadog/browser-rum':
+    specifier: ^4.42.2
+    version: 4.42.2
   '@traptitech/markdown-it-katex':
     specifier: ^3.6.0
     version: 3.6.0
@@ -1576,6 +1579,28 @@ packages:
       vue: ^3.0.11
     dependencies:
       vue: 3.2.47
+    dev: false
+
+  /@datadog/browser-core@4.42.2:
+    resolution: {integrity: sha512-LnkcdFyNRpMEuvV1ePfKdgRvYh+VqqAiVRoAmgObcuzdYdIwQSfcJp4GFbBgr5v7uF2uhAp/b96MIyKlqi0Ixg==}
+    dev: false
+
+  /@datadog/browser-rum-core@4.42.2:
+    resolution: {integrity: sha512-I7If2eJvgk820vbsthl7JVLJcqlny5hS3PyoegOZ7p0q+la1WF4GMS0u9RSDsCT4t87pBe70u0TdsmJj3K9HOw==}
+    dependencies:
+      '@datadog/browser-core': 4.42.2
+    dev: false
+
+  /@datadog/browser-rum@4.42.2:
+    resolution: {integrity: sha512-wwAOSYxBF9FAEk1L7YHa2bJHliaqiuk4i6mrzRw5Z5Xa5kzPX0HzIWlZ6FdqtCEstO1A8wcPL96TGPDpoDArFw==}
+    peerDependencies:
+      '@datadog/browser-logs': 4.42.2
+    peerDependenciesMeta:
+      '@datadog/browser-logs':
+        optional: true
+    dependencies:
+      '@datadog/browser-core': 4.42.2
+      '@datadog/browser-rum-core': 4.42.2
     dev: false
 
   /@emotion/hash@0.8.0:

@@ -17,8 +17,8 @@ import { useAuthStore, useChatStore, usePromptStore, useUserStore } from '@/stor
 import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchUpdateUserChatModel } from '@/api'
 import { t } from '@/locales'
 import { debounce } from '@/utils/functions/debounce'
-import { UserConfig } from '@/components/common/Setting/model'
-import type { CHATMODEL } from '@/components/common/Setting/model'
+import { UserConfig } from '@/components/admin/model'
+import type { CHATMODEL } from '@/components/admin/model'
 
 let controller = new AbortController()
 

@@ -73,6 +73,7 @@ export default {
   },
   setting: {
     setting: 'Setting',
+    admin: 'Administrator',
     general: 'General',
     advanced: 'Advanced',
     statistics: 'Statistics',

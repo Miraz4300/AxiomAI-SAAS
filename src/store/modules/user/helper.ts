@@ -1,4 +1,4 @@
-import { UserConfig } from '@/components/common/Setting/model'
+import { UserConfig } from '@/components/admin/model'
 import { ss } from '@/utils/storage'
 
 const LOCAL_NAME = 'userStorage'

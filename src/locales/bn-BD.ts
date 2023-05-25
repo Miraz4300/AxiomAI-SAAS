@@ -73,6 +73,7 @@ export default {
   },
   setting: {
     setting: 'সেটিংস',
+    admin: 'Administrator',
     general: 'সাধারণ',
     advanced: 'অতিরিক্ত',
     statistics: 'পরিসংখ্যান',

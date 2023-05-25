@@ -54,7 +54,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.siteTitle') }}</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.siteTitle" placeholder=""
+              :value="config && config.siteTitle" placeholder="" style="max-width: 30%"
               @input="(val) => { if (config) config.siteTitle = val }"
             />
           </div>
@@ -63,7 +63,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.siteDomain') }}</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.siteDomain" placeholder=""
+              :value="config && config.siteDomain" placeholder="" style="max-width: 30%"
               @input="(val) => { if (config) config.siteDomain = val }"
             />
           </div>
@@ -83,7 +83,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.loginSalt') }}</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.loginSalt" :placeholder="$t('setting.loginSaltTip')"
+              :value="config && config.loginSalt" :placeholder="$t('setting.loginSaltTip')" style="max-width: 30%"
               @input="(val) => { if (config) config.loginSalt = val }"
             />
           </div>
@@ -112,7 +112,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerMails') }}</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.registerMails" placeholder=""
+              :value="config && config.registerMails" placeholder="" style="max-width: 30%"
               @input="(val) => { if (config) config.registerMails = val }"
             />
           </div>

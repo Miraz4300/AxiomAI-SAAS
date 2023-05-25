@@ -202,7 +202,7 @@ onMounted(async () => {
         :columns="columns"
         :data="users"
         :pagination="pagination"
-        :max-height="444"
+        :max-height="650"
         striped
         @update:page="handleGetUsers"
       />

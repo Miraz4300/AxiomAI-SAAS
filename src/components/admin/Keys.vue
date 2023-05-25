@@ -278,7 +278,7 @@ onMounted(async () => {
           <div class="flex-1">
             <NInput
               v-model:value="keyConfig.remark" type="textarea"
-              :autosize="{ minRows: 1, maxRows: 2 }" placeholder=""
+              :autosize="{ minRows: 1, maxRows: 2 }" placeholder="" style="max-width: 50%"
             />
           </div>
         </div>

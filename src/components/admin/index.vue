@@ -24,7 +24,7 @@ interface Emit {
   (e: 'update:visible', visible: boolean): void
 }
 
-const active = ref('General')
+const active = ref('Config')
 
 const show = computed({
   get() {
@@ -37,12 +37,12 @@ const show = computed({
 </script>
 
 <template>
-  <NLayout v-model:show="show">
-    <NLayoutContent>
+  <NLayout position="absolute">
+    <NLayoutContent v-model:show="show">
       <div class="min-h-full p-8">
         <header class="mb-4">
           <h2 class="mb-2 text-2xl font-bold text-black dark:text-white">
-            Admin Settings
+            Administrator Settings
           </h2>
         </header><main>
           <div>

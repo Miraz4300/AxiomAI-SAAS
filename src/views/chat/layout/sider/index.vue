@@ -1,19 +1,19 @@
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
-import { computed, ref, watch } from 'vue'
-import { NButton, NLayoutSider } from 'naive-ui'
+import { computed, watch } from 'vue'
+import { NButton, NLayoutSider, NPopconfirm } from 'naive-ui'
 import List from './List.vue'
 import Footer from './Footer.vue'
 import { useAppStore, useAuthStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { PromptStore } from '@/components/common'
+import { fetchClearAllChat } from '@/api'
+import { SvgIcon } from '@/components/common'
 
 const appStore = useAppStore()
 const authStore = useAuthStore()
 const chatStore = useChatStore()
 
 const { isMobile } = useBasicLayout()
-const show = ref(false)
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
@@ -21,6 +21,12 @@ async function handleAdd() {
   await chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
   if (isMobile.value)
     appStore.setSiderCollapsed(true)
+}
+
+async function clearData(): Promise<void> {
+  await fetchClearAllChat()
+  localStorage.removeItem('chatStorage')
+  location.reload()
 }
 
 function handleUpdateCollapsed() {
@@ -81,9 +87,17 @@ watch(
           <List />
         </div>
         <div class="p-4">
-          <NButton block @click="show = true">
-            {{ $t('store.siderButton') }}
-          </NButton>
+          <NPopconfirm placement="top" @positive-click="clearData">
+            <template #trigger>
+              <NButton block :disabled="!!authStore.session?.auth && !authStore.token">
+                <template #icon>
+                  <SvgIcon icon="ri:close-circle-line" />
+                </template>
+                {{ $t('common.clear') }}
+              </NButton>
+            </template>
+            {{ $t('chat.clearHistoryConfirm') }}
+          </NPopconfirm>
         </div>
       </main>
       <Footer />
@@ -92,5 +106,4 @@ watch(
   <template v-if="isMobile">
     <div v-show="!collapsed" class="fixed inset-0 z-40 w-full h-full bg-black/40" @click="handleUpdateCollapsed" />
   </template>
-  <PromptStore v-model:visible="show" />
 </template>

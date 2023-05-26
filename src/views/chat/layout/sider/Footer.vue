@@ -1,11 +1,13 @@
 <script setup lang='ts'>
 import { defineAsyncComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
 import { useAuthStore, useUserStore } from '@/store'
+import { ADMIN_ROUTE } from '@/constants/routes'
 
 const Setting = defineAsyncComponent(() => import('@/components/common/Setting/index.vue'))
 
-const Admin = defineAsyncComponent(() => import('@/components/admin/index.vue'))
+const router = useRouter()
 
 const authStore = useAuthStore()
 
@@ -33,7 +35,11 @@ async function handleLogout() {
         <SvgIcon icon="ep:setting" />
       </span>
     </HoverButton>
-    <Setting v-if="!userStore.userInfo.root" v-model:visible="show" />
-    <Admin v-else v-model:visible="show" />
+    <HoverButton v-if="userStore.userInfo.root" :tooltip="$t('setting.admin')" @click="router.push(ADMIN_ROUTE)">
+      <span class="text-xl text-black dark:text-white">
+        <SvgIcon icon="mdi:administrator" />
+      </span>
+    </HoverButton>
+    <Setting v-if="show" v-model:visible="show" />
   </footer>
 </template>

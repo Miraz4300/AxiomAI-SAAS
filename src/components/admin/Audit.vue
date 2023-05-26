@@ -78,7 +78,7 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               :value="config && config.sensitiveWords"
-              placeholder="One word per line"
+              placeholder="One word per line" style="max-width: 30%"
               type="textarea"
               :autosize="{ minRows: 1, maxRows: 4 }"
               @input="(val) => { if (config) config.sensitiveWords = val }"
@@ -110,7 +110,7 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               :value="config && config.options && config.options.apiKey"
-              placeholder=""
+              placeholder="" style="max-width: 30%"
               @input="(val) => { if (config && config.options) config.options.apiKey = val }"
             />
           </div>
@@ -120,7 +120,7 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               :value="config && config.options && config.options.apiSecret"
-              placeholder=""
+              placeholder="" style="max-width: 30%"
               @input="(val) => { if (config && config.options) config.options.apiSecret = val }"
             />
           </div>
@@ -130,20 +130,20 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               :value="config && config.options && config.options.label"
-              :placeholder="$t('setting.auditBaiduLabelTip')"
+              :placeholder="$t('setting.auditBaiduLabelTip')" style="max-width: 30%"
               @input="(val) => { if (config && config.options) config.options.label = val }"
             />
+            <p v-if="config && config.provider === 'baidu'">
+              <a target="_blank" href="https://ai.baidu.com/ai-doc/ANTIPORN/Nk3h6xbb2#%E7%BB%86%E5%88%86%E6%A0%87%E7%AD%BE%E5%AF%B9%E7%85%A7%E8%A1%A8">{{ $t('setting.auditBaiduLabelLink') }}</a>
+            </p>
           </div>
-          <p v-if="config && config.provider === 'baidu'">
-            <a target="_blank" href="https://ai.baidu.com/ai-doc/ANTIPORN/Nk3h6xbb2#%E7%BB%86%E5%88%86%E6%A0%87%E7%AD%BE%E5%AF%B9%E7%85%A7%E8%A1%A8">{{ $t('setting.auditBaiduLabelLink') }}</a>
-          </p>
         </div>
         <div v-if="config && (config.enabled || config.customizeEnabled)" class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditTest') }}</span>
           <div class="flex-1">
             <NInput
               v-model:value="testText"
-              placeholder=""
+              placeholder="" style="max-width: 30%"
             />
           </div>
         </div>

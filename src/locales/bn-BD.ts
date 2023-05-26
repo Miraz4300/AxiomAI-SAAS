@@ -140,6 +140,7 @@ export default {
     userRoles: 'User Role',
     status: 'Status',
     chatModels: 'Chat Models',
+    remark: 'Remark',
   },
   store: {
     siderButton: 'প্রম্পট স্টোর',

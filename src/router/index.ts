@@ -20,6 +20,15 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('@/components/admin/index.vue'),
+    meta: {
+      requiresAdmin: true,
+    },
+  },
+
+  {
     path: '/404',
     name: '404',
     component: () => import('@/views/exception/404/index.vue'),

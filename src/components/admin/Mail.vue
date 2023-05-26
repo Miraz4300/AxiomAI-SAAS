@@ -62,7 +62,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.smtpHost') }}</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.smtpHost" placeholder=""
+              :value="config && config.smtpHost" placeholder="" style="max-width: 30%"
               @input="(val) => { if (config) config.smtpHost = val }"
             />
           </div>
@@ -72,7 +72,7 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               :value="config && config.smtpPort !== undefined ? String(config.smtpPort) : undefined"
-              placeholder=""
+              placeholder="" style="max-width: 30%"
               @input="(val) => { if (config) config.smtpPort = typeof val === 'string' ? Number(val) : undefined }"
             />
           </div>
@@ -91,7 +91,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.smtpUserName') }}</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.smtpUserName" placeholder=""
+              :value="config && config.smtpUserName" placeholder="" style="max-width: 30%"
               @input="(val) => { if (config) config.smtpUserName = val }"
             />
           </div>
@@ -100,7 +100,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.smtpPassword') }}</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.smtpPassword" placeholder=""
+              :value="config && config.smtpPassword" placeholder="" style="max-width: 30%"
               @input="(val) => { if (config) config.smtpPassword = val }"
             />
           </div>

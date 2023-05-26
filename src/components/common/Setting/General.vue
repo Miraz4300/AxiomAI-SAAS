@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { NButton, NInput, NPopconfirm, NSelect, useMessage } from 'naive-ui'
+import { NButton, NInput, NSelect, useMessage } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useUserStore } from '@/store'
@@ -8,7 +8,6 @@ import type { UserInfo } from '@/store/modules/user/helper'
 import { getCurrentDate } from '@/utils/functions'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
-import { fetchClearAllChat } from '@/api'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -102,12 +101,6 @@ function importData(event: Event): void {
   reader.readAsText(file)
 }
 
-async function clearData(): Promise<void> {
-  await fetchClearAllChat()
-  localStorage.removeItem('chatStorage')
-  location.reload()
-}
-
 function handleImportButtonClick(): void {
   const fileInput = document.getElementById('fileInput') as HTMLElement
   if (fileInput)
@@ -157,18 +150,6 @@ function handleImportButtonClick(): void {
             </template>
             {{ $t('common.import') }}
           </NButton>
-
-          <NPopconfirm placement="bottom" @positive-click="clearData">
-            <template #trigger>
-              <NButton size="small" type="error" ghost>
-                <template #icon>
-                  <SvgIcon icon="ri:close-circle-line" />
-                </template>
-                {{ $t('common.clear') }}
-              </NButton>
-            </template>
-            {{ $t('chat.clearHistoryConfirm') }}
-          </NPopconfirm>
         </div>
       </div>
       <div class="flex items-center space-x-4">

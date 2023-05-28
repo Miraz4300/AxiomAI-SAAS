@@ -508,7 +508,9 @@ const handleSyncChat
     // Brush directly, there is a very small probability of not requesting
     chatStore.syncChat({ uuid: Number(uuid) } as Chat.History, undefined, () => {
       firstLoading.value = false
-      scrollToBottom()
+      const scrollRef = document.querySelector('#scrollRef')
+      if (scrollRef)
+        nextTick(() => scrollRef.scrollTop = scrollRef.scrollHeight)
       if (inputRef.value && !isMobile.value)
         inputRef.value?.focus()
     })

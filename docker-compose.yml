@@ -12,21 +12,6 @@ services:
     environment:
       TZ: Asia/Dhaka
 
-      # ChatGPTAPI or ChatGPTUnofficialProxyAPI
-      OPENAI_API_MODEL: 
-
-      # OpenAI API Base URL | Default: https://api.openai.com | Available: https://api.hypere.app
-      OPENAI_API_BASE_URL: 
-
-      # OpenAI API Key - https://platform.openai.com/overview | When using https://api.hypere.app get api key from https://discord.gg/ftSSNcPQgM
-      OPENAI_API_KEY: 
-
-      # Change this to an `accessToken` extracted from the ChatGPT site's `https://chat.openai.com/api/auth/session` response
-      OPENAI_ACCESS_TOKEN: 
-
-      # Reverse Proxy - Available when using accessToken | Default: https://ai.fakeopen.com/api/conversation
-      API_REVERSE_PROXY: 
-
       # Timeout in milliseconds (optional). Which will also abort the underlying HTTP request Default: 100000
       TIMEOUT_MS: 
 

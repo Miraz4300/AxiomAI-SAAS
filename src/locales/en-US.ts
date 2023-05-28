@@ -35,10 +35,11 @@ export default {
     passwordConfirm: 'Confirm Password',
     resetPassword: 'Reset Password',
     resetPasswordMail: 'Submit',
+    auditTip: 'Sensitive words do not take effect on Admin.',
   },
   chat: {
     newChatButton: 'New Chat',
-    placeholderText: 'Ask me anything...(Shift + Enter = line break)',
+    placeholderText: 'Ask me anything...(Shift + Enter = line break, "/" to trigger prompts)',
     placeholderMobile: 'Ask me anything...',
     copy: 'Copy',
     copied: 'Copied!',

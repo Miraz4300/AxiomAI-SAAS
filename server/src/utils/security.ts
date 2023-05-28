@@ -15,7 +15,7 @@ export function md5(input: string) {
 export async function getUserVerifyUrl(username: string) {
   const sign = getUserVerify(username)
   const config = await getCacheConfig()
-  return `${config.siteConfig.siteDomain}/#/chat/?verifytoken=${sign}`
+  return `${config.siteConfig.siteDomain}/chat/?verifytoken=${sign}`
 }
 
 function getUserVerify(username: string) {
@@ -47,7 +47,7 @@ export function checkUserVerify(verify: string) {
 export async function getUserVerifyUrlAdmin(username: string) {
   const sign = getUserVerifyAdmin(username)
   const config = await getCacheConfig()
-  return `${config.siteConfig.siteDomain}/#/chat/?verifytokenadmin=${sign}`
+  return `${config.siteConfig.siteDomain}/chat/?verifytokenadmin=${sign}`
 }
 
 function getUserVerifyAdmin(username: string) {
@@ -61,7 +61,7 @@ export function checkUserVerifyAdmin(verify: string) {
 export async function getUserResetPasswordUrl(username: string) {
   const sign = getUserResetPassword(username)
   const config = await getCacheConfig()
-  return `${config.siteConfig.siteDomain}/#/chat/?verifyresetpassword=${sign}`
+  return `${config.siteConfig.siteDomain}/chat/?verifyresetpassword=${sign}`
 }
 
 function getUserResetPassword(username: string) {

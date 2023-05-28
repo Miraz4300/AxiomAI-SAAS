@@ -359,7 +359,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
       const userId = req.headers.userId.toString()
       const user = await getUserById(userId)
       if (!user.roles.includes(UserRole.Admin) && await containsSensitiveWords(config.auditConfig, prompt)) {
-        res.send({ status: 'Fail', message: 'Contains sensitive words', data: null })
+        res.send({ status: 'Fail', message: '**Contains sensitive words**', data: null })
         return
       }
     }

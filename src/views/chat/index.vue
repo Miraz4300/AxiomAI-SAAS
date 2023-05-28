@@ -508,7 +508,9 @@ const handleSyncChat
     // Brush directly, there is a very small probability of not requesting
     chatStore.syncChat({ uuid: Number(uuid) } as Chat.History, undefined, () => {
       firstLoading.value = false
-      scrollToBottom()
+      const scrollRef = document.querySelector('#scrollRef')
+      if (scrollRef)
+        nextTick(() => scrollRef.scrollTop = scrollRef.scrollHeight)
       if (inputRef.value && !isMobile.value)
         inputRef.value?.focus()
     })
@@ -576,9 +578,11 @@ onMounted(() => {
   firstLoading.value = true
   handleSyncChat()
 
-  const chatModels = authStore.session?.chatModels
-  if (chatModels != null && chatModels.filter(d => d.value === userStore.userInfo.config.chatModel).length <= 0)
-    ms.error('The selected model does not exists, please choose another.', { duration: 7000 })
+  if (authStore.token) {
+    const chatModels = authStore.session?.chatModels
+    if (chatModels != null && chatModels.filter(d => d.value === userStore.userInfo.config.chatModel).length <= 0)
+      ms.error('The selected model doesn\'t exist, please choose another.', { duration: 4000 })
+  }
 })
 
 watch(() => chatStore.active, (newVal, oldVal) => {

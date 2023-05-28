@@ -1,14 +1,12 @@
 <script setup lang='ts'>
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { NInput, NPopconfirm, NScrollbar, NSpin } from 'naive-ui'
-import { useScroll } from '../../hooks/useScroll'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStoreWithout } from '@/store/modules/auth'
 import { debounce } from '@/utils/functions/debounce'
 
-const { scrollToBottom } = useScroll()
 const { isMobile } = useBasicLayout()
 
 const appStore = useAppStore()
@@ -31,7 +29,11 @@ async function handleSyncChatRoom() {
     // This is not needed here, but when vue renders, the chat may give priority to rendering and other reasons, so the probability is not refreshed
     if (chatStore.active) {
       const uuid = chatStore.active
-      chatStore.syncChat({ uuid } as Chat.History, undefined, scrollToBottom)
+      chatStore.syncChat({ uuid } as Chat.History, undefined, () => {
+        const scrollRef = document.querySelector('#scrollRef')
+        if (scrollRef)
+          nextTick(() => scrollRef.scrollTop = scrollRef.scrollHeight)
+      })
     }
   })
 }

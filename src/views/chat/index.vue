@@ -578,8 +578,8 @@ onMounted(() => {
   firstLoading.value = true
   handleSyncChat()
 
-  const chatModels = authStore.session?.chatModels
   if (authStore.token) {
+    const chatModels = authStore.session?.chatModels
     if (chatModels != null && chatModels.filter(d => d.value === userStore.userInfo.config.chatModel).length <= 0)
       ms.error('The selected model doesn\'t exist, please choose another.', { duration: 4000 })
   }

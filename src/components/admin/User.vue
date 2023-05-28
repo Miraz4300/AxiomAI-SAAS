@@ -204,6 +204,7 @@ onMounted(async () => {
         :pagination="pagination"
         :max-height="650"
         striped
+        :scroll-x="1260"
         @update:page="handleGetUsers"
       />
     </div>

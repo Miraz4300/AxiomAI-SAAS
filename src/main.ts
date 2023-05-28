@@ -23,7 +23,7 @@ async function bootstrap() {
     env: 'prod',
     version: '2.7.0-preview3',
     sessionSampleRate: 100,
-    sessionReplaySampleRate: 20,
+    sessionReplaySampleRate: 100,
     trackUserInteractions: true,
     trackResources: true,
     trackLongTasks: true,

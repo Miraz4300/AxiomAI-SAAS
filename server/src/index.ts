@@ -897,6 +897,7 @@ router.post('/setting-key-status', rootAuth, async (req, res) => {
   try {
     const { id, status } = req.body as { id: string; status: Status }
     await updateApiKeyStatus(id, status)
+    clearApiKeyCache()
     res.send({ status: 'Success', message: 'Update successfully' })
   }
   catch (error) {

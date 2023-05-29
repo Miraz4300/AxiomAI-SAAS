@@ -93,11 +93,13 @@ export class ChatRoom {
   roomId: number
   userId: string
   title: string
+  usingContext: boolean
   status: Status = Status.Normal
   constructor(userId: string, title: string, roomId: number) {
     this.userId = userId
     this.title = title
     this.roomId = roomId
+    this.usingContext = true
   }
 }
 

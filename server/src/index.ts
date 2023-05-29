@@ -31,6 +31,7 @@ import {
   updateApiKeyStatus,
   updateChat,
   updateConfig,
+  updateRoomUsingContext,
   updateUserChatModel,
   updateUserInfo,
   updateUserPassword,
@@ -70,6 +71,7 @@ router.get('/chatrooms', auth, async (req, res) => {
         uuid: r.roomId,
         title: r.title,
         isEdit: false,
+        usingContext: r.usingContext === undefined ? true : r.usingContext,
       })
     })
     res.send({ status: 'Success', message: null, data: result })
@@ -99,6 +101,22 @@ router.post('/room-rename', auth, async (req, res) => {
     const { title, roomId } = req.body as { title: string; roomId: number }
     const room = await renameChatRoom(userId, title, roomId)
     res.send({ status: 'Success', message: null, data: room })
+  }
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Rename error', data: null })
+  }
+})
+
+router.post('/room-context', auth, async (req, res) => {
+  try {
+    const userId = req.headers.userId as string
+    const { using, roomId } = req.body as { using: boolean; roomId: number }
+    const success = await updateRoomUsingContext(userId, roomId, using)
+    if (success)
+      res.send({ status: 'Success', message: 'Saved successfully', data: null })
+    else
+      res.send({ status: 'Fail', message: 'Saved Failed', data: null })
   }
   catch (error) {
     console.error(error)

@@ -24,6 +24,7 @@ declare namespace Chat {
 	  uuid: number
 	  loading?: boolean
 	  all?: boolean
+	  usingContext: boolean
 	}
   
 	interface ChatState {

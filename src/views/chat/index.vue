@@ -9,7 +9,6 @@ import html2canvas from 'html2canvas'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
-import { useUsingContext } from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -35,10 +34,11 @@ const chatStore = useChatStore()
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom, scrollTo } = useScroll()
-const { usingContext, toggleUsingContext } = useUsingContext()
 
 const { uuid } = route.params as { uuid: string }
 
+const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActive)
+const usingContext = computed(() => currentChatHistory?.value?.usingContext ?? true)
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
 
@@ -523,6 +523,17 @@ async function handleScroll(event: any) {
   prevScrollTop = scrollTop
 }
 
+async function handleToggleUsingContext() {
+  if (!currentChatHistory.value)
+    return
+  currentChatHistory.value.usingContext = !currentChatHistory.value.usingContext
+  chatStore.setUsingContext(currentChatHistory.value.usingContext, +uuid)
+  if (currentChatHistory.value.usingContext)
+    ms.success(t('chat.turnOnContext'))
+  else
+    ms.warning(t('chat.turnOffContext'))
+}
+
 // Optimizable section
 // Search option calculation, here using value as an index item, so when there is a duplicate value rendering exception (multiple simultaneous appearance of the selected effect)
 // Ideally it should be the key as the index item, but the official renderOption will have problems, so you need the value inverse renderLabel to achieve
@@ -600,8 +611,7 @@ onUnmounted(() => {
     <HeaderComponent
       v-if="isMobile"
       :using-context="usingContext"
-      @export="handleExport"
-      @toggle-using-context="toggleUsingContext"
+      @export="handleExport" @toggle-using-context="handleToggleUsingContext"
     />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
@@ -717,7 +727,7 @@ onUnmounted(() => {
               <SvgIcon icon="mdi:file-export-outline" />
             </span>
           </HoverButton>
-          <HoverButton v-if="!isMobile" @click="toggleUsingContext">
+          <HoverButton v-if="!isMobile" @click="handleToggleUsingContext">
             <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
               <SvgIcon icon="fluent:brain-circuit-24-filled" />
             </span>

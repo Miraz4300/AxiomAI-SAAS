@@ -1,29 +1,14 @@
 <script setup lang='ts'>
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 import { NAvatar, NButton } from 'naive-ui'
-import { useRoute } from 'vue-router'
 import { useAuthStore, useUserStore } from '@/store'
 import defaultAvatar from '@/assets/avatar.jpg'
 import { isString } from '@/utils/is'
-import Permission from '@/views/chat/layout/Permission.vue'
-import { useBasicLayout } from '@/hooks/useBasicLayout'
 
-const route = useRoute()
 const userStore = useUserStore()
 const authStore = useAuthStore()
 
-const { isMobile } = useBasicLayout()
-
-const showPermission = ref(false)
-const needPermission = computed(() => !!authStore.session?.auth && !authStore.token && (isMobile.value || showPermission.value))
-
 const userInfo = computed(() => userStore.userInfo)
-
-onMounted(async () => {
-  const sign = route.query.verifyresetpassword as string
-  if (sign)
-    showPermission.value = true
-})
 </script>
 
 <template>
@@ -47,13 +32,9 @@ onMounted(async () => {
       </h2>
       <NButton
         v-else tag="a" text
-        @click="showPermission = true"
       >
-        <span v-if="!!authStore.session?.auth && !authStore.token" class="ml-8 font-medium text-sm text-black dark:text-white">
-          {{ $t('common.notLoggedIn') }}
-        </span>
-        <span v-else class="text-sm text-black dark:text-white">
-          {{ authStore .session?.title }}
+        <span class="text-sm text-black dark:text-white">
+          {{ authStore.session?.title }}
         </span>
       </NButton>
       <p class="overflow-hidden text-xs text-neutral-500 text-ellipsis whitespace-nowrap">
@@ -63,6 +44,5 @@ onMounted(async () => {
         />
       </p>
     </div>
-    <Permission :visible="needPermission" />
   </div>
 </template>

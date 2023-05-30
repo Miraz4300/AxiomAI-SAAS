@@ -53,7 +53,7 @@ async function handleVerify(verifytoken: string) {
     router.replace('/')
     setTimeout(() => {
       location.reload()
-    }, 2000)
+    }, 3000)
   }
   catch (error: any) {
     ms.error(error.message ?? 'error')
@@ -76,7 +76,7 @@ async function handleVerifyAdmin(verifytoken: string) {
     router.replace('/')
     setTimeout(() => {
       location.reload()
-    }, 2000)
+    }, 3000)
   }
   catch (error: any) {
     ms.error(error.message ?? 'error')
@@ -122,7 +122,7 @@ async function handleResetPassword() {
     router.replace('/')
     setTimeout(() => {
       location.reload()
-    }, 2000)
+    }, 3000)
   }
   catch (error: any) {
     ms.error(error.message ?? 'error')

@@ -6,6 +6,10 @@ module.exports = {
     './src/**/*.{vue,js,ts,jsx,tsx}',
   ],
   theme: {
+    fontFamily: {
+      logo: ['Consolas', 'sans-serif'],
+      header: ['Arial', 'sans-serif'],
+    },
     extend: {
       animation: {
         blink: 'blink 1.2s infinite steps(1, start)',

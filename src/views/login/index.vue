@@ -43,7 +43,7 @@ onMounted(async () => {
   <AuthLayout>
     <div class="px-4 rounded w-full max-w-lg">
       <header class="mb-8 text-center">
-        <h1 class="font-header text-4xl md:text-4xl font-bold text-slate-700 dark:text-slate-100">
+        <h1 class="font-header text-4xl md:text-4xl font-bold text-slate-700 dark:text-slate-200">
           {{ t('common.welcomeBack') }}
         </h1>
       </header>

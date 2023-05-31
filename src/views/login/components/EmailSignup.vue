@@ -68,7 +68,7 @@ async function handleRegister() {
       />
     </NInputGroup>
     <NButton block type="primary" :disabled="disabled || password !== confirmPassword" :loading="loading" @click="handleRegister">
-      {{ $t('common.createAccount') }}
+      {{ $t('common.signup') }}
     </NButton>
   </div>
 </template>

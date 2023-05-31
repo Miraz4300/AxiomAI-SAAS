@@ -69,7 +69,7 @@ onMounted(async () => {
             type="primary"
             @click="currentTab = 'emailSignup'"
           >
-            {{ t('common.signup') }}
+            {{ t('common.createAccount') }}
           </NButton>
           <NButton
             v-show="currentTab !== 'resetPassword' && currentTab !== 'emailSignup'"

@@ -1,6 +1,6 @@
 # Back-end: AxiomNode
 FROM node:lts-alpine as backend
-RUN npm install pnpm -g
+RUN npm install -g pnpm@latest
 WORKDIR /app
 COPY /server/package.json /app
 COPY /server/pnpm-lock.yaml /app
@@ -10,7 +10,7 @@ RUN pnpm build
 
 # Build Final Image
 FROM node:lts-alpine
-RUN npm install pnpm -g
+RUN npm install -g pnpm@latest
 WORKDIR /app
 COPY /server/package.json /app
 COPY /server/pnpm-lock.yaml /app

@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 import { ObjectId } from 'mongodb'
 import type { RequestProps } from './types'
 import type { ChatContext, ChatMessage } from './chatgpt'
-import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, getRandomApiKey, initAuditService } from './chatgpt'
+import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './chatgpt'
 import { auth, getUserId } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AuditConfig, CHATMODEL, ChatInfo, ChatOptions, Config, KeyConfig, MailConfig, SiteConfig, UsageResponse, UserInfo } from './storage/model'
@@ -40,7 +40,7 @@ import {
   upsertKey,
   verifyUser,
 } from './storage/mongo'
-import { limiter } from './middleware/limiter'
+import { authLimiter, limiter } from './middleware/limiter'
 import { hasAnyRole, isEmail, isNotEmptyString } from './utils/is'
 import { sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
 import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
@@ -412,9 +412,9 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
       temperature,
       top_p,
       chatModel: user.config.chatModel,
-      key: await getRandomApiKey(user, user.config.chatModel),
-      userId,
+      user,
       messageId: message._id.toString(),
+      tryCount: 0,
     })
     // return the whole response including usage
     res.write(`\n${JSON.stringify(result.data)}`)
@@ -462,7 +462,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
       }
     }
     catch (error) {
-      global.console.log(error)
+      global.console.error(error)
     }
   }
 })
@@ -484,7 +484,7 @@ router.post('/chat-abort', [auth, limiter], async (req, res) => {
   }
 })
 
-router.post('/user-register', async (req, res) => {
+router.post('/user-register', authLimiter, async (req, res) => {
   try {
     const { username, password } = req.body as { username: string; password: string }
     const config = await getCacheConfig()
@@ -615,7 +615,7 @@ router.post('/session', async (req, res) => {
   }
 })
 
-router.post('/user-login', async (req, res) => {
+router.post('/user-login', authLimiter, async (req, res) => {
   try {
     const { username, password } = req.body as { username: string; password: string }
     if (!username || !password || !isEmail(username))
@@ -647,7 +647,7 @@ router.post('/user-login', async (req, res) => {
   }
 })
 
-router.post('/user-send-reset-mail', async (req, res) => {
+router.post('/user-send-reset-mail', authLimiter, async (req, res) => {
   try {
     const { username } = req.body as { username: string }
     if (!username || !isEmail(username))
@@ -664,7 +664,7 @@ router.post('/user-send-reset-mail', async (req, res) => {
   }
 })
 
-router.post('/user-reset-password', async (req, res) => {
+router.post('/user-reset-password', authLimiter, async (req, res) => {
   try {
     const { username, password, sign } = req.body as { username: string; password: string; sign: string }
     if (!username || !password || !isEmail(username))
@@ -753,7 +753,7 @@ router.post('/user-role', rootAuth, async (req, res) => {
   }
 })
 
-router.post('/verify', async (req, res) => {
+router.post('/verify', authLimiter, async (req, res) => {
   try {
     const { token } = req.body as { token: string }
     if (!token)
@@ -781,7 +781,7 @@ router.post('/verify', async (req, res) => {
   }
 })
 
-router.post('/verifyadmin', async (req, res) => {
+router.post('/verifyadmin', authLimiter, async (req, res) => {
   try {
     const { token } = req.body as { token: string }
     if (!token)

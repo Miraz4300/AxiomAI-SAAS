@@ -1,18 +1,67 @@
 <script setup lang='ts'>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { NButton, NDivider, NInput, useMessage } from 'naive-ui'
-import { useRouter } from 'vue-router'
-import { fetchLogin } from '@/api'
+import { useRoute, useRouter } from 'vue-router'
+import { fetchLogin, fetchVerify, fetchVerifyAdmin } from '@/api'
 import { useAuthStore } from '@/store'
 
 const ms = useMessage()
+
+const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
+
 const loading = ref(false)
 const username = ref('')
 const password = ref('')
 
 const disabled = computed(() => !username.value.trim() || !password.value.trim() || loading.value)
+
+onMounted(async () => {
+  const verifytoken = route.query.verifytoken as string
+  await handleVerify(verifytoken)
+  const verifytokenadmin = route.query.verifytokenadmin as string
+  await handleVerifyAdmin(verifytokenadmin)
+})
+
+async function handleVerify(verifytoken: string) {
+  if (!verifytoken)
+    return
+  const secretKey = verifytoken.trim()
+
+  try {
+    loading.value = true
+    const result = await fetchVerify(secretKey)
+    ms.success(result.message as string)
+    router.replace('/')
+  }
+  catch (error: any) {
+    ms.error(error.message ?? 'error')
+    authStore.removeToken()
+  }
+  finally {
+    loading.value = false
+  }
+}
+
+async function handleVerifyAdmin(verifytoken: string) {
+  if (!verifytoken)
+    return
+  const secretKey = verifytoken.trim()
+
+  try {
+    loading.value = true
+    await fetchVerifyAdmin(secretKey)
+    ms.success('Activate successfully')
+    router.replace('/')
+  }
+  catch (error: any) {
+    ms.error(error.message ?? 'error')
+  }
+  finally {
+    loading.value = false
+  }
+}
 
 function handlePress(event: KeyboardEvent) {
   if (event.key === 'Enter' && !event.shiftKey) {

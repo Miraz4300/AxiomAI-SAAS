@@ -2,12 +2,10 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { NButton, NDivider, NInput, useMessage } from 'naive-ui'
-import { fetchResetPassword, fetchSendResetMail, fetchVerify, fetchVerifyAdmin } from '@/api'
-import { useAuthStore } from '@/store'
+import { fetchResetPassword, fetchSendResetMail } from '@/api'
 
 const route = useRoute()
 const router = useRouter()
-const authStore = useAuthStore()
 
 const ms = useMessage()
 
@@ -32,59 +30,10 @@ const confirmPasswordStatus = computed(() => {
 })
 
 onMounted(async () => {
-  const verifytoken = route.query.verifytoken as string
-  await handleVerify(verifytoken)
-  const verifytokenadmin = route.query.verifytokenadmin as string
-  await handleVerifyAdmin(verifytokenadmin)
   sign.value = route.query.verifyresetpassword as string
   if (sign.value)
     username.value = sign.value.split('-')[0].split('|')[0]
 })
-
-async function handleVerify(verifytoken: string) {
-  if (!verifytoken)
-    return
-  const secretKey = verifytoken.trim()
-
-  try {
-    loading.value = true
-    const result = await fetchVerify(secretKey)
-    ms.success(result.message as string)
-    router.replace('/')
-    setTimeout(() => {
-      location.reload()
-    }, 3000)
-  }
-  catch (error: any) {
-    ms.error(error.message ?? 'error')
-    authStore.removeToken()
-  }
-  finally {
-    loading.value = false
-  }
-}
-
-async function handleVerifyAdmin(verifytoken: string) {
-  if (!verifytoken)
-    return
-  const secretKey = verifytoken.trim()
-
-  try {
-    loading.value = true
-    await fetchVerifyAdmin(secretKey)
-    ms.success('Activate successfully')
-    router.replace('/')
-    setTimeout(() => {
-      location.reload()
-    }, 3000)
-  }
-  catch (error: any) {
-    ms.error(error.message ?? 'error')
-  }
-  finally {
-    loading.value = false
-  }
-}
 
 async function handleSendResetMail() {
   const name = username.value.trim()

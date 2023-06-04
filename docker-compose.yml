@@ -17,6 +17,9 @@ services:
 
       # Rate Limit | Default: 0 (unlimited)
       MAX_REQUEST_PER_HOUR: 
+
+      # Auth Rate Limit
+      AUTH_MAX_REQUEST_PER_MINUTE: 5
       
       # Socks Proxy Host
       SOCKS_PROXY_HOST: 

@@ -6,10 +6,13 @@ import { KeyConfig, Status, UserRole, apiModelOptions, userRoleOptions } from '.
 import { fetchGetKeys, fetchUpdateApiKeyStatus, fetchUpsertApiKey } from '@/api'
 import { t } from '@/locales'
 import { useAuthStore } from '@/store'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
 
 const ms = useMessage()
 const dialog = useDialog()
 const authStore = useAuthStore()
+const { isMobile } = useBasicLayout()
+
 const loading = ref(false)
 const show = ref(false)
 const handleSaving = ref(false)
@@ -196,50 +199,52 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="p-4 space-y-5 min-h-[300px]">
-    <div class="space-y-6">
-      <NSpace vertical :size="12">
-        <NSpace>
-          <NButton @click="handleNewKey()">
-            New Key
-          </NButton>
+  <div class="bg-gray-50 dark:bg-white/5 py-1 px-2 rounded-md">
+    <div class="p-4 space-y-5 min-h-[300px]">
+      <div class="space-y-6">
+        <NSpace vertical :size="12">
+          <NSpace>
+            <NButton @click="handleNewKey()">
+              New Key
+            </NButton>
+          </NSpace>
+          <NDataTable
+            ref="table"
+            remote
+            :loading="loading"
+            :row-key="(rowData) => rowData._id"
+            :columns="columns"
+            :data="keys"
+            :pagination="pagination"
+            :max-height="444"
+            :scroll-x="1300"
+            striped @update:page="handleGetKeys"
+          />
         </NSpace>
-        <NDataTable
-          ref="table"
-          remote
-          :loading="loading"
-          :row-key="(rowData) => rowData._id"
-          :columns="columns"
-          :data="keys"
-          :pagination="pagination"
-          :max-height="444"
-          :scroll-x="1300"
-          striped @update:page="handleGetKeys"
-        />
-      </NSpace>
+      </div>
     </div>
   </div>
 
-  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width:50%;">
+  <NModal v-model:show="show" :auto-focus="false" preset="card" :style="{ width: !isMobile ? '50%' : '100%' }">
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.apiModel') }}</span>
-          <div>
+          <div class="flex-1">
             <NSelect
-              style="width: 240px"
+              style="width: 100%"
               :value="keyConfig.keyModel"
               :options="apiModelOptions"
               @update-value="value => keyConfig.keyModel = value"
             />
           </div>
-          <p>
+          <p v-if="!isMobile">
             <a v-if="keyConfig.keyModel === 'ChatGPTAPI'" target="_blank" href="https://platform.openai.com/account/api-keys">Get Api Key</a>
             <a v-else target="_blank" href="https://chat.openai.com/api/auth/session">Get Access Token</a>
           </p>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.api') }}</span>
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.apiKey') }}</span>
           <div class="flex-1">
             <NInput
               v-model:value="keyConfig.key" type="textarea"
@@ -255,7 +260,7 @@ onMounted(async () => {
               multiple
               :value="keyConfig.chatModels"
               :options="authStore.session?.chatModels"
-              @update-value="value => keyConfig.chatModels = value"
+              @update-value="(value: CHATMODEL[]) => keyConfig.chatModels = value"
             />
           </div>
         </div>
@@ -267,7 +272,7 @@ onMounted(async () => {
               multiple
               :value="keyConfig.userRoles"
               :options="userRoleOptions"
-              @update-value="value => keyConfig.userRoles = value"
+              @update-value="(value: UserRole[]) => keyConfig.userRoles = value"
             />
           </div>
         </div>
@@ -277,7 +282,7 @@ onMounted(async () => {
             <NSwitch
               :round="false"
               :value="keyConfig.status === Status.Normal"
-              @update:value="(val) => { keyConfig.status = val ? Status.Normal : Status.Disabled }"
+              @update:value="(val: any) => { keyConfig.status = val ? Status.Normal : Status.Disabled }"
             />
           </div>
         </div>

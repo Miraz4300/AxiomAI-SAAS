@@ -192,21 +192,23 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="p-4 space-y-5 min-h-[200px]">
-    <div class="space-y-6">
-      <NDataTable
-        ref="table"
-        remote
-        :loading="loading"
-        :row-key="(rowData) => rowData._id"
-        :columns="columns"
-        :data="users"
-        :pagination="pagination"
-        :max-height="650"
-        striped
-        :scroll-x="1260"
-        @update:page="handleGetUsers"
-      />
+  <div class="bg-gray-50 dark:bg-white/5 py-1 px-2 rounded-md">
+    <div class="p-4 space-y-5 min-h-[200px]">
+      <div class="space-y-6">
+        <NDataTable
+          ref="table"
+          remote
+          :loading="loading"
+          :row-key="(rowData) => rowData._id"
+          :columns="columns"
+          :data="users"
+          :pagination="pagination"
+          :max-height="650"
+          striped
+          :scroll-x="1260"
+          @update:page="handleGetUsers"
+        />
+      </div>
     </div>
   </div>
   <NModal v-model:show="show" :auto-focus="false" preset="card" style="width:50%;">
@@ -220,7 +222,7 @@ onMounted(async () => {
               multiple
               :value="userRef.roles"
               :options="userRoleOptions"
-              @update-value="value => userRef.roles = value"
+              @update-value="(value: UserRole[]) => userRef.roles = value"
             />
           </div>
         </div>

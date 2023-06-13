@@ -15,7 +15,7 @@ export function md5(input: string) {
 export async function getUserVerifyUrl(username: string) {
   const sign = getUserVerify(username)
   const config = await getCacheConfig()
-  return `${config.siteConfig.siteDomain}/login/?verifytoken=${sign}`
+  return `${config.siteConfig.siteDomain}/auth/login/?verifytoken=${sign}`
 }
 
 function getUserVerify(username: string) {
@@ -36,7 +36,7 @@ function checkVerify(verify: string) {
   // Simple point no check expiration date
   if (sign === md5(`${prefix}-${expired}`))
     return prefix.split('|')[0]
-  throw new Error('Verify failed')
+  throw new Error('Verification failed')
 }
 
 export function checkUserVerify(verify: string) {
@@ -47,7 +47,7 @@ export function checkUserVerify(verify: string) {
 export async function getUserVerifyUrlAdmin(username: string) {
   const sign = getUserVerifyAdmin(username)
   const config = await getCacheConfig()
-  return `${config.siteConfig.siteDomain}/login/?verifytokenadmin=${sign}`
+  return `${config.siteConfig.siteDomain}/auth/login/?verifytokenadmin=${sign}`
 }
 
 function getUserVerifyAdmin(username: string) {
@@ -61,7 +61,7 @@ export function checkUserVerifyAdmin(verify: string) {
 export async function getUserResetPasswordUrl(username: string) {
   const sign = getUserResetPassword(username)
   const config = await getCacheConfig()
-  return `${config.siteConfig.siteDomain}/login/?verifyresetpassword=${sign}`
+  return `${config.siteConfig.siteDomain}/auth/login/?verifyresetpassword=${sign}`
 }
 
 function getUserResetPassword(username: string) {
@@ -72,5 +72,5 @@ export function checkUserResetPassword(verify: string, username: string) {
   const name = checkVerify(verify)
   if (name === username)
     return name
-  throw new Error('Verify failed')
+  throw new Error('Verification failed')
 }

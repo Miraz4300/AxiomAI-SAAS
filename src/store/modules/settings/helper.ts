@@ -9,7 +9,7 @@ export interface SettingsState {
 
 export function defaultSetting(): SettingsState {
   return {
-    temperature: 0.7,
+    temperature: 0.8,
     top_p: 1,
   }
 }

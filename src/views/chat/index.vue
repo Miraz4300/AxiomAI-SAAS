@@ -596,7 +596,7 @@ onMounted(() => {
   }
 })
 
-watch(() => chatStore.active, (newVal, oldVal) => {
+watch(() => chatStore.active, (_newVal, _oldVal) => {
   handleSyncChat()
 })
 
@@ -634,7 +634,7 @@ onUnmounted(() => {
                         :value="userStore.userInfo.config.chatModel"
                         :options="authStore.session?.chatModels"
                         :disabled="!!authStore.session?.auth && !authStore.token"
-                        @update-value="(val) => handleSyncChatModel(val)"
+                        @update-value="(val: CHATMODEL) => handleSyncChatModel(val)"
                       />
                     </div>
                   </div>
@@ -698,7 +698,7 @@ onUnmounted(() => {
                   :loading="item.loading"
                   @regenerate="onRegenerate(index)"
                   @delete="handleDelete(index)"
-                  @response-history="(ev) => onResponseHistory(index, ev)"
+                  @response-history="(ev: number) => onResponseHistory(index, ev)"
                 />
                 <div class="sticky bottom-0 left-0 flex justify-center">
                   <NButton v-if="loading" ghost @click="handleStop">

@@ -28,6 +28,8 @@ export function setupPageGuard(router: Router) {
           next({ name: '500' })
         }
       }
+
+      next()
     }
     catch (error) {
       next({ name: '500' })

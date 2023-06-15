@@ -3,7 +3,7 @@ import { defineAsyncComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
 import { useAuthStore, useUserStore } from '@/store'
-import { ADMIN_ROUTE } from '@/constants/routes'
+import { ADMIN_ROUTE } from '@/router/routes'
 
 const Setting = defineAsyncComponent(() => import('@/components/common/Setting/index.vue'))
 

@@ -22,7 +22,7 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/login',
+    path: '/auth/login',
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
   },

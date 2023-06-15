@@ -93,7 +93,7 @@ async function chatReplyProcess(options: RequestOptions) {
   if (key == null || key === undefined)
     throw new Error('No available configuration. Please try again.')
   const { message, lastContext, process, temperature, top_p } = options
-  const systemMessage = 'You\'re AxiomAI, a large language model trained by OpenAI and developed by Miraz Hossain.'
+  const systemMessage = 'You\'re AxiomAI, a large language model trained by Deepspacelab and developed by Miraz Hossain.'
 
   try {
     const timeoutMs = (await getCacheConfig()).timeoutMs

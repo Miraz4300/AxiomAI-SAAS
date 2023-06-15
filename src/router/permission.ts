@@ -22,13 +22,12 @@ export function setupPageGuard(router: Router) {
           const data = await authStore.getSession()
           if (String(data.auth) === 'false' && authStore.token)
             await authStore.removeToken()
+          next()
         }
         catch (error) {
-          // Handle error if needed
+          next({ name: '500' })
         }
       }
-
-      next()
     }
     catch (error) {
       next({ name: '500' })

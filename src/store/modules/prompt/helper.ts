@@ -14,8 +14,7 @@ export interface PromptStore {
 }
 
 export function getLocalPromptList(): PromptStore {
-  const promptStore: PromptStore | undefined = ss.get(LOCAL_NAME)
-  return promptStore ?? { promptList: [] }
+  return ss.get(LOCAL_NAME) ?? { promptList: [] }
 }
 
 // Add the data to the prompt list if it doesn't exist
@@ -112,15 +111,12 @@ const promptData: Prompt[] = [
 
 const promptStore: PromptStore = getLocalPromptList()
 
-if (promptStore.promptList.length > 0) {
-  // Delete all existing prompt data
-  promptStore.promptList = []
-}
+// Delete all existing prompt data
+promptStore.promptList = []
 
-// Check if promptData already exists in promptStore
-const existingPromptKeys = promptStore.promptList.map(prompt => prompt.key)
-const newPromptData = promptData.filter(prompt => !existingPromptKeys.includes(prompt.key))
+// Add new prompts to promptStore if they don't already exist
+const existingPromptKeys = new Set(promptStore.promptList.map(prompt => prompt.key))
+const newPromptData = promptData.filter(prompt => !existingPromptKeys.has(prompt.key))
 
-// Add new prompts to promptStore
 promptStore.promptList.push(...newPromptData)
 ss.set(LOCAL_NAME, promptStore)

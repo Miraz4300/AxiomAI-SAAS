@@ -112,6 +112,11 @@ const promptData: Prompt[] = [
 
 const promptStore: PromptStore = getLocalPromptList()
 
+if (promptStore.promptList.length > 0) {
+  // Delete all existing prompt data
+  promptStore.promptList = []
+}
+
 // Check if promptData already exists in promptStore
 const existingPromptKeys = promptStore.promptList.map(prompt => prompt.key)
 const newPromptData = promptData.filter(prompt => !existingPromptKeys.includes(prompt.key))

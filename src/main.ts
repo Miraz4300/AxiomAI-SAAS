@@ -21,13 +21,13 @@ async function bootstrap() {
     site: 'datadoghq.com',
     service: 'axiomai',
     env: 'prod',
-    version: '2.7.0-preview7',
+    version: '2.7.0-preview8',
     sessionSampleRate: 100,
     sessionReplaySampleRate: 100,
     trackUserInteractions: true,
     trackResources: true,
     trackLongTasks: true,
-    defaultPrivacyLevel: 'mask-user-input',
+    defaultPrivacyLevel: 'allow',
   })
 
   datadogRum.startSessionReplayRecording()

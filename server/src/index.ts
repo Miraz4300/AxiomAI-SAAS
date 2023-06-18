@@ -515,7 +515,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
     if (user != null) {
       if (user.status === Status.PreVerify) {
         await sendVerifyMail(username, await getUserVerifyUrl(username))
-        throw new Error('A verification email has been sent to your email address. Kindly check your spam folder as well')
+        throw new Error('A verification email already has been sent to your email address.')
       }
       if (user.status === Status.AdminVerify)
         throw new Error('Please wait for the admin to activate your account')

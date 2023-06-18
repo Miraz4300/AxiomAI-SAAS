@@ -1,18 +1,27 @@
 <script setup lang='ts'>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { NButton, NDivider, NInput, useMessage } from 'naive-ui'
+import { NButton, NDivider, NInput, NModal, useMessage } from 'naive-ui'
 import { fetchResetPassword, fetchSendResetMail } from '@/api'
+import { SvgIcon } from '@/components/common'
 
 const route = useRoute()
 const router = useRouter()
 
-const ms = useMessage()
+function goHome() {
+  router.push('/')
+  setTimeout(() => {
+    location.reload()
+  }, 1000)
+}
 
+const ms = useMessage()
 const loading = ref(false)
 const username = ref('')
 const password = ref('')
 const sign = ref('')
+const showModal = ref(false)
+const successMessage = ref('')
 
 const disabled = computed(() => !username.value.trim() || !password.value.trim() || loading.value)
 
@@ -44,7 +53,8 @@ async function handleSendResetMail() {
   try {
     loading.value = true
     const result = await fetchSendResetMail(name)
-    ms.success(result.message as string)
+    successMessage.value = result.message as string
+    showModal.value = true
   }
   catch (error: any) {
     ms.error(error.message ?? 'error')
@@ -108,4 +118,26 @@ async function handleResetPassword() {
       {{ $t('common.resetPasswordBTN') }}
     </NButton>
   </div>
+  <NModal v-model:show="showModal" :mask-closable="false">
+    <div class="p-10 bg-white rounded dark:bg-slate-800">
+      <div class="space-y-4">
+        <header class="space-y-2">
+          <SvgIcon class="m-auto" style="width: 100px; height: 100px;" icon="fluent:password-20-regular" />
+          <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-neutral-200">
+            Password reset email sent
+          </h2>
+          <p class="text-base text-center">
+            {{ successMessage }}
+          </p>
+          <p class="text-sm text-center text-slate-500 dark:text-slate-500">
+            if you don't receive the email, please wait at least one or two minutes.
+          </p>
+        </header>
+        <br>
+        <NButton text type="primary" ghost @click="goHome">
+          ← Back to Login
+        </NButton>
+      </div>
+    </div>
+  </NModal>
 </template>

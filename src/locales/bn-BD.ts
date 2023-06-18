@@ -30,7 +30,7 @@ export default {
     signup: 'নিবন্ধন',
     createAccount: 'অ্যাকাউন্ট তৈরি করুন',
     login: 'লগইন',
-    backtologin: '< লগইন করতে ফিরে যান',
+    backtologin: '← লগইন করতে ফিরে যান',
     logOut: 'লগআউট',
     email: 'Email',
     password: 'Password',

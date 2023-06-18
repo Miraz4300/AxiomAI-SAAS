@@ -13,8 +13,6 @@ export default {
     action: 'Action',
     export: 'Export',
     exportSuccess: 'Export Success',
-    import: 'Import',
-    importSuccess: 'Import Success',
     clear: 'Clear conversations',
     clearSuccess: 'Clear Success',
     yes: 'Yes',

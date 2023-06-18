@@ -71,40 +71,10 @@ function exportData(): void {
   const url: string = URL.createObjectURL(blob)
   const link: HTMLAnchorElement = document.createElement('a')
   link.href = url
-  link.download = `chat-store_${date}.json`
+  link.download = `axiomai_history_${date}.json`
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
-}
-
-function importData(event: Event): void {
-  const target = event.target as HTMLInputElement
-  if (!target || !target.files)
-    return
-
-  const file: File = target.files[0]
-  if (!file)
-    return
-
-  const reader: FileReader = new FileReader()
-  reader.onload = () => {
-    try {
-      const data = JSON.parse(reader.result as string)
-      localStorage.setItem('chatStorage', JSON.stringify(data))
-      ms.success(t('common.success'))
-      location.reload()
-    }
-    catch (error) {
-      ms.error(t('common.invalidFileFormat'))
-    }
-  }
-  reader.readAsText(file)
-}
-
-function handleImportButtonClick(): void {
-  const fileInput = document.getElementById('fileInput') as HTMLElement
-  if (fileInput)
-    fileInput.click()
 }
 </script>
 
@@ -141,14 +111,6 @@ function handleImportButtonClick(): void {
               <SvgIcon icon="ri:upload-2-fill" />
             </template>
             {{ $t('common.export') }}
-          </NButton>
-
-          <input id="fileInput" type="file" style="display:none" @change="importData">
-          <NButton size="small" @click="handleImportButtonClick">
-            <template #icon>
-              <SvgIcon icon="ri:download-2-fill" />
-            </template>
-            {{ $t('common.import') }}
           </NButton>
         </div>
       </div>

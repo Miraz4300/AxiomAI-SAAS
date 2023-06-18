@@ -13,8 +13,6 @@ export default {
     action: 'পদক্ষেপ',
     export: 'Export',
     exportSuccess: 'Export সফল হয়েছে',
-    import: 'Import',
-    importSuccess: 'Import সফল হয়েছে',
     clear: 'পরিষ্কার করুন',
     clearSuccess: 'পরিষ্কার সফল হয়েছে',
     yes: 'হ্যাঁ',

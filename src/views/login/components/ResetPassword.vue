@@ -95,27 +95,27 @@ async function handleResetPassword() {
 <template>
   <NDivider class="my-2">
     <span class="text-slate-600 dark:text-slate-200 font-semibold">
-      {{ $t("common.resetPasswordBTN") }}
+      Reset password
     </span>
   </NDivider>
   <div class="flex flex-col gap-2">
     <NInputGroup>
-      <NInput v-model:value="username" :disabled="sign !== undefined" type="text" :placeholder="$t('common.email')" class="mb-2" />
-      <NInput v-if="!!sign" v-model:value="password" type="password" :placeholder="$t('common.password')" class="mb-2" @input="handlePasswordInput" />
+      <NInput v-model:value="username" :disabled="sign !== undefined" type="text" placeholder="Email" class="mb-2" />
+      <NInput v-if="!!sign" v-model:value="password" type="password" placeholder="Password" class="mb-2" @input="handlePasswordInput" />
       <NInput
         v-if="showConfirmPassword"
         v-model:value="confirmPassword"
         type="password"
-        :placeholder="$t('common.passwordConfirm')"
+        placeholder="Confirm Password"
         class="mb-4"
         :status="confirmPasswordStatus"
       />
     </NInputGroup>
     <NButton v-if="!sign" block type="primary" :disabled="username.length <= 0" :loading="loading" @click="handleSendResetMail">
-      {{ $t('common.resetPasswordMail') }}
+      Submit
     </NButton>
     <NButton v-else block type="primary" :disabled="disabled || password !== confirmPassword" :loading="loading" @click="handleResetPassword">
-      {{ $t('common.resetPasswordBTN') }}
+      Reset password
     </NButton>
   </div>
   <NModal v-model:show="showModal" :mask-closable="false">

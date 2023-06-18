@@ -81,7 +81,7 @@ async function handleLogin() {
     loading.value = true
     const result = await fetchLogin(name, pwd)
     await authStore.setToken(result.data.token)
-    ms.success('logged in')
+    ms.success('Login successful, welcome back.')
     router.replace('/')
   }
   catch (error: any) {
@@ -97,16 +97,16 @@ async function handleLogin() {
 <template>
   <NDivider class="my-2">
     <span class="text-slate-600 dark:text-slate-200 font-semibold">
-      {{ $t("common.login") }}
+      Login
     </span>
   </NDivider>
   <div class="flex flex-col gap-2">
     <NInputGroup>
-      <NInput v-model:value="username" type="text" :placeholder="$t('common.email')" class="mb-2" />
-      <NInput v-model:value="password" type="password" :placeholder="$t('common.password')" class="mb-2" @keypress="handlePress" />
+      <NInput v-model:value="username" type="text" placeholder="Email" class="mb-2" />
+      <NInput v-model:value="password" type="password" placeholder="Password" class="mb-2" @keypress="handlePress" />
     </NInputGroup>
     <NButton block type="primary" :disabled="disabled" :loading="loading" @click="handleLogin">
-      {{ $t('common.login') }}
+      Login
     </NButton>
   </div>
 </template>

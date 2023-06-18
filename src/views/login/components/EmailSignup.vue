@@ -65,24 +65,24 @@ async function handleRegister() {
 <template>
   <NDivider class="my-2">
     <span class="text-slate-600 dark:text-slate-200 font-semibold">
-      {{ $t("common.signup") }}
+      Signup
     </span>
   </NDivider>
   <div class="flex flex-col gap-2">
     <NInputGroup>
-      <NInput v-model:value="username" type="text" :placeholder="$t('common.email')" class="mb-2" />
-      <NInput v-model:value="password" type="password" :placeholder="$t('common.password')" class="mb-2" @input="handlePasswordInput" />
+      <NInput v-model:value="username" type="text" placeholder="Email" class="mb-2" />
+      <NInput v-model:value="password" type="password" placeholder="Password" class="mb-2" @input="handlePasswordInput" />
       <NInput
         v-if="showConfirmPassword"
         v-model:value="confirmPassword"
         type="password"
-        :placeholder="$t('common.passwordConfirm')"
+        placeholder="Confirm Password"
         class="mb-4"
         :status="confirmPasswordStatus"
       />
     </NInputGroup>
     <NButton block type="primary" :disabled="disabled || password !== confirmPassword" :loading="loading" @click="handleRegister">
-      {{ $t('common.signup') }}
+      Signup
     </NButton>
   </div>
   <NModal v-model:show="showModal" :mask-closable="false">

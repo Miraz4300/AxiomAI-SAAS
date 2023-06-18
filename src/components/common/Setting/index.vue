@@ -7,13 +7,12 @@ import Statistics from './Statistics.vue'
 import About from './About.vue'
 import { SvgIcon } from '@/components/common'
 import { useAuthStore } from '@/store'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
 
 const props = defineProps<Props>()
-
 const emit = defineEmits<Emit>()
-
 const authStore = useAuthStore()
-
+const { isMobile } = useBasicLayout()
 const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
 interface Props {
@@ -58,7 +57,7 @@ const show = computed({
             <Advanced />
           </div>
         </NTabPane>
-        <NTabPane name="Statistics" tab="Statistics">
+        <NTabPane v-if="!isMobile" name="Statistics" tab="Statistics">
           <template #tab>
             <SvgIcon class="text-lg" icon="mdi:chart-box-outline" />
             <span class="ml-2">{{ $t('setting.statistics') }}</span>

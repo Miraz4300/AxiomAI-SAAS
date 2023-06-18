@@ -99,21 +99,6 @@ function exportData(): void {
           <NInput v-model:value="avatar" placeholder="https://example.com/avatar/image.png" />
         </div>
       </div>
-      <div
-        class="flex items-center space-x-4"
-        :class="isMobile && 'items-start'"
-      >
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.chatHistory') }}</span>
-
-        <div class="flex flex-wrap items-center gap-4">
-          <NButton size="small" @click="exportData">
-            <template #icon>
-              <SvgIcon icon="ri:upload-2-fill" />
-            </template>
-            {{ $t('common.export') }}
-          </NButton>
-        </div>
-      </div>
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.theme') }}</span>
         <div class="flex flex-wrap items-center gap-4">
@@ -139,6 +124,21 @@ function exportData(): void {
             :options="languageOptions"
             @update-value="value => appStore.setLanguage(value)"
           />
+        </div>
+      </div>
+      <div
+        class="flex items-center space-x-4"
+        :class="isMobile && 'items-start'"
+      >
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.chatHistory') }}</span>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <NButton size="small" @click="exportData">
+            <template #icon>
+              <SvgIcon icon="ri:upload-2-fill" />
+            </template>
+            {{ $t('common.export') }}
+          </NButton>
         </div>
       </div>
       <div class="flex items-center space-x-4">

@@ -515,11 +515,11 @@ router.post('/user-register', authLimiter, async (req, res) => {
     if (user != null) {
       if (user.status === Status.PreVerify) {
         await sendVerifyMail(username, await getUserVerifyUrl(username))
-        throw new Error('A verification email already has been sent to your email address.')
+        throw new Error('A verification email has already been sent to your email address!')
       }
       if (user.status === Status.AdminVerify)
         throw new Error('Please wait for the admin to activate your account')
-      res.send({ status: 'Fail', message: 'The email address provided is already registered/exists in our system', data: null })
+      res.send({ status: 'Fail', message: 'The email address given has already been registered within our system.', data: null })
       return
     }
     const newPassword = md5(password)
@@ -527,11 +527,11 @@ router.post('/user-register', authLimiter, async (req, res) => {
     await createUser(username, newPassword, isRoot)
 
     if (isRoot) {
-      res.send({ status: 'Success', message: 'Registration success', data: null })
+      res.send({ status: 'Success', message: 'The administrative account has been activated.', data: null })
     }
     else {
       await sendVerifyMail(username, await getUserVerifyUrl(username))
-      res.send({ status: 'Success', message: 'A verification email has been sent to your email address. Kindly check your spam folder as well', data: null })
+      res.send({ status: 'Success', message: 'A verification email has been sent to your email address.', data: null })
     }
   }
   catch (error) {
@@ -677,7 +677,7 @@ router.post('/user-reset-password', authLimiter, async (req, res) => {
 
     updateUserPassword(user._id.toString(), md5(password))
 
-    res.send({ status: 'Success', message: 'Password reset successful', data: null })
+    res.send({ status: 'Success', message: 'The password reset has been completed successfully.', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -761,7 +761,7 @@ router.post('/verify', authLimiter, async (req, res) => {
     const username = await checkUserVerify(token)
     const user = await getUser(username)
     if (user != null && user.status === Status.Normal) {
-      res.send({ status: 'Fail', message: 'The email address provided is already registered/exists in our system', data: null })
+      res.send({ status: 'Fail', message: 'The email address given has already been registered within our system.', data: null })
       return
     }
     const config = await getCacheConfig()

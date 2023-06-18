@@ -6,7 +6,6 @@ import EmailSignup from './components/EmailSignup.vue'
 import EmailLogin from './components/EmailLogin.vue'
 import ResetPassword from './components/ResetPassword.vue'
 import AuthLayout from './components/AuthLayout.vue'
-import { t } from '@/locales'
 
 interface Props {
   visible: boolean
@@ -44,12 +43,12 @@ onMounted(async () => {
     <div class="px-4 rounded w-full max-w-lg">
       <header class="mb-8 text-center">
         <h1 class="font-header text-4xl md:text-4xl font-bold text-slate-700 dark:text-slate-200">
-          {{ t('common.welcomeBack') }}
+          Welcome back
         </h1>
       </header>
       <div class="flex flex-col gap-4">
         <p class="text-slate-500 dark:text-slate-200 font-light text-lg text-center">
-          {{ t("common.signInTips") }}
+          Welcome to AxiomAI. Login in to continue, or create a new account to explore the possibilities of GPT.
         </p>
         <EmailLogin v-if="currentTab === 'emailLogin'" />
         <EmailSignup v-else-if="currentTab === 'emailSignup'" />
@@ -61,7 +60,7 @@ onMounted(async () => {
             type="primary"
             @click="currentTab = 'emailLogin'"
           >
-            {{ t('common.backtologin') }}
+            ← Go back to login
           </NButton>
           <NButton
             v-show="currentTab !== 'emailSignup' && currentTab !== 'resetPassword'"
@@ -69,7 +68,7 @@ onMounted(async () => {
             type="primary"
             @click="currentTab = 'emailSignup'"
           >
-            {{ t('common.createAccount') }}
+            Create account
           </NButton>
           <NButton
             v-show="currentTab !== 'resetPassword' && currentTab !== 'emailSignup'"
@@ -77,7 +76,7 @@ onMounted(async () => {
             type="primary"
             @click="currentTab = 'resetPassword'"
           >
-            {{ t('common.resetPassword') }}
+            Forgot password?
           </NButton>
         </div>
       </div>

@@ -30,7 +30,7 @@ export default {
     signup: 'Signup',
     createAccount: 'Create account',
     login: 'Login',
-    backtologin: '< Go back to login',
+    backtologin: '← Go back to login',
     logOut: 'Logout',
     email: 'Email',
     password: 'Password',

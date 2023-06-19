@@ -22,6 +22,11 @@ const password = ref('')
 const sign = ref('')
 const showModal = ref(false)
 const successMessage = ref('')
+const successResetPassMessage = ref('')
+
+const getIcon = computed(() => {
+  return successResetPassMessage.value ? 'iconoir:password-pass' : 'fluent:password-20-regular'
+})
 
 const disabled = computed(() => !username.value.trim() || !password.value.trim() || loading.value)
 
@@ -77,11 +82,8 @@ async function handleResetPassword() {
   try {
     loading.value = true
     const result = await fetchResetPassword(name, pwd, sign.value)
-    ms.success(result.message as string)
-    router.replace('/')
-    setTimeout(() => {
-      location.reload()
-    }, 3000)
+    successResetPassMessage.value = result.message as string
+    showModal.value = true
   }
   catch (error: any) {
     ms.error(error.message ?? 'error')
@@ -122,15 +124,15 @@ async function handleResetPassword() {
     <div class="p-10 bg-white rounded dark:bg-slate-800">
       <div class="space-y-4">
         <header class="space-y-2">
-          <SvgIcon class="m-auto" style="width: 100px; height: 100px;" icon="fluent:password-20-regular" />
+          <SvgIcon class="m-auto" style="width: 100px; height: 100px;" :icon="getIcon" />
           <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-neutral-200">
-            Password reset email sent
+            {{ successMessage ? 'Password reset email sent' : 'Password successfully changed' }}
           </h2>
           <p class="text-base text-center">
-            {{ successMessage }}
+            {{ successMessage || successResetPassMessage }}
           </p>
           <p class="text-sm text-center text-slate-500 dark:text-slate-500">
-            if you don't receive the email, please wait at least one or two minutes.
+            {{ successMessage ? 'if you don\'t receive the email, please wait at least one or two minutes.' : 'now you can login by clicking the button below' }}
           </p>
         </header>
         <br>

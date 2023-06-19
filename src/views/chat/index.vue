@@ -611,7 +611,7 @@ onUnmounted(() => {
     <HeaderComponent
       v-if="isMobile"
       :using-context="usingContext"
-      @export="handleExport" @toggle-using-context="handleToggleUsingContext"
+      @export="handleExport" @handle-clear="handleClear"
     />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
@@ -717,7 +717,7 @@ onUnmounted(() => {
     <footer :class="footerClass">
       <div class="w-full max-w-screen-xl m-auto">
         <div class="flex items-center justify-between space-x-2">
-          <HoverButton @click="handleClear">
+          <HoverButton v-if="!isMobile" @click="handleClear">
             <span class="text-xl text-black dark:text-white">
               <SvgIcon icon="ri:delete-bin-line" />
             </span>
@@ -727,7 +727,7 @@ onUnmounted(() => {
               <SvgIcon icon="mdi:file-export-outline" />
             </span>
           </HoverButton>
-          <HoverButton v-if="!isMobile" @click="handleToggleUsingContext">
+          <HoverButton @click="handleToggleUsingContext">
             <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
               <SvgIcon icon="fluent:brain-circuit-24-filled" />
             </span>

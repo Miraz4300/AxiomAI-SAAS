@@ -732,7 +732,7 @@ onUnmounted(() => {
               <SvgIcon icon="fluent:brain-circuit-24-filled" />
             </span>
           </HoverButton>
-          <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
+          <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption" placement="top">
             <template #default="{ handleInput, handleBlur, handleFocus }">
               <NInput
                 ref="inputRef"

@@ -25,7 +25,7 @@ const successMessage = ref('')
 const successResetPassMessage = ref('')
 
 const getIcon = computed(() => {
-  return successResetPassMessage.value ? 'iconoir:password-pass' : 'fluent:password-20-regular'
+  return successMessage.value ? 'fluent:password-20-regular' : 'iconoir:password-pass'
 })
 
 const disabled = computed(() => !username.value.trim() || !password.value.trim() || loading.value)

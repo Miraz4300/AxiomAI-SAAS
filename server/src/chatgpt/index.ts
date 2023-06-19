@@ -256,12 +256,21 @@ async function fetchBalance() {
       console.error('Your account has been blocked, please login to OpenAI to view it.')
       return
     }
-    const subscriptionData = await response.json()
+    interface SubscriptionData {
+      hard_limit_usd?: number
+      // Other possible attributes can be added here
+    }
+    const subscriptionData: SubscriptionData = await response.json()
     const totalAmount = subscriptionData.hard_limit_usd
+
+    interface UsageData {
+      total_usage?: number
+      // Other possible attributes can be added here
+    }
 
     // Get the amount used
     response = await fetch(urlUsage, { agent: socksAgent === undefined ? httpsAgent : socksAgent, headers })
-    const usageData = await response.json()
+    const usageData: UsageData = await response.json()
     const totalUsage = usageData.total_usage / 100
 
     // Calculate the remaining amount

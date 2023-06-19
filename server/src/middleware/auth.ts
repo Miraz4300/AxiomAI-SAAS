@@ -13,12 +13,12 @@ const auth = async (req, res, next) => {
       req.headers.userId = info.userId
       const user = await getUserById(info.userId)
       if (user == null || user.status !== Status.Normal)
-        throw new Error('User does not exist.')
+        throw new Error('User does not exist')
       else
         next()
     }
     catch (error) {
-      res.send({ status: 'Unauthorized', message: error.message ?? 'Please authenticate.', data: null })
+      res.send({ status: 'Unauthorized', message: error.message ?? 'Please authenticate', data: null })
     }
   }
   else {

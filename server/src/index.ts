@@ -337,7 +337,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
       const userId = req.headers.userId.toString()
       const user = await getUserById(userId)
       if (!user.roles.includes(UserRole.Admin) && await containsSensitiveWords(config.auditConfig, prompt)) {
-        res.send({ status: 'Fail', message: '**Contains sensitive words**', data: null })
+        res.send({ status: 'Fail', message: '**⚠️ Contains sensitive words.**', data: null })
         return
       }
     }
@@ -453,7 +453,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
       return
     }
     if (!isEmail(username)) {
-      res.send({ status: 'Fail', message: 'Please enter a valid email address.', data: null })
+      res.send({ status: 'Fail', message: 'Please enter a valid email address', data: null })
       return
     }
     if (isNotEmptyString(config.siteConfig.registerMails)) {
@@ -479,7 +479,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
       }
       if (user.status === Status.AdminVerify)
         throw new Error('Please wait for the admin to activate your account')
-      res.send({ status: 'Fail', message: 'The email address given has already been registered within our system.', data: null })
+      res.send({ status: 'Fail', message: 'The email address given has already been registered within our system!', data: null })
       return
     }
     const newPassword = md5(password)
@@ -487,7 +487,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
     await createUser(username, newPassword, isRoot)
 
     if (isRoot) {
-      res.send({ status: 'Success', message: 'The administrative account has been activated.', data: null })
+      res.send({ status: 'Success', message: 'The administrative account has been activated', data: null })
     }
     else {
       await sendVerifyMail(username, await getUserVerifyUrl(username))
@@ -499,13 +499,13 @@ router.post('/user-register', authLimiter, async (req, res) => {
   }
 })
 
-router.post('/config', rootAuth, async (req, res) => {
+router.post('/oauth3', rootAuth, async (req, res) => {
   try {
     const userId = req.headers.userId.toString()
 
     const user = await getUserById(userId)
     if (user == null || user.status !== Status.Normal || !user.roles.includes(UserRole.Admin))
-      throw new Error('No permission.')
+      throw new Error('⚠️ No permission')
 
     const response = await chatConfig()
     res.send(response)
@@ -583,13 +583,13 @@ router.post('/user-login', authLimiter, async (req, res) => {
 
     const user = await getUser(username)
     if (user == null || user.password !== md5(password))
-      throw new Error('User does not exist or incorrect password.')
+      throw new Error('User does not exist or incorrect password')
     if (user.status === Status.PreVerify)
       throw new Error('Please verify your email address first')
     if (user != null && user.status === Status.AdminVerify)
       throw new Error('Please wait for the admin to activate your account')
     if (user.status !== Status.Normal)
-      throw new Error('Account status abnormal.')
+      throw new Error('⚠️ Account status abnormal')
 
     const config = await getCacheConfig()
     const token = jwt.sign({
@@ -611,7 +611,7 @@ router.post('/user-send-reset-mail', authLimiter, async (req, res) => {
   try {
     const { username } = req.body as { username: string }
     if (!username || !isEmail(username))
-      throw new Error('Please enter a correctly formatted email address.')
+      throw new Error('Please enter a correctly formatted email address')
 
     const user = await getUser(username)
     if (user == null || user.status !== Status.Normal)
@@ -633,7 +633,7 @@ router.post('/user-reset-password', authLimiter, async (req, res) => {
       throw new Error('The link is invalid, please resend.')
     const user = await getUser(username)
     if (user == null || user.status !== Status.Normal)
-      throw new Error('Account status abnormal.')
+      throw new Error('⚠️ Account status abnormal')
 
     updateUserPassword(user._id.toString(), md5(password))
 
@@ -713,7 +713,7 @@ router.post('/user-role', rootAuth, async (req, res) => {
   }
 })
 
-router.post('/verify', authLimiter, async (req, res) => {
+router.post('/verification', authLimiter, async (req, res) => {
   try {
     const { token } = req.body as { token: string }
     if (!token)
@@ -721,7 +721,7 @@ router.post('/verify', authLimiter, async (req, res) => {
     const username = await checkUserVerify(token)
     const user = await getUser(username)
     if (user != null && user.status === Status.Normal) {
-      res.send({ status: 'Fail', message: 'The email address given has already been registered within our system.', data: null })
+      res.send({ status: 'Fail', message: 'The email address given has already been registered within our system!', data: null })
       return
     }
     const config = await getCacheConfig()
@@ -741,7 +741,7 @@ router.post('/verify', authLimiter, async (req, res) => {
   }
 })
 
-router.post('/verifyadmin', authLimiter, async (req, res) => {
+router.post('/admin-verification', authLimiter, async (req, res) => {
   try {
     const { token } = req.body as { token: string }
     if (!token)
@@ -761,7 +761,7 @@ router.post('/verifyadmin', authLimiter, async (req, res) => {
   }
 })
 
-router.post('/setting-base', rootAuth, async (req, res) => {
+router.post('/setting-system', rootAuth, async (req, res) => {
   try {
     const { apiKey, apiModel, apiBaseUrl, accessToken, timeoutMs, reverseProxy, socksProxy, socksAuth, httpsProxy } = req.body as Config
 

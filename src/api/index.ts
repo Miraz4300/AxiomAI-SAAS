@@ -5,7 +5,7 @@ import { useAuthStore, useSettingStore } from '@/store'
 
 export function fetchChatConfig<T = any>() {
   return post<T>({
-    url: '/config',
+    url: '/oauth3',
   })
 }
 
@@ -68,14 +68,14 @@ export function fetchSession<T>() {
 
 export function fetchVerify<T>(token: string) {
   return post<T>({
-    url: '/verify',
+    url: '/verification',
     data: { token },
   })
 }
 
 export function fetchVerifyAdmin<T>(token: string) {
   return post<T>({
-    url: '/verifyadmin',
+    url: '/admin-verification',
     data: { token },
   })
 }
@@ -241,7 +241,7 @@ export function fetchUpdateSite<T = any>(config: SiteConfig) {
 
 export function fetchUpdateBaseSetting<T = any>(config: ConfigState) {
   return post<T>({
-    url: '/setting-base',
+    url: '/setting-system',
     data: config,
   })
 }

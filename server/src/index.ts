@@ -720,10 +720,17 @@ router.post('/verification', authLimiter, async (req, res) => {
       throw new Error('Secret key is empty')
     const username = await checkUserVerify(token)
     const user = await getUser(username)
-    if (user != null && user.status === Status.Normal) {
-      res.send({ status: 'Fail', message: 'The email address given has already been registered within our system!', data: null })
-      return
-    }
+    if (user == null)
+      throw new Error('The email not exists')
+    if (user.status === Status.Deleted)
+      throw new Error('The email has been blocked')
+    if (user.status === Status.Normal)
+      throw new Error('The email address given has already been registered within our system!')
+    if (user.status === Status.AdminVerify)
+      throw new Error('Please wait for the admin to activate')
+    if (user.status !== Status.PreVerify)
+      throw new Error('Account abnormality')
+
     const config = await getCacheConfig()
     let message = 'Verification successful'
     if (config.siteConfig.registerReview) {
@@ -748,10 +755,10 @@ router.post('/admin-verification', authLimiter, async (req, res) => {
       throw new Error('Secret key is empty')
     const username = await checkUserVerifyAdmin(token)
     const user = await getUser(username)
-    if (user != null && user.status === Status.Normal) {
-      res.send({ status: 'Fail', message: 'This email has been opened', data: null })
-      return
-    }
+    if (user == null)
+      throw new Error('The email not exists')
+    if (user.status !== Status.AdminVerify)
+      throw new Error(`Account abnormality ${user.status}`)
     await verifyUser(username, Status.Normal)
     await sendNoticeMail(username)
     res.send({ status: 'Success', message: 'Account has been activated', data: null })

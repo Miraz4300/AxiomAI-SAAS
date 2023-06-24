@@ -104,6 +104,7 @@ export default {
     registerEnabled: 'Register Enabled',
     registerReview: 'Register Review',
     registerMails: 'Register Mails',
+    registerReviewTip: 'Only email addresses with these suffixes are allowed to register on this website.',
     apiBaseUrl: 'Api Base Url',
     apiModel: 'Endpoint',
     accessToken: 'Access Token',

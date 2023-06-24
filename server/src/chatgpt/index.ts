@@ -180,8 +180,8 @@ export function initAuditService(audit: AuditConfig) {
 
 async function containsSensitiveWords(audit: AuditConfig, text: string): Promise<boolean> {
   if (audit.customizeEnabled && isNotEmptyString(audit.sensitiveWords)) {
-    const textLower = text.toLowerCase()
-    const notSafe = audit.sensitiveWords.split('\n').filter(d => textLower.includes(d.trim().toLowerCase())).length > 0
+    const textLower = text.toLowerCase().split(' ')
+    const notSafe = audit.sensitiveWords.split('\n').some(sensitiveWord => textLower.includes(sensitiveWord.trim().toLowerCase()))
     if (notSafe)
       return true
   }

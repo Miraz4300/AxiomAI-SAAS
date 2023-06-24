@@ -69,7 +69,7 @@ onMounted(() => {
           <div class="flex items-center space-x-4">
             <span class="flex-shrink-0 w-[100px]">{{ $t('setting.socks') }}</span>
             <div class="flex-1">
-              <NInput :value="config.socksProxy" placeholder="" style="max-width: 30%" @input="(val: string | undefined) => { config.socksProxy = val }" />
+              <NInput :value="config.socksProxy" placeholder="ip:port" style="max-width: 30%" @input="(val: string | undefined) => { config.socksProxy = val }" />
             </div>
           </div>
           <div class="flex items-center space-x-4">

@@ -80,7 +80,7 @@ const columns = [
           },
           onClick: () => handleUpdateUserStatus(row._id, Status.Deleted),
         },
-        { default: () => t('chat.deleteUser') },
+        { default: () => t('common.delete') },
       ))
       if (row.status === Status.Normal) {
         actions.push(h(
@@ -89,7 +89,7 @@ const columns = [
             size: 'small',
             type: 'primary',
             style: {
-              marginRight: '6px',
+              marginRight: '8px',
             },
             onClick: () => handleEditUser(row),
           },

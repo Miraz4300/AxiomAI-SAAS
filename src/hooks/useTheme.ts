@@ -28,7 +28,7 @@ export function useTheme() {
           primaryColorPressed: '#0083A0',
           primaryColorSuppl: '#009BBD',
           placeholderColor: 'rgba(255, 255, 255, 0.38)', // reflects on pre-text color
-          bodyColor: 'rgb(15, 14, 14)', // reflects on main body
+          bodyColor: 'rgb(17, 17, 17)', // reflects on main body
           cardColor: 'rgb(25, 25, 25)', // reflects on side menu
           modalColor: 'rgb(32, 33, 35)', // reflects on settings
           popoverColor: 'rgb(56, 56, 60)', // reflects on side menu close button

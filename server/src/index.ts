@@ -320,7 +320,16 @@ router.post('/chat-clear', auth, async (req, res) => {
 router.post('/conversation', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
-  const { roomId, uuid, regenerate, prompt, options = {}, temperature, top_p } = req.body as RequestProps
+  const { roomId, uuid, regenerate, prompt, options = {}, persona } = req.body as RequestProps
+
+  const personaLookup = {
+    precise: { temperature: 0.2, top_p: 0.1 },
+    balanced: { temperature: 0.8, top_p: 0.5 },
+    creative: { temperature: 1.6, top_p: 1 },
+  }
+
+  const { temperature, top_p } = personaLookup[persona] || personaLookup.balanced
+
   const userId = req.headers.userId as string
   const room = await getChatRoom(userId, roomId)
   if (room == null)

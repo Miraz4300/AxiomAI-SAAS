@@ -33,8 +33,8 @@ export function fetchChatAPIProcess<T = any>(
   if (authStore.isChatGPTAPI) {
     data = {
       ...data,
-      temperature: settingStore.temperature,
-      top_p: settingStore.top_p,
+      memory: settingStore.memory,
+      persona: settingStore.persona,
     }
   }
 

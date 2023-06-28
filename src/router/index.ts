@@ -34,19 +34,16 @@ const routes: RouteRecordRaw[] = [
       requiresAdmin: true,
     },
   },
-
   {
     path: '/404',
     name: '404',
     component: () => import('@/views/exception/404/index.vue'),
   },
-
   {
     path: '/500',
     name: '500',
     component: () => import('@/views/exception/500/index.vue'),
   },
-
   {
     path: '/:pathMatch(.*)*',
     name: 'notFound',

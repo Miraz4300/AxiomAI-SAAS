@@ -8,27 +8,17 @@ export function setupPageGuard(router: Router) {
 
     if (!to.meta.requiresAuth && !to.meta.requiresAdmin)
       return next()
-
     try {
+      const data = await authStore.getSession()
+      if (String(data.auth) === 'false' && authStore.token)
+        await authStore.removeToken()
+
       const token = authStore.token
       if (!token)
         return next({ name: 'Login' })
 
       if (to.meta.requiresAdmin && !userStore.userInfo.root)
         return next({ name: '404' })
-
-      if (!authStore.session) {
-        try {
-          const data = await authStore.getSession()
-          if (String(data.auth) === 'false' && authStore.token)
-            await authStore.removeToken()
-          next()
-        }
-        catch (error) {
-          next({ name: '500' })
-        }
-      }
-
       next()
     }
     catch (error) {

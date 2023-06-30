@@ -9,6 +9,7 @@ export function defaultState(): Chat.ChatState {
     usingContext: true, // Follow-up Mode. Follow-up Mode is a feature that allows you to continue the conversation with the same context. This will carry the previous chat records. | Default: false
     history: [{ uuid, title: 'New Chat', isEdit: false, usingContext: true }],
     chat: [{ uuid, data: [] }],
+    searchKeyword: '',
   }
 }
 

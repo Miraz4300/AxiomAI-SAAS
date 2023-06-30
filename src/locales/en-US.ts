@@ -60,6 +60,7 @@ export default {
     deleteKey: 'Delete Key',
     editKeyButton: 'Edit Key',
     deleteKeyConfirm: 'Are you sure to delete this key?',
+    searchPlaceholder: 'Search conversation',
   },
   setting: {
     setting: 'Setting',

@@ -15,7 +15,7 @@ const authStore = useAuthStoreWithout()
 
 const loadingRoom = ref(false)
 
-const dataSources = computed(() => chatStore.history)
+const dataSources = computed(() => chatStore.getFilteredHistories)
 
 onMounted(async () => {
   if (authStore.session == null || !authStore.session.auth || authStore.token)

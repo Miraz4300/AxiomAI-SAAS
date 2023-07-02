@@ -2,18 +2,14 @@
 import { computed, ref } from 'vue'
 import { NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
-import Advanced from './Advanced.vue'
 import Statistics from './Statistics.vue'
 import About from './About.vue'
 import { SvgIcon } from '@/components/common'
-import { useAuthStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
-const authStore = useAuthStore()
 const { isMobile } = useBasicLayout()
-const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
 interface Props {
   visible: boolean
@@ -46,15 +42,6 @@ const show = computed({
           </template>
           <div class="min-h-[100px]">
             <General />
-          </div>
-        </NTabPane>
-        <NTabPane v-if="isChatGPTAPI" name="Advanced" tab="Advanced">
-          <template #tab>
-            <SvgIcon class="text-lg" icon="mdi:tune" />
-            <span class="ml-2">{{ $t('setting.advanced') }}</span>
-          </template>
-          <div class="min-h-[100px]">
-            <Advanced />
           </div>
         </NTabPane>
         <NTabPane v-if="!isMobile" name="Statistics" tab="Statistics">

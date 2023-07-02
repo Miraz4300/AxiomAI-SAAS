@@ -42,7 +42,7 @@ async function handleLogout() {
         </HoverButton>
         <Setting v-if="show" v-model:visible="show" />
         <HoverButton v-if="!!authStore.token" @click="show = true">
-          <UserAvatar v-if="!!authStore.token" @click="show = true" />
+          <UserAvatar />
         </HoverButton>
       </div>
     </div>

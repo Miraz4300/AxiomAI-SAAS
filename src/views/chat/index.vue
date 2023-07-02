@@ -4,7 +4,7 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
-import { NAutoComplete, NButton, NInput, NSelect, NSpin, useDialog, useMessage } from 'naive-ui'
+import { NAutoComplete, NButton, NInput, NSpin, useDialog, useMessage } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
@@ -12,11 +12,9 @@ import Header from './components/Header/index.vue'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStore, useChatStore, usePromptStore, useUserStore } from '@/store'
-import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding, fetchUpdateUserChatModel } from '@/api'
+import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding } from '@/api'
 import { t } from '@/locales'
 import { debounce } from '@/utils/functions/debounce'
-import { UserConfig } from '@/components/admin/model'
-import type { CHATMODEL } from '@/components/admin/model'
 
 let controller = new AbortController()
 let lastChatInfo: any = {}
@@ -514,14 +512,6 @@ const footerClass = computed(() => {
   return classes
 })
 
-async function handleSyncChatModel(chatModel: CHATMODEL) {
-  if (userStore.userInfo.config == null)
-    userStore.userInfo.config = new UserConfig()
-  userStore.userInfo.config.chatModel = chatModel
-  userStore.recordState()
-  await fetchUpdateUserChatModel(chatModel)
-}
-
 onMounted(() => {
   firstLoading.value = true
   handleSyncChat()
@@ -554,18 +544,6 @@ onUnmounted(() => {
               <div class="flex items-center justify-center mt-2">
                 <!-- AxiomAI is being introduced. -->
                 <div class="text-gray-800 w-full md:max-w-2xl lg:max-w-3xl md:h-full md:flex md:flex-col px-6 dark:text-gray-100">
-                  <!-- Model Selection -->
-                  <div class="flex items-center justify-center">
-                    <SvgIcon style="width:30px;height:30px;margin-right:6px;" class="spin-on-hover" icon="ri:openai-fill" />
-                    <NSelect
-                      style="width:185px"
-                      :value="userStore.userInfo.config.chatModel"
-                      :options="authStore.session?.chatModels"
-                      :disabled="!!authStore.session?.auth && !authStore.token"
-                      @update-value="(val: CHATMODEL) => handleSyncChatModel(val)"
-                    />
-                  </div>
-                  <!-- Model Selection End -->
                   <h1 class="text-4xl font-semibold text-center mt-6 sm:mt-[20vh] ml-auto mr-auto mb-10 sm:mb-16 flex gap-2 items-center justify-center">
                     AxiomAI<a class="text-sm bg-gray-50 dark:bg-white/5 py-1 px-2 rounded-md">preview</a>
                   </h1><div class="md:flex items-start text-center gap-3.5">
@@ -642,7 +620,7 @@ onUnmounted(() => {
       </div>
     </main>
     <footer :class="footerClass">
-      <div class="w-full max-w-screen-xl m-auto">
+      <div class="max-w-screen-2xl m-auto px-4">
         <div class="flex items-center justify-between space-x-2">
           <ToolButton :tooltip="$t('chat.usingContext')" placement="top" @click="handleToggleUsingContext">
             <span class="text-xl" :class="{ 'text-[#22c55e]': usingContext, 'text-[#a8071a]': !usingContext }">
@@ -680,18 +658,3 @@ onUnmounted(() => {
     </footer>
   </div>
 </template>
-
-<style>
-.spin-on-hover:hover {
-  animation: spin 1s infinite linear;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-</style>

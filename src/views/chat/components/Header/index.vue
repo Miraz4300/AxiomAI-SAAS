@@ -1,24 +1,42 @@
 <script setup lang='ts'>
-import { useDialog, useMessage } from 'naive-ui'
+import { NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
 import { computed, nextTick, ref } from 'vue'
 import html2canvas from 'html2canvas'
 import { useRoute } from 'vue-router'
-import { useAppStore, useChatStore } from '@/store'
+import { useAppStore, useAuthStore, useChatStore, useSettingStore, useUserStore } from '@/store'
+import type { SettingsState } from '@/store/modules/settings/helper'
+import { fetchUpdateUserChatModel } from '@/api'
+import { UserConfig } from '@/components/admin/model'
+import type { CHATMODEL } from '@/components/admin/model'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
 
-const appStore = useAppStore()
-const chatStore = useChatStore()
-
-const route = useRoute()
 const dialog = useDialog()
 const ms = useMessage()
-const loading = ref<boolean>(false)
-const { uuid } = route.params as { uuid: string }
-const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActive)
-const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
+const route = useRoute()
+
 const { isMobile } = useBasicLayout()
+const isMobileValue = isMobile.value
+const spacing = isMobileValue ? 'space-x-1' : 'space-x-10'
+const width = isMobileValue ? 'w-[280px]' : 'w-[300px]'
+const mt = isMobileValue ? 'mt-3' : ''
+
+const appStore = useAppStore()
+const authStore = useAuthStore()
+const settingStore = useSettingStore()
+const userStore = useUserStore()
+const chatStore = useChatStore()
+
+const show = ref(false)
+const loading = ref<boolean>(false)
+
+const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
+
+const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActive)
+
+const { uuid } = route.params as { uuid: string }
+const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 
 function handleExport() {
   if (loading.value)
@@ -87,6 +105,30 @@ function onScrollToTop() {
   if (scrollRef)
     nextTick(() => scrollRef.scrollTop = 0)
 }
+
+const memory = ref(settingStore.memory ?? 1)
+const marks = {
+  1: t('setting.memory1'),
+  50: t('setting.memory2'),
+  99: t('setting.memory3'),
+}
+const persona = ref(settingStore.persona ?? 'balanced')
+const precise = 'precise'
+const balanced = 'balanced'
+const creative = 'creative'
+
+function updateSettings(options: Partial<SettingsState>) {
+  settingStore.updateSetting(options)
+  ms.success(t('common.success'))
+}
+
+async function handleSyncChatModel(chatModel: CHATMODEL) {
+  if (userStore.userInfo.config == null)
+    userStore.userInfo.config = new UserConfig()
+  userStore.userInfo.config.chatModel = chatModel
+  userStore.recordState()
+  await fetchUpdateUserChatModel(chatModel)
+}
 </script>
 
 <template>
@@ -118,5 +160,72 @@ function onScrollToTop() {
         </ToolButton>
       </div>
     </div>
+    <div v-if="!!authStore.token && isChatGPTAPI" class="absolute left-1/2 top-full -translate-x-1/2 cursor-pointer select-none rounded-b-md border bg-white px-4 dark:border-neutral-700 dark:bg-[#111114]" @click="show = true">
+      <span class="flex items-center space-x-2">
+        <span>{{ userStore.userInfo.config.chatModel }}</span>
+        <SvgIcon icon="ri:arrow-down-s-line" />
+      </span>
+    </div>
   </header>
+
+  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 640px" title="Advanced">
+    <div class="p-4 space-y-5 min-h-[200px]">
+      <div class="space-y-6">
+        <div class="flex flex-wrap items-center" :class="[spacing]">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.memory') }}</span>
+          <div :class="[width]">
+            <NSelect
+              style="width:185px"
+              :value="userStore.userInfo.config.chatModel"
+              :options="authStore.session?.chatModels"
+              :disabled="!!authStore.session?.auth && !authStore.token"
+              @update-value="(val: CHATMODEL) => handleSyncChatModel(val)"
+            />
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center" :class="[spacing]">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.memory') }}</span>
+          <div :class="[width]">
+            <NSlider v-model:value="memory" :marks="marks" step="mark" :tooltip="false" @update:value="updateSettings({ memory })" />
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center" :class="[spacing]">
+          <span class="flex-shrink-0 w-[100px]" />
+          <div class="w-[300px] text-center text-neutral-500 dark:text-gray-400">
+            {{ $t('setting.memory_info') }}
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center" :class="[spacing]">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.persona') }}</span>
+          <div :class="[width, mt]">
+            <NRadioGroup v-model:value="persona" size="medium" @update:value="updateSettings({ persona })">
+              <NRadioButton :value="precise">
+                {{ $t('setting.persona1') }}
+              </NRadioButton>
+              <NRadioButton :value="balanced">
+                {{ $t('setting.persona2') }}
+              </NRadioButton>
+              <NRadioButton :value="creative">
+                {{ $t('setting.persona3') }}
+              </NRadioButton>
+            </NRadioGroup>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center" :class="[spacing]">
+          <span class="flex-shrink-0 w-[100px]" />
+          <div class="w-[300px] text-center text-neutral-500 dark:text-gray-400">
+            <span v-if="precise === persona">
+              {{ $t('setting.persona1_info') }}
+            </span>
+            <span v-else-if="balanced === persona">
+              {{ $t('setting.persona2_info') }}
+            </span>
+            <span v-else>
+              {{ $t('setting.persona3_info') }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </NModal>
 </template>

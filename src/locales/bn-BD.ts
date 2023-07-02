@@ -27,7 +27,6 @@ export default {
     auditTip: 'Sensitive words do not take effect on Admin.',
   },
   chat: {
-    newChatButton: 'নতুন চ্যাট',
     placeholderText: 'আমাকে যে কোন কিছু জিজ্ঞাসা করুন...(Shift + Enter = লাইন বিরতি, "/" প্রম্পট ট্রিগার)',
     placeholderMobile: 'আমাকে কিছু জিজ্ঞাসা করুন...',
     copy: 'Copy',

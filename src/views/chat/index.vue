@@ -5,12 +5,11 @@ import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
 import { NAutoComplete, NButton, NInput, NSelect, NSpin, useDialog, useMessage } from 'naive-ui'
-import html2canvas from 'html2canvas'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
-import HeaderComponent from './components/Header/index.vue'
-import { HoverButton, SvgIcon } from '@/components/common'
+import Header from './components/Header/index.vue'
+import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStore, useChatStore, usePromptStore, useUserStore } from '@/store'
 import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding, fetchUpdateUserChatModel } from '@/api'
@@ -51,10 +50,7 @@ let loadingms: MessageReactive
 let allmsg: MessageReactive
 let prevScrollTop: number
 
-// Add PromptStore
 const promptStore = usePromptStore()
-
-// Use storeToRefs to ensure that the associative part can be re-rendered after the store is modified
 const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
 
 // If the page is refreshed for unknown reasons, the loading status will not be reset, so it can be reset manually.
@@ -382,48 +378,6 @@ async function onResponseHistory(index: number, historyIndex: number) {
   )
 }
 
-function handleExport() {
-  if (loading.value)
-    return
-
-  const d = dialog.warning({
-    title: t('chat.exportImage'),
-    content: t('chat.exportImageConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
-    onPositiveClick: async () => {
-      try {
-        d.loading = true
-        const ele = document.getElementById('image-wrapper')
-        const canvas = await html2canvas(ele as HTMLDivElement, {
-          useCORS: true,
-        })
-        const imgUrl = canvas.toDataURL('image/png')
-        const tempLink = document.createElement('a')
-        tempLink.style.display = 'none'
-        tempLink.href = imgUrl
-        tempLink.setAttribute('download', 'chat-shot.png')
-        if (typeof tempLink.download === 'undefined')
-          tempLink.setAttribute('target', '_blank')
-
-        document.body.appendChild(tempLink)
-        tempLink.click()
-        document.body.removeChild(tempLink)
-        window.URL.revokeObjectURL(imgUrl)
-        d.loading = false
-        ms.success(t('chat.exportSuccess'))
-        Promise.resolve()
-      }
-      catch (error: any) {
-        ms.error(t('chat.exportFailed'))
-      }
-      finally {
-        d.loading = false
-      }
-    },
-  })
-}
-
 function handleDelete(index: number) {
   if (loading.value)
     return
@@ -435,21 +389,6 @@ function handleDelete(index: number) {
     negativeText: t('common.no'),
     onPositiveClick: () => {
       chatStore.deleteChatByUuid(+uuid, index)
-    },
-  })
-}
-
-function handleClear() {
-  if (loading.value)
-    return
-
-  dialog.warning({
-    title: t('chat.clearChat'),
-    content: t('chat.clearChatConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
-    onPositiveClick: () => {
-      chatStore.clearChatByUuid(+uuid)
     },
   })
 }
@@ -534,9 +473,7 @@ async function handleToggleUsingContext() {
     ms.warning(t('chat.turnOffContext'))
 }
 
-// Optimizable section
-// Search option calculation, here using value as an index item, so when there is a duplicate value rendering exception (multiple simultaneous appearance of the selected effect)
-// Ideally it should be the key as the index item, but the official renderOption will have problems, so you need the value inverse renderLabel to achieve
+// Build-in prompt
 const searchOptions = computed(() => {
   if (prompt.value.startsWith('/')) {
     return promptTemplate.value.filter((item: { key: string }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
@@ -608,35 +545,25 @@ onUnmounted(() => {
 
 <template>
   <div class="flex flex-col w-full h-full">
-    <HeaderComponent
-      v-if="isMobile"
-      :using-context="usingContext"
-      @export="handleExport" @handle-clear="handleClear"
-    />
+    <Header />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
-        <div
-          id="image-wrapper"
-          class="w-full max-w-screen-xl m-auto dark:bg-[#111111]"
-          :class="[isMobile ? 'p-2' : 'p-4']"
-        >
+        <div id="image-wrapper" class="w-full max-w-screen-2xl m-auto dark:bg-[#111111]" :class="[isMobile ? 'p-2' : 'p-4']">
           <NSpin :show="firstLoading">
             <template v-if="!dataSources.length">
-              <div class="flex items-center justify-center mt-2 text-neutral-300">
+              <div class="flex items-center justify-center mt-2">
                 <!-- AxiomAI is being introduced. -->
                 <div class="text-gray-800 w-full md:max-w-2xl lg:max-w-3xl md:h-full md:flex md:flex-col px-6 dark:text-gray-100">
                   <!-- Model Selection -->
-                  <div style="display: flex; justify-content: center;">
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                      <SvgIcon style="width: 30px; height: 30px; margin-right: 6px;" class="spin-on-hover" icon="ri:openai-fill" />
-                      <NSelect
-                        style="width: 185px"
-                        :value="userStore.userInfo.config.chatModel"
-                        :options="authStore.session?.chatModels"
-                        :disabled="!!authStore.session?.auth && !authStore.token"
-                        @update-value="(val: CHATMODEL) => handleSyncChatModel(val)"
-                      />
-                    </div>
+                  <div class="flex items-center justify-center">
+                    <SvgIcon style="width:30px;height:30px;margin-right:6px;" class="spin-on-hover" icon="ri:openai-fill" />
+                    <NSelect
+                      style="width:185px"
+                      :value="userStore.userInfo.config.chatModel"
+                      :options="authStore.session?.chatModels"
+                      :disabled="!!authStore.session?.auth && !authStore.token"
+                      @update-value="(val: CHATMODEL) => handleSyncChatModel(val)"
+                    />
                   </div>
                   <!-- Model Selection End -->
                   <h1 class="text-4xl font-semibold text-center mt-6 sm:mt-[20vh] ml-auto mr-auto mb-10 sm:mb-16 flex gap-2 items-center justify-center">
@@ -681,7 +608,7 @@ onUnmounted(() => {
                     </div>
                   </div>
                 </div>
-              <!-- End of introduction. -->
+                <!-- End of introduction. -->
               </div>
             </template>
             <template v-else>
@@ -717,21 +644,11 @@ onUnmounted(() => {
     <footer :class="footerClass">
       <div class="w-full max-w-screen-xl m-auto">
         <div class="flex items-center justify-between space-x-2">
-          <HoverButton v-if="!isMobile" :tooltip="$t('chat.deleteMessage')" placement="top" @click="handleClear">
-            <span class="text-xl text-black dark:text-white">
-              <SvgIcon icon="ri:delete-bin-line" />
-            </span>
-          </HoverButton>
-          <HoverButton v-if="!isMobile" :tooltip="$t('chat.exportImage')" placement="top" @click="handleExport">
-            <span class="text-xl text-black dark:text-white">
-              <SvgIcon icon="mdi:file-export-outline" />
-            </span>
-          </HoverButton>
-          <HoverButton :tooltip="$t('chat.usingContext')" placement="top" @click="handleToggleUsingContext">
+          <ToolButton :tooltip="$t('chat.usingContext')" placement="top" @click="handleToggleUsingContext">
             <span class="text-xl" :class="{ 'text-[#22c55e]': usingContext, 'text-[#a8071a]': !usingContext }">
               <SvgIcon icon="fluent:brain-circuit-24-filled" />
             </span>
-          </HoverButton>
+          </ToolButton>
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption" placement="top">
             <template #default="{ handleInput, handleBlur, handleFocus }">
               <NInput

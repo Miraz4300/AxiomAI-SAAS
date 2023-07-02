@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { NLayoutHeader, useDialog, useMessage } from 'naive-ui'
+import { useDialog, useMessage } from 'naive-ui'
 import { computed, nextTick, ref } from 'vue'
 import html2canvas from 'html2canvas'
 import { useRoute } from 'vue-router'
@@ -17,6 +17,7 @@ const ms = useMessage()
 const loading = ref<boolean>(false)
 const { uuid } = route.params as { uuid: string }
 const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActive)
+const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const { isMobile } = useBasicLayout()
 
 function handleExport() {
@@ -89,7 +90,7 @@ function onScrollToTop() {
 </script>
 
 <template>
-  <NLayoutHeader bordered :class="[isMobile ? 'bg-white/80 dark:bg-black/20' : '']">
+  <header class="relative z-30 border-b border-b-neutral-300 dark:border-b-neutral-800 backdrop-blur" :class="[isMobile ? 'bg-white/80 dark:bg-black/20' : 'bg-[#EEE9E9] dark:bg-[#111111]']">
     <div class="m-auto flex h-14 max-w-screen-2xl items-center justify-between" :class="[isMobile ? 'px-2' : 'px-4']">
       <div class="flex min-w-0 flex-1 items-center space-x-2 overflow-hidden pr-2">
         <button
@@ -100,11 +101,11 @@ function onScrollToTop() {
           <SvgIcon v-if="collapsed" class="text-2xl" icon="ri:align-justify" />
           <SvgIcon v-else class="text-2xl" icon="ri:align-right" />
         </button>
-        <span class="flex-1 overflow-hidden cursor-pointer select-none text-ellipsis whitespace-nowrap" @dblclick="onScrollToTop">
+        <span class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap" :class="[isMobile ? 'cursor-pointer select-none' : 'text-base font-bold']" @dblclick="onScrollToTop">
           {{ currentChatHistory?.title ?? '' }}
         </span>
       </div>
-      <div class="flex items-center space-x-2">
+      <div v-if="dataSources.length" class="flex items-center space-x-2">
         <ToolButton :tooltip="$t('chat.exportImage')" @click="handleExport">
           <span class="text-xl text-[#4f555e] dark:text-white">
             <SvgIcon icon="mdi:file-export-outline" />
@@ -112,10 +113,10 @@ function onScrollToTop() {
         </ToolButton>
         <ToolButton :tooltip="$t('chat.deleteMessage')" @click="handleClear">
           <span class="text-xl text-[#4f555e] dark:text-white">
-            <SvgIcon icon="ri:delete-bin-line" />
+            <SvgIcon icon="ri:brush-2-line" />
           </span>
         </ToolButton>
       </div>
     </div>
-  </NLayoutHeader>
+  </header>
 </template>

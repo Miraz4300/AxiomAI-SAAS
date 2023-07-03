@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
-import { computed, nextTick, ref } from 'vue'
+import { computed, ref } from 'vue'
 import html2canvas from 'html2canvas'
 import { useRoute } from 'vue-router'
 import { useAppStore, useAuthStore, useChatStore, useSettingStore, useUserStore } from '@/store'
@@ -100,12 +100,6 @@ function handleUpdateCollapsed() {
   appStore.setSiderCollapsed(!collapsed.value)
 }
 
-function onScrollToTop() {
-  const scrollRef = document.querySelector('#scrollRef')
-  if (scrollRef)
-    nextTick(() => scrollRef.scrollTop = 0)
-}
-
 const memory = ref(settingStore.memory ?? 1)
 const marks = {
   1: t('setting.memory1'),
@@ -132,7 +126,7 @@ async function handleSyncChatModel(chatModel: CHATMODEL) {
 </script>
 
 <template>
-  <header class="relative z-30 border-b border-b-neutral-300 dark:border-b-neutral-800 backdrop-blur" :class="[isMobile ? 'bg-white/80 dark:bg-black/20' : 'bg-[#EEE9E9] dark:bg-[#111111]']">
+  <header class="relative z-30 border-b border-b-neutral-300 dark:border-b-neutral-800 bg-[#EEE9E9] dark:bg-[#111111] backdrop-blur">
     <div class="m-auto flex h-14 max-w-screen-2xl items-center justify-between" :class="[isMobile ? 'px-2' : 'px-4']">
       <div class="flex min-w-0 flex-1 items-center space-x-2 overflow-hidden pr-2">
         <button
@@ -143,7 +137,7 @@ async function handleSyncChatModel(chatModel: CHATMODEL) {
           <SvgIcon v-if="collapsed" class="text-2xl" icon="ri:align-justify" />
           <SvgIcon v-else class="text-2xl" icon="ri:align-right" />
         </button>
-        <span class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap" :class="[isMobile ? 'cursor-pointer select-none' : 'text-base font-bold']" @dblclick="onScrollToTop">
+        <span class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap" :class="[isMobile ? '' : 'text-base font-bold']">
           {{ currentChatHistory?.title ?? '' }}
         </span>
       </div>

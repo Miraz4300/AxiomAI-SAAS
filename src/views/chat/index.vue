@@ -433,7 +433,7 @@ async function loadMoreMessage(event: any) {
     )
   }, () => {
     allmsg && allmsg.destroy()
-    allmsg = ms.warning('No more', {
+    allmsg = ms.warning('Synced', {
       duration: 1000,
     })
   })

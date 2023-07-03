@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
-import { computed, watch } from 'vue'
-import { NButton, NLayoutSider, NPopconfirm } from 'naive-ui'
+import { computed, ref, watch } from 'vue'
+import { NButton, NInput, NLayoutSider, NPopconfirm } from 'naive-ui'
 import List from './List.vue'
 import Footer from './Footer.vue'
 import { useAppStore, useAuthStore, useChatStore } from '@/store'
@@ -17,6 +17,8 @@ const { isMobile } = useBasicLayout()
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
+const keyword = ref(chatStore.searchKeyword)
+
 async function handleAdd() {
   await chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false, usingContext: true })
   if (isMobile.value)
@@ -31,6 +33,10 @@ async function clearData(): Promise<void> {
 
 function handleUpdateCollapsed() {
   appStore.setSiderCollapsed(!collapsed.value)
+}
+
+function handleSearchChat() {
+  chatStore.setSearchKeyword(keyword.value)
 }
 
 const getMobileClass = computed<CSSProperties>(() => {
@@ -79,9 +85,24 @@ watch(
     <div class="flex flex-col h-full" :style="mobileSafeArea">
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
-          <NButton dashed block :disabled="!!authStore.session?.auth && !authStore.token" @click="handleAdd">
-            {{ $t('chat.newChatButton') }}
-          </NButton>
+          <div class="p-1">
+            <NButton dashed block :disabled="!!authStore.session?.auth && !authStore.token" @click="handleAdd">
+              {{ $t('chat.newChatButton') }}
+            </NButton>
+          </div>
+          <div class="p-1">
+            <NInput
+              v-if="chatStore.history.length > 10"
+              v-model:value="keyword"
+              clearable
+              :placeholder="$t('chat.searchPlaceholder')"
+              @update:value="handleSearchChat"
+            >
+              <template #prefix>
+                <SvgIcon icon="ri:search-line" />
+              </template>
+            </NInput>
+          </div>
         </div>
         <div class="flex-1 min-h-0 pb-4 overflow-hidden">
           <List />

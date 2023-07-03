@@ -3,14 +3,14 @@ import { ss } from '@/utils/storage'
 const LOCAL_NAME = 'settingsStorage'
 
 export interface SettingsState {
-  temperature: number
-  top_p: number
+  memory: number
+  persona: string
 }
 
 export function defaultSetting(): SettingsState {
   return {
-    temperature: 0.8,
-    top_p: 1,
+    memory: 1,
+    persona: 'balanced',
   }
 }
 

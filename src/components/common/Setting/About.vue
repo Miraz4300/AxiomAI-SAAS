@@ -3,14 +3,14 @@ import pkg from '@/../package.json'
 </script>
 
 <template>
-  <div class="p-4 space-y-4">
+  <div class="p-4 space-y-4 bg-gray-50 dark:bg-white/5 rounded-md">
     <h2 class="text-2xl text-[#000000] dark:text-[#FFFFFF] font-bold">
       <center> AxiomAI </center>
     </h2>
     <div class="p-2 space-y-2 rounded-md bg-neutral-200 dark:bg-stone-700">
       <center>
         <p>
-          AxiomAI uses deep learning techniques to understand natural language and generate responses in real-time, built on the GPT-3.5 architecture.
+          AxiomAI uses deep learning techniques to understand natural language and generate responses in real-time, built on the GPT architecture.
           With its advanced natural language processing capabilities, AxiomAI can engage in sophisticated conversations and provide intelligent responses to a wide range of queries.
         </p>
       </center>

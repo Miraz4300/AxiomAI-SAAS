@@ -85,26 +85,18 @@ watch(
     <div class="flex flex-col h-full" :style="mobileSafeArea">
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
-          <div class="p-1">
-            <NButton dashed block :disabled="!!authStore.session?.auth && !authStore.token" @click="handleAdd">
-              {{ $t('chat.newChatButton') }}
-            </NButton>
-          </div>
-          <div class="p-1">
-            <NInput
-              v-if="chatStore.history.length > 10"
-              v-model:value="keyword"
-              clearable
-              :placeholder="$t('chat.searchPlaceholder')"
-              @update:value="handleSearchChat"
-            >
+          <div class="flex space-x-2">
+            <NInput v-model:value="keyword" size="small" :disabled="!!authStore.session?.auth && !authStore.token" clearable :placeholder="$t('chat.searchPlaceholder')" @update:value="handleSearchChat">
               <template #prefix>
                 <SvgIcon icon="ri:search-line" />
               </template>
             </NInput>
+            <NButton type="primary" size="small" :disabled="!!authStore.session?.auth && !authStore.token" @click="handleAdd">
+              <SvgIcon icon="ri:add-line" />
+            </NButton>
           </div>
         </div>
-        <div class="flex-1 min-h-0 pb-4 overflow-hidden">
+        <div class="flex-1 min-h-0 pb-4 mt-3 overflow-hidden">
           <List />
         </div>
         <div class="p-4">

@@ -35,6 +35,14 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: '/user',
+    name: 'User',
+    component: () => import('@/components/common/Setting/index.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/404',
     name: '404',
     component: () => import('@/views/exception/404/index.vue'),

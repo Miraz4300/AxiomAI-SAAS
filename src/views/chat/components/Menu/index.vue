@@ -8,19 +8,26 @@ import { ADMIN_ROUTE, SETTING_ROUTE } from '@/router/routes'
 const router = useRouter()
 const authStore = useAuthStore()
 const userStore = useUserStore()
+
 const { isMobile } = useBasicLayout()
+const buttonClass = 'h-12 w-12 cursor-pointer rounded-xl bg-white dark:bg-[#34373c] text-[#4b9e5f] dark:text-[#86dfba]'
+const iconClass = 'flex h-full m-auto text-center text-2xl'
+const iconClass2 = 'inline-block text-xl'
+
+function goChat() {
+  router.push('/')
+}
+
+function goSetting() {
+  router.push('/user')
+}
 </script>
 
 <template>
   <div v-if="!isMobile" class="min-w-[72px] bg-[#e8eaf1] dark:bg-[#202020]">
     <div class="flex h-full flex-col items-center justify-between px-2 py-7">
       <div class="flex flex-col space-y-4">
-        <a class="h-12 w-12 cursor-pointer rounded-xl bg-white dark:bg-[#34373c] text-[#4b9e5f] dark:text-[#86dfba]">
-          <div class="flex h-full"><div class="m-auto text-center text-2xl"><SvgIcon icon="ri:message-3-line" /></div></div>
-        </a>
-        <a class="h-12 w-12 cursor-pointer rounded-xl bg-white dark:bg-[#34373c] text-[#4b9e5f] dark:text-[#86dfba]">
-          <div class="flex h-full"><div class="m-auto text-center text-2xl"><SvgIcon icon="tabler:photo-ai" /></div></div>
-        </a>
+        <a :class="[buttonClass]" @click="goChat"><SvgIcon :class="[iconClass]" icon="ri:message-3-line" /></a>
       </div>
       <div class="flex flex-col items-center space-y-2">
         <HoverButton v-if="userStore.userInfo.root" @click="router.push(ADMIN_ROUTE)">
@@ -37,17 +44,12 @@ const { isMobile } = useBasicLayout()
 
   <NLayoutFooter v-if="isMobile" class="bg-[#e8eaf1] dark:bg-[#202020]">
     <div class="grid py-2 border-t dark:border-t-neutral-800 grid-cols-4">
-      <a class="leading-4 text-center cursor-pointer text-[#4b9e5f] dark:text-[#86dfba]">
-        <span class="inline-block text-xl"><SvgIcon icon="ri:message-3-line" /></span>
+      <a class="leading-4 text-center cursor-pointer" @click="goChat">
+        <SvgIcon :class="[iconClass2]" icon="ri:message-3-line" />
         <p>Chat</p>
       </a>
-      <a class="leading-4 text-center cursor-pointer text-slate-500"><span class="inline-block text-xl"><SvgIcon icon="ri:message-3-line" /></span>
-        <p>Image</p>
-      </a>
-      <a class="leading-4 text-center cursor-pointer text-slate-500"><span class="inline-block text-xl"><SvgIcon icon="ri:message-3-line" /></span>
-        <p>News</p>
-      </a>
-      <a class="leading-4 text-center cursor-pointer text-slate-500"><span class="inline-block text-xl"><SvgIcon icon="ri:message-3-line" /></span>
+      <a class="leading-4 text-center cursor-pointer" @click="goSetting">
+        <SvgIcon :class="[iconClass2]" icon="mdi:account-circle-outline" />
         <p>Personal</p>
       </a>
     </div>

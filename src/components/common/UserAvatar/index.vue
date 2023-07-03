@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, defineProps } from 'vue'
+import { computed } from 'vue'
 import { NAvatar } from 'naive-ui'
 import { useUserStore } from '@/store'
 import defaultAvatar from '@/assets/avatar.jpg'

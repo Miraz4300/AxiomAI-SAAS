@@ -76,6 +76,7 @@ export default {
     chatHistory: 'History',
     theme: 'Theme',
     language: 'Language',
+    model: 'Model',
     memory: 'Memory',
     memory_info: 'The stronger the memory, the more context AxiomAI can remember during conversations, but it may consume more tokens.',
     memory1: 'Ordinary',

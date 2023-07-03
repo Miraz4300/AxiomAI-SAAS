@@ -76,6 +76,7 @@ export default {
     chatHistory: 'ইতিহাস',
     theme: 'থিম',
     language: 'Language',
+    model: 'মডেল',
     memory: 'মেমরি',
     memory_info: 'মেমরি যত শক্তিশালী হবে, কথোপকথনের সময় AxiomAI তত বেশি প্রসঙ্গ মনে রাখতে পারে, তবে এটি বেশি টোকেন ব্যবহার করতে পারে।',
     memory1: 'সাধারণ',

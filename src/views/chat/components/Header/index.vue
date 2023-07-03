@@ -16,17 +16,17 @@ const dialog = useDialog()
 const ms = useMessage()
 const route = useRoute()
 
-const { isMobile } = useBasicLayout()
-const isMobileValue = isMobile.value
-const spacing = isMobileValue ? 'space-x-1' : 'space-x-10'
-const width = isMobileValue ? 'w-[280px]' : 'w-[300px]'
-const mt = isMobileValue ? 'mt-3' : ''
-
 const appStore = useAppStore()
 const authStore = useAuthStore()
+const chatStore = useChatStore()
 const settingStore = useSettingStore()
 const userStore = useUserStore()
-const chatStore = useChatStore()
+
+const { isMobile } = useBasicLayout()
+const isMobileValue = isMobile.value
+const width = isMobileValue ? 'w-[280px]' : 'w-[300px]'
+const mt = isMobileValue ? 'mt-3' : ''
+const info = 'mt-2 text-xs text-neutral-500 dark:text-gray-400'
 
 const show = ref(false)
 const loading = ref<boolean>(false)
@@ -163,63 +163,53 @@ async function handleSyncChatModel(chatModel: CHATMODEL) {
   </header>
 
   <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 640px" title="Advanced">
-    <div class="p-4 space-y-5 min-h-[200px]">
-      <div class="space-y-6">
-        <div class="flex flex-wrap items-center" :class="[spacing]">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.memory') }}</span>
-          <div :class="[width]">
-            <NSelect
-              style="width:185px"
-              :value="userStore.userInfo.config.chatModel"
-              :options="authStore.session?.chatModels"
-              :disabled="!!authStore.session?.auth && !authStore.token"
-              @update-value="(val: CHATMODEL) => handleSyncChatModel(val)"
-            />
-          </div>
-        </div>
-        <div class="flex flex-wrap items-center" :class="[spacing]">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.memory') }}</span>
-          <div :class="[width]">
-            <NSlider v-model:value="memory" :marks="marks" step="mark" :tooltip="false" @update:value="updateSettings({ memory })" />
-          </div>
-        </div>
-        <div class="flex flex-wrap items-center" :class="[spacing]">
-          <span class="flex-shrink-0 w-[100px]" />
-          <div class="w-[300px] text-center text-neutral-500 dark:text-gray-400">
-            {{ $t('setting.memory_info') }}
-          </div>
-        </div>
-        <div class="flex flex-wrap items-center" :class="[spacing]">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.persona') }}</span>
-          <div :class="[width, mt]">
-            <NRadioGroup v-model:value="persona" size="medium" @update:value="updateSettings({ persona })">
-              <NRadioButton :value="precise">
-                {{ $t('setting.persona1') }}
-              </NRadioButton>
-              <NRadioButton :value="balanced">
-                {{ $t('setting.persona2') }}
-              </NRadioButton>
-              <NRadioButton :value="creative">
-                {{ $t('setting.persona3') }}
-              </NRadioButton>
-            </NRadioGroup>
-          </div>
-        </div>
-        <div class="flex flex-wrap items-center" :class="[spacing]">
-          <span class="flex-shrink-0 w-[100px]" />
-          <div class="w-[300px] text-center text-neutral-500 dark:text-gray-400">
-            <span v-if="precise === persona">
-              {{ $t('setting.persona1_info') }}
-            </span>
-            <span v-else-if="balanced === persona">
-              {{ $t('setting.persona2_info') }}
-            </span>
-            <span v-else>
-              {{ $t('setting.persona3_info') }}
-            </span>
-          </div>
+    <div class="p-4 space-y-5">
+      <div class="flex items-center justify-between">
+        <span>{{ $t('setting.model') }}</span>
+        <div>
+          <NSelect
+            style="width:200px"
+            :value="userStore.userInfo.config.chatModel"
+            :options="authStore.session?.chatModels"
+            :disabled="!!authStore.session?.auth && !authStore.token"
+            @update-value="(val: CHATMODEL) => handleSyncChatModel(val)"
+          />
         </div>
       </div>
+      <div class="flex items-center justify-between">
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.memory') }}</span>
+        <div :class="[width]">
+          <NSlider v-model:value="memory" :marks="marks" step="mark" :tooltip="false" @update:value="updateSettings({ memory })" />
+        </div>
+      </div>
+      <p :class="[info]">
+        {{ $t('setting.memory_info') }}
+      </p>
+      <div class="flex items-center" :class="[isMobile ? 'flex-wrap' : 'justify-between']">
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.persona') }}</span>
+        <div :class="[mt]">
+          <NRadioGroup v-model:value="persona" size="medium" @update:value="updateSettings({ persona })">
+            <NRadioButton :value="precise">
+              {{ $t('setting.persona1') }}
+            </NRadioButton>
+            <NRadioButton :value="balanced">
+              {{ $t('setting.persona2') }}
+            </NRadioButton>
+            <NRadioButton :value="creative">
+              {{ $t('setting.persona3') }}
+            </NRadioButton>
+          </NRadioGroup>
+        </div>
+      </div>
+      <p v-if="precise === persona" :class="[info]">
+        {{ $t('setting.persona1_info') }}
+      </p>
+      <p v-else-if="balanced === persona" :class="[info]">
+        {{ $t('setting.persona2_info') }}
+      </p>
+      <p v-else :class="[info]">
+        {{ $t('setting.persona3_info') }}
+      </p>
     </div>
   </NModal>
 </template>

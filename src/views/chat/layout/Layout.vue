@@ -18,9 +18,7 @@ const { isMobile } = useBasicLayout()
 const collapsed = computed(() => appStore.siderCollapsed)
 
 const getMobileClass = computed(() => (isMobile.value ? ['rounded-none', 'shadow-none'] : ['border', 'rounded-none', 'shadow-md', 'dark:border-neutral-800']))
-
 const getContainerClass = computed(() => ['h-full', { 'pl-[260px]': !isMobile.value && !collapsed.value }])
-
 const getMobileMenu = computed(() => (isMobile.value ? ['flex', 'flex-col', 'h-full'] : ['']))
 </script>
 

@@ -129,28 +129,24 @@ async function handleSyncChatModel(chatModel: CHATMODEL) {
   <header class="relative z-30 border-b border-b-neutral-300 dark:border-b-neutral-800 bg-[#EEE9E9] dark:bg-[#111111] backdrop-blur">
     <div class="m-auto flex h-14 max-w-screen-2xl items-center justify-between" :class="[isMobile ? 'px-2' : 'px-4']">
       <div class="flex min-w-0 flex-1 items-center space-x-2 overflow-hidden pr-2">
-        <button
+        <ToolButton
           v-if="isMobile"
           class="flex items-center"
           @click="handleUpdateCollapsed"
         >
-          <SvgIcon v-if="collapsed" class="text-2xl" icon="ri:align-justify" />
-          <SvgIcon v-else class="text-2xl" icon="ri:align-right" />
-        </button>
+          <SvgIcon v-if="collapsed" class="text-xl" icon="ri:align-justify" />
+          <SvgIcon v-else class="text-xl" icon="ri:align-right" />
+        </ToolButton>
         <span class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap" :class="[isMobile ? '' : 'text-base font-bold']">
           {{ currentChatHistory?.title ?? '' }}
         </span>
       </div>
       <div v-if="dataSources.length" class="flex items-center space-x-2">
         <ToolButton :tooltip="$t('chat.exportImage')" @click="handleExport">
-          <span class="text-xl text-[#4f555e] dark:text-white">
-            <SvgIcon icon="mdi:file-export-outline" />
-          </span>
+          <SvgIcon class="text-xl" icon="mdi:file-export-outline" />
         </ToolButton>
         <ToolButton :tooltip="$t('chat.deleteMessage')" @click="handleClear">
-          <span class="text-xl text-[#4f555e] dark:text-white">
-            <SvgIcon icon="ri:brush-2-line" />
-          </span>
+          <SvgIcon class="text-xl" icon="ri:brush-2-line" />
         </ToolButton>
       </div>
     </div>

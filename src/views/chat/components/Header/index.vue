@@ -137,7 +137,7 @@ async function handleSyncChatModel(chatModel: CHATMODEL) {
           <SvgIcon v-if="collapsed" class="text-xl" icon="ri:align-justify" />
           <SvgIcon v-else class="text-xl" icon="ri:align-right" />
         </ToolButton>
-        <span class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap" :class="[isMobile ? '' : 'text-base font-bold']">
+        <span class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-[340px]" :class="[isMobile ? '' : 'text-base font-bold']">
           {{ currentChatHistory?.title ?? '' }}
         </span>
       </div>
@@ -150,7 +150,7 @@ async function handleSyncChatModel(chatModel: CHATMODEL) {
         </ToolButton>
       </div>
     </div>
-    <div v-if="!!authStore.token && isChatGPTAPI" class="absolute left-1/2 top-full -translate-x-1/2 cursor-pointer select-none rounded-b-md border bg-white px-4 dark:border-neutral-700 dark:bg-[#111114]" @click="show = true">
+    <div v-if="!!authStore.token && isChatGPTAPI" class="absolute z-20 left-1/2 top-full -translate-x-1/2 cursor-pointer select-none rounded-b-md border bg-white px-4 dark:border-neutral-700 dark:bg-[#111114]" @click="show = true">
       <span class="flex items-center space-x-2">
         <span>{{ userStore.userInfo.config.chatModel }}</span>
         <SvgIcon icon="ri:arrow-down-s-line" />

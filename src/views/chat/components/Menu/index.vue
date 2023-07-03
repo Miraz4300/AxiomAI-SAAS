@@ -43,12 +43,12 @@ function goSetting() {
   </div>
 
   <NLayoutFooter v-if="isMobile" class="bg-[#e8eaf1] dark:bg-[#202020]">
-    <div class="grid py-2 border-t dark:border-t-neutral-800 grid-cols-4">
-      <a class="leading-4 text-center cursor-pointer" @click="goChat">
+    <div class="grid py-2 border-t dark:border-t-neutral-800 grid-cols-2">
+      <a class="leading-4 text-center cursor-pointer text-[#4b9e5f] dark:text-[#86dfba]" @click="goChat">
         <SvgIcon :class="[iconClass2]" icon="ri:message-3-line" />
         <p>Chat</p>
       </a>
-      <a class="leading-4 text-center cursor-pointer" @click="goSetting">
+      <a class="leading-4 text-center cursor-pointer text-[#4b9e5f] dark:text-[#86dfba]" @click="goSetting">
         <SvgIcon :class="[iconClass2]" icon="mdi:account-circle-outline" />
         <p>Personal</p>
       </a>

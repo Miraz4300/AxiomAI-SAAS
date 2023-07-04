@@ -208,11 +208,11 @@ function handleDropdown(optionKey: string) {
       </div>
       <div v-if="dataSources.length" class="flex items-center space-x-2">
         <NDropdown trigger="click" :options="options" @select="handleDropdown">
-          <ToolButton :tooltip="$t('chat.exportChat')">
+          <ToolButton :tooltip="!isMobile ? $t('chat.exportChat') : ''">
             <SvgIcon class="text-xl" icon="ri:file-download-line" />
           </ToolButton>
         </NDropdown>
-        <ToolButton :tooltip="$t('chat.deleteMessage')" @click="handleClear">
+        <ToolButton :tooltip="!isMobile ? $t('chat.deleteMessage') : ''" @click="handleClear">
           <SvgIcon class="text-xl" icon="ri:brush-2-line" />
         </ToolButton>
       </div>

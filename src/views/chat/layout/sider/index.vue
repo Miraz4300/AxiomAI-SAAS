@@ -96,7 +96,7 @@ watch(
             </NButton>
           </div>
         </div>
-        <div class="flex-1 min-h-0 pb-4 mt-3 overflow-hidden">
+        <div class="flex-1 min-h-0 pb-4 mt-8 overflow-hidden">
           <List />
         </div>
         <div class="p-4">

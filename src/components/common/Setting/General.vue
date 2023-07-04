@@ -1,11 +1,10 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { NButton, NInput, NSelect, useDialog, useMessage } from 'naive-ui'
+import { NButton, NInput, NSelect, useMessage } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon, UserAvatar } from '@/components/common'
 import { useAppStore, useAuthStore, useUserStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
-import { getCurrentDate } from '@/utils/functions'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
 
@@ -26,8 +25,6 @@ const avatar = ref(userInfo.value.avatar ?? '')
 const name = ref(userInfo.value.name ?? '')
 
 const description = ref(userInfo.value.description ?? '')
-
-const dialog = useDialog()
 
 const language = computed({
   get() {
@@ -66,26 +63,12 @@ async function updateUserInfo(options: Partial<UserInfo>) {
   ms.success(t('common.success'))
 }
 
-function exportData(): void {
-  const date = getCurrentDate()
-  const data: string = localStorage.getItem('chatStorage') || '{}'
-  const jsonString: string = JSON.stringify(JSON.parse(data), null, 2)
-  const blob: Blob = new Blob([jsonString], { type: 'application/json' })
-  const url: string = URL.createObjectURL(blob)
-  const link: HTMLAnchorElement = document.createElement('a')
-  link.href = url
-  link.download = `axiomai_history_${date}.json`
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-}
-
 function handleLogout() {
-  dialog.warning({
-    title: t('setting.logOut'),
-    content: t('setting.logOutConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
+  window.$dialog?.warning({
+    title: 'Logout',
+    content: 'Are you sure to Logout?',
+    positiveText: 'logout',
+    negativeText: 'cancel',
     onPositiveClick: async () => {
       await authStore.removeToken()
     },
@@ -94,81 +77,64 @@ function handleLogout() {
 </script>
 
 <template>
-  <div class="p-4 space-y-5 min-h-[200px]">
-    <div class="space-y-6">
-      <div class="flex flex-shrink-0 w-[100px] items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]" />
-        <UserAvatar :size="100" />
+  <div class="space-y-6" :class="[isMobile ? 'p-2' : 'p-4']">
+    <div class="flex flex-shrink-0 w-[100px] items-center space-x-4">
+      <span class="flex-shrink-0 w-[100px]" />
+      <UserAvatar :size="100" />
+    </div>
+    <div class="flex items-center space-x-4">
+      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
+      <div class="flex-1">
+        <NInput v-model:value="name" placeholder="" />
       </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
-        <div class="flex-1">
-          <NInput v-model:value="name" placeholder="" />
-        </div>
+    </div>
+    <div class="flex items-center space-x-4">
+      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
+      <div class="flex-1">
+        <NInput v-model:value="description" placeholder="Innovative and strategic problem solver." />
       </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
-        <div class="flex-1">
-          <NInput v-model:value="description" placeholder="Innovative and strategic problem solver." />
-        </div>
+    </div>
+    <div class="flex items-center space-x-4">
+      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
+      <div class="flex-1">
+        <NInput v-model:value="avatar" placeholder="https://example.com/avatar/image.png" />
       </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
-        <div class="flex-1">
-          <NInput v-model:value="avatar" placeholder="https://example.com/avatar/image.png" />
-        </div>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.theme') }}</span>
-        <div class="flex flex-wrap items-center gap-4">
-          <template v-for="item of themeOptions" :key="item.key">
-            <NButton
-              size="small"
-              :type="item.key === theme ? 'primary' : undefined"
-              @click="appStore.setTheme(item.key)"
-            >
-              <template #icon>
-                <SvgIcon :icon="item.icon" />
-              </template>
-            </NButton>
-          </template>
-        </div>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.language') }}</span>
-        <div class="flex flex-wrap items-center gap-4">
-          <NSelect
-            style="width: 140px"
-            :value="language"
-            :options="languageOptions"
-            @update-value="value => appStore.setLanguage(value)"
-          />
-        </div>
-      </div>
-      <div
-        class="flex items-center space-x-4"
-        :class="isMobile && 'items-start'"
-      >
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.chatHistory') }}</span>
-
-        <div class="flex flex-wrap items-center gap-4">
-          <NButton size="small" @click="exportData">
+    </div>
+    <div class="flex items-center space-x-4">
+      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.theme') }}</span>
+      <div class="flex flex-wrap items-center gap-4">
+        <template v-for="item of themeOptions" :key="item.key">
+          <NButton
+            size="small"
+            :type="item.key === theme ? 'primary' : undefined"
+            @click="appStore.setTheme(item.key)"
+          >
             <template #icon>
-              <SvgIcon icon="ri:upload-2-fill" />
+              <SvgIcon :icon="item.icon" />
             </template>
-            {{ $t('common.export') }}
           </NButton>
-        </div>
+        </template>
       </div>
-      <div class="flex flex-shrink-0 w-[100px] items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]" />
-        <NButton type="primary" @click="updateUserInfo({ avatar, name, description })">
-          {{ $t('common.save') }}
-        </NButton>
-        <NButton v-if="!!authStore.token" type="warning" @click="handleLogout">
-          Logout
-        </NButton>
+    </div>
+    <div class="flex items-center space-x-4">
+      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.language') }}</span>
+      <div class="flex flex-wrap items-center gap-4">
+        <NSelect
+          style="width: 140px"
+          :value="language"
+          :options="languageOptions"
+          @update-value="value => appStore.setLanguage(value)"
+        />
       </div>
+    </div>
+    <div class="flex flex-shrink-0 w-[100px] items-center space-x-4">
+      <span class="flex-shrink-0 w-[100px]" />
+      <NButton type="primary" @click="updateUserInfo({ avatar, name, description })">
+        {{ $t('common.save') }}
+      </NButton>
+      <NButton v-if="!!authStore.token" type="warning" @click="handleLogout">
+        Logout
+      </NButton>
     </div>
   </div>
 </template>

@@ -1,5 +1,6 @@
 <script setup lang='ts'>
-import { NLayoutHeader, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
+import type { DropdownOption } from 'naive-ui'
+import { NDropdown, NLayoutHeader, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
 import { computed, ref } from 'vue'
 import html2canvas from 'html2canvas'
 import { useRoute } from 'vue-router'
@@ -9,6 +10,7 @@ import { fetchUpdateUserChatModel } from '@/api'
 import { UserConfig } from '@/components/admin/model'
 import type { CHATMODEL } from '@/components/admin/model'
 import { SvgIcon, ToolButton } from '@/components/common'
+import { getCurrentDate } from '@/utils/functions'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
 
@@ -38,13 +40,51 @@ const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActiv
 const { uuid } = route.params as { uuid: string }
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 
-function handleExport() {
+function exportJSON() {
   if (loading.value)
     return
 
-  const d = dialog.warning({
-    title: t('chat.exportImage'),
-    content: t('chat.exportImageConfirm'),
+  const d = dialog.info({
+    title: t('chat.exportJSON'),
+    content: t('chat.exportJSONConfirm'),
+    positiveText: t('common.yes'),
+    negativeText: t('common.no'),
+    onPositiveClick: async () => {
+      try {
+        d.loading = true
+        const date = getCurrentDate()
+        const data: string = localStorage.getItem('chatStorage') || '{}'
+        const jsonString: string = JSON.stringify(JSON.parse(data), null, 2)
+        const blob: Blob = new Blob([jsonString], { type: 'application/json' })
+        const url: string = URL.createObjectURL(blob)
+        const link: HTMLAnchorElement = document.createElement('a')
+        link.href = url
+        link.download = `axiomai_history_${date}.json`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+        d.loading = false
+        ms.success(t('chat.exportSuccess'))
+        Promise.resolve()
+      }
+      catch (error: any) {
+        ms.error(t('chat.exportFailed'))
+      }
+      finally {
+        d.loading = false
+      }
+    },
+  })
+}
+
+function exportPNG() {
+  if (loading.value)
+    return
+
+  const d = dialog.info({
+    title: t('chat.exportPNG'),
+    content: t('chat.exportPNGConfirm'),
     positiveText: t('common.yes'),
     negativeText: t('common.no'),
     onPositiveClick: async () => {
@@ -84,7 +124,7 @@ function handleClear() {
   if (loading.value)
     return
 
-  dialog.warning({
+  dialog.info({
     title: t('chat.clearChat'),
     content: t('chat.clearChatConfirm'),
     positiveText: t('common.yes'),
@@ -123,6 +163,31 @@ async function handleSyncChatModel(chatModel: CHATMODEL) {
   userStore.recordState()
   await fetchUpdateUserChatModel(chatModel)
 }
+
+const options: DropdownOption[] = [
+  {
+    label: 'Export as JSON',
+    key: 'json',
+  },
+  {
+    type: 'divider',
+    key: 'divider',
+  },
+  {
+    label: 'Export as image',
+    key: 'image',
+  },
+]
+
+type DropdownKey = 'json' | 'image'
+
+function handleDropdown(optionKey: string) {
+  const key = optionKey as DropdownKey
+  if (key === 'json')
+    exportJSON()
+  else if (key === 'image')
+    exportPNG ()
+}
 </script>
 
 <template>
@@ -142,10 +207,12 @@ async function handleSyncChatModel(chatModel: CHATMODEL) {
         </span>
       </div>
       <div v-if="dataSources.length" class="flex items-center space-x-2">
-        <ToolButton :tooltip="$t('chat.exportImage')" @click="handleExport">
-          <SvgIcon class="text-xl" icon="mdi:file-export-outline" />
-        </ToolButton>
-        <ToolButton :tooltip="$t('chat.deleteMessage')" @click="handleClear">
+        <NDropdown trigger="click" :options="options" @select="handleDropdown">
+          <ToolButton :tooltip="!isMobile ? $t('chat.exportChat') : ''">
+            <SvgIcon class="text-xl" icon="ri:file-download-line" />
+          </ToolButton>
+        </NDropdown>
+        <ToolButton :tooltip="!isMobile ? $t('chat.deleteMessage') : ''" @click="handleClear">
           <SvgIcon class="text-xl" icon="ri:brush-2-line" />
         </ToolButton>
       </div>

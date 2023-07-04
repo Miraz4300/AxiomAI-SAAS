@@ -622,7 +622,7 @@ onUnmounted(() => {
     <footer :class="footerClass">
       <div class="max-w-screen-2xl m-auto px-4">
         <div class="flex items-center justify-between space-x-2">
-          <ToolButton :tooltip="$t('chat.usingContext')" placement="top" @click="handleToggleUsingContext">
+          <ToolButton :tooltip="!isMobile ? $t('chat.usingContext') : ''" placement="top" @click="handleToggleUsingContext">
             <span class="text-xl" :class="{ 'text-[#22c55e]': usingContext, 'text-[#a8071a]': !usingContext }">
               <SvgIcon icon="fluent:brain-circuit-24-filled" />
             </span>

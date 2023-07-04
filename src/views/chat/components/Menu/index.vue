@@ -1,14 +1,21 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
+import type { DropdownOption } from 'naive-ui'
+import { NDropdown, NText } from 'naive-ui'
+import { computed, h } from 'vue'
 import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
+import { useIconRender } from '@/hooks/useIconRender'
 import { useAuthStore, useUserStore } from '@/store'
+import { isString } from '@/utils/is'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { ADMIN_ROUTE, SETTING_ROUTE } from '@/router/routes'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const userStore = useUserStore()
+const userInfo = computed(() => userStore.userInfo)
 
+const { iconRender } = useIconRender()
 const { isMobile } = useBasicLayout()
 const buttonClass = 'h-12 w-12 cursor-pointer rounded-xl bg-white dark:bg-[#34373c] text-[#4b9e5f] dark:text-[#86dfba]'
 const iconClass = 'flex h-full m-auto text-center text-2xl'
@@ -20,6 +27,62 @@ function goChat() {
 
 function goSetting() {
   router.push('/user')
+}
+
+function userHeader() {
+  return h('div', { class: 'flex items-center p-3' }, [
+    h(UserAvatar, { class: 'mr-3' }),
+    h('div', [
+      h(NText, { depth: 2, class: 'font-bold' }, { default: () => userInfo.value.name }),
+      h(NText, { depth: 3, class: 'text-xs' }, {
+        default: () => h('div', {
+          innerHTML: (isString(userInfo.value.description) && userInfo.value.description !== '') ? userInfo.value.description : '',
+        }),
+      }),
+    ]),
+  ])
+}
+
+const options: DropdownOption[] = [
+  {
+    key: 'header',
+    type: 'render',
+    render: userHeader,
+  },
+  {
+    type: 'divider',
+    key: 'divider',
+  },
+  {
+    label: 'Profile',
+    key: 'user-center',
+    icon: iconRender({ icon: 'mdi:account-circle-outline' }),
+  },
+  {
+    label: 'Logout',
+    key: 'logout',
+    icon: iconRender({ icon: 'ri:logout-box-line' }),
+  },
+]
+
+type DropdownKey = 'user-center' | 'logout'
+
+function handleDropdown(optionKey: string) {
+  const key = optionKey as DropdownKey
+  if (key === 'logout') {
+    window.$dialog?.warning({
+      title: 'Logout',
+      content: 'Are you sure to Logout?',
+      positiveText: 'logout',
+      negativeText: 'cancel',
+      onPositiveClick: async () => {
+        await authStore.removeToken()
+      },
+    })
+  }
+  else if (key === 'user-center') {
+    router.push(SETTING_ROUTE)
+  }
 }
 </script>
 
@@ -35,9 +98,9 @@ function goSetting() {
             <SvgIcon icon="mdi:administrator" />
           </span>
         </HoverButton>
-        <HoverButton v-if="!!authStore.token" @click="router.push(SETTING_ROUTE)">
-          <UserAvatar class="mt-1.5" />
-        </HoverButton>
+        <NDropdown v-if="!!authStore.token" trigger="hover" :options="options" @select="handleDropdown">
+          <UserAvatar class="cursor-pointer" />
+        </NDropdown>
       </div>
     </div>
   </div>

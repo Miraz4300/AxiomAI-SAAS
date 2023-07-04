@@ -12,9 +12,6 @@ const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
 const { isMobile } = useBasicLayout()
 
-const getMobileClass = computed(() => (isMobile.value ? ['rounded-none', 'shadow-none'] : ['border', 'rounded-none', 'shadow-md', 'dark:border-neutral-800']))
-const getMobileMenu = computed(() => (isMobile.value ? ['flex', 'flex-col', 'h-full'] : ['']))
-
 interface Props {
   visible: boolean
 }
@@ -36,7 +33,7 @@ const show = computed({
 </script>
 
 <template>
-  <div class="flex h-full overflow-hidden" :class="[getMobileClass, getMobileMenu]">
+  <div class="flex h-full overflow-hidden" :class="[isMobile ? 'flex-col' : '']">
     <Menu v-if="!isMobile" />
     <NLayout v-model:show="show">
       <div class="min-h-full p-8">
@@ -59,7 +56,7 @@ const show = computed({
                 <SvgIcon class="text-lg" icon="mdi:chart-box-outline" />
                 <span class="ml-2">{{ $t('setting.statistics') }}</span>
               </template>
-              <div class="min-h-[100px] max-w-[1080px]">
+              <div class="max-h-[780px] max-w-[1080px]">
                 <Statistics />
               </div>
             </NTabPane>

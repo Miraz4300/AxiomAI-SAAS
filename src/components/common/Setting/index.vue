@@ -59,7 +59,7 @@ const show = computed({
                 <SvgIcon class="text-lg" icon="mdi:chart-box-outline" />
                 <span class="ml-2">{{ $t('setting.statistics') }}</span>
               </template>
-              <div class="min-h-[100px] max-w-[1080px]">
+              <div class="max-h-[780px] max-w-[1080px]">
                 <Statistics />
               </div>
             </NTabPane>

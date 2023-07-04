@@ -36,7 +36,7 @@ function goSetting() {
           </span>
         </HoverButton>
         <HoverButton v-if="!!authStore.token" @click="router.push(SETTING_ROUTE)">
-          <UserAvatar class="mt-1.5" />
+          <UserAvatar />
         </HoverButton>
       </div>
     </div>

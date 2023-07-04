@@ -18,19 +18,17 @@ const userInfo = computed(() => userStore.userInfo)
 </script>
 
 <template>
-  <div class="flex items-center">
-    <div class="w-full h-full rounded-full shrink-0">
-      <template v-if="isString(userInfo.avatar) && userInfo.avatar.length > 0">
-        <NAvatar
-          :size="props.size"
-          round
-          :src="userInfo.avatar"
-          :fallback-src="defaultAvatar"
-        />
-      </template>
-      <template v-else>
-        <NAvatar :size="props.size" round :src="defaultAvatar" />
-      </template>
-    </div>
+  <div class="flex items-center rounded-full border-2">
+    <template v-if="isString(userInfo.avatar) && userInfo.avatar.length > 0">
+      <NAvatar
+        :size="props.size"
+        round
+        :src="userInfo.avatar"
+        :fallback-src="defaultAvatar"
+      />
+    </template>
+    <template v-else>
+      <NAvatar :size="props.size" round :src="defaultAvatar" />
+    </template>
   </div>
 </template>

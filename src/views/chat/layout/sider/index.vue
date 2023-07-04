@@ -113,7 +113,7 @@ watch(
           </NPopconfirm>
         </div>
       </main>
-      <Footer />
+      <Footer v-if="isMobile" />
     </div>
   </NLayoutSider>
   <template v-if="isMobile">

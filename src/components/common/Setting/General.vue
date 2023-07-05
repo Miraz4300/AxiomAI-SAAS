@@ -27,12 +27,9 @@ const images = ref(Array.from({ length: 16 }, (_, i) => `/assets/avatar_${i + 1}
 const hoverAvatar = ref('')
 const selectedAvatar = ref('')
 
-async function saveAvatar() {
-  if (!selectedAvatar.value)
-    return
-  await updateUserInfo({ avatar: selectedAvatar.value })
-  show.value = false
-  selectedAvatar.value = ''
+function selectAvatar(avatarUrl: string) {
+  selectedAvatar.value = avatarUrl
+  avatar.value = avatarUrl
 }
 
 const language = computed({
@@ -70,6 +67,7 @@ const languageOptions: { label: string; key: Language; value: Language }[] = [
 async function updateUserInfo(options: Partial<UserInfo>) {
   await userStore.updateUserInfo(true, options)
   ms.success(t('common.success'))
+  show.value = false
 }
 
 function handleLogout() {
@@ -162,7 +160,7 @@ function handleLogout() {
           }"
           @mouseover="hoverAvatar = image"
           @mouseleave="hoverAvatar = ''"
-          @click="selectedAvatar = image"
+          @click="selectAvatar(image)"
         />
       </div>
     </div>
@@ -170,7 +168,7 @@ function handleLogout() {
       <NButton @click="show = false">
         cancel
       </NButton>
-      <NButton :disabled="selectedAvatar === ''" type="primary" @click="saveAvatar">
+      <NButton :disabled="selectedAvatar === ''" type="primary" @click="updateUserInfo({ avatar, name, description })">
         save
       </NButton>
     </div>

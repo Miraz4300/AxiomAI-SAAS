@@ -18,7 +18,7 @@ const userInfo = computed(() => userStore.userInfo)
 </script>
 
 <template>
-  <div class="flex items-center rounded-full border-2">
+  <div class="flex items-center drop-shadow-lg rounded-full ring">
     <template v-if="isString(userInfo.avatar) && userInfo.avatar.length > 0">
       <NAvatar
         :size="props.size"

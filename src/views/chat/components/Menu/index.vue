@@ -54,18 +54,18 @@ const options: DropdownOption[] = [
     key: 'divider',
   },
   {
-    label: 'Profile',
-    key: 'user-center',
-    icon: iconRender({ icon: 'mdi:account-circle-outline' }),
+    label: 'Settings',
+    key: 'settings',
+    icon: iconRender({ icon: 'ri:settings-3-line' }),
   },
   {
     label: 'Logout',
     key: 'logout',
-    icon: iconRender({ icon: 'ri:logout-box-line' }),
+    icon: iconRender({ icon: 'ri:logout-circle-line' }),
   },
 ]
 
-type DropdownKey = 'user-center' | 'logout'
+type DropdownKey = 'settings' | 'logout'
 
 function handleDropdown(optionKey: string) {
   const key = optionKey as DropdownKey
@@ -80,7 +80,7 @@ function handleDropdown(optionKey: string) {
       },
     })
   }
-  else if (key === 'user-center') {
+  else if (key === 'settings') {
     router.push(SETTING_ROUTE)
   }
 }
@@ -109,11 +109,11 @@ function handleDropdown(optionKey: string) {
     <div class="grid py-2 border-t dark:border-t-neutral-800 grid-cols-2">
       <a class="leading-4 text-center cursor-pointer text-[#4b9e5f] dark:text-[#86dfba]" @click="goChat">
         <SvgIcon :class="[iconClass2]" icon="ri:message-3-line" />
-        <p>Chat</p>
+        <p>{{ $t('chat.chat') }}</p>
       </a>
       <a class="leading-4 text-center cursor-pointer text-[#4b9e5f] dark:text-[#86dfba]" @click="goSetting">
-        <SvgIcon :class="[iconClass2]" icon="mdi:account-circle-outline" />
-        <p>Personal</p>
+        <SvgIcon :class="[iconClass2]" icon="ri:settings-3-line" />
+        <p>{{ $t('setting.setting') }}</p>
       </a>
     </div>
   </NLayoutFooter>

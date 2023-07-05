@@ -27,21 +27,10 @@ const images = ref(Array.from({ length: 16 }, (_, i) => `/assets/avatar_${i + 1}
 const hoverAvatar = ref('')
 const selectedAvatar = ref('')
 
-function handleMouseover(avatarUrl: string) {
-  hoverAvatar.value = avatarUrl
-}
-
-function handleMouseleave() {
-  hoverAvatar.value = ''
-}
-
-function selectAvatar(avatarUrl: string) {
-  selectedAvatar.value = avatarUrl
-}
-
 async function saveAvatar() {
-  avatar.value = selectedAvatar.value
-  await updateUserInfo({ avatar: avatar.value })
+  if (!selectedAvatar.value)
+    return
+  await updateUserInfo({ avatar: selectedAvatar.value })
   show.value = false
   selectedAvatar.value = ''
 }
@@ -100,7 +89,7 @@ function handleLogout() {
   <div class="space-y-6" :class="[isMobile ? 'p-2' : 'p-4']">
     <div class="flex flex-shrink-0 w-[100px] items-center space-x-4">
       <span class="flex-shrink-0 w-[100px]" />
-      <UserAvatar :size="100" class="cursor-pointer ring-green-500 ring-offset-2" @click="show = true" />
+      <UserAvatar :size="100" class="cursor-pointer rounded-full ring ring-green-500 ring-offset-2" @click="show = true" />
     </div>
     <div class="flex items-center space-x-4">
       <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
@@ -171,9 +160,9 @@ function handleLogout() {
             border: (selectedAvatar === image || hoverAvatar === image) ? '4px solid #22c55e' : 'none',
             transition: 'transform 0.5s ease, border-color 0.5s ease',
           }"
-          @mouseover="handleMouseover(image)"
-          @mouseleave="handleMouseleave"
-          @click="selectAvatar(image)"
+          @mouseover="hoverAvatar = image"
+          @mouseleave="hoverAvatar = ''"
+          @click="selectedAvatar = image"
         />
       </div>
     </div>

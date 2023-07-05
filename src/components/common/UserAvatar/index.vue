@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { NAvatar } from 'naive-ui'
 import { useUserStore } from '@/store'
-import defaultAvatar from '@/assets/avatar.jpg'
 import { isString } from '@/utils/is'
 
 const props = defineProps({
@@ -15,10 +14,12 @@ const props = defineProps({
 const userStore = useUserStore()
 
 const userInfo = computed(() => userStore.userInfo)
+
+const defaultAvatar = '/assets/avatar_1.jpg'
 </script>
 
 <template>
-  <div class="flex items-center rounded-full border-2">
+  <div class="flex items-center drop-shadow-lg">
     <template v-if="isString(userInfo.avatar) && userInfo.avatar.length > 0">
       <NAvatar
         :size="props.size"

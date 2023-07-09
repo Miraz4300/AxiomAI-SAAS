@@ -57,7 +57,7 @@ export default {
     usageResponse: 'Response:',
     usageTotal: 'Total token cost:',
     deleteUser: 'Delete User',
-    setUserRole: 'Set Role',
+    editUser: 'Edit User',
     deleteUserConfirm: 'Are you sure to delete this user? After deletion, this email can never be registered or logged in again.',
     verifiedUser: 'Verified User',
     deleteKey: 'Delete Key',
@@ -140,5 +140,7 @@ export default {
     status: 'Status',
     chatModels: 'Model',
     remark: 'Remark',
+    email: 'Email',
+    password: 'Password',
   },
 }

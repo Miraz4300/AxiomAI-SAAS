@@ -90,6 +90,18 @@ const columns = [
     width: 220,
     render(row: KeyConfig) {
       const actions: any[] = []
+      actions.push(h(
+        NButton,
+        {
+          size: 'small',
+          style: {
+            marginRight: '6px',
+          },
+          type: 'error',
+          onClick: () => handleUpdateApiKeyStatus(row._id as string, Status.Disabled),
+        },
+        { default: () => t('common.delete') },
+      ))
       if (row.status === Status.Normal) {
         actions.push(h(
           NButton,
@@ -102,18 +114,6 @@ const columns = [
             onClick: () => handleEditKey(row),
           },
           { default: () => t('common.edit') },
-        ))
-        actions.push(h(
-          NButton,
-          {
-            size: 'small',
-            style: {
-              marginRight: '6px',
-            },
-            type: 'error',
-            onClick: () => handleUpdateApiKeyStatus(row._id as string, Status.Disabled),
-          },
-          { default: () => t('common.delete') },
         ))
       }
       return actions

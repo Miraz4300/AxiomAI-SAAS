@@ -1,10 +1,11 @@
 import { createApp } from 'vue'
 import { datadogRum } from '@datadog/browser-rum'
+import * as Sentry from '@sentry/vue'
 import App from './App.vue'
 import { setupI18n } from './locales'
 import { setupAssets, setupScrollbarStyle } from './plugins'
 import { setupStore } from './store'
-import { setupRouter } from './router'
+import { router, setupRouter } from './router'
 
 async function bootstrap() {
   const app = createApp(App)
@@ -29,8 +30,25 @@ async function bootstrap() {
     trackLongTasks: true,
     defaultPrivacyLevel: 'allow',
   })
-
   datadogRum.startSessionReplayRecording()
+
+  // Initialize Sentry
+  Sentry.init({
+    app,
+    dsn: 'https://aaf3ccd8fcb84cfbb189216512228687@o4505499531673600.ingest.sentry.io/4505499534557184',
+    integrations: [
+      new Sentry.BrowserTracing({
+        tracePropagationTargets: ['localhost', /^https:\/\/yourserver\.io\/api/],
+        routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+      }),
+      new Sentry.Replay(),
+    ],
+    // Performance Monitoring
+    tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!
+    // Session Replay
+    replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+  })
 
   app.mount('#app')
 }

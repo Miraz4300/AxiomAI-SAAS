@@ -38,7 +38,7 @@ const show = computed({
     <NLayout v-model:show="show">
       <div class="min-h-full p-8">
         <header class="mb-4 text-2xl font-bold text-black dark:text-white">
-          Personal Settings
+          {{ $t('setting.setting') }}
         </header>
         <NLayoutContent>
           <NTabs v-model:value="active" type="line" animated>

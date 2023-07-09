@@ -27,6 +27,7 @@ export default {
     auditTip: 'Sensitive words do not take effect on Admin.',
   },
   chat: {
+    chat: 'Chat',
     placeholderText: 'Ask me anything...(Shift + Enter = line break, "/" to trigger prompts)',
     placeholderMobile: 'Ask me anything...',
     copy: 'Copy',
@@ -56,7 +57,7 @@ export default {
     usageResponse: 'Response:',
     usageTotal: 'Total token cost:',
     deleteUser: 'Delete User',
-    setUserRole: 'Set Role',
+    editUser: 'Edit User',
     deleteUserConfirm: 'Are you sure to delete this user? After deletion, this email can never be registered or logged in again.',
     verifiedUser: 'Verified User',
     deleteKey: 'Delete Key',
@@ -65,7 +66,7 @@ export default {
     searchPlaceholder: 'Search conversation',
   },
   setting: {
-    setting: 'Setting',
+    setting: 'Settings',
     admin: 'Administrator',
     general: 'General',
     advanced: 'Advanced',
@@ -139,5 +140,7 @@ export default {
     status: 'Status',
     chatModels: 'Model',
     remark: 'Remark',
+    email: 'Email',
+    password: 'Password',
   },
 }

@@ -21,7 +21,7 @@ async function bootstrap() {
     site: 'datadoghq.com',
     service: 'axiomai',
     env: 'prod',
-    version: '2.7.1-preview',
+    version: '3.0.0-preview4',
     sessionSampleRate: 100,
     sessionReplaySampleRate: 100,
     trackUserInteractions: true,
@@ -29,7 +29,6 @@ async function bootstrap() {
     trackLongTasks: true,
     defaultPrivacyLevel: 'allow',
   })
-
   datadogRum.startSessionReplayRecording()
 
   app.mount('#app')

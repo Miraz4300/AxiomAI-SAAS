@@ -1,45 +1,31 @@
 <script setup lang='ts'>
-import { defineAsyncComponent, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
+import { computed } from 'vue'
+import { UserAvatar } from '@/components/common'
 import { useAuthStore, useUserStore } from '@/store'
-import { ADMIN_ROUTE } from '@/router/routes'
-
-const Setting = defineAsyncComponent(() => import('@/components/common/Setting/index.vue'))
-
-const router = useRouter()
-
-const authStore = useAuthStore()
+import { isString } from '@/utils/is'
 
 const userStore = useUserStore()
-
-const show = ref(false)
-
-async function handleLogout() {
-  await authStore.removeToken()
-}
+const userInfo = computed(() => userStore.userInfo)
+const authStore = useAuthStore()
 </script>
 
 <template>
   <footer class="flex items-center justify-between min-w-0 p-4 overflow-hidden border-t dark:border-neutral-800">
-    <div class="flex-1 flex-shrink-0 overflow-hidden">
+    <div class="flex">
       <UserAvatar />
     </div>
-    <HoverButton v-if="!!authStore.token" :tooltip="$t('common.logOut')" @click="handleLogout">
-      <span class="text-xl text-black dark:text-white">
-        <SvgIcon icon="tabler:logout" />
-      </span>
-    </HoverButton>
-    <HoverButton v-if="!!authStore.token" :tooltip="$t('setting.setting')" @click="show = true">
-      <span class="text-xl text-black dark:text-white">
-        <SvgIcon icon="ep:setting" />
-      </span>
-    </HoverButton>
-    <HoverButton v-if="userStore.userInfo.root" :tooltip="$t('setting.admin')" @click="router.push(ADMIN_ROUTE)">
-      <span class="text-xl text-black dark:text-white">
-        <SvgIcon icon="mdi:administrator" />
-      </span>
-    </HoverButton>
-    <Setting v-if="show" v-model:visible="show" />
+    <div class="flex-1 min-w-0 ml-2">
+      <h2 v-if="userInfo.name" class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
+        {{ userInfo.name }}
+      </h2>
+      <NButton v-else tag="a" text>
+        <span class="text-sm text-black dark:text-white">
+          {{ authStore.session?.title }}
+        </span>
+      </NButton>
+      <p class="overflow-hidden text-xs text-neutral-500 text-ellipsis whitespace-nowrap">
+        <span v-if="isString(userInfo.description) && userInfo.description !== ''" v-html="userInfo.description" />
+      </p>
+    </div>
   </footer>
 </template>

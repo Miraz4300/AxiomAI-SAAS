@@ -18,7 +18,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@datadog/browser-rum": "^4.44.2",
+    "@datadog/browser-rum": "^4.45.0",
     "@traptitech/markdown-it-katex": "^3.6.0",
     "@vueuse/core": "^10.2.1",
     "chart.js": "^4.3.0",

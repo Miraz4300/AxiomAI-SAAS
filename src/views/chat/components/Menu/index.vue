@@ -6,7 +6,6 @@ import { computed, h } from 'vue'
 import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
 import { useIconRender } from '@/hooks/useIconRender'
 import { useAuthStore, useUserStore } from '@/store'
-import { isString } from '@/utils/is'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { ADMIN_ROUTE, SETTING_ROUTE } from '@/router/routes'
 
@@ -30,14 +29,19 @@ function goSetting() {
 }
 
 function userHeader() {
+  const { name, description } = userInfo.value
   return h('div', { class: 'flex items-center p-3' }, [
     h(UserAvatar, { class: 'mr-3' }),
     h('div', [
-      h(NText, { depth: 2, class: 'font-bold' }, { default: () => userInfo.value.name }),
-      h(NText, { depth: 3, class: 'text-xs' }, {
-        default: () => h('div', {
-          innerHTML: (isString(userInfo.value.description) && userInfo.value.description !== '') ? userInfo.value.description : '',
+      h('div', { class: 'flex items-center' }, [
+        h(NText, { depth: 2, class: 'font-bold' }, { default: () => name }),
+        h('a', {
+          class: 'text-sm bg-gray-200 dark:bg-white/5 px-2 rounded-md ml-2 text-black dark:text-white',
+          innerText: 'Free',
         }),
+      ]),
+      h(NText, { depth: 3, class: 'text-xs' }, {
+        default: () => h('div', { innerHTML: description }),
       }),
     ]),
   ])

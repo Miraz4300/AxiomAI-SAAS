@@ -87,23 +87,25 @@ function handleLogout() {
     <div class="flex flex-shrink-0 items-center space-x-4">
       <span :class="[isMobile ? '' : 'flex-shrink-0 w-[100px]']" />
       <UserAvatar :size="100" class="cursor-pointer rounded-full ring ring-green-500 ring-offset-2" @click="show = true" />
-      <div class="flex flex-col items-center pl-3">
-        <a class="text-2xl font-bold">{{ userInfo.name }}</a>
-        <p>
+      <div class="flex flex-col pl-3">
+        <span class="font-bold" :class="[isMobile && userInfo.name.length > 9 ? 'text-base' : 'text-2xl']">
+          {{ userInfo.name }}
+        </span>
+        <span>
           Subscription: <a class="text-sm bg-gray-50 dark:bg-white/5 px-2 rounded-md">Free</a>
-        </p>
+        </span>
       </div>
     </div>
     <div class="flex items-center pt-6 space-x-4">
       <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
       <div class="flex-1">
-        <NInput v-model:value="name" placeholder="" />
+        <NInput v-model:value="name" maxlength="15" placeholder="" />
       </div>
     </div>
     <div class="flex items-center space-x-4">
       <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
       <div class="flex-1">
-        <NInput v-model:value="description" placeholder="Innovative and strategic problem solver." />
+        <NInput v-model:value="description" maxlength="35" placeholder="Innovative and strategic problem solver." />
       </div>
     </div>
     <div class="flex items-center space-x-4">

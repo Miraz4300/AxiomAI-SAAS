@@ -41,7 +41,7 @@ function userHeader() {
         }),
       ]),
       h(NText, { depth: 3, class: 'text-xs' }, {
-        default: () => h('div', { innerHTML: description }),
+        default: () => h('div', { innerText: description }),
       }),
     ]),
   ])

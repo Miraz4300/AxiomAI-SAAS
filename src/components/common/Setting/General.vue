@@ -11,14 +11,13 @@ import { t } from '@/locales'
 const appStore = useAppStore()
 const authStore = useAuthStore()
 const userStore = useUserStore()
+const userInfo = computed(() => userStore.userInfo)
 
 const { isMobile } = useBasicLayout()
-
 const ms = useMessage()
 const show = ref(false)
 
 const theme = computed(() => appStore.theme)
-const userInfo = computed(() => userStore.userInfo)
 const avatar = ref(userInfo.value.avatar ?? '')
 const name = ref(userInfo.value.name ?? '')
 const description = ref(userInfo.value.description ?? '')
@@ -85,11 +84,17 @@ function handleLogout() {
 
 <template>
   <div class="space-y-6" :class="[isMobile ? 'p-2' : 'p-4']">
-    <div class="flex flex-shrink-0 w-[100px] items-center space-x-4">
-      <span class="flex-shrink-0 w-[100px]" />
+    <div class="flex flex-shrink-0 items-center space-x-4">
+      <span :class="[isMobile ? '' : 'flex-shrink-0 w-[100px]']" />
       <UserAvatar :size="100" class="cursor-pointer rounded-full ring ring-green-500 ring-offset-2" @click="show = true" />
+      <div class="flex flex-col items-center pl-3">
+        <a class="text-2xl font-bold">{{ userInfo.name }}</a>
+        <p>
+          Subscription: <a class="text-sm bg-gray-50 dark:bg-white/5 px-2 rounded-md">Free</a>
+        </p>
+      </div>
     </div>
-    <div class="flex items-center space-x-4">
+    <div class="flex items-center pt-6 space-x-4">
       <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
       <div class="flex-1">
         <NInput v-model:value="name" placeholder="" />

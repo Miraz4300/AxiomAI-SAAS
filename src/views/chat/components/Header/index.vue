@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { DropdownOption } from 'naive-ui'
-import { NDropdown, NLayoutHeader, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
+import { NDropdown, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
 import { computed, ref } from 'vue'
 import html2canvas from 'html2canvas'
 import { useRoute } from 'vue-router'
@@ -191,7 +191,7 @@ function handleDropdown(optionKey: string) {
 </script>
 
 <template>
-  <NLayoutHeader bordered class="relative bg-[#EEE9E9] dark:bg-[#111111]">
+  <header class="relative border-b border-b-neutral-300 dark:border-b-neutral-800 bg-[#EEE9E9] dark:bg-[#111111]">
     <div class="m-auto flex h-14 max-w-screen-2xl items-center justify-between" :class="[isMobile ? 'px-2' : 'px-4']">
       <div class="flex min-w-0 flex-1 items-center space-x-2 overflow-hidden pr-2">
         <ToolButton
@@ -223,7 +223,7 @@ function handleDropdown(optionKey: string) {
         <SvgIcon icon="ri:arrow-down-s-line" />
       </span>
     </div>
-  </NLayoutHeader>
+  </header>
 
   <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 640px" title="Advanced">
     <div class="p-4 space-y-5">

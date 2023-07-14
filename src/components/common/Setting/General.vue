@@ -81,7 +81,7 @@ function handleLogout() {
   })
 }
 
-const spanClass = 'flex-shrink-0 w-[70px]'
+const spanClass = 'flex-shrink-0 w-[80px]'
 const divClass = 'flex items-center space-x-4'
 </script>
 

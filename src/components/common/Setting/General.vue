@@ -80,6 +80,9 @@ function handleLogout() {
     },
   })
 }
+
+const spanClass = 'flex-shrink-0 w-[70px]'
+const divClass = 'flex items-center space-x-4'
 </script>
 
 <template>
@@ -96,26 +99,26 @@ function handleLogout() {
         </span>
       </div>
     </div>
-    <div class="flex items-center pt-6 space-x-4">
-      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
+    <div class="pt-6" :class="[divClass]">
+      <span :class="[spanClass]">{{ $t('setting.name') }}</span>
       <div class="flex-1">
         <NInput v-model:value="name" maxlength="15" placeholder="" />
       </div>
     </div>
-    <div class="flex items-center space-x-4">
-      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
+    <div :class="[divClass]">
+      <span :class="[spanClass]">{{ $t('setting.description') }}</span>
       <div class="flex-1">
         <NInput v-model:value="description" maxlength="35" placeholder="Innovative and strategic problem solver." />
       </div>
     </div>
-    <div class="flex items-center space-x-4">
-      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
+    <div :class="[divClass]">
+      <span :class="[spanClass]">{{ $t('setting.avatarLink') }}</span>
       <div class="flex-1">
         <NInput v-model:value="avatar" placeholder="https://example.com/avatar/image.png" />
       </div>
     </div>
-    <div class="flex items-center space-x-4">
-      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.theme') }}</span>
+    <div :class="[divClass]">
+      <span :class="[spanClass]">{{ $t('setting.theme') }}</span>
       <div class="flex flex-wrap items-center gap-4">
         <template v-for="item of themeOptions" :key="item.key">
           <NButton
@@ -130,8 +133,8 @@ function handleLogout() {
         </template>
       </div>
     </div>
-    <div class="flex items-center space-x-4">
-      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.language') }}</span>
+    <div :class="[divClass]">
+      <span :class="[spanClass]">{{ $t('setting.language') }}</span>
       <div class="flex flex-wrap items-center gap-4">
         <NSelect
           style="width: 140px"
@@ -141,8 +144,8 @@ function handleLogout() {
         />
       </div>
     </div>
-    <div class="flex flex-shrink-0 w-[100px] items-center space-x-4">
-      <span class="flex-shrink-0 w-[100px]" />
+    <div :class="[divClass]">
+      <span :class="[spanClass]" />
       <NButton type="primary" @click="updateUserInfo({ avatar, name, description })">
         {{ $t('common.save') }}
       </NButton>

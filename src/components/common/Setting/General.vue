@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { NAvatar, NButton, NInput, NModal, NSelect, useMessage } from 'naive-ui'
+import { NAvatar, NButton, NInput, NModal, NSelect, NTag, useMessage } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon, UserAvatar } from '@/components/common'
 import { useAppStore, useAuthStore, useUserStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
+import { UserRole } from '@/components/admin/model'
 
 const appStore = useAppStore()
 const authStore = useAuthStore()
@@ -94,8 +95,11 @@ const divClass = 'flex items-center space-x-4'
         <span class="font-bold" :class="[isMobile && userInfo.name.length > 9 ? 'text-base' : 'text-2xl']">
           {{ userInfo.name }}
         </span>
-        <span>
-          Subscription: <a class="text-sm bg-gray-50 dark:bg-white/5 px-2 rounded-md">Free</a>
+        <span v-if="userInfo.roles.length > 0">
+          Subscription:
+          <NTag size="small" :bordered="false" type="success">
+            {{ UserRole[userInfo.roles[0]] }}
+          </NTag>
         </span>
       </div>
     </div>

@@ -2,11 +2,10 @@
 import { computed, h } from 'vue'
 import { useRouter } from 'vue-router'
 import type { DropdownOption } from 'naive-ui'
-import { NDropdown, NTag, NText } from 'naive-ui'
-import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
+import { NDropdown, NText } from 'naive-ui'
+import { HoverButton, SvgIcon, UserAvatar, UserRole } from '@/components/common'
 import { useIconRender } from '@/hooks/useIconRender'
 import { useAuthStore, useUserStore } from '@/store'
-import { UserRole } from '@/components/admin/model'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { ADMIN_ROUTE, SETTING_ROUTE } from '@/router/routes'
 
@@ -30,20 +29,13 @@ function goSetting() {
 }
 
 function userHeader() {
-  const { name, description, roles } = userInfo.value
+  const { name, description } = userInfo.value
   return h('div', { class: 'flex items-center p-3' }, [
     h(UserAvatar, { class: 'mr-3' }),
     h('div', [
       h('div', { class: 'flex items-center gap-2' }, [
         h(NText, { depth: 2, class: 'font-bold' }, { default: () => name }),
-        h(NTag, {
-          vIf: roles.length > 0,
-          size: 'small',
-          bordered: false,
-          type: 'success',
-        }, {
-          default: () => UserRole[roles[0]],
-        }),
+        h(UserRole),
       ]),
       h(NText, { depth: 3, class: 'text-xs' }, {
         default: () => h('div', { innerText: description }),

@@ -1,11 +1,10 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { NAvatar, NButton, NInput, NModal, NSelect, NTag, useMessage } from 'naive-ui'
+import { NAvatar, NButton, NInput, NModal, NSelect, useMessage } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
-import { SvgIcon, UserAvatar } from '@/components/common'
+import { SvgIcon, UserAvatar, UserRole } from '@/components/common'
 import { useAppStore, useAuthStore, useUserStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
-import { UserRole } from '@/components/admin/model'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
 
@@ -95,12 +94,7 @@ const divClass = 'flex items-center space-x-4'
         <span class="font-bold" :class="[isMobile && userInfo.name.length > 9 ? 'text-base' : 'text-2xl']">
           {{ userInfo.name }}
         </span>
-        <span v-if="userInfo.roles.length > 0">
-          Subscription:
-          <NTag size="small" :bordered="false" type="success">
-            {{ UserRole[userInfo.roles[0]] }}
-          </NTag>
-        </span>
+        <span>Subscription: <UserRole /></span>
       </div>
     </div>
     <div class="pt-6" :class="[divClass]">
@@ -112,7 +106,7 @@ const divClass = 'flex items-center space-x-4'
     <div :class="[divClass]">
       <span :class="[spanClass]">{{ $t('setting.description') }}</span>
       <div class="flex-1">
-        <NInput v-model:value="description" maxlength="35" placeholder="Innovative and strategic problem solver." />
+        <NInput v-model:value="description" maxlength="40" placeholder="Innovative and strategic problem solver." />
       </div>
     </div>
     <div :class="[divClass]">

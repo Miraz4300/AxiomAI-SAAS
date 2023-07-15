@@ -1,8 +1,6 @@
 <script setup lang='ts'>
 import { computed } from 'vue'
-import { NTag } from 'naive-ui'
-import { UserAvatar } from '@/components/common'
-import { UserRole } from '@/components/admin/model'
+import { UserAvatar, UserRole } from '@/components/common'
 import { useUserStore } from '@/store'
 import { isString } from '@/utils/is'
 
@@ -20,9 +18,7 @@ const userInfo = computed(() => userStore.userInfo)
         <h2 v-if="userInfo.name" class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
           {{ userInfo.name }}
         </h2>
-        <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" type="success">
-          {{ UserRole[userInfo.roles[0]] }}
-        </NTag>
+        <UserRole />
       </div>
       <p class="overflow-hidden text-xs text-neutral-500 text-ellipsis whitespace-nowrap">
         <span v-if="isString(userInfo.description) && userInfo.description !== ''" v-html="userInfo.description" />

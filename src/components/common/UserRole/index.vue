@@ -2,27 +2,42 @@
 import { computed } from 'vue'
 import { NTag } from 'naive-ui'
 import { UserRole } from '@/components/admin/model'
+import { SvgIcon } from '@/components/common'
 import { useUserStore } from '@/store'
 
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
+const Role = userInfo.value.roles[0]
 
-function Tag(role: UserRole) {
-  if (role === UserRole.Free)
-    return 'default'
-  else if (role === UserRole.Premium)
+function TagType(role: UserRole) {
+  if (role === UserRole.Premium)
     return 'success'
-  else if (role === UserRole.MVP)
+  if (role === UserRole.MVP)
     return 'warning'
-  else if (role === UserRole.Support)
+  if (role === UserRole.Support)
     return 'info'
-  else
-    return 'default'
+  return 'default'
 }
+
+function IconName(role: UserRole) {
+  if (role === UserRole.Premium)
+    return 'ri:vip-diamond-fill'
+  if (role === UserRole.MVP)
+    return 'ri:award-fill'
+  if (role === UserRole.Support)
+    return 'ri:hearts-fill'
+  return ''
+}
+
+const Tag = computed(() => TagType(Role))
+const Icon = computed(() => IconName(Role))
 </script>
 
 <template>
-  <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag(userInfo.roles[0])">
+  <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag">
     {{ UserRole[userInfo.roles[0]] }}
+    <template v-if="Icon" #icon>
+      <SvgIcon :icon="Icon" />
+    </template>
   </NTag>
 </template>

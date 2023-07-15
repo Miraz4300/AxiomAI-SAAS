@@ -5,9 +5,9 @@ import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon, UserAvatar } from '@/components/common'
 import { useAppStore, useAuthStore, useUserStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
+import { UserRole } from '@/components/admin/model'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
-import { UserRole } from '@/components/admin/model'
 
 const appStore = useAppStore()
 const authStore = useAuthStore()

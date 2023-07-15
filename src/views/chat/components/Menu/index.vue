@@ -1,14 +1,14 @@
 <script lang="ts" setup>
+import { computed, h } from 'vue'
 import { useRouter } from 'vue-router'
 import type { DropdownOption } from 'naive-ui'
 import { NDropdown, NTag, NText } from 'naive-ui'
-import { computed, h } from 'vue'
 import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
 import { useIconRender } from '@/hooks/useIconRender'
 import { useAuthStore, useUserStore } from '@/store'
+import { UserRole } from '@/components/admin/model'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { ADMIN_ROUTE, SETTING_ROUTE } from '@/router/routes'
-import { UserRole } from '@/components/admin/model'
 
 const router = useRouter()
 const authStore = useAuthStore()

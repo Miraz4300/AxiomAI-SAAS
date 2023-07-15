@@ -1,5 +1,5 @@
-import type { UserRole } from '@/components/admin/model'
 import { UserConfig } from '@/components/admin/model'
+import type { UserRole } from '@/components/admin/model'
 import { ss } from '@/utils/storage'
 
 const LOCAL_NAME = 'userStorage'

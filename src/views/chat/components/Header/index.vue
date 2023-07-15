@@ -1,9 +1,9 @@
 <script setup lang='ts'>
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import type { DropdownOption } from 'naive-ui'
 import { NDropdown, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
-import { computed, ref } from 'vue'
 import html2canvas from 'html2canvas'
-import { useRoute } from 'vue-router'
 import { useAppStore, useAuthStore, useChatStore, useSettingStore, useUserStore } from '@/store'
 import type { SettingsState } from '@/store/modules/settings/helper'
 import { fetchUpdateUserChatModel } from '@/api'

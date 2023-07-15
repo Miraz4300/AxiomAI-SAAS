@@ -47,7 +47,7 @@ const show = computed({
                 <SvgIcon class="text-lg" icon="mdi:account-circle-outline" />
                 <span class="ml-2">{{ $t('setting.general') }}</span>
               </template>
-              <div class="min-h-[100px] max-w-[460px]">
+              <div class="mt-4 min-h-[100px] max-w-[460px]">
                 <General />
               </div>
             </NTabPane>
@@ -56,7 +56,7 @@ const show = computed({
                 <SvgIcon class="text-lg" icon="mdi:chart-box-outline" />
                 <span class="ml-2">{{ $t('setting.statistics') }}</span>
               </template>
-              <div class="max-h-[780px] max-w-[1080px]">
+              <div class="mt-4 max-h-[780px] max-w-[1080px]">
                 <Statistics />
               </div>
             </NTabPane>
@@ -65,7 +65,9 @@ const show = computed({
                 <SvgIcon class="text-lg" icon="mdi:about-circle-outline" />
                 <span class="ml-2">{{ $t('setting.about') }}</span>
               </template>
-              <About />
+              <div class="mt-4 min-h-[100px] max-w-[1080px]">
+                <About />
+              </div>
             </NTabPane>
           </NTabs>
         </NLayoutContent>

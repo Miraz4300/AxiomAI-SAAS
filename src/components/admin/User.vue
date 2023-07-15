@@ -12,7 +12,7 @@ const { isMobile } = useBasicLayout()
 const loading = ref(false)
 const show = ref(false)
 const handleSaving = ref(false)
-const userRef = ref(new UserInfo([UserRole.User]))
+const userRef = ref(new UserInfo([UserRole.Free]))
 const users = ref([])
 const columns = [
   {
@@ -168,7 +168,7 @@ async function handleUpdateUserStatus(userId: string, status: Status) {
 }
 
 function handleNewUser() {
-  userRef.value = new UserInfo([UserRole.User])
+  userRef.value = new UserInfo([UserRole.Free])
   show.value = true
 }
 

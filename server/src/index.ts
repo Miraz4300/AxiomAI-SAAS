@@ -504,7 +504,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
     }
     const newPassword = md5(password)
     const isRoot = username.toLowerCase() === process.env.ROOT_USER
-    await createUser(username, newPassword, isRoot ? [UserRole.Admin] : [UserRole.User])
+    await createUser(username, newPassword, isRoot ? [UserRole.Admin] : [UserRole.Free])
 
     if (isRoot) {
       res.send({ status: 'Success', message: 'The administrative account has been activated', data: null })
@@ -548,7 +548,7 @@ router.post('/session', async (req, res) => {
       key: string
       value: string
     }[] = []
-    let userInfo: { name: string; description: string; avatar: string; userId: string; root: boolean; config: UserConfig }
+    let userInfo: { name: string; description: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig }
     if (userId != null) {
       const user = await getUserById(userId)
       userInfo = {
@@ -557,6 +557,7 @@ router.post('/session', async (req, res) => {
         avatar: user.avatar,
         userId: user._id.toString(),
         root: user.roles.includes(UserRole.Admin),
+        roles: user.roles,
         config: user.config,
       }
       const keys = (await getCacheApiKeys()).filter(d => hasAnyRole(d.userRoles, user.roles))

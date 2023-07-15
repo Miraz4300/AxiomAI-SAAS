@@ -1,12 +1,11 @@
 <script setup lang='ts'>
 import { computed } from 'vue'
-import { UserAvatar } from '@/components/common'
-import { useAuthStore, useUserStore } from '@/store'
+import { UserAvatar, UserRole } from '@/components/common'
+import { useUserStore } from '@/store'
 import { isString } from '@/utils/is'
 
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
-const authStore = useAuthStore()
 </script>
 
 <template>
@@ -15,14 +14,12 @@ const authStore = useAuthStore()
       <UserAvatar />
     </div>
     <div class="flex-1 min-w-0 ml-2">
-      <h2 v-if="userInfo.name" class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
-        {{ userInfo.name }}
-      </h2>
-      <NButton v-else tag="a" text>
-        <span class="text-sm text-black dark:text-white">
-          {{ authStore.session?.title }}
-        </span>
-      </NButton>
+      <div class="flex gap-1">
+        <h2 v-if="userInfo.name" class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
+          {{ userInfo.name }}
+        </h2>
+        <UserRole />
+      </div>
       <p class="overflow-hidden text-xs text-neutral-500 text-ellipsis whitespace-nowrap">
         <span v-if="isString(userInfo.description) && userInfo.description !== ''" v-html="userInfo.description" />
       </p>

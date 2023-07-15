@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { NAvatar, NButton, NInput, NModal, NSelect, useMessage } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
-import { SvgIcon, UserAvatar } from '@/components/common'
+import { SvgIcon, UserAvatar, UserRole } from '@/components/common'
 import { useAppStore, useAuthStore, useUserStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -80,6 +80,9 @@ function handleLogout() {
     },
   })
 }
+
+const spanClass = 'flex-shrink-0 w-[80px]'
+const divClass = 'flex items-center space-x-4'
 </script>
 
 <template>
@@ -91,31 +94,29 @@ function handleLogout() {
         <span class="font-bold" :class="[isMobile && userInfo.name.length > 9 ? 'text-base' : 'text-2xl']">
           {{ userInfo.name }}
         </span>
-        <span>
-          Subscription: <a class="text-sm bg-gray-50 dark:bg-white/5 px-2 rounded-md">Free</a>
-        </span>
+        <span>Subscription: <UserRole /></span>
       </div>
     </div>
-    <div class="flex items-center pt-6 space-x-4">
-      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.name') }}</span>
+    <div class="pt-6" :class="[divClass]">
+      <span :class="[spanClass]">{{ $t('setting.name') }}</span>
       <div class="flex-1">
         <NInput v-model:value="name" maxlength="15" placeholder="" />
       </div>
     </div>
-    <div class="flex items-center space-x-4">
-      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.description') }}</span>
+    <div :class="[divClass]">
+      <span :class="[spanClass]">{{ $t('setting.description') }}</span>
       <div class="flex-1">
-        <NInput v-model:value="description" maxlength="35" placeholder="Innovative and strategic problem solver." />
+        <NInput v-model:value="description" maxlength="40" placeholder="Innovative and strategic problem solver." />
       </div>
     </div>
-    <div class="flex items-center space-x-4">
-      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
+    <div :class="[divClass]">
+      <span :class="[spanClass]">{{ $t('setting.avatarLink') }}</span>
       <div class="flex-1">
         <NInput v-model:value="avatar" placeholder="https://example.com/avatar/image.png" />
       </div>
     </div>
-    <div class="flex items-center space-x-4">
-      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.theme') }}</span>
+    <div :class="[divClass]">
+      <span :class="[spanClass]">{{ $t('setting.theme') }}</span>
       <div class="flex flex-wrap items-center gap-4">
         <template v-for="item of themeOptions" :key="item.key">
           <NButton
@@ -130,8 +131,8 @@ function handleLogout() {
         </template>
       </div>
     </div>
-    <div class="flex items-center space-x-4">
-      <span class="flex-shrink-0 w-[100px]">{{ $t('setting.language') }}</span>
+    <div :class="[divClass]">
+      <span :class="[spanClass]">{{ $t('setting.language') }}</span>
       <div class="flex flex-wrap items-center gap-4">
         <NSelect
           style="width: 140px"
@@ -141,8 +142,8 @@ function handleLogout() {
         />
       </div>
     </div>
-    <div class="flex flex-shrink-0 w-[100px] items-center space-x-4">
-      <span class="flex-shrink-0 w-[100px]" />
+    <div :class="[divClass]">
+      <span :class="[spanClass]" />
       <NButton type="primary" @click="updateUserInfo({ avatar, name, description })">
         {{ $t('common.save') }}
       </NButton>

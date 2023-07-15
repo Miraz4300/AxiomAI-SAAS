@@ -153,7 +153,7 @@ export async function getApiKeys() {
   result.keys.forEach((key) => {
     if (key.userRoles == null || key.userRoles.length <= 0) {
       key.userRoles.push(UserRole.Admin)
-      key.userRoles.push(UserRole.User)
+      key.userRoles.push(UserRole.Free)
       key.userRoles.push(UserRole.Guest)
     }
     if (key.chatModels == null || key.chatModels.length <= 0) {

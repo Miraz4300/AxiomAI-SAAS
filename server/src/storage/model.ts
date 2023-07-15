@@ -13,14 +13,15 @@ export enum Status {
 
 export enum UserRole {
   Admin = 0,
-  User = 1,
+  Free = 1,
   Guest = 2,
-  Support = 3,
-  Viewer = 4,
-  Contributor = 5,
-  Developer = 6,
-  Tester = 7,
-  Partner = 8,
+  Premium = 3,
+  MVP = 4,
+  Support = 5,
+  Contributor = 6,
+  Developer = 7,
+  Tester = 8,
+  Partner = 9,
 }
 
 export class UserInfo {
@@ -44,7 +45,7 @@ export class UserInfo {
     this.createTime = new Date().toLocaleString()
     this.verifyTime = null
     this.updateTime = new Date().toLocaleString()
-    this.roles = [UserRole.User]
+    this.roles = [UserRole.Free]
   }
 }
 

@@ -240,7 +240,7 @@ function initUserInfo(userInfo: UserInfo) {
   if (userInfo.config.chatModel == null)
     userInfo.config.chatModel = 'gpt-3.5-turbo'
   if (userInfo.roles == null || userInfo.roles.length <= 0) {
-    userInfo.roles = [UserRole.User]
+    userInfo.roles = [UserRole.Free]
     if (process.env.ROOT_USER === userInfo.email.toLowerCase())
       userInfo.roles.push(UserRole.Admin)
   }

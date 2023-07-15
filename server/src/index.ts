@@ -504,7 +504,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
     }
     const newPassword = md5(password)
     const isRoot = username.toLowerCase() === process.env.ROOT_USER
-    await createUser(username, newPassword, isRoot ? [UserRole.Admin] : [UserRole.User])
+    await createUser(username, newPassword, isRoot ? [UserRole.Admin] : [UserRole.Free])
 
     if (isRoot) {
       res.send({ status: 'Success', message: 'The administrative account has been activated', data: null })

@@ -4,7 +4,7 @@ import { NLayout, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
 import Statistics from './Statistics.vue'
 import About from './About.vue'
-import Menu from '@/views/chat/components/Menu/index.vue'
+import Sidebar from '@/views/chat/components/Sidebar/index.vue'
 import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
@@ -34,7 +34,7 @@ const show = computed({
 
 <template>
   <div class="flex h-full overflow-hidden" :class="[isMobile ? 'flex-col' : '']">
-    <Menu v-if="!isMobile" />
+    <Sidebar v-if="!isMobile" />
     <NLayout v-model:show="show">
       <div class="min-h-full p-8">
         <header class="mb-4 text-2xl font-bold text-black dark:text-white">
@@ -73,6 +73,6 @@ const show = computed({
         </NLayoutContent>
       </div>
     </NLayout>
-    <Menu v-if="isMobile" />
+    <Sidebar v-if="isMobile" />
   </div>
 </template>

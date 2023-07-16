@@ -5,6 +5,13 @@ import { UserRole } from '@/components/admin/model'
 import { SvgIcon } from '@/components/common'
 import { useUserStore } from '@/store'
 
+const props = defineProps({
+  subLink: {
+    type: Boolean,
+    default: false,
+  },
+})
+
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
 const Role = userInfo.value.roles[0]
@@ -34,10 +41,13 @@ const Icon = computed(() => IconName(Role))
 </script>
 
 <template>
-  <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag">
+  <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag" class="font-semibold">
     {{ UserRole[userInfo.roles[0]] }}
     <template v-if="Icon" #icon>
       <SvgIcon :icon="Icon" />
     </template>
   </NTag>
+  <div v-if="props.subLink && Role === UserRole.Free" class="text-[#fb923c]">
+    <a href="https://forms.gle/JcTqyxCac2MUQz7U7" target="_blank" rel="noreferrer">Buy subscription here</a>
+  </div>
 </template>

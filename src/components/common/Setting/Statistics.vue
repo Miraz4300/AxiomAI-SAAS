@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import { t } from '@/locales'
 import { fetchUserStatistics } from '@/api'
 import { SvgIcon } from '@/components/common'
+
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 const chartData: ChartData<'bar'> = reactive({
   labels: [],
@@ -141,7 +142,6 @@ onMounted(() => {
 
         <Bar
           v-if="showChart && chartData.labels?.length"
-          ref="statisticsChart"
           style="aspect-ratio: 3/2;"
           :options="chartOptions"
           :data="chartData"

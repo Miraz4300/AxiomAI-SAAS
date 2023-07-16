@@ -32,6 +32,7 @@ import {
   updateApiKeyStatus,
   updateChat,
   updateConfig,
+  updateRoomChatModel,
   updateRoomUsingContext,
   updateUser,
   updateUserChatModel,
@@ -73,6 +74,7 @@ router.get('/chatrooms', auth, async (req, res) => {
         title: r.title,
         isEdit: false,
         usingContext: r.usingContext === undefined ? true : r.usingContext,
+        chatModel: r.chatModel,
       })
     })
     res.send({ status: 'Success', message: null, data: result })
@@ -102,6 +104,22 @@ router.post('/room-rename', auth, async (req, res) => {
     const { title, roomId } = req.body as { title: string; roomId: number }
     const room = await renameChatRoom(userId, title, roomId)
     res.send({ status: 'Success', message: null, data: room })
+  }
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Rename error', data: null })
+  }
+})
+
+router.post('/room-chatmodel', auth, async (req, res) => {
+  try {
+    const userId = req.headers.userId as string
+    const { chatModel, roomId } = req.body as { chatModel: CHATMODEL; roomId: number }
+    const success = await updateRoomChatModel(userId, roomId, chatModel)
+    if (success)
+      res.send({ status: 'Success', message: 'Saved successfully', data: null })
+    else
+      res.send({ status: 'Fail', message: 'Saved Failed', data: null })
   }
   catch (error) {
     console.error(error)
@@ -381,10 +399,10 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
       },
       temperature,
       top_p,
-      chatModel: user.config.chatModel,
       user,
       messageId: message._id.toString(),
       tryCount: 0,
+      room,
     })
     // return the whole response including usage
     if (!result.data.detail?.usage) {

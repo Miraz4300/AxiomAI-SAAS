@@ -14,7 +14,7 @@ import { getCacheApiKeys, getCacheConfig, getOriginConfig } from '../storage/con
 import { sendResponse } from '../utils'
 import { hasAnyRole, isNotEmptyString } from '../utils/is'
 import type { ChatContext, ChatGPTUnofficialProxyAPIOptions, JWT, ModelConfig } from '../types'
-import { getChatByMessageId } from '../storage/mongo'
+import { getChatByMessageId, updateRoomAccountId, updateRoomChatModel } from '../storage/mongo'
 import type { RequestOptions } from './types'
 
 const { HttpsProxyAgent } = httpsProxyAgent
@@ -34,10 +34,7 @@ let auditService: TextAuditService
 const _lockedKeys: { key: string; lockedTime: number }[] = []
 
 export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
-  // More Info: https://github.com/transitive-bullshit/chatgpt-api
-
   const config = await getCacheConfig()
-
   const model = chatModel as string
 
   if (key.keyModel === 'ChatGPTAPI') {
@@ -53,7 +50,7 @@ export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
 
     // Set the token limits based on the model's type. This is because different models have different token limits.
     // The token limit includes the token count from both the message array sent and the model response.
-    // 'gpt-35-turbo' has a limit of 4096 tokens, 'gpt-4' and 'gpt-4-32k' have limits of 8192 and 32768 tokens respectively.
+    // 'gpt-3.5-turbo' has a limit of 4096 tokens, 'gpt-4' and 'gpt-4-32k' have limits of 8192 and 32768 tokens respectively.
 
     // Check if the model type includes '16k'
     if (model.toLowerCase().includes('16k')) {
@@ -100,14 +97,26 @@ export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
 
 const processThreads: { userId: string; abort: AbortController; messageId: string }[] = []
 async function chatReplyProcess(options: RequestOptions) {
-  const model = options.chatModel
-  const key = await getRandomApiKey(options.user, options.user.config.chatModel)
+  const model = options.user.config.chatModel
+  const key = await getRandomApiKey(options.user, options.user.config.chatModel, options.room.accountId)
   const userId = options.user._id.toString()
   const messageId = options.messageId
   if (key == null || key === undefined)
     throw new Error('No available configuration. Please try again.')
+
+  if (key.keyModel === 'ChatGPTUnofficialProxyAPI') {
+    if (!options.room.accountId)
+      updateRoomAccountId(userId, options.room.roomId, getAccountId(key.key))
+    if (options.lastContext && ((options.lastContext.conversationId && !options.lastContext.parentMessageId)
+        || (!options.lastContext.conversationId && options.lastContext.parentMessageId)))
+      throw new Error('Unable to use AccessToken and Api at the same time in the same room, please contact the administrator or open a new chat room for conversation')
+  }
+
+  updateRoomChatModel(userId, options.room.roomId, model)
+
   const { message, lastContext, process, temperature, top_p } = options
-  const systemMessage = 'You\'re AxiomAI, a large language model trained by Deepspacelab and developed by Miraz Hossain.'
+  const currentDate = new Date().toISOString().split('T')[0]
+  const systemMessage = `You are AxiomAI, a large language model trained by Deepspacelab and developed by Miraz Hossain.\nCurrent date: ${currentDate}`
 
   try {
     const timeoutMs = (await getCacheConfig()).timeoutMs
@@ -295,10 +304,10 @@ function formatDate(date) {
 
 async function chatConfig() {
   const config = await getOriginConfig() as ModelConfig
-  if (config.apiModel === 'ChatGPTAPI')
-    config.balance = await fetchBalance()
-  else
-    config.accessTokenExpiredTime = await fetchAccessTokenExpiredTime()
+  // if (config.apiModel === 'ChatGPTAPI')
+  //  config.balance = await fetchBalance()
+  // else
+  //  config.accessTokenExpiredTime = await fetchAccessTokenExpiredTime()
   return sendResponse<ModelConfig>({
     type: 'Success',
     data: config,
@@ -379,9 +388,23 @@ async function randomKeyConfig(keys: KeyConfig[]): Promise<KeyConfig | null> {
   return thisKey
 }
 
-async function getRandomApiKey(user: UserInfo, chatModel: CHATMODEL): Promise<KeyConfig | undefined> {
-  const keys = (await getCacheApiKeys()).filter(d => hasAnyRole(d.userRoles, user.roles))
-  return randomKeyConfig(keys.filter(d => d.chatModels.includes(chatModel)))
+async function getRandomApiKey(user: UserInfo, chatModel: CHATMODEL, accountId?: string): Promise<KeyConfig | undefined> {
+  let keys = (await getCacheApiKeys()).filter(d => hasAnyRole(d.userRoles, user.roles))
+    .filter(d => d.chatModels.includes(chatModel))
+  if (accountId)
+    keys = keys.filter(d => d.keyModel === 'ChatGPTUnofficialProxyAPI' && getAccountId(d.key) === accountId)
+
+  return randomKeyConfig(keys)
+}
+
+function getAccountId(accessToken: string): string {
+  try {
+    const jwt = jwt_decode(accessToken) as JWT
+    return jwt['https://api.openai.com/auth'].user_id
+  }
+  catch (error) {
+    return ''
+  }
 }
 
 export type { ChatContext, ChatMessage }

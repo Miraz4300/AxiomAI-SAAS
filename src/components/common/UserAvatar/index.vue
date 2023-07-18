@@ -9,27 +9,32 @@ const props = defineProps({
     type: Number,
     default: 40,
   },
+  avatarChange: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const userStore = useUserStore()
-
 const userInfo = computed(() => userStore.userInfo)
 
 const defaultAvatar = '/assets/avatar_1.jpg'
+const userAvatar = computed(() => {
+  return isString(userInfo.value.avatar) && userInfo.value.avatar.length > 0 ? userInfo.value.avatar : defaultAvatar
+})
 </script>
 
 <template>
-  <div class="flex items-center drop-shadow-lg">
-    <template v-if="isString(userInfo.avatar) && userInfo.avatar.length > 0">
-      <NAvatar
-        :size="props.size"
-        round
-        :src="userInfo.avatar"
-        :fallback-src="defaultAvatar"
-      />
-    </template>
-    <template v-else>
-      <NAvatar :size="props.size" round :src="defaultAvatar" />
-    </template>
+  <div class="relative flex cursor-pointer rounded-full ring-0 ring-offset-2 drop-shadow-lg overflow-hidden">
+    <NAvatar
+      :size="props.size"
+      round
+      :src="userAvatar"
+      :fallback-src="defaultAvatar"
+      class="relative z-10"
+    />
+    <div v-if="props.avatarChange" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white opacity-0 hover:opacity-100 transition-opacity duration-200 z-20">
+      Change Avatar
+    </div>
   </div>
 </template>

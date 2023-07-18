@@ -33,7 +33,7 @@ function userHeader() {
   return h('div', { class: 'flex items-center p-3' }, [
     h(UserAvatar, { class: 'mr-3' }),
     h('div', [
-      h('div', { class: 'flex items-center gap-2' }, [
+      h('div', { class: 'flex items-center gap-1' }, [
         h(NText, { depth: 2, class: 'font-bold' }, { default: () => name }),
         h(UserRole),
       ]),
@@ -100,7 +100,7 @@ function handleDropdown(optionKey: string) {
           </span>
         </HoverButton>
         <NDropdown v-if="!!authStore.token" trigger="hover" :options="options" @select="handleDropdown">
-          <UserAvatar class="cursor-pointer" />
+          <UserAvatar />
         </NDropdown>
       </div>
     </div>

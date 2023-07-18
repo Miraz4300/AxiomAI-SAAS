@@ -209,7 +209,6 @@ onMounted(async () => {
             </NButton>
           </NSpace>
           <NDataTable
-            ref="table"
             remote
             :loading="loading"
             :row-key="(rowData) => rowData._id"

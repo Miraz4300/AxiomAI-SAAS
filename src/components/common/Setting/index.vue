@@ -1,10 +1,11 @@
 <script setup lang='ts'>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { NLayout, NTabPane, NTabs } from 'naive-ui'
+import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
 import Statistics from './Statistics.vue'
 import About from './About.vue'
-import Menu from '@/views/chat/components/Menu/index.vue'
+import Sidebar from '@/views/chat/components/Sidebar/index.vue'
 import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
@@ -15,12 +16,23 @@ const { isMobile } = useBasicLayout()
 interface Props {
   visible: boolean
 }
-
 interface Emit {
   (e: 'update:visible', visible: boolean): void
 }
 
-const active = ref('General')
+const route = useRoute()
+const router = useRouter()
+const active = ref('general')
+
+onMounted(() => {
+  const id = route.query.id
+  active.value = id ? id as string : 'general'
+  if (!id)
+    router.replace({ query: { id: active.value } })
+})
+watch(active, (newTab) => {
+  router.push({ query: { id: newTab } })
+})
 
 const show = computed({
   get() {
@@ -34,7 +46,7 @@ const show = computed({
 
 <template>
   <div class="flex h-full overflow-hidden" :class="[isMobile ? 'flex-col' : '']">
-    <Menu v-if="!isMobile" />
+    <Sidebar v-if="!isMobile" />
     <NLayout v-model:show="show">
       <div class="min-h-full p-8">
         <header class="mb-4 text-2xl font-bold text-black dark:text-white">
@@ -42,7 +54,7 @@ const show = computed({
         </header>
         <NLayoutContent>
           <NTabs v-model:value="active" type="line" animated>
-            <NTabPane name="General" tab="General">
+            <NTabPane name="general">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:account-circle-outline" />
                 <span class="ml-2">{{ $t('setting.general') }}</span>
@@ -51,7 +63,7 @@ const show = computed({
                 <General />
               </div>
             </NTabPane>
-            <NTabPane v-if="!isMobile" name="Statistics" tab="Statistics">
+            <NTabPane v-if="!isMobile" name="statistics">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:chart-box-outline" />
                 <span class="ml-2">{{ $t('setting.statistics') }}</span>
@@ -60,7 +72,7 @@ const show = computed({
                 <Statistics />
               </div>
             </NTabPane>
-            <NTabPane name="About" tab="About">
+            <NTabPane name="about">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:about-circle-outline" />
                 <span class="ml-2">{{ $t('setting.about') }}</span>
@@ -73,6 +85,6 @@ const show = computed({
         </NLayoutContent>
       </div>
     </NLayout>
-    <Menu v-if="isMobile" />
+    <Sidebar v-if="isMobile" />
   </div>
 </template>

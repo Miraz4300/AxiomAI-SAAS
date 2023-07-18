@@ -41,12 +41,15 @@ const Icon = computed(() => IconName(Role))
 </script>
 
 <template>
-  <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag" class="font-semibold">
-    {{ UserRole[userInfo.roles[0]] }}
-    <template v-if="Icon" #icon>
-      <SvgIcon :icon="Icon" />
-    </template>
-  </NTag>
+  <div class="flex gap-1">
+    <a v-if="props.subLink">Subscription:</a>
+    <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag" class="font-semibold">
+      {{ UserRole[userInfo.roles[0]] }}
+      <template v-if="Icon" #icon>
+        <SvgIcon :icon="Icon" />
+      </template>
+    </NTag>
+  </div>
   <div v-if="props.subLink && Role === UserRole.Free" class="text-[#fb923c]">
     <a href="https://forms.office.com/r/2Z1fz0NhgE" target="_blank" rel="noreferrer">Buy subscription here</a>
   </div>

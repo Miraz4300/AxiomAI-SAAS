@@ -94,7 +94,7 @@ const divClass = 'flex items-center space-x-4'
         <span class="font-bold" :class="[isMobile && userInfo.name.length > 9 ? 'text-base' : 'text-2xl']">
           {{ userInfo.name }}
         </span>
-        <span class="flex gap-1">Subscription: <UserRole :sub-link="true" /></span>
+        <UserRole :sub-link="true" />
       </div>
     </div>
     <div class="pt-6" :class="[divClass]">

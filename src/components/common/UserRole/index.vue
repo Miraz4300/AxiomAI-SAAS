@@ -48,6 +48,6 @@ const Icon = computed(() => IconName(Role))
     </template>
   </NTag>
   <div v-if="props.subLink && Role === UserRole.Free" class="text-[#fb923c]">
-    <a href="https://forms.gle/JcTqyxCac2MUQz7U7" target="_blank" rel="noreferrer">Buy subscription here</a>
+    <a href="https://forms.office.com/r/2Z1fz0NhgE" target="_blank" rel="noreferrer">Buy subscription here</a>
   </div>
 </template>

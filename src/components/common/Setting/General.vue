@@ -90,11 +90,11 @@ const divClass = 'flex items-center space-x-4'
     <div class="flex flex-shrink-0 items-center space-x-4">
       <span :class="[isMobile ? '' : 'flex-shrink-0 w-[100px]']" />
       <UserAvatar :size="100" :avatar-change="true" @click="show = true" />
-      <div class="flex flex-col pl-3">
+      <div class="flex-1 pl-3">
         <span class="font-bold" :class="[isMobile && userInfo.name.length > 9 ? 'text-base' : 'text-2xl']">
           {{ userInfo.name }}
         </span>
-        <span>Subscription: <UserRole :sub-link="true" /></span>
+        <span class="flex gap-1">Subscription: <UserRole :sub-link="true" /></span>
       </div>
     </div>
     <div class="pt-6" :class="[divClass]">

@@ -34,10 +34,7 @@ let auditService: TextAuditService
 const _lockedKeys: { key: string; lockedTime: number }[] = []
 
 export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
-  // More Info: https://github.com/transitive-bullshit/chatgpt-api
-
   const config = await getCacheConfig()
-
   const model = chatModel as string
 
   if (key.keyModel === 'ChatGPTAPI') {
@@ -53,7 +50,7 @@ export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
 
     // Set the token limits based on the model's type. This is because different models have different token limits.
     // The token limit includes the token count from both the message array sent and the model response.
-    // 'gpt-35-turbo' has a limit of 4096 tokens, 'gpt-4' and 'gpt-4-32k' have limits of 8192 and 32768 tokens respectively.
+    // 'gpt-3.5-turbo' has a limit of 4096 tokens, 'gpt-4' and 'gpt-4-32k' have limits of 8192 and 32768 tokens respectively.
 
     // Check if the model type includes '16k'
     if (model.toLowerCase().includes('16k')) {
@@ -118,7 +115,8 @@ async function chatReplyProcess(options: RequestOptions) {
   updateRoomChatModel(userId, options.room.roomId, model)
 
   const { message, lastContext, process, temperature, top_p } = options
-  const systemMessage = 'You\'re AxiomAI, a large language model trained by Deepspacelab and developed by Miraz Hossain.'
+  const currentDate = new Date().toISOString().split('T')[0]
+  const systemMessage = `You are AxiomAI, a large language model trained by Deepspacelab and developed by Miraz Hossain.\nCurrent date: ${currentDate}`
 
   try {
     const timeoutMs = (await getCacheConfig()).timeoutMs

@@ -100,7 +100,7 @@ function handleDropdown(optionKey: string) {
           </span>
         </HoverButton>
         <NDropdown v-if="!!authStore.token" trigger="hover" :options="options" @select="handleDropdown">
-          <UserAvatar class="cursor-pointer" />
+          <UserAvatar />
         </NDropdown>
       </div>
     </div>

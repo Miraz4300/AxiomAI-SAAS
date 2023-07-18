@@ -236,7 +236,7 @@ function handleDropdown(optionKey: string) {
         <span>{{ $t('setting.model') }}</span>
         <div>
           <NSelect
-            style="width:200px"
+            style="width:215px"
             :value="currentChatModel"
             :options="authStore.session?.chatModels"
             :disabled="!!authStore.session?.auth && !authStore.token"

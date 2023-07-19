@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import { computed } from 'vue'
 import { NTag } from 'naive-ui'
+import { useRouter } from 'vue-router'
 import { UserRole } from '@/components/admin/model'
 import { SvgIcon } from '@/components/common'
 import { useUserStore } from '@/store'
@@ -12,9 +13,15 @@ const props = defineProps({
   },
 })
 
+const router = useRouter()
+
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
 const Role = userInfo.value.roles[0]
+
+function goSub() {
+  router.push('/user?id=subscription')
+}
 
 function TagType(role: UserRole) {
   if (role === UserRole.Premium)
@@ -50,7 +57,7 @@ const Icon = computed(() => IconName(Role))
       </template>
     </NTag>
   </div>
-  <div v-if="props.subLink && Role === UserRole.Free" class="text-[#fb923c]">
-    <a href="https://forms.office.com/r/2Z1fz0NhgE" target="_blank" rel="noreferrer">Buy subscription here</a>
+  <div v-if="props.subLink && Role === UserRole.Free">
+    <a class="cursor-pointer text-[#fb923c]" @click="goSub">Buy subscription here</a>
   </div>
 </template>

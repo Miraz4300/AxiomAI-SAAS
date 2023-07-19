@@ -69,6 +69,7 @@ export default {
     setting: 'Settings',
     admin: 'Administrator',
     general: 'General',
+    subscription: 'Subscription',
     advanced: 'Advanced',
     statistics: 'Statistics',
     about: 'About',

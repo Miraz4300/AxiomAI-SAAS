@@ -69,6 +69,7 @@ export default {
     setting: 'সেটিংস',
     admin: 'Administrator',
     general: 'সাধারণ',
+    subscription: 'সাবস্ক্রিপশন',
     advanced: 'অতিরিক্ত',
     statistics: 'পরিসংখ্যান',
     about: 'পরিচয়',

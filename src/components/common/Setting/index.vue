@@ -1,8 +1,9 @@
 <script setup lang='ts'>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import { NLayout, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
+import Subscription from './Subscription.vue'
 import Statistics from './Statistics.vue'
 import About from './About.vue'
 import Sidebar from '@/views/chat/components/Sidebar/index.vue'
@@ -29,6 +30,11 @@ onMounted(() => {
   active.value = id ? id as string : 'general'
   if (!id)
     router.replace({ query: { id: active.value } })
+})
+watchEffect(() => {
+  const id = route.query.id
+  if (id)
+    active.value = id as string
 })
 watch(active, (newTab) => {
   router.push({ query: { id: newTab } })
@@ -61,6 +67,15 @@ const show = computed({
               </template>
               <div class="mt-4 min-h-[100px] max-w-[460px]">
                 <General />
+              </div>
+            </NTabPane>
+            <NTabPane name="subscription">
+              <template #tab>
+                <SvgIcon class="text-lg" icon="ri:bank-card-line" />
+                <span class="ml-2">{{ $t('setting.subscription') }}</span>
+              </template>
+              <div class="mt-4 min-h-[100px] max-w-[1080px]">
+                <Subscription />
               </div>
             </NTabPane>
             <NTabPane v-if="!isMobile" name="statistics">

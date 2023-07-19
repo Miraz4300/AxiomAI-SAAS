@@ -87,13 +87,15 @@ const divClass = 'flex items-center space-x-4'
 
 <template>
   <div class="space-y-6" :class="[isMobile ? 'p-2' : 'p-4']">
-    <div class="flex flex-shrink-0 items-center space-x-4">
-      <span :class="[isMobile ? '' : 'flex-shrink-0 w-[85px]']" />
-      <UserAvatar :size="100" :avatar-change="true" @click="show = true" />
+    <div class="flex items-center space-x-4">
+      <span :class="[isMobile ? '' : 'flex-shrink-0 w-[80px]']" />
+      <div>
+        <UserAvatar :size="100" :avatar-change="true" @click="show = true" />
+      </div>
       <div class="flex-1 pl-3">
-        <span class="font-bold" :class="[isMobile && userInfo.name.length > 9 ? 'text-base' : 'text-2xl']">
+        <p class="font-bold" :class="[isMobile && userInfo.name.length > 9 ? 'text-base' : 'text-2xl']">
           {{ userInfo.name }}
-        </span>
+        </p>
         <UserRole :sub-link="true" />
       </div>
     </div>

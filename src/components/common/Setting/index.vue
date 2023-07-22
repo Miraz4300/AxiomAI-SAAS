@@ -65,7 +65,7 @@ const show = computed({
                 <SvgIcon class="text-lg" icon="mdi:account-circle-outline" />
                 <span class="ml-2">{{ $t('setting.general') }}</span>
               </template>
-              <div class="mt-4 min-h-[100px] max-w-[460px]">
+              <div class="mt-4 min-h-[100px] max-w-[490px]">
                 <General />
               </div>
             </NTabPane>

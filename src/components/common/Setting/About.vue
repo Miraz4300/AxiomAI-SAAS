@@ -10,7 +10,7 @@ import pkg from '@/../package.json'
     <div class="p-2 space-y-2 rounded-md bg-neutral-200 dark:bg-stone-700">
       <center>
         <p>
-          AxiomAI uses deep learning techniques to understand natural language and generate responses in real-time, built on the GPT architecture.
+          AxiomAI uses deep learning techniques to understand natural language and generate responses in real-time.
           With its advanced natural language processing capabilities, AxiomAI can engage in sophisticated conversations and provide intelligent responses to a wide range of queries.
         </p>
       </center>
@@ -19,16 +19,12 @@ import pkg from '@/../package.json'
       <a class="text-[#0083A0] dark:text-[#00B2DB]">Environment:</a> Production <br>
       <a class="text-[#0083A0] dark:text-[#00B2DB]">Version:</a> {{ pkg.version }}
     </p>
-    <div class="grid grid-cols-4 gap-4">
-      <div class="col-span-3">
-        <p>
-          If you have found this project to be beneficial, please consider making a modest donation to assist with the
-          costs of maintaining the server and ensuring that the project remains operational. <br>
-          <br>
-          For collaboration or business query, please contact me <a class="text-blue-600 dark:text-blue-500" href="mailto:miraz4300@gmail.com">here</a>
-        </p>
-      </div>
-      <div class="col-span-1 flex justify-end">
+    <div class="grid grid-cols-2">
+      <a>
+        If you have found this project to be beneficial, please consider making a modest donation to assist with the
+        costs of maintaining the server and ensuring that the project remains operational.
+      </a>
+      <div class="flex items-center justify-end">
         <span class="text-[#000000] dark:text-[#C0C0C0]">
           <a href="https://axiomai.s3.us-west-002.backblazeb2.com/bKash.png" target="_blank">
             <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="145" height="145" viewBox="0 0 962 944" style="border: 2px solid black;">
@@ -49,5 +45,8 @@ import pkg from '@/../package.json'
           </a></span>
       </div>
     </div>
+    <p>
+      For collaboration or business query, please contact me <a class="text-blue-600 dark:text-blue-500" href="mailto:miraz4300@gmail.com">here</a>
+    </p>
   </div>
 </template>

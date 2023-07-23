@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { NButton, NCard, NModal } from 'naive-ui'
 import { ref } from 'vue'
+import { NAlert, NButton, NCard, NModal } from 'naive-ui'
+import { SvgIcon } from '@/components/common'
 
 const show = ref(false)
 </script>
@@ -9,9 +10,10 @@ const show = ref(false)
   <NCard title="Subscription">
     <div class="space-y-4">
       <p class="text-gray-500 dark:text-gray-400">
-        You can buy subscription from here. We are currently accepting bKash and Nagad.
-        After purschasing subscription will be activated within 3 hours.
+        You can buy subscription from here. Subscription will be activated for 30 days.<br>
+        After purschasing, subscription will be activated within 3 hours.
       </p>
+      <br>
       <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 md:grid-cols-3">
         <NCard title="Premium" hoverable>
           <div class="flex flex-col space-y-4">
@@ -25,7 +27,7 @@ const show = ref(false)
               3. Mid-journey (coming soon)
             </span>
             <NButton strong secondary type="primary" @click="show = true">
-              Buy Now - BDT 150/=
+              Buy Now - BDT 100/=
             </NButton>
           </div>
         </NCard>
@@ -41,7 +43,7 @@ const show = ref(false)
               3. Mid-journey - unlimited (coming soon)
             </span>
             <NButton strong secondary type="primary" @click="show = true">
-              Buy Now - BDT 250/=
+              Buy Now - BDT 200/=
             </NButton>
           </div>
         </NCard>
@@ -50,7 +52,7 @@ const show = ref(false)
             <span>
               Help us to keep the project alive and additionally you will get:
               <br>
-              1. Everything includes in Premium
+              1. Everything includes in MVP
               <br>
               2. Exclusive T-shirt
             </span>
@@ -60,6 +62,9 @@ const show = ref(false)
           </div>
         </NCard>
       </div>
+      <NAlert type="info">
+        We are currently accepting <SvgIcon class="inline-block" icon="arcticons:bkash" /> bKash and <SvgIcon class="inline-block" icon="arcticons:nagad" /> Nagad payment.
+      </NAlert>
     </div>
   </NCard>
 

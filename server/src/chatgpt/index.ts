@@ -116,7 +116,7 @@ async function chatReplyProcess(options: RequestOptions) {
 
   const { message, lastContext, process, temperature, top_p } = options
   const currentDate = new Date().toISOString().split('T')[0]
-  const systemMessage = `You are AxiomAI, a large language model trained by Deepspacelab and developed by Miraz Hossain.\nCurrent date: ${currentDate}`
+  const systemMessage = `You are AxiomAI, trained by Deepspacelab and developed by Miraz Hossain. Follow user instructions and respond in english language.\nCurrent date: ${currentDate}`
 
   try {
     const timeoutMs = (await getCacheConfig()).timeoutMs

@@ -13,21 +13,20 @@ const show = ref(false)
         You can buy subscription from here. Subscription will be activated for 30 days.<br>
         After purschasing, subscription will be activated within 3 hours.
       </p>
-      <br>
       <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 md:grid-cols-3">
         <NCard title="Premium" hoverable>
           <div class="flex flex-col space-y-4">
             <span>
               Unlocks:
               <br>
-              1. Higher avalibility of GPT-3.5 and GPT-4
+              1. GPT-4 and other models
               <br>
-              2. Ability to use GPT-3.5 with 16k tokens
+              2. Higher avalibility of GPT-3.5 and GPT-4
               <br>
-              3. Mid-journey (coming soon)
+              3. Mid-journey - 10/day (coming soon)
             </span>
             <NButton strong secondary type="primary" @click="show = true">
-              Buy Now - BDT 100/=
+              Buy Now - BDT 120/=
             </NButton>
           </div>
         </NCard>
@@ -36,14 +35,14 @@ const show = ref(false)
             <span>
               Unlocks:
               <br>
-              1. Higher avalibility of GPT-3.5 and GPT-4
+              1. GPT-4 and other models
               <br>
-              2. Ability to use GPT-3.5 with 16k tokens
+              2. Higher avalibility of GPT-3.5 and GPT-4
               <br>
-              3. Mid-journey - unlimited (coming soon)
+              3. Mid-journey - 30/day (coming soon)
             </span>
             <NButton strong secondary type="primary" @click="show = true">
-              Buy Now - BDT 200/=
+              Buy Now - BDT 220/=
             </NButton>
           </div>
         </NCard>

@@ -54,7 +54,7 @@ const show = computed({
   <div class="flex h-full overflow-hidden" :class="[isMobile ? 'flex-col' : '']">
     <Sidebar v-if="!isMobile" />
     <NLayout v-model:show="show">
-      <div class="min-h-full p-8">
+      <div class="min-h-full" :class="[isMobile ? 'p-4' : 'p-8']">
         <header class="mb-4 text-2xl font-bold text-black dark:text-white">
           {{ $t('setting.setting') }}
         </header>

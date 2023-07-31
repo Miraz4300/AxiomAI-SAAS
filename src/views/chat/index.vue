@@ -4,7 +4,7 @@ import { computed, nextTick, onMounted, onUnmounted, provide, ref, watch } from 
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
-import { NAutoComplete, NButton, NInput, NSpin, useDialog, useMessage } from 'naive-ui'
+import { NAutoComplete, NButton, NDivider, NInput, NSpin, NSwitch, NTooltip, useDialog, useMessage } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
@@ -629,36 +629,57 @@ onUnmounted(() => {
       </div>
     </main>
     <footer :class="footerClass">
-      <div class="max-w-screen-2xl m-auto px-4">
-        <div class="flex items-center justify-between space-x-2">
-          <ToolButton :tooltip="!isMobile ? $t('chat.usingContext') : ''" placement="top" @click="handleToggleUsingContext">
-            <span class="text-xl" :class="{ 'text-[#22c55e]': usingContext, 'text-[#a8071a]': !usingContext }">
-              <SvgIcon icon="fluent:brain-circuit-24-filled" />
-            </span>
-          </ToolButton>
-          <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption" placement="top">
-            <template #default="{ handleInput, handleBlur, handleFocus }">
-              <NInput
-                ref="inputRef"
-                v-model:value="prompt"
-                :disabled="!!authStore.session?.auth && !authStore.token"
-                type="textarea"
-                :placeholder="placeholderText"
-                :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
-                @input="handleInput"
-                @focus="handleFocus"
-                @blur="handleBlur"
-                @keypress="handleEnter"
-              />
-            </template>
-          </NAutoComplete>
-          <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
-            <template #icon>
-              <span class="dark:text-black">
-                <SvgIcon icon="ri:send-plane-fill" />
-              </span>
-            </template>
-          </NButton>
+      <div class="m-auto max-w-screen-2xl" :class="[isMobile ? 'pl-1' : 'px-4']">
+        <div class="flex items-stretch space-x-2">
+          <div class="relative flex-1">
+            <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption" placement="top">
+              <template #default="{ handleInput, handleBlur, handleFocus }">
+                <NInput
+                  ref="inputRef"
+                  v-model:value="prompt"
+                  clearable
+                  class="pb-10"
+                  :disabled="!!authStore.session?.auth && !authStore.token"
+                  type="textarea"
+                  :placeholder="placeholderText"
+                  :autosize="{ minRows: 2, maxRows: isMobile ? 4 : 8 }"
+                  @input="handleInput"
+                  @focus="handleFocus"
+                  @blur="handleBlur"
+                  @keypress="handleEnter"
+                />
+              </template>
+            </NAutoComplete>
+            <div class="absolute bottom-2 left-2 right-2">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <ToolButton :tooltip="!isMobile ? $t('chat.usingContext') : ''" placement="top" @click="handleToggleUsingContext">
+                    <span class="text-xl" :class="{ 'text-[#22c55e]': usingContext, 'text-[#a8071a]': !usingContext }">
+                      <SvgIcon icon="fluent:brain-circuit-24-filled" />
+                    </span>
+                  </ToolButton>
+                </div>
+                <div class="flex items-center">
+                  <div class="flex items-center text-neutral-400">
+                    <NTooltip :style="{ maxWidth: '300px' }" trigger="hover">
+                      <template #trigger>
+                        <SvgIcon icon="ri:question-line" />
+                      </template>
+                      {{ $t('chat.internetAccessTip') }}
+                    </NTooltip>
+                    <span class="ml-1 mr-2 text-xs">{{ $t('chat.internetAccess') }}</span>
+                    <NSwitch size="small" disabled />
+                    <NDivider vertical />
+                  </div>
+                  <NButton circle :disabled="buttonDisabled" @click="handleSubmit">
+                    <template #icon>
+                      <SvgIcon icon="ri:send-plane-fill" />
+                    </template>
+                  </NButton>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="text-center text-xs text-black/60 dark:text-white/50 mt-2">

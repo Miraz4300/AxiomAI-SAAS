@@ -342,9 +342,9 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
   const { roomId, uuid, regenerate, prompt, options = {}, persona } = req.body as RequestProps
 
   const personaLookup = {
-    precise: { temperature: 0.2, top_p: 0.1 },
-    balanced: { temperature: 0.8, top_p: 0.5 },
-    creative: { temperature: 1.6, top_p: 1 },
+    precise: { temperature: 0.2, top_p: 1.0 },
+    balanced: { temperature: 0.8, top_p: 0.85 },
+    creative: { temperature: 1.5, top_p: 0.6 },
   }
 
   const { temperature, top_p } = personaLookup[persona] || personaLookup.balanced

@@ -10,7 +10,7 @@ import pkg from '@/../package.json'
     <div class="p-2 space-y-2 rounded-md bg-neutral-200 dark:bg-stone-700">
       <center>
         <p>
-          AxiomAI uses deep learning techniques to understand natural language and generate responses in real-time, built on the GPT architecture.
+          AxiomAI uses deep learning techniques to understand natural language and generate responses in real-time.
           With its advanced natural language processing capabilities, AxiomAI can engage in sophisticated conversations and provide intelligent responses to a wide range of queries.
         </p>
       </center>
@@ -19,16 +19,14 @@ import pkg from '@/../package.json'
       <a class="text-[#0083A0] dark:text-[#00B2DB]">Environment:</a> Production <br>
       <a class="text-[#0083A0] dark:text-[#00B2DB]">Version:</a> {{ pkg.version }}
     </p>
-    <div class="grid grid-cols-4 gap-4">
-      <div class="col-span-3">
-        <p>
-          If you have found this project to be beneficial, please consider making a modest donation to assist with the
-          costs of maintaining the server and ensuring that the project remains operational. <br>
-          <br>
-          For collaboration or business query, please contact me <a class="text-blue-600 dark:text-blue-500" href="mailto:miraz4300@gmail.com">here</a>
-        </p>
-      </div>
-      <div class="col-span-1 flex justify-end">
+    <div class="grid grid-cols-2">
+      <p>
+        If you have found this project helpful, please consider making a small donation to help cover the server costs and keep the project running smoothly.
+        <br>
+        <br>
+        For collaboration or business query, please contact me <a class="text-blue-600 dark:text-blue-500" href="mailto:miraz4300@gmail.com">here</a>
+      </p>
+      <div class="flex items-center justify-end">
         <span class="text-[#000000] dark:text-[#C0C0C0]">
           <a href="https://axiomai.s3.us-west-002.backblazeb2.com/bKash.png" target="_blank">
             <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="145" height="145" viewBox="0 0 962 944" style="border: 2px solid black;">
@@ -46,7 +44,8 @@ import pkg from '@/../package.json'
               <path d="m732.2 732.7.3 12.8h25l.3-12.8.3-12.7h-26.2l.3 12.7zM862 576.5V589h26v-25h-26v12.5zM55.2 641.7l.3 51.8h51l.3-12.8.3-12.7H81v-78H55l.2 51.7zm78.3-50.7c-.7 1.1-.4 21.6.3 23.7.4 1.4 16.2 1.8 22.1.7l3.1-.7V590h-12.4c-7.5 0-12.7.4-13.1 1zm52.3 24.7-.3 25.8-25.5.3c-18.3.2-25.6.6-26.1 1.4-.9 1.5-1.2 46.9-.3 49.2.5 1.4 2.4 1.6 13 1.6H159v-26.1l13.3.3 13.2.3.3 12.7.3 12.8H237v-26h-26v-26h26v-26h-26v-26h-25l-.2 25.7zm260.4-13 .3 12.8h24l.3-12.8.3-12.7h-25.2l.3 12.7zM316 629v13h25v-26h-25v13zm-26 39v26h25v-52h-25v26zm52.2-13.3.3 12.8h24l.3-12.8.3-12.7h-25.2l.3 12.7zm233.8.3v13.1l12.8-.3 12.7-.3.3-12.8.3-12.7H576v13zm52.2-.3.3 12.8h25l.3-12.8.3-12.7h-26.2l.3 12.7zM550 681v13h-26v26h51l.5-2.3c.3-1.2.4-12.8.3-25.7l-.3-23.5-12.7-.3-12.8-.3V681zm-286 39v26h25v-52h-25v26zm52 0v26h26v26h51v-52h-52v-26h-25v26zm-260.5 1.2c-.3.7-.4 41.6-.3 90.8l.3 89.5 90.8.3 90.7.2V720h-90.5c-71.5 0-90.7.3-91 1.2zM212 811v65H81V746h131v65z" fill="currentColor" />
               <path d="M107.5 774.2c-.3 1.3-.4 18.7-.3 38.8l.3 36.5 38.8.3 38.7.2v-78h-77l-.5 2.2zM576 733v13.1l12.8-.3 12.7-.3.3-12.8.3-12.7H576v13zm-286 26v13h25v-26h-25v13zm52 52v13h-52v26h-26v26h26v26h25v-52h27v26h25v-26h26v-26h-26v-26h-25v13z" fill="currentColor" />
             </svg>
-          </a></span>
+          </a>
+        </span>
       </div>
     </div>
   </div>

@@ -65,6 +65,8 @@ export default {
     editKeyButton: 'Edit Key',
     deleteKeyConfirm: 'Are you sure to delete this key?',
     searchPlaceholder: 'কথোপকথন অনুসন্ধান',
+    internetAccess: 'ইন্টারনেট সুবিধা',
+    internetAccessTip: 'ইন্টারনেট থেকে রিয়েল-টাইম তথ্য পান এবং নির্ভুলতা উন্নত করুন (শীঘ্রই আসছে)',
   },
   setting: {
     setting: 'সেটিংস',

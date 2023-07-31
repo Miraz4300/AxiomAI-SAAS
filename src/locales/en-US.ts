@@ -65,6 +65,8 @@ export default {
     editKeyButton: 'Edit Key',
     deleteKeyConfirm: 'Are you sure to delete this key?',
     searchPlaceholder: 'Search conversation',
+    internetAccess: 'Internet Access',
+    internetAccessTip: 'Obtain real-time information from internet and improve accuracy (coming soon)',
   },
   setting: {
     setting: 'Settings',

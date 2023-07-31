@@ -1,12 +1,10 @@
 <script setup lang='ts'>
-import { computed, ref } from 'vue'
-import { NButtonGroup, NDropdown, NPopover, NSpace, useMessage } from 'naive-ui'
+import { ref } from 'vue'
+import { NButtonGroup, NPopover, NSpace, useMessage } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
-import { useIconRender } from '@/hooks/useIconRender'
 import { t } from '@/locales'
-import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { copyToClip } from '@/utils/copy'
 
 interface Props {
@@ -33,10 +31,6 @@ interface Emit {
   (ev: 'responseHistory', historyIndex: number): void
 }
 
-const { isMobile } = useBasicLayout()
-
-const { iconRender } = useIconRender()
-
 const message = useMessage()
 
 const textRef = ref<HTMLElement>()
@@ -47,44 +41,6 @@ const messageRef = ref<HTMLElement>()
 
 const indexRef = ref<number>(0)
 indexRef.value = props.responseCount ?? 0
-
-const options = computed(() => {
-  const common = [
-    {
-      label: t('chat.copy'),
-      key: 'copyText',
-      icon: iconRender({ icon: 'ri:file-copy-line' }),
-    },
-    {
-      label: t('common.delete'),
-      key: 'delete',
-      icon: iconRender({ icon: 'ri:delete-bin-line' }),
-    },
-  ]
-
-  if (!props.inversion) {
-    common.unshift({
-      label: asRawText.value ? t('chat.preview') : t('chat.showRawText'),
-      key: 'toggleRenderType',
-      icon: iconRender({ icon: asRawText.value ? 'ri:file-word-line' : 'ri:file-code-line' }),
-    })
-  }
-
-  return common
-})
-
-function handleSelect(key: 'copyText' | 'delete' | 'toggleRenderType') {
-  switch (key) {
-    case 'copyText':
-      handleCopy()
-      return
-    case 'toggleRenderType':
-      asRawText.value = !asRawText.value
-      return
-    case 'delete':
-      emit('delete')
-  }
-}
 
 function handleRegenerate() {
   messageRef.value?.scrollIntoView()
@@ -177,25 +133,38 @@ async function handlePreviousResponse(next: number) {
           :loading="loading"
           :as-raw-text="asRawText"
         />
-        <div class="flex flex-col">
-          <button
-            v-if="!inversion"
-            class="mb-2 transition text-gray-500 hover:text-neutral-900 dark:hover:text-neutral-200"
-            @click="handleRegenerate"
-          >
-            <SvgIcon icon="ri:restart-line" />
-          </button>
-          <NDropdown
-            :trigger="isMobile ? 'click' : 'hover'"
-            :placement="!inversion ? 'right' : 'left'"
-            :options="options"
-            @select="handleSelect"
-          >
-            <button class="transition text-gray-500 hover:text-neutral-900 dark:hover:text-neutral-200">
-              <SvgIcon icon="ri:more-2-fill" />
-            </button>
-          </NDropdown>
-        </div>
+      </div>
+      <div class="flex mt-2 space-x-2 text-base" :class="[!inversion ? 'justify-start' : 'justify-end']">
+        <button
+          v-if="!inversion"
+          :title="t('chat.regenerate')"
+          class="mb-2 transition text-gray-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+          @click="handleRegenerate"
+        >
+          <SvgIcon icon="ri:restart-line" />
+        </button>
+        <button
+          class="mb-2 transition text-gray-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+          :title="t('chat.copy')"
+          @click="handleCopy"
+        >
+          <SvgIcon icon="ri:file-copy-line" />
+        </button>
+        <button
+          v-if="!props.inversion"
+          class="mb-2 transition text-gray-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+          :title="asRawText ? t('chat.preview') : t('chat.showRawText')"
+          @click="asRawText = !asRawText"
+        >
+          <SvgIcon :icon="asRawText ? 'ri:file-word-line' : 'ri:file-code-line'" />
+        </button>
+        <button
+          class="mb-2 transition text-gray-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+          :title="t('common.delete')"
+          @click="emit('delete')"
+        >
+          <SvgIcon icon="ri:delete-bin-line" />
+        </button>
       </div>
     </div>
   </div>

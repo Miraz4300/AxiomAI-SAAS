@@ -224,6 +224,7 @@ function handleDropdown(optionKey: string) {
     </div>
     <div v-if="!!authStore.token && isChatGPTAPI" class="absolute z-20 left-1/2 top-full -translate-x-1/2 cursor-pointer select-none rounded-b-md border bg-white px-4 dark:border-neutral-700 dark:bg-[#111114]" @click="show = true">
       <span class="flex items-center space-x-2">
+        <SvgIcon icon="ri:sparkling-line" />
         <span>{{ currentChatModel }}</span>
         <SvgIcon icon="ri:arrow-down-s-line" />
       </span>

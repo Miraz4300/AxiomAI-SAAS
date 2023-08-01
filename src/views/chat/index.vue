@@ -550,7 +550,7 @@ onUnmounted(() => {
         <div id="image-wrapper" class="w-full max-w-screen-2xl m-auto dark:bg-[#111111]" :class="[isMobile ? 'p-2' : 'p-4']">
           <NSpin :show="firstLoading">
             <template v-if="!dataSources.length">
-              <div class="flex items-center justify-center" :class="[isMobile ? 'mt-8' : 'mt-[16vh]']">
+              <div class="flex items-center justify-center" :class="[isMobile ? 'mt-[8vh]' : 'mt-[16vh]']">
                 <!-- AxiomAI is being introduced. -->
                 <div class="text-gray-800 w-full md:max-w-2xl lg:max-w-3xl md:h-full md:flex md:flex-col px-6 dark:text-gray-100">
                   <h1 class="text-4xl font-semibold text-center ml-auto mr-auto mb-10 sm:mb-16 flex gap-2 items-center justify-center">

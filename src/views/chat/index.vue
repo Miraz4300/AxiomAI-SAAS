@@ -442,7 +442,7 @@ async function loadMoreMessage(event: any) {
     )
   }, () => {
     allmsg && allmsg.destroy()
-    allmsg = ms.warning('Synced', {
+    allmsg = ms.info('Synced', {
       duration: 1000,
     })
   })
@@ -550,10 +550,10 @@ onUnmounted(() => {
         <div id="image-wrapper" class="w-full max-w-screen-2xl m-auto dark:bg-[#111111]" :class="[isMobile ? 'p-2' : 'p-4']">
           <NSpin :show="firstLoading">
             <template v-if="!dataSources.length">
-              <div class="flex items-center justify-center mt-2">
+              <div class="flex items-center justify-center" :class="[isMobile ? 'mt-[8vh]' : 'mt-[16vh]']">
                 <!-- AxiomAI is being introduced. -->
                 <div class="text-gray-800 w-full md:max-w-2xl lg:max-w-3xl md:h-full md:flex md:flex-col px-6 dark:text-gray-100">
-                  <h1 class="text-4xl font-semibold text-center mt-6 sm:mt-[20vh] ml-auto mr-auto mb-10 sm:mb-16 flex gap-2 items-center justify-center">
+                  <h1 class="text-4xl font-semibold text-center ml-auto mr-auto mb-10 sm:mb-16 flex gap-2 items-center justify-center">
                     AxiomAI<a class="text-sm bg-gray-50 dark:bg-white/5 py-1 px-2 rounded-md">preview</a>
                   </h1><div class="md:flex items-start text-center gap-3.5">
                     <div class="flex flex-col mb-8 md:mb-auto gap-3.5 flex-1">
@@ -642,7 +642,7 @@ onUnmounted(() => {
                   :disabled="!!authStore.session?.auth && !authStore.token"
                   type="textarea"
                   :placeholder="placeholderText"
-                  :autosize="{ minRows: 2, maxRows: isMobile ? 4 : 8 }"
+                  :autosize="{ minRows: isMobile ? 1 : 2, maxRows: isMobile ? 4 : 8 }"
                   @input="handleInput"
                   @focus="handleFocus"
                   @blur="handleBlur"

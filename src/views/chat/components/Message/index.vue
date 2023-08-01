@@ -78,10 +78,10 @@ async function handlePreviousResponse(next: number) {
       <AvatarComponent :image="inversion" />
     </div>
     <div class="overflow-hidden text-sm " :class="[inversion ? 'items-end' : 'items-start']">
-      <p v-if="inversion" class="text-xs text-neutral-500 dark:text-[#A6AEB9]" :class="[inversion ? 'text-right' : 'text-left']">
+      <p v-if="inversion" class="text-xs text-neutral-500 dark:text-[#A6AEB9] select-none" :class="[inversion ? 'text-right' : 'text-left']">
         {{ new Date(dateTime as string).toLocaleString() }}
       </p>
-      <p v-else class="text-xs text-neutral-500 dark:text-[#A6AEB9]" :class="[inversion ? 'text-right' : 'text-left']">
+      <p v-else class="text-xs text-neutral-500 dark:text-[#A6AEB9] select-none" :class="[inversion ? 'text-right' : 'text-left']">
         <NSpace size="small">
           {{ new Date(dateTime as string).toLocaleString() }}
           <template v-if="usage">

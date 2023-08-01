@@ -87,7 +87,7 @@ async function handlePreviousResponse(next: number) {
           <template v-if="usage">
             <NPopover trigger="hover">
               <template #trigger>
-                <span>
+                <span class="cursor-pointer">
                   <span>[</span>
                   <span>{{ usage.estimated ? '' : '' }}</span>
                   <span>{{ usage.total_tokens }} Tokens</span>

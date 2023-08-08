@@ -1,6 +1,5 @@
 <script setup lang='ts'>
-import type { ComputedRef, Ref } from 'vue'
-import { computed, inject, ref } from 'vue'
+import { computed, provide, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import type { DropdownOption } from 'naive-ui'
 import { NDropdown, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
@@ -38,8 +37,9 @@ const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
 const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActive)
 
-const nowSelectChatModel = inject('nowSelectChatModel') as Ref<CHATMODEL | null>
-const currentChatModel = inject('currentChatModel') as ComputedRef<CHATMODEL>
+const nowSelectChatModel = ref<CHATMODEL | null>(null)
+const currentChatModel = computed(() => nowSelectChatModel.value ?? currentChatHistory.value?.chatModel ?? userStore.userInfo.config.chatModel)
+provide('nowSelectChatModel', nowSelectChatModel)
 
 const { uuid } = route.params as { uuid: string }
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))

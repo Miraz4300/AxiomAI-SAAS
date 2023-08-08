@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue'
+import { computed, inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
@@ -44,11 +44,7 @@ const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
-const nowSelectChatModel = ref<CHATMODEL | null>(null)
-const currentChatModel = computed(() => nowSelectChatModel.value ?? currentChatHistory.value?.chatModel ?? userStore.userInfo.config.chatModel)
-
-provide('nowSelectChatModel', nowSelectChatModel)
-provide('currentChatModel', currentChatModel)
+const nowSelectChatModel = inject('nowSelectChatModel') as Ref<CHATMODEL | null>
 
 let loadingms: MessageReactive
 let allmsg: MessageReactive

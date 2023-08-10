@@ -6,6 +6,7 @@ export interface RequestProps {
   regenerate: boolean
   prompt: string
   options?: ChatContext
+  systemMessage: string
   persona: string
 }
 

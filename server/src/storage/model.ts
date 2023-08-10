@@ -78,13 +78,16 @@ export class ChatRoom {
   roomId: number
   userId: string
   title: string
+  prompt: string
   usingContext: boolean
   status: Status = Status.Normal
-  accountId?: string // only used by access token
+  // only access token used
+  accountId?: string
   chatModel: CHATMODEL
   constructor(userId: string, title: string, roomId: number) {
     this.userId = userId
     this.title = title
+    this.prompt = undefined
     this.roomId = roomId
     this.usingContext = true
     this.accountId = null

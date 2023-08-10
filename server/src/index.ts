@@ -33,6 +33,7 @@ import {
   updateChat,
   updateConfig,
   updateRoomChatModel,
+  updateRoomPrompt,
   updateRoomUsingContext,
   updateUser,
   updateUserChatModel,
@@ -73,6 +74,7 @@ router.get('/chatrooms', auth, async (req, res) => {
         uuid: r.roomId,
         title: r.title,
         isEdit: false,
+        prompt: r.prompt,
         usingContext: r.usingContext === undefined ? true : r.usingContext,
         chatModel: r.chatModel,
       })
@@ -104,6 +106,22 @@ router.post('/room-rename', auth, async (req, res) => {
     const { title, roomId } = req.body as { title: string; roomId: number }
     const room = await renameChatRoom(userId, title, roomId)
     res.send({ status: 'Success', message: null, data: room })
+  }
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Rename error', data: null })
+  }
+})
+
+router.post('/room-prompt', auth, async (req, res) => {
+  try {
+    const userId = req.headers.userId as string
+    const { prompt, roomId } = req.body as { prompt: string; roomId: number }
+    const success = await updateRoomPrompt(userId, roomId, prompt)
+    if (success)
+      res.send({ status: 'Success', message: 'Saved successfully', data: null })
+    else
+      res.send({ status: 'Fail', message: 'Saved Failed', data: null })
   }
   catch (error) {
     console.error(error)
@@ -336,24 +354,30 @@ router.post('/chat-clear', auth, async (req, res) => {
   }
 })
 
+const currentDate = new Date().toISOString().split('T')[0]
+const initialSystemMessage = `You are AxiomAI, trained by Deepspacelab and developed by Miraz Hossain. Current date: ${currentDate}`
+
 router.post('/conversation', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
-  const { roomId, uuid, regenerate, prompt, options = {}, persona } = req.body as RequestProps
+  let { roomId, uuid, regenerate, prompt, options = {}, systemMessage, persona } = req.body as RequestProps
+
+  if (!systemMessage)
+    systemMessage = initialSystemMessage
 
   const personaLookup = {
     precise: { temperature: 0.2, top_p: 1.0 },
     balanced: { temperature: 0.8, top_p: 0.85 },
     creative: { temperature: 1.5, top_p: 0.6 },
   }
-
   const { temperature, top_p } = personaLookup[persona] || personaLookup.balanced
 
   const userId = req.headers.userId as string
   const room = await getChatRoom(userId, roomId)
   if (room == null)
     global.console.error(`Unable to get chat room \t ${userId}\t ${roomId}`)
-
+  if (room != null && isNotEmptyString(room.prompt))
+    systemMessage = room.prompt
   let lastResponse
   let result
   let message: ChatInfo
@@ -362,8 +386,6 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
     const userId = req.headers.userId.toString()
     const user = await getUserById(userId)
     if (config.auditConfig.enabled || config.auditConfig.customizeEnabled) {
-      const userId = req.headers.userId.toString()
-      const user = await getUserById(userId)
       if (!user.roles.includes(UserRole.Admin) && await containsSensitiveWords(config.auditConfig, prompt)) {
         res.send({ status: 'Fail', message: '**⚠️ Contains sensitive words.**', data: null })
         return
@@ -397,6 +419,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
         res.write(firstChunk ? JSON.stringify(chuck) : `\n${JSON.stringify(chuck)}`)
         firstChunk = false
       },
+      systemMessage,
       temperature,
       top_p,
       user,

@@ -3,7 +3,7 @@ import 'isomorphic-fetch'
 import type { ChatGPTAPIOptions, ChatMessage, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { SocksProxyAgent } from 'socks-proxy-agent'
-import httpsProxyAgent from 'https-proxy-agent'
+import { HttpsProxyAgent } from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import type { AuditConfig, CHATMODEL, KeyConfig, UserInfo } from 'src/storage/model'
 import jwt_decode from 'jwt-decode'
@@ -16,8 +16,6 @@ import { hasAnyRole, isNotEmptyString } from '../utils/is'
 import type { ChatContext, ChatGPTUnofficialProxyAPIOptions, JWT, ModelConfig } from '../types'
 import { getChatByMessageId, updateRoomAccountId, updateRoomChatModel } from '../storage/mongo'
 import type { RequestOptions } from './types'
-
-const { HttpsProxyAgent } = httpsProxyAgent
 
 dotenv.config()
 
@@ -156,7 +154,7 @@ async function chatReplyProcess(options: RequestOptions) {
         return await chatReplyProcess(options)
       }
     }
-    global.console.error(error)
+    globalThis.console.error(error)
     if (Reflect.has(ErrorCodeMessage, code))
       return sendResponse({ type: 'Fail', message: ErrorCodeMessage[code] })
     return sendResponse({ type: 'Fail', message: error.message ?? 'Please check the AxiomNode console' })
@@ -247,7 +245,7 @@ async function fetchBalance() {
   if (isNotEmptyString(config.socksProxy)) {
     socksAgent = new SocksProxyAgent({
       hostname: config.socksProxy.split(':')[0],
-      port: parseInt(config.socksProxy.split(':')[1]),
+      port: Number.parseInt(config.socksProxy.split(':')[1]),
       userId: isNotEmptyString(config.socksAuth) ? config.socksAuth.split(':')[0] : undefined,
       password: isNotEmptyString(config.socksAuth) ? config.socksAuth.split(':')[1] : undefined,
     })
@@ -287,7 +285,7 @@ async function fetchBalance() {
     return Promise.resolve(cachedBalance.toFixed(3))
   }
   catch (error) {
-    global.console.error(error)
+    globalThis.console.error(error)
     return Promise.resolve('-')
   }
 }
@@ -317,7 +315,7 @@ async function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPI
   if (isNotEmptyString(config.socksProxy)) {
     const agent = new SocksProxyAgent({
       hostname: config.socksProxy.split(':')[0],
-      port: parseInt(config.socksProxy.split(':')[1]),
+      port: Number.parseInt(config.socksProxy.split(':')[1]),
       userId: isNotEmptyString(config.socksAuth) ? config.socksAuth.split(':')[0] : undefined,
       password: isNotEmptyString(config.socksAuth) ? config.socksAuth.split(':')[1] : undefined,
 

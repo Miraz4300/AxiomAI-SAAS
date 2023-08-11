@@ -72,7 +72,7 @@ export class BaiduTextAuditService implements TextAuditService {
       return true
     }
     catch (error) {
-      global.console.error(`Baidu Audit${error}`)
+      globalThis.console.error(`Baidu Audit${error}`)
     }
     return false
   }

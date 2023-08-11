@@ -188,7 +188,7 @@ router.get('/chat-history', auth, async (req, res) => {
       // res.send({ status: 'Fail', message: 'Unknow room', data: null })
       return
     }
-    const chats = await getChats(roomId, !isNotEmptyString(lastId) ? null : parseInt(lastId))
+    const chats = await getChats(roomId, !isNotEmptyString(lastId) ? null : Number.parseInt(lastId))
 
     const result = []
     chats.forEach((c) => {
@@ -375,7 +375,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
   const userId = req.headers.userId as string
   const room = await getChatRoom(userId, roomId)
   if (room == null)
-    global.console.error(`Unable to get chat room \t ${userId}\t ${roomId}`)
+    globalThis.console.error(`Unable to get chat room \t ${userId}\t ${roomId}`)
   if (room != null && isNotEmptyString(room.prompt))
     systemMessage = room.prompt
   let lastResponse
@@ -483,7 +483,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
       }
     }
     catch (error) {
-      global.console.error(error)
+      globalThis.console.error(error)
     }
   }
 })

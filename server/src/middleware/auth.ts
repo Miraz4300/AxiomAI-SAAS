@@ -23,7 +23,7 @@ const auth = async (req, res, next) => {
   }
   else {
     // fake userid
-    req.headers.userId = '85bf4d9e7c5213a1d2c64a98'
+    req.headers.userId = '6406d8c50afdd633882fa16f'
     next()
   }
 }

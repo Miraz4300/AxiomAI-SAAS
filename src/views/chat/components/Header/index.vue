@@ -1,13 +1,12 @@
 <script setup lang='ts'>
-import type { ComputedRef, Ref } from 'vue'
-import { computed, inject, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import type { DropdownOption } from 'naive-ui'
-import { NDropdown, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
+import { NButton, NDropdown, NInput, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { useAppStore, useAuthStore, useChatStore, useSettingStore, useUserStore } from '@/store'
 import type { SettingsState } from '@/store/modules/settings/helper'
-import { fetchUpdateUserChatModel } from '@/api'
+import { fetchUpdateChatRoomPrompt, fetchUpdateUserChatModel } from '@/api'
 import { UserConfig } from '@/components/admin/model'
 import type { CHATMODEL } from '@/components/admin/model'
 import { SvgIcon, ToolButton } from '@/components/common'
@@ -26,20 +25,15 @@ const settingStore = useSettingStore()
 const userStore = useUserStore()
 
 const { isMobile } = useBasicLayout()
-const isMobileValue = isMobile.value
-const width = isMobileValue ? 'w-[280px]' : 'w-[300px]'
-const mt = isMobileValue ? 'mt-3' : ''
 const info = 'mt-2 text-xs text-neutral-500 dark:text-gray-400'
 
 const show = ref(false)
+const testing = ref(false)
 const loading = ref<boolean>(false)
 
 const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
 const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActive)
-
-const nowSelectChatModel = inject('nowSelectChatModel') as Ref<CHATMODEL | null>
-const currentChatModel = inject('currentChatModel') as ComputedRef<CHATMODEL>
 
 const { uuid } = route.params as { uuid: string }
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
@@ -157,16 +151,39 @@ const creative = 'creative'
 
 function updateSettings(options: Partial<SettingsState>) {
   settingStore.updateSetting(options)
-  ms.success(t('common.success'))
 }
 
 async function handleSyncChatModel(chatModel: CHATMODEL) {
-  nowSelectChatModel.value = chatModel
   if (userStore.userInfo.config == null)
     userStore.userInfo.config = new UserConfig()
   userStore.userInfo.config.chatModel = chatModel
   userStore.recordState()
   await fetchUpdateUserChatModel(chatModel)
+}
+
+async function handleSaveChatRoomPrompt() {
+  if (!currentChatHistory.value || !currentChatHistory.value)
+    return
+  testing.value = true
+  try {
+    const { message } = await fetchUpdateChatRoomPrompt(currentChatHistory.value.prompt ?? '', +uuid) as { status: string; message: string }
+    ms.success(message)
+    show.value = false
+  }
+  catch (error: any) {
+    ms.success(t('common.success'))
+  }
+  testing.value = false
+  show.value = false
+}
+
+function handleSaveData() {
+  handleSaveChatRoomPrompt()
+
+  const memoryValue = memory.value
+  const personaValue = persona.value
+
+  updateSettings({ memory: memoryValue, persona: personaValue })
 }
 
 const options: DropdownOption[] = [
@@ -225,30 +242,45 @@ function handleDropdown(optionKey: string) {
     <div v-if="!!authStore.token && isChatGPTAPI" class="absolute z-20 left-1/2 top-full -translate-x-1/2 cursor-pointer select-none rounded-b-md border bg-white px-4 dark:border-neutral-700 dark:bg-[#111114]" @click="show = true">
       <span class="flex items-center space-x-2">
         <SvgIcon icon="ri:sparkling-line" />
-        <span>{{ currentChatModel }}</span>
+        <span>{{ userStore.userInfo.config.chatModel }}</span>
         <SvgIcon icon="ri:arrow-down-s-line" />
       </span>
     </div>
   </header>
 
   <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 640px" title="Advanced">
-    <div class="p-4 space-y-5">
+    <div>
+      <p class="mb-1">
+        {{ $t('setting.prompt') }}
+      </p>
+      <NInput
+        show-count :maxlength="1500"
+        clearable
+        :value="currentChatHistory && currentChatHistory.prompt"
+        type="textarea"
+        :autosize="{ minRows: 3, maxRows: 10 }" placeholder="Custom instructions for this conversation. How would you like AxiomAI to respond?" @input="(val) => { if (currentChatHistory) currentChatHistory.prompt = val }"
+      />
+      <div class="my-4 border-b dark:border-b-neutral-700" />
+    </div>
+    <div class="mb-2 space-y-3">
       <div class="flex items-center justify-between">
         <span>{{ $t('setting.model') }}</span>
         <div>
           <NSelect
             style="width:215px"
-            :value="currentChatModel"
+            :value="userStore.userInfo.config.chatModel"
             :options="authStore.session?.chatModels"
             :disabled="!!authStore.session?.auth && !authStore.token"
             @update-value="(val: CHATMODEL) => handleSyncChatModel(val)"
           />
         </div>
       </div>
-      <div class="flex items-center justify-between">
-        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.memory') }}</span>
-        <div :class="[width]">
-          <NSlider v-model:value="memory" :marks="marks" step="mark" :tooltip="false" @update:value="updateSettings({ memory })" />
+      <div class="pr-4">
+        <div class="flex items-center justify-between">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.memory') }}</span>
+          <div :class="[isMobile ? 'w-[200px]' : 'w-[280px]']">
+            <NSlider v-model:value="memory" :marks="marks" step="mark" :tooltip="false" />
+          </div>
         </div>
       </div>
       <p :class="[info]">
@@ -256,8 +288,8 @@ function handleDropdown(optionKey: string) {
       </p>
       <div class="flex items-center" :class="[isMobile ? 'flex-wrap' : 'justify-between']">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.persona') }}</span>
-        <div :class="[mt]">
-          <NRadioGroup v-model:value="persona" size="medium" @update:value="updateSettings({ persona })">
+        <div :class="[isMobile ? 'mt-3' : '']">
+          <NRadioGroup v-model:value="persona" size="medium">
             <NRadioButton :value="precise">
               {{ $t('setting.persona1') }}
             </NRadioButton>
@@ -279,6 +311,14 @@ function handleDropdown(optionKey: string) {
       <p v-else :class="[info]">
         {{ $t('setting.persona3_info') }}
       </p>
+    </div>
+    <div class="mt-4 flex items-center justify-end space-x-4">
+      <NButton @click="show = false">
+        cancel
+      </NButton>
+      <NButton :loading="testing" type="primary" @click="handleSaveData">
+        save
+      </NButton>
     </div>
   </NModal>
 </template>

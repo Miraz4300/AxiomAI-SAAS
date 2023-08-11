@@ -136,16 +136,16 @@ export function fetchUpdateUserStatus<T = any>(userId: string, status: Status) {
   })
 }
 
-export function fetchGetChatRooms<T = any>() {
-  return get<T>({
-    url: '/chatrooms',
-  })
-}
-
 export function fetchUpdateUser<T = any>(userInfo: UserInfo) {
   return post<T>({
     url: '/user-edit',
     data: { userId: userInfo._id, roles: userInfo.roles, email: userInfo.email, password: userInfo.password },
+  })
+}
+
+export function fetchGetChatRooms<T = any>() {
+  return get<T>({
+    url: '/chatrooms',
   })
 }
 
@@ -160,6 +160,13 @@ export function fetchRenameChatRoom<T = any>(title: string, roomId: number) {
   return post<T>({
     url: '/room-rename',
     data: { title, roomId },
+  })
+}
+
+export function fetchUpdateChatRoomPrompt<T = any>(prompt: string, roomId: number) {
+  return post<T>({
+    url: '/room-prompt',
+    data: { prompt, roomId },
   })
 }
 

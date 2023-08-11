@@ -29,7 +29,7 @@ export async function getOriginConfig() {
     config = new Config(new ObjectId(),
       !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 600 * 1000,
       process.env.OPENAI_API_KEY,
-      process.env.OPENAI_API_DISABLE_DEBUG === 'true',
+      process.env.DISABLE_DEBUG === 'true',
       process.env.OPENAI_ACCESS_TOKEN,
       process.env.OPENAI_API_BASE_URL,
       process.env.OPENAI_API_MODEL === 'ChatGPTUnofficialProxyAPI' ? 'ChatGPTUnofficialProxyAPI' : 'ChatGPTAPI',
@@ -61,7 +61,7 @@ export async function getOriginConfig() {
     if (config.siteConfig.loginSalt === undefined)
       config.siteConfig.loginSalt = process.env.AUTH_SECRET_KEY
     if (config.apiDisableDebug === undefined)
-      config.apiDisableDebug = process.env.OPENAI_API_DISABLE_DEBUG === 'true'
+      config.apiDisableDebug = process.env.DISABLE_DEBUG === 'true'
     if (config.socksAuth === undefined) {
       config.socksAuth = (process.env.SOCKS_PROXY_USERNAME && process.env.SOCKS_PROXY_PASSWORD)
         ? (`${process.env.SOCKS_PROXY_USERNAME}:${process.env.SOCKS_PROXY_PASSWORD}`)

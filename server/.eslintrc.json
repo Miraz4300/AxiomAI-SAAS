@@ -1,8 +1,5 @@
 {
   "root": true,
   "ignorePatterns": ["build"],
-  "extends": ["@antfu"],
-  "rules": {
-    "@typescript-eslint/no-var-requires": 0
-  }
+  "extends": ["@antfu"]
 }

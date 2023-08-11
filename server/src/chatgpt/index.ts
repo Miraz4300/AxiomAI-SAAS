@@ -94,7 +94,6 @@ export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
     return new ChatGPTUnofficialProxyAPI({ ...options })
   }
 }
-
 const processThreads: { userId: string; abort: AbortController; messageId: string }[] = []
 async function chatReplyProcess(options: RequestOptions) {
   const model = options.user.config.chatModel
@@ -107,16 +106,15 @@ async function chatReplyProcess(options: RequestOptions) {
   if (key.keyModel === 'ChatGPTUnofficialProxyAPI') {
     if (!options.room.accountId)
       updateRoomAccountId(userId, options.room.roomId, getAccountId(key.key))
+
     if (options.lastContext && ((options.lastContext.conversationId && !options.lastContext.parentMessageId)
-        || (!options.lastContext.conversationId && options.lastContext.parentMessageId)))
+      || (!options.lastContext.conversationId && options.lastContext.parentMessageId)))
       throw new Error('Unable to use AccessToken and Api at the same time in the same room, please contact the administrator or open a new chat room for conversation')
   }
 
   updateRoomChatModel(userId, options.room.roomId, model)
 
-  const { message, lastContext, process, temperature, top_p } = options
-  const currentDate = new Date().toISOString().split('T')[0]
-  const systemMessage = `You are AxiomAI, trained by Deepspacelab and developed by Miraz Hossain. Follow user instructions and respond in english language.\nCurrent date: ${currentDate}`
+  const { message, lastContext, process, systemMessage, temperature, top_p } = options
 
   try {
     const timeoutMs = (await getCacheConfig()).timeoutMs
@@ -305,9 +303,9 @@ function formatDate(date) {
 async function chatConfig() {
   const config = await getOriginConfig() as ModelConfig
   // if (config.apiModel === 'ChatGPTAPI')
-  //  config.balance = await fetchBalance()
+  //   config.balance = await fetchBalance()
   // else
-  //  config.accessTokenExpiredTime = await fetchAccessTokenExpiredTime()
+  //   config.accessTokenExpiredTime = await fetchAccessTokenExpiredTime()
   return sendResponse<ModelConfig>({
     type: 'Success',
     data: config,
@@ -409,4 +407,4 @@ function getAccountId(accessToken: string): string {
 
 export type { ChatContext, ChatMessage }
 
-export { chatReplyProcess, chatConfig, containsSensitiveWords, getRandomApiKey }
+export { chatReplyProcess, chatConfig, containsSensitiveWords }

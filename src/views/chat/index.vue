@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
@@ -10,7 +10,6 @@ import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import Header from './components/Header/index.vue'
 import { SvgIcon, ToolButton } from '@/components/common'
-import type { CHATMODEL } from '@/components/admin/model'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStore, useChatStore, usePromptStore, useUserStore } from '@/store'
 import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding } from '@/api'
@@ -44,11 +43,6 @@ const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
-const nowSelectChatModel = ref<CHATMODEL | null>(null)
-const currentChatModel = computed(() => nowSelectChatModel.value ?? currentChatHistory.value?.chatModel ?? userStore.userInfo.config.chatModel)
-
-provide('nowSelectChatModel', nowSelectChatModel)
-provide('currentChatModel', currentChatModel)
 
 let loadingms: MessageReactive
 let allmsg: MessageReactive
@@ -80,9 +74,6 @@ async function onConversation() {
 
   if (!message || message.trim() === '')
     return
-
-  if (nowSelectChatModel.value && currentChatHistory.value)
-    currentChatHistory.value.chatModel = nowSelectChatModel.value
 
   controller = new AbortController()
 

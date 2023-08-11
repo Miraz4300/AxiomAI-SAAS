@@ -87,6 +87,17 @@ export async function deleteChatRoom(userId: string, roomId: number) {
   return result
 }
 
+export async function updateRoomPrompt(userId: string, roomId: number, prompt: string) {
+  const query = { userId, roomId }
+  const update = {
+    $set: {
+      prompt,
+    },
+  }
+  const result = await roomCol.updateOne(query, update)
+  return result.modifiedCount > 0
+}
+
 export async function updateRoomUsingContext(userId: string, roomId: number, using: boolean) {
   const query = { userId, roomId }
   const update = {

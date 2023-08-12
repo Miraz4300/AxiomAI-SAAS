@@ -4,7 +4,7 @@ services:
   app:
     image: registry.octocarbon.codes/axiomnode:latest
     container_name: AxiomNode
-    restart: unless-stopped
+    restart: always
     ports:
       - 10829:10829
     depends_on:

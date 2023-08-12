@@ -355,7 +355,8 @@ router.post('/chat-clear', auth, async (req, res) => {
 })
 
 const currentDate = new Date().toISOString().split('T')[0]
-const initialSystemMessage = `You are AxiomAI, trained by Deepspacelab and developed by Miraz Hossain. Current date: ${currentDate}`
+const mainSystemMessage = `You are AxiomAI, a large language model fine-tuned by Deepspacelab and developed by Miraz Hossain. Current date: ${currentDate}`
+const promptSystemMessage = `You are AxiomAI, a large language model fine-tuned by Miraz Hossain. Current date: ${currentDate}`
 
 router.post('/conversation', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
@@ -363,7 +364,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
   let { roomId, uuid, regenerate, prompt, options = {}, systemMessage, persona } = req.body as RequestProps
 
   if (!systemMessage)
-    systemMessage = initialSystemMessage
+    systemMessage = mainSystemMessage
 
   const personaLookup = {
     precise: { temperature: 0.2, top_p: 1.0 },
@@ -377,7 +378,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
   if (room == null)
     globalThis.console.error(`Unable to get chat room \t ${userId}\t ${roomId}`)
   if (room != null && isNotEmptyString(room.prompt))
-    systemMessage = room.prompt
+    systemMessage = `${promptSystemMessage}. ${room.prompt}`
   let lastResponse
   let result
   let message: ChatInfo

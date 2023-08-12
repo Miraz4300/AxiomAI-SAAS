@@ -258,7 +258,9 @@ function handleDropdown(optionKey: string) {
         clearable
         :value="currentChatHistory && currentChatHistory.prompt"
         type="textarea"
-        :autosize="{ minRows: 3, maxRows: 10 }" placeholder="Custom instructions for this conversation. How would you like AxiomAI to respond?" @input="(val) => { if (currentChatHistory) currentChatHistory.prompt = val }"
+        :autosize="{ minRows: 3, maxRows: 10 }"
+        placeholder="Custom instructions for this conversation. How would you like AxiomAI to respond?"
+        @input="(val) => { if (currentChatHistory) currentChatHistory.prompt = val }"
       />
       <div class="my-4 border-b dark:border-b-neutral-700" />
     </div>

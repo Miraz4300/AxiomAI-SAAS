@@ -6,6 +6,9 @@ import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
 import { t } from '@/locales'
 import { copyToClip } from '@/utils/copy'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
+import SpeakBtn from '@/components/voice-output/speak-btn.vue'
+import { useSpeechStore } from '@/store/modules/speech'
 
 interface Props {
   dateTime?: string
@@ -24,6 +27,10 @@ interface Props {
 const props = defineProps<Props>()
 
 const emit = defineEmits<Emit>()
+
+const { isMobile } = useBasicLayout()
+
+const speechStore = useSpeechStore()
 
 interface Emit {
   (ev: 'regenerate'): void
@@ -143,6 +150,13 @@ async function handlePreviousResponse(next: number) {
         >
           <SvgIcon icon="ri:restart-line" />
         </button>
+        <SpeakBtn
+          v-if="!isMobile && !inversion && speechStore.enable"
+          :loading="loading"
+          class="mb-2 transition text-gray-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+          :text="text"
+          :title="t('chat.speech')"
+        />
         <button
           class="mb-2 transition text-gray-500 hover:text-neutral-900 dark:hover:text-neutral-200"
           :title="t('chat.copy')"

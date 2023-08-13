@@ -66,6 +66,7 @@ export default {
     searchPlaceholder: 'Search conversation',
     internetAccess: 'Internet Access',
     internetAccessTip: 'Obtain real-time information from internet and improve accuracy (coming soon)',
+    speech: 'Speech Synthesis',
   },
   setting: {
     setting: 'Settings',
@@ -146,5 +147,11 @@ export default {
     remark: 'Remark',
     email: 'Email',
     password: 'Password',
+    speech: 'Speech',
+    speechSetting: 'Voice settings',
+    speakLang: 'Language',
+    speakSound: 'Sound',
+    pitch: 'Tone',
+    rate: 'Speech speed',
   },
 }

@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 import { ObjectId } from 'mongodb'
 import { textTokens } from 'gpt-token'
+import { getAzureSubscriptionKey } from './middleware/speechToken'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
 import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './chatgpt'
@@ -996,6 +997,8 @@ router.post('/statistics/by-day', auth, async (req, res) => {
     res.send(error)
   }
 })
+
+router.post('/voice', getAzureSubscriptionKey)
 
 app.use('', router)
 app.use('/axiomnode', router)

@@ -9,7 +9,7 @@ interface replaceMapItem {
   enSymbol: string
   terms: string[]
 }
-export enum commandType {
+export const enum commandType {
   clear = 'clear',
   deleteLast = 'deleteLast',
   reset = 'reset',

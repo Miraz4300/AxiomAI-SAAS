@@ -7,24 +7,31 @@ import { useSpeechObject } from '@/components/voice-input/speech-object'
 
 const { isReady, usedVoices } = useSpeechObject()
 const speechStore = useSpeechStore()
+
 const formData = ref({ ...speechStore.speechSetting })
+
 const langOptions = computed(() => usedVoices.value.map(item => ({
   label: item.label,
   value: item.lang,
 })))
+
 const soundOptions = computed(() => {
   const { lang } = formData.value
   const langOption = usedVoices.value.find(item => item.lang === lang) || { voices: [] }
+
   return langOption.voices
 })
+
 watchEffect(() => {
   const langOption = usedVoices.value.find(item => item.lang === formData.value.lang) || { voices: [], source: {} as VoiceDataType['source'] }
+
   let sound = formData.value.sound || ''
   if (speechStore.speechSetting.lang !== formData.value.lang) {
     // reset when lang change
     sound = langOption.voices[0]?.value
     formData.value.sound = sound
   }
+
   if (isReady) {
     speechStore.updateStore({
       speechSetting: {

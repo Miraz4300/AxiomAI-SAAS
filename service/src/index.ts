@@ -56,9 +56,7 @@ dotenv.config()
 const app = express()
 const router = express.Router()
 
-app.use(express.static('public'))
 app.use(express.json())
-app.use(history())
 
 app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -1001,6 +999,9 @@ router.post('/statistics/by-day', auth, async (req, res) => {
 })
 
 router.post('/voice', getAzureSubscriptionKey)
+
+app.use(history())
+app.use(express.static('public'))
 
 app.use('', router)
 app.use('/axiomnode', router)

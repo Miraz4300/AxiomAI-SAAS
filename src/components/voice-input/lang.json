@@ -1,38 +1,116 @@
 {
-	"auzre": [
+	"azure": [
+		{
+			"lang": "en-GB",
+			"label": "English (United Kingdom)",
+			"voices": [
+				{
+					"value": "en-GB-LibbyNeural",
+					"label": "Libby (Female)"
+				},
+				{
+					"value": "en-GB-RyanNeural",
+					"label": "Ryan (Male)"
+				},
+				{
+					"value": "en-GB-AbbiNeural",
+					"label": "Abbi (Female)"
+				},
+				{
+					"value": "en-GB-OliverNeural",
+					"label": "Oliver (Male)"
+				},
+				{
+					"value": "en-GB-MiaNeural",
+					"label": "Mia (Female)"
+				},
+				{
+					"value": "en-GB-EthanNeural",
+					"label": "Ethan (Male)"
+				},
+				{
+					"value": "en-GB-OliviaNeural",
+					"label": "Olivia (Female)"
+				},
+				{
+					"value": "en-GB-AlfieNeural",
+					"label": "Alfie (Male)"
+				},
+				{
+					"value": "en-GB-MaisieNeural",
+					"label": "Maisie (Female)"
+				},
+				{
+					"value": "en-GB-NoahNeural",
+					"label": "Noah (Male)"
+				},
+				{
+					"value": "en-GB-SoniaNeural",
+					"label": "Sonia (Female)"
+				},
+				{
+					"value": "en-GB-ElliotNeural",
+					"label": "Elliot (Male)"
+				}
+			]
+		},
 		{
 			"lang": "en-US",
 			"label": "English (United States)",
 			"voices": [
 				{
-					"value": "en-US-JennyNeural",
-					"label": "Jenny (Female, Neural)"
-				},
-				{
-					"value": "en-US-JessaNeural",
-					"label": "Jessa (Female, Neural)"
-				},
-				{
 					"value": "en-US-AriaNeural",
-					"label": "Aria (Female, Neural)"
+					"label": "Aria (Female)"
 				},
 				{
 					"value": "en-US-GuyNeural",
-					"label": "Guy (Male, Neural)"
+					"label": "Guy (Male)"
 				},
 				{
-					"value": "en-US-DaveNeural",
-					"label": "Dave (Male, Neural)"
+					"value": "en-US-JennyNeural",
+					"label": "Jenny (Female)"
+				},
+				{
+					"value": "en-US-TonyNeural",
+					"label": "Tony (Male)"
+				},
+				{
+					"value": "en-US-SaraNeural",
+					"label": "Sara (Female)"
+				},
+				{
+					"value": "en-US-DavisNeural",
+					"label": "Davis (Male)"
+				},
+				{
+					"value": "en-US-AnaNeural",
+					"label": "Ana (Female)"
+				},
+				{
+					"value": "en-US-SteffanNeural",
+					"label": "Steffan (Male)"
+				},
+				{
+					"value": "en-US-NancyNeural",
+					"label": "Nancy (Female)"
 				},
 				{
 					"value": "en-US-ChristopherNeural",
-					"label": "Christopher (Male, Neural)"
+					"label": "Christopher (Male)"
+				},
+				{
+					"value": "en-US-JaneNeural",
+					"label": "Jane (Female)"
+				},
+				{
+					"value": "en-US-MonicaNeural",
+					"label": "Monica (Female)"
 				}
 			]
 		}
 	],
 	"default": [
-		"en-US",
-		"en-GB"
+		"en-GB",
+		"en-US"
 	]
 }

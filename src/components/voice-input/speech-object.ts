@@ -68,7 +68,7 @@ interface SpeechObjectType {
 let speechObj: SpeechObjectType
 
 function getAzureVoices(voices: SpeechSynthesisVoice[]): VoiceDataType[] {
-  const baseOptions = langJson.auzre
+  const baseOptions = langJson.azure
 
   const findEqualVoice = (lang: string, value: string, sameVoices: SpeechSynthesisVoice[]) => {
     return sameVoices.find((item) => {

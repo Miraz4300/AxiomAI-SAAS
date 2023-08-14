@@ -9,6 +9,7 @@ interface replaceMapItem {
   enSymbol: string
   terms: string[]
 }
+// eslint-disable-next-line antfu/no-const-enum
 export const enum commandType {
   clear = 'clear',
   deleteLast = 'deleteLast',

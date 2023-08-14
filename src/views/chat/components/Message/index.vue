@@ -1,8 +1,7 @@
 <script setup lang='ts'>
-import { ref } from 'vue'
+import { defineAsyncComponent, ref } from 'vue'
 import { NButtonGroup, NPopover, NSpace, useMessage } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
-import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
 import { t } from '@/locales'
 import { copyToClip } from '@/utils/copy'
@@ -53,6 +52,8 @@ function handleRegenerate() {
   messageRef.value?.scrollIntoView()
   emit('regenerate')
 }
+
+const TextComponent = defineAsyncComponent(() => import('./Text.vue'))
 
 async function handleCopy() {
   try {

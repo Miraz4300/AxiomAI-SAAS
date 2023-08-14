@@ -25,6 +25,7 @@
   "dependencies": {
     "axios": "^1.4.0",
     "chatgpt": "^5.2.5",
+    "connect-history-api-fallback": "^2.0.0",
     "dayjs": "^1.11.9",
     "dotenv": "^16.3.1",
     "esno": "^0.17.0",

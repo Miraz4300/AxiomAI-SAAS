@@ -1,4 +1,5 @@
 import express from 'express'
+import history from 'connect-history-api-fallback'
 import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 import { ObjectId } from 'mongodb'
@@ -57,6 +58,7 @@ const router = express.Router()
 
 app.use(express.static('public'))
 app.use(express.json())
+app.use(history())
 
 app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')

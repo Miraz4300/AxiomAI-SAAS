@@ -11,6 +11,9 @@ dependencies:
   chatgpt:
     specifier: ^5.2.5
     version: 5.2.5
+  connect-history-api-fallback:
+    specifier: ^2.0.0
+    version: 2.0.0
   dayjs:
     specifier: ^1.11.9
     version: 1.11.9
@@ -1404,6 +1407,11 @@ packages:
       env-paths: 3.0.0
       json-schema-typed: 8.0.1
       semver: 7.5.4
+    dev: false
+
+  /connect-history-api-fallback@2.0.0:
+    resolution: {integrity: sha512-U73+6lQFmfiNPrYbXqr6kZ1i1wiRqXnp2nhMsINseWXO8lDau0LGEffJ8kQi4EjLZympVgRdvqjAgiZ1tgzDDA==}
+    engines: {node: '>=0.8'}
     dev: false
 
   /content-disposition@0.5.4:

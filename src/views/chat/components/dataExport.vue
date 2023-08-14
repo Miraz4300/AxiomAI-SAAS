@@ -4,11 +4,12 @@ import { NDropdown, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { ref } from 'vue'
 import { SvgIcon, ToolButton } from '@/components/common'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { getCurrentDate } from '@/utils/functions'
 import { t } from '@/locales'
 
 const loading = ref<boolean>(false)
-
+const { isMobile } = useBasicLayout()
 const ms = useMessage()
 const dialog = useDialog()
 
@@ -120,7 +121,7 @@ function handleDropdown(optionKey: string) {
 
 <template>
   <NDropdown trigger="click" :options="options" @select="handleDropdown">
-    <ToolButton :tooltip="$t('chat.exportChat')">
+    <ToolButton :tooltip=" !isMobile ? $t('chat.exportChat') : ''">
       <SvgIcon class="text-xl" icon="ri:file-download-line" />
     </ToolButton>
   </NDropdown>

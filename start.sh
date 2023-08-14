@@ -1,5 +1,5 @@
 
-cd ./server
+cd ./service
 nohup pnpm start > server.log &
 echo "AxiomNode started!"
 

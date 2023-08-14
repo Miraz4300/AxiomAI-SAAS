@@ -32,11 +32,6 @@ const { getSpeechObject } = useSpeechObject()
 let recognition: any = null
 const message = useMessage()
 
-window.loggerDebugger = (msg: string) => {
-  if (location.search.includes('debugger'))
-    message.error(msg)
-}
-
 function changeEnableVoice() {
   enableVoice.value = !enableVoice.value
 
@@ -64,7 +59,6 @@ async function initRecognition() {
   recognition.onstart = () => logger('init recognition')
   recognition.onerror = (e: any) => {
     logger('Misidentified!')
-    window.loggerDebugger(e?.error?.toString() ?? e.toString())
   }
   recognition.onend = () => {
     logger('Why was it terminated?')

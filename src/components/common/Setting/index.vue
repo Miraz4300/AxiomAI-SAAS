@@ -72,7 +72,7 @@ const show = computed({
                 <General />
               </div>
             </NTabPane>
-            <NTabPane v-if="speechStore.enable" name="speech">
+            <NTabPane v-if="!isMobile && speechStore.enable" name="speech">
               <template #tab>
                 <SvgIcon class="text-lg" icon="ri:voice-recognition-line" />
                 <span class="ml-2">{{ $t('setting.speech') }}</span>

@@ -28,7 +28,7 @@
     "jwt-decode": "^3.1.2",
     "katex": "^0.16.8",
     "markdown-it": "^13.0.1",
-    "microsoft-cognitiveservices-speech-sdk": "^1.26.0",
+    "microsoft-cognitiveservices-speech-sdk": "^1.31.0",
     "naive-ui": "^2.34.4",
     "pinia": "^2.1.6",
     "vue": "^3.3.4",

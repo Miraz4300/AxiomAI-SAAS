@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app:
-    image: registry.octocarbon.codes/axiomai:latest
+    image: registry.deepspacelab.tech/axiomai:latest
     container_name: AxiomAI
     restart: always
     ports:

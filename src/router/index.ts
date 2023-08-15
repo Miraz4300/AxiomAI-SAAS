@@ -2,13 +2,12 @@ import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
 import { setupPageGuard } from './permission'
-import { ChatLayout } from '@/views/chat/layout'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Root',
-    component: ChatLayout,
+    component: () => import('@/views/chat/layout/Layout.vue'),
     redirect: '/chat',
     meta: {
       requiresAuth: true,

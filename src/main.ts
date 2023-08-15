@@ -21,7 +21,7 @@ async function bootstrap() {
     site: 'datadoghq.com',
     service: 'axiomai',
     env: 'prod',
-    version: '3.0.0-preview10',
+    version: '3.0.0-preview11',
     sessionSampleRate: 100,
     sessionReplaySampleRate: 100,
     trackUserInteractions: true,

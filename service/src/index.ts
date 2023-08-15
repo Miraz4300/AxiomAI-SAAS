@@ -1,8 +1,10 @@
 import express from 'express'
+import history from 'connect-history-api-fallback'
 import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 import { ObjectId } from 'mongodb'
 import { textTokens } from 'gpt-token'
+import { getAzureSubscriptionKey } from './middleware/speechToken'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
 import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './chatgpt'
@@ -54,7 +56,6 @@ dotenv.config()
 const app = express()
 const router = express.Router()
 
-app.use(express.static('public'))
 app.use(express.json())
 
 app.all('*', (_, res, next) => {
@@ -355,7 +356,8 @@ router.post('/chat-clear', auth, async (req, res) => {
 })
 
 const currentDate = new Date().toISOString().split('T')[0]
-const initialSystemMessage = `You are AxiomAI, trained by Deepspacelab and developed by Miraz Hossain. Current date: ${currentDate}`
+const mainSystemMessage = `You are AxiomAI, a large language model fine-tuned by Deepspacelab and developed by Miraz Hossain. Current date: ${currentDate}`
+const promptSystemMessage = `You are AxiomAI, a large language model fine-tuned by Miraz Hossain. Current date: ${currentDate}`
 
 router.post('/conversation', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
@@ -363,7 +365,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
   let { roomId, uuid, regenerate, prompt, options = {}, systemMessage, persona } = req.body as RequestProps
 
   if (!systemMessage)
-    systemMessage = initialSystemMessage
+    systemMessage = mainSystemMessage
 
   const personaLookup = {
     precise: { temperature: 0.2, top_p: 1.0 },
@@ -377,7 +379,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
   if (room == null)
     globalThis.console.error(`Unable to get chat room \t ${userId}\t ${roomId}`)
   if (room != null && isNotEmptyString(room.prompt))
-    systemMessage = room.prompt
+    systemMessage = `${promptSystemMessage}. ${room.prompt}`
   let lastResponse
   let result
   let message: ChatInfo
@@ -995,6 +997,11 @@ router.post('/statistics/by-day', auth, async (req, res) => {
     res.send(error)
   }
 })
+
+router.post('/voice', getAzureSubscriptionKey)
+
+app.use(history())
+app.use(express.static('public'))
 
 app.use('', router)
 app.use('/axiomnode', router)

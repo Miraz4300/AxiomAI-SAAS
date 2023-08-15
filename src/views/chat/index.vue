@@ -1,11 +1,10 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
 import { NAutoComplete, NButton, NDivider, NInput, NSpin, NSwitch, NTooltip, useDialog, useMessage } from 'naive-ui'
-import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import Header from './components/Header/index.vue'
@@ -14,6 +13,9 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStore, useChatStore, usePromptStore, useUserStore } from '@/store'
 import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding } from '@/api'
 import { t } from '@/locales'
+import VoiceInput from '@/components/voice-input/index.vue'
+import AutoSpeak from '@/components/voice-output/auto-speak.vue'
+import { useSpeechStore } from '@/store/modules/speech'
 import { debounce } from '@/utils/functions/debounce'
 
 let controller = new AbortController()
@@ -27,6 +29,7 @@ const ms = useMessage()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const chatStore = useChatStore()
+const speechStore = useSpeechStore()
 
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
@@ -512,6 +515,15 @@ const footerClass = computed(() => {
   return classes
 })
 
+function handleVoiceChange(v: string[]) {
+  prompt.value = v.filter(item => !!item).join('')
+}
+const handleReset = () => chatStore.clearChatByUuid(+uuid)
+function handleVoiceSubmit() {
+  if (!loading.value)
+    handleSubmit()
+}
+
 onMounted(() => {
   firstLoading.value = true
   handleSyncChat()
@@ -531,6 +543,8 @@ onUnmounted(() => {
   if (loading.value)
     controller.abort()
 })
+
+const Message = defineAsyncComponent(() => import('./components/Message/index.vue'))
 </script>
 
 <template>
@@ -645,10 +659,12 @@ onUnmounted(() => {
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                   <ToolButton :tooltip="!isMobile ? $t('chat.usingContext') : ''" placement="top" @click="handleToggleUsingContext">
-                    <span class="text-xl" :class="{ 'text-[#22c55e]': usingContext, 'text-[#a8071a]': !usingContext }">
+                    <span class="text-xl" :class="{ 'text-[#22c55e]': usingContext, 'text-amber-500': !usingContext }">
                       <SvgIcon icon="fluent:brain-circuit-24-filled" />
                     </span>
                   </ToolButton>
+                  <AutoSpeak v-if="!isMobile && speechStore.enable" />
+                  <VoiceInput v-if="!isMobile && speechStore.enable" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
                 </div>
                 <div class="flex items-center">
                   <div class="flex items-center text-neutral-400">

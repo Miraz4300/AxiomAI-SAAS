@@ -29,7 +29,7 @@ coverage
 *.sw?
 
 # Environment variables files
-/server/.env
+service/.env
 
 # PWA Development
 dev-dist

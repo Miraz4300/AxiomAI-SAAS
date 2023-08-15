@@ -2,13 +2,11 @@ version: '3'
 
 services:
   app:
-    image: registry.octocarbon.codes/axiomnode:latest
-    container_name: AxiomNode
-    restart: unless-stopped
+    image: registry.deepspacelab.tech/axiomai:latest
+    container_name: AxiomAI
+    restart: always
     ports:
       - 10829:10829
-    depends_on:
-      - database
     environment:
       TZ: Asia/Dhaka
 
@@ -22,7 +20,7 @@ services:
       AUTH_MAX_REQUEST_PER_MINUTE:
 
       # MONGODB_URL=mongodb://username:password@hostname:port
-      MONGODB_URL: 'mongodb://root:104382009@database:27017'
+      MONGODB_URL: ''
 
       # ----- Only valid after setting AUTH_SECRET_KEY begin ----
       # JWT secret key | Empty key will disable authentication system
@@ -31,32 +29,32 @@ services:
       # Allow anyone to signup
       REGISTER_ENABLED: false
 
-      # Enable signup application review
-      REGISTER_REVIEW: false
-
       # Root user email
       ROOT_USER:
 
       # Password salt
-      PASSWORD_MD5_SALT: tastysalt
+      PASSWORD_MD5_SALT: anysalt
 
-    links:
-      - database
+      # For text to speech
+      # Azure Subscription Key
+      AZURE_SUBSCRIPTION_KEY:
 
-  database:
-    image: mongo
-    container_name: AxiomDB
+      # SPEECH_REGION
+      AZURE_SPEECH_REGION:
+
+  nginx:
+    image: nginx:alpine
+    container_name: NginxAxiomAI
     restart: always
     ports:
-      - '27017:27017'
+      - '443:443'
     expose:
-      - '27017'
+      - '443'
     volumes:
-      - mongodb:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 104382009
-      MONGO_INITDB_DATABASE: axiomdb
+      - nginxCONF:/etc/nginx # Needs to create nginxCONF volume manually
+    links:
+      - app
 
 volumes:
-  mongodb: {}
+  nginxCONF:
+    external: true

@@ -66,6 +66,7 @@ export default {
     searchPlaceholder: 'কথোপকথন অনুসন্ধান',
     internetAccess: 'ইন্টারনেট সুবিধা',
     internetAccessTip: 'ইন্টারনেট থেকে রিয়েল-টাইম তথ্য পান এবং নির্ভুলতা উন্নত করুন (শীঘ্রই আসছে)',
+    speech: 'Speech Synthesis',
   },
   setting: {
     setting: 'সেটিংস',
@@ -146,5 +147,11 @@ export default {
     remark: 'Remark',
     email: 'Email',
     password: 'Password',
+    speech: 'Speech',
+    speechSetting: 'Voice settings',
+    speakLang: 'Language',
+    speakSound: 'Sound',
+    pitch: 'Tone',
+    rate: 'Speech speed',
   },
 }

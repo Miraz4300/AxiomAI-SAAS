@@ -6,13 +6,16 @@ import General from './General.vue'
 import Subscription from './Subscription.vue'
 import Statistics from './Statistics.vue'
 import About from './About.vue'
+import Speech from './Speech.vue'
 import Sidebar from '@/views/chat/components/Sidebar/index.vue'
 import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { useSpeechStore } from '@/store/modules/speech'
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
 const { isMobile } = useBasicLayout()
+const speechStore = useSpeechStore()
 
 interface Props {
   visible: boolean
@@ -67,6 +70,15 @@ const show = computed({
               </template>
               <div class="mt-4 min-h-[100px] max-w-[490px]">
                 <General />
+              </div>
+            </NTabPane>
+            <NTabPane v-if="speechStore.enable" name="speech">
+              <template #tab>
+                <SvgIcon class="text-lg" icon="ri:voice-recognition-line" />
+                <span class="ml-2">{{ $t('setting.speech') }}</span>
+              </template>
+              <div class="mt-4 min-h-[100px] max-w-[720px]">
+                <Speech />
               </div>
             </NTabPane>
             <NTabPane name="subscription">

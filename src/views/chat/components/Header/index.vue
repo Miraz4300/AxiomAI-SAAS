@@ -138,7 +138,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
     </div>
   </header>
 
-  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 640px" title="Advanced">
+  <NModal v-model:show="show" :auto-focus="false" :mask-closable="false" preset="card" style="width: 95%; max-width: 640px" title="Advanced">
     <div>
       <p class="mb-1">
         {{ $t('setting.prompt') }}

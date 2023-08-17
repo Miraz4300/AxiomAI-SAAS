@@ -181,7 +181,7 @@ export default {
     v-model:show="showTip"
     style="width: 75%; max-width: 570px;"
     preset="dialog"
-    title="Voice Input Tips"
+    title="Voice Recognition"
     :mask-closable="false"
     positive-text="OK"
     negative-text="don't show again"
@@ -191,7 +191,7 @@ export default {
     @negative-click="onNegativeClick"
   >
     <NAlert type="info" :show-icon="false" :bordered="false" title="Instructions">
-      When voice function is enabled, you can input content by voice and chat with AxiomAI.
+      When voice recognition is enabled, you can input content by voice and chat with AxiomAI.
       Additionally these commands are available. For Example:
     </NAlert>
     <br>

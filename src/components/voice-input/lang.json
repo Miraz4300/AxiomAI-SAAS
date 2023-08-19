@@ -107,10 +107,25 @@
 					"label": "Monica (Female)"
 				}
 			]
+		},
+		{
+			"lang": "bn-BD",
+			"label": "Bangla (Bangladesh)",
+			"voices": [
+				{
+					"value": "bn-BD-NabanitaNeural",
+					"label": "Nabanita (Female)"
+				},
+				{
+					"value": "bn-BD-PradeepNeural",
+					"label": "Pradeep (Male)"
+				}
+			]
 		}
 	],
 	"default": [
 		"en-GB",
-		"en-US"
+		"en-US",
+		"bn-BD"
 	]
 }

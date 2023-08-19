@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@datadog/browser-rum':
+    specifier: ^4.47.0
+    version: 4.47.0
   '@traptitech/markdown-it-katex':
     specifier: ^3.6.0
     version: 3.6.0
@@ -1546,6 +1549,35 @@ packages:
       vue: ^3.0.11
     dependencies:
       vue: 3.3.4
+    dev: false
+
+  /@datadog/browser-core@4.47.0:
+    resolution: {integrity: sha512-C3qm4kiT8OoK09UnAed2HTY9ecDaz0n7Qm0m4WwC+lpwOR97oduWdggbvgJgLGdJLleQjqEFHyuB8BEvEQ66BQ==}
+    dev: false
+
+  /@datadog/browser-rum-core@4.47.0:
+    resolution: {integrity: sha512-6nOnFPZJ0cYkWV4w7lbtCxVGLiquxw68D1qvwXbMtxZ1q+zroLhPY+lpk7Hd6XN7OT7xmTP2wbTnr0DL5VGwig==}
+    dependencies:
+      '@datadog/browser-core': 4.47.0
+    dev: false
+
+  /@datadog/browser-rum@4.47.0:
+    resolution: {integrity: sha512-+CK8Z7w0fZnCN1oK7S3TQq9LfDmpXDnYxzmHw+11INHHdFhWqmUojpKKi+7+XLMaTOvU83yYBfOBFz2DSWvwew==}
+    peerDependencies:
+      '@datadog/browser-logs': 4.47.0
+    peerDependenciesMeta:
+      '@datadog/browser-logs':
+        optional: true
+    dependencies:
+      '@datadog/browser-core': 4.47.0
+      '@datadog/browser-rum-core': 4.47.0
+      '@datadog/browser-worker': 4.47.0
+    dev: false
+
+  /@datadog/browser-worker@4.47.0:
+    resolution: {integrity: sha512-7/jiPXiGYStd40zsQl0U6DBkkoKhFPuWgl5R/k4sKaMdZ3YXwhL3M+js7S7MIGsrNvpoZygEQml+McVYZ2Vmyg==}
+    dependencies:
+      '@datadog/browser-core': 4.47.0
     dev: false
 
   /@emotion/hash@0.8.0:

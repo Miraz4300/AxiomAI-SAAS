@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import pkg from '@/../package.json'
+const { VITE_GLOB_APP_ENVIRONMENT, VITE_GLOB_APP_VERSION } = import.meta.env
 </script>
 
 <template>
@@ -16,8 +16,8 @@ import pkg from '@/../package.json'
       </center>
     </div>
     <p>
-      <a class="text-[#0083A0] dark:text-[#00B2DB]">Environment:</a> Production <br>
-      <a class="text-[#0083A0] dark:text-[#00B2DB]">Version:</a> {{ pkg.version }}
+      <a class="text-[#0083A0] dark:text-[#00B2DB]">Environment:</a> {{ VITE_GLOB_APP_ENVIRONMENT }} <br>
+      <a class="text-[#0083A0] dark:text-[#00B2DB]">Version:</a> {{ VITE_GLOB_APP_VERSION }}
     </p>
     <div class="grid grid-cols-2">
       <p>

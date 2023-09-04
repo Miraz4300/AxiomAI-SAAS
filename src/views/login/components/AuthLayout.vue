@@ -1,10 +1,15 @@
 <script lang="ts" setup>
 import { SvgIcon } from '@/components/common'
+
+const { VITE_GLOB_APP_VERSION } = import.meta.env
 </script>
 
 <template>
   <main class="w-screen h-screen flex items-center justify-center gap-8 dark:bg-slate-900">
     <div class="h-screen flex-1 flex flex-col items-center py-16 px-4">
+      <div class="fixed bottom-2 left-2 text-slate-800 dark:text-slate-100 text-xs">
+        {{ VITE_GLOB_APP_VERSION }}
+      </div>
       <p class="flex gap-2 font-logo text-slate-800 dark:text-slate-100 font-semibold text-5xl text-center">
         <SvgIcon style="width: 70px; height: 70px;" icon="ri:openai-fill" />
         <span class="flex py-2 items-center flex-col">

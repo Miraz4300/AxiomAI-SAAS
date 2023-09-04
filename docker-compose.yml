@@ -42,6 +42,13 @@ services:
       # SPEECH_REGION
       AZURE_SPEECH_REGION:
 
+      # DataDog APM
+      DD_AGENT_HOST: datadog
+      
+    depends_on:
+    - datadog
+
+  # Nginx reverse proxy
   nginx:
     image: nginx:alpine
     container_name: NginxAxiomAI
@@ -54,6 +61,24 @@ services:
       - nginxCONF:/etc/nginx # Needs to create nginxCONF volume manually
     links:
       - app
+
+  # DataDog Agent
+  datadog:
+    image: datadog/agent:latest
+    container_name: dd-agent
+    restart: always
+    environment:
+     - DD_API_KEY=c3d42e730bcd04c437b6c64379eae78a
+     - DD_SITE=datadoghq.com
+     - DD_APM_ENABLED=true
+     - DD_ENV="production"
+     - DD_LOGS_INJECTION=true
+     - DD_PROFILING_ENABLED=true
+     - DD_APPSEC_ENABLED=true
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - /proc/:/host/proc/:ro
+     - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
 
 volumes:
   nginxCONF:

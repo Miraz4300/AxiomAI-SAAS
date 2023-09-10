@@ -1,6 +1,6 @@
 {
   "name": "axiomai",
-  "version": "3.0.0-preview11",
+  "version": "3.0.0-preview12",
   "private": false,
   "description": "AxiomAI",
   "author": "Miraz4300 <miraz4300@gmail.com>",
@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "@datadog/browser-rum": "^4.47.0",
+    "@sentry/vite-plugin": "^2.7.0",
+    "@sentry/vue": "^7.64.0",
     "@traptitech/markdown-it-katex": "^3.6.0",
     "@vueuse/core": "^10.3.0",
     "chart.js": "^4.3.3",

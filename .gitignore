@@ -33,3 +33,6 @@ service/.env
 
 # PWA Development
 dev-dist
+
+# Sentry Auth Token
+.env.sentry-build-plugin

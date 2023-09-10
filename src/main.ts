@@ -48,7 +48,7 @@ async function bootstrap() {
         }),
         new Sentry.Replay(),
       ],
-      tracesSampleRate: 0.5,
+      tracesSampleRate: 0.3,
     })
   }
 

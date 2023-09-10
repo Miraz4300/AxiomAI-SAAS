@@ -62,7 +62,7 @@ const router = express.Router()
 Sentry.init({
   dsn: 'https://065ae85c98143dc4c16eb4999272c64c@o4505499531673600.ingest.sentry.io/4505759091458048',
   environment: 'production',
-  release: '3.0.0-preview11',
+  release: '3.0.0-preview12',
   integrations: [
     new Sentry.Integrations.Http({
       tracing: true,
@@ -72,8 +72,8 @@ Sentry.init({
     }),
     new ProfilingIntegration(),
   ],
-  tracesSampleRate: 0.5, // Set tracesSampleRate to 0.5 to capture 50% of transactions for performance monitoring. Recommended to adjusting this value <1.0 in production
-  profilesSampleRate: 0.5, // Profiling sample rate is relative to tracesSampleRate
+  tracesSampleRate: 0.3, // Set tracesSampleRate to 0.5 to capture 50% of transactions for performance monitoring. Recommended to adjusting this value <1.0 in production
+  profilesSampleRate: 0.3, // Profiling sample rate is relative to tracesSampleRate
 })
 
 // Trace incoming requests [Sentry]
@@ -1022,7 +1022,7 @@ router.post('/statistics/by-day', auth, async (req, res) => {
   }
 })
 
-router.post('/voice', getAzureSubscriptionKey)
+router.post('/voice', [auth, limiter], getAzureSubscriptionKey)
 
 // Sentry error handler
 app.use(Sentry.Handlers.errorHandler())

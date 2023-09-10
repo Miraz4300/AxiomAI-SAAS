@@ -16,19 +16,21 @@ const { VITE_GLOB_APP_ENVIRONMENT, VITE_GLOB_APP_VERSION } = import.meta.env
       </center>
     </div>
     <p>
-      <a class="text-[#0083A0] dark:text-[#00B2DB]">Environment:</a> {{ VITE_GLOB_APP_ENVIRONMENT }} <br>
-      <a class="text-[#0083A0] dark:text-[#00B2DB]">Version:</a> {{ VITE_GLOB_APP_VERSION }}
+      Environment: <a class="text-[#0083A0] dark:text-[#00B2DB]">{{ VITE_GLOB_APP_ENVIRONMENT }}</a><br>
+      Version: <a class="text-[#0083A0] dark:text-[#00B2DB]">{{ VITE_GLOB_APP_VERSION }}</a>
     </p>
     <div class="grid grid-cols-2">
       <p>
         If you have found this project helpful, please consider making a small donation to help cover the server costs and keep the project running smoothly.
         <br>
         <br>
-        For collaboration or business query, please contact me <a class="text-blue-600 dark:text-blue-500" href="mailto:miraz4300@gmail.com">here</a>
+        For support, collaboration or business query, please contact here<br>
+        Support:<a class="text-[#0083A0] dark:text-[#00B2DB]" href="mailto:support@axiomaibd.com"> Get support through email.</a><br>
+        Sales:<a class="text-[#0083A0] dark:text-[#00B2DB]" href="mailto:sales@axiomaibd.com"> Inquery about sales.</a>
       </p>
       <div class="flex items-center justify-end">
         <span class="text-[#000000] dark:text-[#C0C0C0]">
-          <a href="https://axiomai.s3.us-west-002.backblazeb2.com/bKash.png" target="_blank">
+          <a href="https://blob.axiomaibd.com/files/bKash.png" target="_blank">
             <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="145" height="145" viewBox="0 0 962 944" style="border: 2px solid black;">
               <path d="M55.7 43.7c-.4.3-.7 41.3-.7 91V225h182V43h-90.3c-49.7 0-90.7.3-91 .7zm155.8 90.7v64.9l-63.5-.1c-34.9 0-64.3-.1-65.2-.1-1.7-.1-1.8-3.9-1.8-65.1V69l65.3.2 65.2.3v64.9z" fill="currentColor" />
               <path d="M107.6 96.6c-.3.9-.6 18.4-.6 39V173h78V95h-38.4c-34.1 0-38.5.2-39 1.6zM264 69v26h26v26h25V43h-51v26zm78-13v13h26v26h-26v26h51V43h-51v13zm78 13v26h26v52h24.9l.3-12.8.3-12.7 39-.5 39-.5.1-9.5c.1-5.2-.1-11-.4-12.8l-.4-3.2H523V69h-25v26h-27V43h-51v26zm156 0v26h26v26h-26v26h26v26h78l-.2 39.2-.3 39.3-12.7.3-12.7.3-.3 12.7-.3 12.7-12.7.3-12.8.3V303h52v-26h52v-24.9l-12.7-.3-12.8-.3-.5-52-.5-52H680V121h26.1l-.3-12.8-.3-12.7-25.7-.3L654 95l-.2-25.8-.3-25.7-38.7-.3L576 43v26zm52 13v13h-26V69h26v13zm104.7-38.3c-.4.3-.7 41.3-.7 91V225h182V43h-90.3c-49.7 0-90.7.3-91 .7zM888 134c0 61.2-.1 65-1.7 65.1-1 0-30.3.2-65 .2l-63.3.2V69h130v65z" fill="currentColor" />

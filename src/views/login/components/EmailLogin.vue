@@ -82,7 +82,9 @@ async function handleLogin() {
     const result = await fetchLogin(name, pwd)
     await authStore.setToken(result.data.token)
     ms.success('Login successful, welcome back.')
-    router.replace('/')
+    // Redirect to the originally requested page or home page if no redirect query parameter exists
+    const redirect = route.query.redirect
+    router.replace(redirect ? decodeURIComponent(redirect as string) : '/')
   }
   catch (error: any) {
     ms.error(error.message ?? 'error')

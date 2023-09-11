@@ -32,7 +32,7 @@ const { VITE_GLOB_APP_VERSION } = import.meta.env
   white-space: nowrap;
   margin: 0 auto;
   letter-spacing: 0.12em;
-  animation: typing 1.5s steps(29, end), blink-caret 0.75s step-end infinite;
+  animation: typing 1.5s steps(29, end) forwards, blink-caret 0.75s step-end infinite;
 }
 
 @keyframes typing {
@@ -40,16 +40,8 @@ const { VITE_GLOB_APP_VERSION } = import.meta.env
     width: 0;
   }
   to {
-    width: 60%;
-  }
-}
-
-@keyframes blink-caret {
-  from, to {
-    border-color: transparent;
-  }
-  50% {
-    border-color: orange;
+    width: 100%;
+    border-right: none;
   }
 }
 </style>

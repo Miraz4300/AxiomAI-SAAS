@@ -16,16 +16,22 @@ const userInfo = computed(() => userStore.userInfo)
 
 const { iconRender } = useIconRender()
 const { isMobile } = useBasicLayout()
-const buttonClass = 'h-12 w-12 cursor-pointer rounded-xl bg-white dark:bg-[#34373c] text-[#4b9e5f] dark:text-[#86dfba]'
+const buttonClass = 'h-12 w-12 cursor-pointer rounded-xl bg-white dark:bg-[#34373c] text-[#0083A0] dark:text-[#00B2DB]'
 const iconClass = 'flex h-full m-auto text-center text-2xl'
 const iconClass2 = 'inline-block text-xl'
 
+const chatRouteRegex = /^\/chat\/\d+$/
+const isChatActive = computed(() => chatRouteRegex.test(router.currentRoute.value.path))
+const isSettingsActive = computed(() => router.currentRoute.value.path === '/user')
+
 function goChat() {
-  router.push('/')
+  if (!chatRouteRegex.test(router.currentRoute.value.path))
+    router.push('/')
 }
 
 function goSetting() {
-  router.push('/user')
+  if (router.currentRoute.value.path !== '/user')
+    router.push('/user')
 }
 
 function userHeader() {
@@ -68,7 +74,7 @@ const options: DropdownOption[] = [
 
 type DropdownKey = 'settings' | 'logout'
 
-function handleDropdown(optionKey: string) {
+async function handleDropdown(optionKey: string) {
   const key = optionKey as DropdownKey
   if (key === 'logout') {
     window.$dialog?.warning({
@@ -77,11 +83,17 @@ function handleDropdown(optionKey: string) {
       positiveText: 'logout',
       negativeText: 'cancel',
       onPositiveClick: async () => {
-        await authStore.removeToken()
+        try {
+          await authStore.removeToken()
+        }
+        catch (error) {
+          console.error('Error removing token: ', error)
+          // Add any user-facing error handling here
+        }
       },
     })
   }
-  else if (key === 'settings') {
+  else if (key === 'settings' && router.currentRoute.value.path !== SETTING_ROUTE) {
     router.push(SETTING_ROUTE)
   }
 }
@@ -106,13 +118,13 @@ function handleDropdown(optionKey: string) {
     </div>
   </div>
 
-  <NLayoutFooter v-if="isMobile" class="bg-[#e8eaf1] dark:bg-[#202020]">
+  <NLayoutFooter v-if="isMobile" class="bg-white dark:bg-[#202020]">
     <div class="grid py-2 border-t dark:border-t-neutral-800 grid-cols-2">
-      <a class="leading-4 text-center cursor-pointer text-[#4b9e5f] dark:text-[#86dfba]" @click="goChat">
+      <a class="leading-4 text-center cursor-pointer" :class="[isChatActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goChat">
         <SvgIcon :class="[iconClass2]" icon="ri:message-3-line" />
         <p>{{ $t('chat.chat') }}</p>
       </a>
-      <a class="leading-4 text-center cursor-pointer text-[#4b9e5f] dark:text-[#86dfba]" @click="goSetting">
+      <a class="leading-4 text-center cursor-pointer" :class="[isSettingsActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goSetting">
         <SvgIcon :class="[iconClass2]" icon="ri:settings-3-line" />
         <p>{{ $t('setting.setting') }}</p>
       </a>

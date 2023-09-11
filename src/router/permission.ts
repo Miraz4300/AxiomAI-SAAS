@@ -11,22 +11,25 @@ export function setupPageGuard(router: Router) {
 
     try {
       const data = await authStore.getSession()
-      if (String(data.auth) === 'false' && authStore.token)
-        await authStore.removeToken()
 
-      else
-        await useUserStore().updateUserInfo(false, data.userInfo)
+      if (String(data.auth) === 'false' && authStore.token) {
+        await authStore.removeToken()
+        return next({ name: 'Login', query: { redirect: to.fullPath } }) // Added redirection path
+      }
+
+      else { await useUserStore().updateUserInfo(false, data.userInfo) }
 
       if (!!authStore.session?.auth && !authStore.token)
-        return next({ name: 'Login' }) // Redirect to Login page if token is missing
+        return next({ name: 'Login', query: { redirect: to.fullPath } }) // Added redirection path
 
       if (to.meta.requiresAdmin && !userStore.userInfo.root)
-        return next({ name: '404' }) // Redirect to 404 page if admin access is required
+        return next({ name: '404' }) // Redirect to not found page
 
       next() // Continue navigation
     }
     catch (error) {
-      next({ name: 'Login' }) // Redirect to Login page in case of error
+      console.error('Error during route guard: ', error)
+      next({ name: '500' }) // Redirect to Error page in case of non-authentication related errors
     }
   })
 }

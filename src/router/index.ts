@@ -54,7 +54,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/:pathMatch(.*)*',
     name: 'notFound',
-    redirect: '/404',
+    component: () => import('@/views/exception/404/index.vue'),
   },
 ]
 
@@ -69,5 +69,4 @@ setupPageGuard(router)
 export async function setupRouter(app: App) {
   app.use(router)
   await router.isReady()
-  return router
 }

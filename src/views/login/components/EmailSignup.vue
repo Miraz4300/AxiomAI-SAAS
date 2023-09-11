@@ -1,14 +1,17 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
 import { NButton, NDivider, NInput, NModal, useMessage } from 'naive-ui'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { fetchRegister } from '@/api'
 import { SvgIcon } from '@/components/common'
 
+const route = useRoute()
 const router = useRouter()
 
 function goHome() {
-  router.push('/')
+  // Redirect to the originally requested page or home page if no redirect query parameter exists
+  const redirect = route.query.redirect
+  router.replace(redirect ? decodeURIComponent(redirect as string) : '/')
   setTimeout(() => {
     location.reload()
   }, 1000)

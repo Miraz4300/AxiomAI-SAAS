@@ -11,6 +11,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  icon: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const router = useRouter()
@@ -50,9 +54,9 @@ const Icon = computed(() => IconName(Role))
 <template>
   <div class="flex gap-1">
     <a v-if="props.subLink">Subscription:</a>
-    <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag" class="font-semibold">
-      {{ UserRole[userInfo.roles[0]] }}
-      <template v-if="Icon" #icon>
+    <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag" @click="goSub">
+      <a class="cursor-pointer font-semibold">{{ UserRole[userInfo.roles[0]] }}</a>
+      <template v-if="Icon && props.icon" #icon>
         <SvgIcon :icon="Icon" />
       </template>
     </NTag>

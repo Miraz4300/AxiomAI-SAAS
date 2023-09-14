@@ -41,7 +41,6 @@ function userHeader() {
     h('div', [
       h('div', { class: 'flex items-center gap-1' }, [
         h(NText, { depth: 2, class: 'font-bold' }, { default: () => name }),
-        h(UserRole),
       ]),
       h(NText, { depth: 3, class: 'text-xs' }, {
         default: () => h('div', { innerText: description }),
@@ -100,7 +99,7 @@ async function handleDropdown(optionKey: string) {
 </script>
 
 <template>
-  <div v-if="!isMobile" class="min-w-[72px] bg-[#e8eaf1] dark:bg-[#202020]">
+  <div v-if="!isMobile" class="max-w-[72px] bg-[#e8eaf1] dark:bg-[#202020]">
     <div class="flex h-full flex-col items-center justify-between px-2 py-7">
       <div class="flex flex-col space-y-4">
         <a :class="[buttonClass]" @click="goChat"><SvgIcon :class="[iconClass]" icon="ri:message-3-line" /></a>
@@ -114,6 +113,7 @@ async function handleDropdown(optionKey: string) {
         <NDropdown v-if="!!authStore.token" trigger="hover" :options="options" @select="handleDropdown">
           <UserAvatar />
         </NDropdown>
+        <UserRole :icon="false" />
       </div>
     </div>
   </div>

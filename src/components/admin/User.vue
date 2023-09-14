@@ -113,7 +113,7 @@ const columns = [
 ]
 const pagination = reactive ({
   page: 1,
-  pageSize: 25,
+  pageSize: 50,
   pageCount: 1,
   itemCount: 1,
   prefix({ itemCount }: { itemCount: number | undefined }) {
@@ -210,7 +210,7 @@ onMounted(async () => {
           :columns="columns"
           :data="users"
           :pagination="pagination"
-          :max-height="444"
+          :max-height="580"
           striped
           :scroll-x="1260"
           @update:page="handleGetUsers"

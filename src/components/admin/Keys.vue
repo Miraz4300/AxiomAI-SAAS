@@ -199,7 +199,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="p-4 space-y-5 min-h-[300px]">
+  <div class="p-4 space-y-5 min-h-[750px]">
     <div class="space-y-6">
       <NSpace vertical :size="12">
         <NSpace>
@@ -214,7 +214,7 @@ onMounted(async () => {
           :columns="columns"
           :data="keys"
           :pagination="pagination"
-          :max-height="444"
+          :max-height="580"
           :scroll-x="1300"
           striped @update:page="handleGetKeys"
         />

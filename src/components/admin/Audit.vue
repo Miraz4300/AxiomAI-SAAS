@@ -60,109 +60,107 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-gray-50 dark:bg-white/5 py-1 px-2 rounded-md">
-    <NSpin :show="loading">
-      <div class="p-4 space-y-5 min-h-[200px]">
-        <div class="space-y-6">
-          <div class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditCustomizeEnabled') }}</span>
-            <div class="flex-1">
-              <NSwitch
-                :round="false" :value="config && config.customizeEnabled"
-                @update:value="(val: boolean | undefined) => { if (config) config.customizeEnabled = val }"
-              />
-            </div>
+  <NSpin :show="loading">
+    <div class="p-4 space-y-5 min-h-[200px]">
+      <div class="space-y-6">
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditCustomizeEnabled') }}</span>
+          <div class="flex-1">
+            <NSwitch
+              :round="false" :value="config && config.customizeEnabled"
+              @update:value="(val: boolean | undefined) => { if (config) config.customizeEnabled = val }"
+            />
           </div>
-          <div v-if="config && config.customizeEnabled" class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditCustomizeWords') }}</span>
-            <div class="flex-1">
-              <NInput
-                :value="config && config.sensitiveWords"
-                placeholder="One word per line" style="max-width: 30%"
-                type="textarea"
-                :autosize="{ minRows: 1, maxRows: 4 }"
-                @input="(val: string | undefined) => { if (config) config.sensitiveWords = val }"
-              />
-            </div>
+        </div>
+        <div v-if="config && config.customizeEnabled" class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditCustomizeWords') }}</span>
+          <div class="flex-1">
+            <NInput
+              :value="config && config.sensitiveWords"
+              placeholder="One word per line" style="max-width: 30%"
+              type="textarea"
+              :autosize="{ minRows: 1, maxRows: 4 }"
+              @input="(val: string | undefined) => { if (config) config.sensitiveWords = val }"
+            />
           </div>
-          <div class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditEnabled') }}</span>
-            <div class="flex-1">
-              <NSwitch
-                :round="false" :value="config && config.enabled"
-                @update:value="(val: boolean | undefined) => { if (config) config.enabled = val }"
-              />
-            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditEnabled') }}</span>
+          <div class="flex-1">
+            <NSwitch
+              :round="false" :value="config && config.enabled"
+              @update:value="(val: boolean | undefined) => { if (config) config.enabled = val }"
+            />
           </div>
-          <div v-if="config && config.enabled" class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditProvider') }}</span>
-            <div class="flex-1">
-              <NSelect
-                style="width: 140px"
-                :value="config && config.provider"
-                :options="serviceOptions"
-                @update-value="(val: string) => { if (config) config.provider = val as TextAuditServiceProvider }"
-              />
-            </div>
+        </div>
+        <div v-if="config && config.enabled" class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditProvider') }}</span>
+          <div class="flex-1">
+            <NSelect
+              style="width: 140px"
+              :value="config && config.provider"
+              :options="serviceOptions"
+              @update-value="(val: string) => { if (config) config.provider = val as TextAuditServiceProvider }"
+            />
           </div>
-          <div v-if="config && config.enabled" class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditApiKey') }}</span>
-            <div class="flex-1">
-              <NInput
-                :value="config && config.options && config.options.apiKey"
-                placeholder="" style="max-width: 30%"
-                @input="(val: string) => { if (config && config.options) config.options.apiKey = val }"
-              />
-            </div>
+        </div>
+        <div v-if="config && config.enabled" class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditApiKey') }}</span>
+          <div class="flex-1">
+            <NInput
+              :value="config && config.options && config.options.apiKey"
+              placeholder="" style="max-width: 30%"
+              @input="(val: string) => { if (config && config.options) config.options.apiKey = val }"
+            />
           </div>
-          <div v-if="config && config.enabled" class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditApiSecret') }}</span>
-            <div class="flex-1">
-              <NInput
-                :value="config && config.options && config.options.apiSecret"
-                placeholder="" style="max-width: 30%"
-                @input="(val: string) => { if (config && config.options) config.options.apiSecret = val }"
-              />
-            </div>
+        </div>
+        <div v-if="config && config.enabled" class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditApiSecret') }}</span>
+          <div class="flex-1">
+            <NInput
+              :value="config && config.options && config.options.apiSecret"
+              placeholder="" style="max-width: 30%"
+              @input="(val: string) => { if (config && config.options) config.options.apiSecret = val }"
+            />
           </div>
-          <div v-if="config && config.enabled" class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditBaiduLabel') }}</span>
-            <div class="flex-1">
-              <NInput
-                :value="config && config.options && config.options.label"
-                :placeholder="$t('setting.auditBaiduLabelTip')" style="max-width: 30%"
-                @input="(val: string | undefined) => { if (config && config.options) config.options.label = val }"
-              />
-              <p v-if="config && config.provider === 'baidu'">
-                <a target="_blank" href="https://ai.baidu.com/ai-doc/ANTIPORN/Nk3h6xbb2#%E7%BB%86%E5%88%86%E6%A0%87%E7%AD%BE%E5%AF%B9%E7%85%A7%E8%A1%A8">{{ $t('setting.auditBaiduLabelLink') }}</a>
-              </p>
-            </div>
+        </div>
+        <div v-if="config && config.enabled" class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditBaiduLabel') }}</span>
+          <div class="flex-1">
+            <NInput
+              :value="config && config.options && config.options.label"
+              :placeholder="$t('setting.auditBaiduLabelTip')" style="max-width: 30%"
+              @input="(val: string | undefined) => { if (config && config.options) config.options.label = val }"
+            />
+            <p v-if="config && config.provider === 'baidu'">
+              <a target="_blank" href="https://ai.baidu.com/ai-doc/ANTIPORN/Nk3h6xbb2#%E7%BB%86%E5%88%86%E6%A0%87%E7%AD%BE%E5%AF%B9%E7%85%A7%E8%A1%A8">{{ $t('setting.auditBaiduLabelLink') }}</a>
+            </p>
           </div>
-          <div v-if="config && (config.enabled || config.customizeEnabled)" class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditTest') }}</span>
-            <div class="flex-1">
-              <NInput
-                v-model:value="testText"
-                placeholder="" style="max-width: 30%"
-              />
-            </div>
+        </div>
+        <div v-if="config && (config.enabled || config.customizeEnabled)" class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.auditTest') }}</span>
+          <div class="flex-1">
+            <NInput
+              v-model:value="testText"
+              placeholder="" style="max-width: 30%"
+            />
           </div>
-          <div class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]" />
-            <div class="flex flex-wrap items-center gap-4">
-              <NButton :loading="saving" type="primary" @click="updateAuditInfo()">
-                {{ $t('common.save') }}
-              </NButton>
-              <NButton :loading="testing" type="info" @click="testAudit()">
-                {{ $t('common.test') }}
-              </NButton>
-              <p class="text-xs text-[#b4bbc4] text-left">
-                {{ $t('common.auditTip') }}
-              </p>
-            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]" />
+          <div class="flex flex-wrap items-center gap-4">
+            <NButton :loading="saving" type="primary" @click="updateAuditInfo()">
+              {{ $t('common.save') }}
+            </NButton>
+            <NButton :loading="testing" type="info" @click="testAudit()">
+              {{ $t('common.test') }}
+            </NButton>
+            <p class="text-xs text-[#b4bbc4] text-left">
+              {{ $t('common.auditTip') }}
+            </p>
           </div>
         </div>
       </div>
-    </NSpin>
-  </div>
+    </div>
+  </NSpin>
 </template>

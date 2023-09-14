@@ -195,31 +195,30 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="bg-gray-50 dark:bg-white/5 py-1 px-2 rounded-md">
-    <div class="p-4 space-y-5 min-h-[200px]">
-      <div class="space-y-6">
-        <NSpace vertical :size="12">
-          <NSpace>
-            <NButton @click="handleNewUser()">
-              New User
-            </NButton>
-          </NSpace>
-          <NDataTable
-            remote
-            :loading="loading"
-            :row-key="(rowData) => rowData._id"
-            :columns="columns"
-            :data="users"
-            :pagination="pagination"
-            :max-height="444"
-            striped
-            :scroll-x="1260"
-            @update:page="handleGetUsers"
-          />
+  <div class="p-4 space-y-5 min-h-[750px]">
+    <div class="space-y-6">
+      <NSpace vertical :size="12">
+        <NSpace>
+          <NButton @click="handleNewUser()">
+            New User
+          </NButton>
         </NSpace>
-      </div>
+        <NDataTable
+          remote
+          :loading="loading"
+          :row-key="(rowData) => rowData._id"
+          :columns="columns"
+          :data="users"
+          :pagination="pagination"
+          :max-height="444"
+          striped
+          :scroll-x="1260"
+          @update:page="handleGetUsers"
+        />
+      </NSpace>
     </div>
   </div>
+
   <NModal v-model:show="show" :auto-focus="false" preset="card" :style="{ width: !isMobile ? '33%' : '100%' }">
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">

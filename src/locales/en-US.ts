@@ -140,7 +140,6 @@ export default {
     auditCustomizeEnabled: 'Customize',
     auditCustomizeWords: 'Sensitive Words',
     accessTokenExpiredTime: 'Expired Time',
-    keysConfig: 'Keys Manager',
     userRoles: 'User Role',
     status: 'Status',
     chatModels: 'Model',

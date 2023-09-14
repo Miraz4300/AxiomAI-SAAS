@@ -199,28 +199,26 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="bg-gray-50 dark:bg-white/5 py-1 px-2 rounded-md">
-    <div class="p-4 space-y-5 min-h-[300px]">
-      <div class="space-y-6">
-        <NSpace vertical :size="12">
-          <NSpace>
-            <NButton @click="handleNewKey()">
-              New Key
-            </NButton>
-          </NSpace>
-          <NDataTable
-            remote
-            :loading="loading"
-            :row-key="(rowData) => rowData._id"
-            :columns="columns"
-            :data="keys"
-            :pagination="pagination"
-            :max-height="444"
-            :scroll-x="1300"
-            striped @update:page="handleGetKeys"
-          />
+  <div class="p-4 space-y-5 min-h-[300px]">
+    <div class="space-y-6">
+      <NSpace vertical :size="12">
+        <NSpace>
+          <NButton @click="handleNewKey()">
+            New Key
+          </NButton>
         </NSpace>
-      </div>
+        <NDataTable
+          remote
+          :loading="loading"
+          :row-key="(rowData) => rowData._id"
+          :columns="columns"
+          :data="keys"
+          :pagination="pagination"
+          :max-height="444"
+          :scroll-x="1300"
+          striped @update:page="handleGetKeys"
+        />
+      </NSpace>
     </div>
   </div>
 

@@ -545,6 +545,7 @@ onUnmounted(() => {
 })
 
 const Message = defineAsyncComponent(() => import('./components/Message/index.vue'))
+const Announcement = defineAsyncComponent(() => import('@/components/common/Announcement/index.vue'))
 </script>
 
 <template>
@@ -694,4 +695,5 @@ const Message = defineAsyncComponent(() => import('./components/Message/index.vu
       </div>
     </footer>
   </div>
+  <Announcement />
 </template>

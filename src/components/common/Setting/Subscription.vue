@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { NAlert, NButton, NCard, NModal, NTag } from 'naive-ui'
-import { SvgIcon } from '@/components/common'
+import type { SubscriptionConfig } from '@/components/admin/model'
 import { UserRole } from '@/components/admin/model'
+import { SvgIcon } from '@/components/common'
+import { fetchUserSubscription } from '@/api'
 import { useUserStore } from '@/store'
 
 const show = ref(false)
@@ -10,6 +12,29 @@ const show = ref(false)
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
 const Role = userInfo.value.roles[0]
+
+const premiumPrice = ref('')
+const premiumMSG = ref('')
+const mvpPrice = ref('')
+const mvpMSG = ref('')
+const supportPrice = ref('')
+const supportMSG = ref('')
+const subImageLink = ref('')
+const subURL = ref('')
+
+onMounted(async () => {
+  const response = await fetchUserSubscription<SubscriptionConfig>()
+  if (response.data) {
+    premiumPrice.value = response.data.premiumPrice || 'Loading...'
+    premiumMSG.value = response.data.premiumMSG || 'Loading...'
+    mvpPrice.value = response.data.mvpPrice || 'Loading...'
+    mvpMSG.value = response.data.mvpMSG || 'Loading...'
+    supportPrice.value = response.data.supportPrice || 'Loading...'
+    supportMSG.value = response.data.supportMSG || 'Loading...'
+    subImageLink.value = response.data.subImageLink || 'Loading...'
+    subURL.value = response.data.subURL || 'Loading...'
+  }
+})
 </script>
 
 <template>
@@ -42,10 +67,10 @@ const Role = userInfo.value.roles[0]
               4. Mid-journey - 10/day (coming soon)
             </span>
             <NButton v-if="Role === UserRole.Premium" strong secondary type="primary">
-              Your benefits are activated
+              {{ premiumMSG }}
             </NButton>
             <NButton v-else strong secondary type="primary" @click="show = true">
-              Buy Now - BDT 150/=
+              {{ premiumPrice }}
             </NButton>
           </div>
         </NCard>
@@ -71,10 +96,10 @@ const Role = userInfo.value.roles[0]
               4. Mid-journey - 30/day (coming soon)
             </span>
             <NButton v-if="Role === UserRole.MVP" strong secondary type="primary">
-              Your benefits are activated
+              {{ mvpMSG }}
             </NButton>
             <NButton v-else strong secondary type="primary" @click="show = true">
-              Buy Now - BDT 250/=
+              {{ mvpPrice }}
             </NButton>
           </div>
         </NCard>
@@ -98,24 +123,24 @@ const Role = userInfo.value.roles[0]
               2. Exclusive T-shirt
             </span>
             <NButton v-if="Role === UserRole.Support" strong secondary type="primary">
-              We truly appreciate your support! ❤️
+              {{ supportMSG }}
             </NButton>
             <NButton v-else strong secondary type="primary" @click="show = true">
-              Buy Now - BDT 1000/=
+              {{ supportPrice }}
             </NButton>
           </div>
         </NCard>
       </div>
       <NAlert type="info">
-        We are currently accepting <SvgIcon class="inline-block" icon="arcticons:bkash" /> bKash and <SvgIcon class="inline-block" icon="arcticons:nagad" /> Nagad payment.
+        We currently accept <SvgIcon class="inline-block" icon="arcticons:bkash" /> bKash and <SvgIcon class="inline-block" icon="arcticons:nagad" /> Nagad payment.
       </NAlert>
     </div>
   </NCard>
 
   <NModal v-model:show="show" style="max-width: 370px">
     <NCard :bordered="false" role="dialog" title="Buy subscription">
-      <a href="https://forms.office.com/r/2Z1fz0NhgE" target="_blank">
-        <img src="https://blob.axiomaibd.com/files/QRCode-for-AxiomAI-Subscription.png">
+      <a :href="subURL" target="_blank">
+        <img :src="subImageLink">
       </a>
     </NCard>
   </NModal>

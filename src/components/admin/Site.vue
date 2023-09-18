@@ -47,85 +47,83 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-gray-50 dark:bg-white/5 py-1 px-2 rounded-md">
-    <NSpin :show="loading">
-      <div class="p-4 space-y-5 min-h-[200px]">
-        <div class="space-y-6">
-          <div class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.siteTitle') }}</span>
-            <div class="flex-1">
-              <NInput
-                :value="config && config.siteTitle" placeholder="" style="max-width: 30%"
-                @input="(val: string | undefined) => { if (config) config.siteTitle = val }"
-              />
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.siteDomain') }}</span>
-            <div class="flex-1">
-              <NInput
-                :value="config && config.siteDomain" placeholder="" style="max-width: 30%"
-                @input="(val: string | undefined) => { if (config) config.siteDomain = val }"
-              />
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.loginEnabled') }}</span>
-            <div class="flex-1">
-              <NSwitch
-                :round="false"
-                :disabled="config && config.loginEnabled"
-                :value="config && config.loginEnabled"
-                @update:value="(val: boolean | undefined) => { if (config) config.loginEnabled = val }"
-              />
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.loginSalt') }}</span>
-            <div class="flex-1">
-              <NInput
-                :value="config && config.loginSalt" :placeholder="$t('setting.loginSaltTip')" style="max-width: 30%"
-                @input="(val: string | undefined) => { if (config) config.loginSalt = val }"
-              />
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerEnabled') }}</span>
-            <div class="flex-1">
-              <NSwitch
-                :round="false"
-                :value="config && config.registerEnabled"
-                @update:value="(val: boolean | undefined) => { if (config) config.registerEnabled = val }"
-              />
-            </div>
-          </div>
-          <div v-show="config && config.registerEnabled" class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerReview') }}</span>
-            <div class="flex-1">
-              <NSwitch
-                :round="false"
-                :value="config && config.registerReview"
-                @update:value="(val: boolean | undefined) => { if (config) config.registerReview = val }"
-              />
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerMails') }}</span>
-            <div class="flex-1">
-              <NInput
-                :value="config && config.registerMails" :placeholder="$t('setting.registerReviewTip')" style="max-width: 30%"
-                @input="(val: string | undefined) => { if (config) config.registerMails = val }"
-              />
-            </div>
-          </div>
-          <div class="flex items-center space-x-4">
-            <span class="flex-shrink-0 w-[100px]" />
-            <NButton :loading="saving" type="primary" @click="updateSiteInfo(config)">
-              {{ $t('common.save') }}
-            </NButton>
+  <NSpin :show="loading">
+    <div class="p-4 space-y-5 min-h-[200px]">
+      <div class="space-y-6">
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.siteTitle') }}</span>
+          <div class="flex-1">
+            <NInput
+              :value="config && config.siteTitle" placeholder="" style="max-width: 30%"
+              @input="(val: string | undefined) => { if (config) config.siteTitle = val }"
+            />
           </div>
         </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.siteDomain') }}</span>
+          <div class="flex-1">
+            <NInput
+              :value="config && config.siteDomain" placeholder="" style="max-width: 30%"
+              @input="(val: string | undefined) => { if (config) config.siteDomain = val }"
+            />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.loginEnabled') }}</span>
+          <div class="flex-1">
+            <NSwitch
+              :round="false"
+              :disabled="config && config.loginEnabled"
+              :value="config && config.loginEnabled"
+              @update:value="(val: boolean | undefined) => { if (config) config.loginEnabled = val }"
+            />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.loginSalt') }}</span>
+          <div class="flex-1">
+            <NInput
+              :value="config && config.loginSalt" :placeholder="$t('setting.loginSaltTip')" style="max-width: 30%"
+              @input="(val: string | undefined) => { if (config) config.loginSalt = val }"
+            />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerEnabled') }}</span>
+          <div class="flex-1">
+            <NSwitch
+              :round="false"
+              :value="config && config.registerEnabled"
+              @update:value="(val: boolean | undefined) => { if (config) config.registerEnabled = val }"
+            />
+          </div>
+        </div>
+        <div v-show="config && config.registerEnabled" class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerReview') }}</span>
+          <div class="flex-1">
+            <NSwitch
+              :round="false"
+              :value="config && config.registerReview"
+              @update:value="(val: boolean | undefined) => { if (config) config.registerReview = val }"
+            />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerMails') }}</span>
+          <div class="flex-1">
+            <NInput
+              :value="config && config.registerMails" :placeholder="$t('setting.registerReviewTip')" style="max-width: 30%"
+              @input="(val: string | undefined) => { if (config) config.registerMails = val }"
+            />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]" />
+          <NButton :loading="saving" type="primary" @click="updateSiteInfo(config)">
+            {{ $t('common.save') }}
+          </NButton>
+        </div>
       </div>
-    </NSpin>
-  </div>
+    </div>
+  </NSpin>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { nextTick, onMounted, reactive, ref } from 'vue'
-import { NCol, NDatePicker, NIcon, NNumberAnimation, NRow, NSpin, NStatistic } from 'naive-ui'
+import { NCard, NCol, NDatePicker, NIcon, NNumberAnimation, NRow, NSpin, NStatistic } from 'naive-ui'
 import type { ChartData, ChartOptions } from 'chart.js'
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js'
 import { Bar } from 'vue-chartjs'
@@ -91,7 +91,7 @@ onMounted(() => {
 
 <template>
   <NSpin :show="loading">
-    <div class="p-4 space-y-5 bg-gray-50 dark:bg-white/5 rounded-md">
+    <NCard>
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">{{ $t('setting.statisticsPeriod') }}</span>
@@ -147,6 +147,6 @@ onMounted(() => {
           :data="chartData"
         />
       </div>
-    </div>
+    </NCard>
   </NSpin>
 </template>

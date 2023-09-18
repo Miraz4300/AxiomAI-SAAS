@@ -13,7 +13,7 @@ import type { ChatMessage } from './chatgpt'
 import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './chatgpt'
 import { auth, getUserId } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
-import type { AuditConfig, CHATMODEL, ChatInfo, ChatOptions, Config, KeyConfig, MailConfig, SiteConfig, UserConfig, UserInfo } from './storage/model'
+import type { AnnouncementConfig, AuditConfig, CHATMODEL, ChatInfo, ChatOptions, Config, KeyConfig, MailConfig, SiteConfig, SubscriptionConfig, UserConfig, UserInfo } from './storage/model'
 import { Status, UsageResponse, UserRole, chatModelOptions } from './storage/model'
 import {
   clearChat,
@@ -63,7 +63,7 @@ const router = express.Router()
 Sentry.init({
   dsn: 'https://065ae85c98143dc4c16eb4999272c64c@o4505499531673600.ingest.sentry.io/4505759091458048',
   environment: 'production',
-  release: '3.0.0-preview13',
+  release: '3.0.0-preview14',
   integrations: [
     new Sentry.Integrations.Http({
       tracing: true,
@@ -910,6 +910,56 @@ router.post('/setting-site', rootAuth, async (req, res) => {
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/setting-subscription', rootAuth, async (req, res) => {
+  try {
+    const config = req.body as SubscriptionConfig
+
+    const thisConfig = await getOriginConfig()
+    thisConfig.subscriptionConfig = config
+    const result = await updateConfig(thisConfig)
+    clearConfigCache()
+    res.send({ status: 'Success', message: 'Successfully', data: result.subscriptionConfig })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.get('/user-subscription', auth, async (req, res) => {
+  try {
+    const thisConfig = await getOriginConfig()
+    res.send({ status: 'Success', message: 'Successfully fetched', data: thisConfig.subscriptionConfig })
+  }
+  catch (error) {
+    res.status(500).send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/setting-announcement', rootAuth, async (req, res) => {
+  try {
+    const config = req.body as AnnouncementConfig
+
+    const thisConfig = await getOriginConfig()
+    thisConfig.announcementConfig = config
+    const result = await updateConfig(thisConfig)
+    clearConfigCache()
+    res.send({ status: 'Success', message: 'Successfully', data: result.announcementConfig })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.get('/user-announcement', auth, async (req, res) => {
+  try {
+    const thisConfig = await getOriginConfig()
+    res.send({ status: 'Success', message: 'Successfully fetched', data: thisConfig.announcementConfig })
+  }
+  catch (error) {
+    res.status(500).send({ status: 'Fail', message: error.message, data: null })
   }
 })
 

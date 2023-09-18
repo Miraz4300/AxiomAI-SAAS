@@ -181,6 +181,8 @@ export class Config {
     public socksAuth?: string,
     public httpsProxy?: string,
     public siteConfig?: SiteConfig,
+    public subscriptionConfig?: SubscriptionConfig,
+    public announcementConfig?: AnnouncementConfig,
     public mailConfig?: MailConfig,
     public auditConfig?: AuditConfig,
   ) { }
@@ -195,6 +197,27 @@ export class SiteConfig {
     public registerReview?: boolean,
     public registerMails?: string,
     public siteDomain?: string,
+  ) { }
+}
+
+export class SubscriptionConfig {
+  constructor(
+    public premiumPrice?: string,
+    public premiumMSG?: string,
+    public mvpPrice?: string,
+    public mvpMSG?: string,
+    public supportPrice?: string,
+    public supportMSG?: string,
+    public subImageLink?: string,
+    public subURL?: string,
+  ) { }
+}
+
+export class AnnouncementConfig {
+  constructor(
+    public announceHeader?: string,
+    public announceBody?: string,
+    public announceFooter?: string,
   ) { }
 }
 

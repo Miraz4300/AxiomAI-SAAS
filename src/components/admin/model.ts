@@ -11,6 +11,8 @@ export class ConfigState {
   httpsProxy?: string
   balance?: number
   siteConfig?: SiteConfig
+  subscriptionConfig?: SubscriptionConfig
+  announcementConfig?: AnnouncementConfig
   mailConfig?: MailConfig
   auditConfig?: AuditConfig
 }
@@ -30,6 +32,23 @@ export class SiteConfig {
   registerReview?: boolean
   registerMails?: string
   siteDomain?: string
+}
+
+export class SubscriptionConfig {
+  premiumPrice?: string
+  premiumMSG?: string
+  mvpPrice?: string
+  mvpMSG?: string
+  supportPrice?: string
+  supportMSG?: string
+  subImageLink?: string
+  subURL?: string
+}
+
+export class AnnouncementConfig {
+  announceHeader?: string
+  announceBody?: string
+  announceFooter?: string
 }
 
 export class MailConfig {

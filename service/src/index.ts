@@ -63,7 +63,7 @@ const router = express.Router()
 Sentry.init({
   dsn: 'https://065ae85c98143dc4c16eb4999272c64c@o4505499531673600.ingest.sentry.io/4505759091458048',
   environment: 'production',
-  release: '3.0.0-preview13',
+  release: '3.0.0-preview14',
   integrations: [
     new Sentry.Integrations.Http({
       tracing: true,

@@ -1,4 +1,5 @@
 import path from 'node:path'
+import process from 'node:process'
 import type { PluginOption } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import { sentryVitePlugin } from '@sentry/vite-plugin'

@@ -23,7 +23,7 @@ async function fetchConfig() {
   }
 }
 
-async function updatePrice() {
+async function updateAnnouncement() {
   saving.value = true
   try {
     const { data } = await fetchUpdateAnnouncement(config.value as AnnouncementConfig)
@@ -74,7 +74,7 @@ onMounted(() => {
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]" />
         <div class="flex flex-wrap items-center gap-4">
-          <NButton :loading="saving" type="primary" @click="updatePrice()">
+          <NButton :loading="saving" type="primary" @click="updateAnnouncement()">
             {{ $t('common.save') }}
           </NButton>
         </div>

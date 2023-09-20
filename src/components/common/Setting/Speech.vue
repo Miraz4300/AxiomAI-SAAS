@@ -1,5 +1,5 @@
-<script lang="ts" setup>
-import { NCard, NForm, NFormItem, NSelect, NSlider, NSwitch } from 'naive-ui'
+<script setup lang="ts">
+import { NForm, NFormItem, NSelect, NSlider, NSwitch } from 'naive-ui'
 import { computed, ref, watchEffect } from 'vue'
 import { useSpeechStore } from '@/store/modules/speech'
 import type { VoiceDataType } from '@/components/voice-input/speech-object'
@@ -50,23 +50,21 @@ export default {
 </script>
 
 <template>
-  <NCard>
-    <NForm label-placement="left" size="medium" :model="formData" label-width="100">
-      <NFormItem :label="$t('setting.speakLang')" path="lang">
-        <NSelect v-model:value="formData.lang" :options="langOptions" />
-      </NFormItem>
-      <NFormItem :label="$t('setting.speakSound')" path="sound">
-        <NSelect v-model:value="formData.sound" :options="soundOptions" />
-      </NFormItem>
-      <NFormItem :label="$t('setting.pitch')" path="pitch">
-        <NSlider v-model:value="formData.pitch" :min="0" :max="2" />
-      </NFormItem>
-      <NFormItem :label="$t('setting.rate')" path="rate">
-        <NSlider v-model:value="formData.rate" :step="0.1" :min="0" :max="2" />
-      </NFormItem>
-      <NFormItem label="Default voice" path="useDefault">
-        <NSwitch v-model:value="formData.useDefault" />
-      </NFormItem>
-    </NForm>
-  </NCard>
+  <NForm label-placement="left" size="medium" :model="formData" label-width="100">
+    <NFormItem :label="$t('setting.speakLang')" path="lang">
+      <NSelect v-model:value="formData.lang" :options="langOptions" />
+    </NFormItem>
+    <NFormItem :label="$t('setting.speakSound')" path="sound">
+      <NSelect v-model:value="formData.sound" :options="soundOptions" />
+    </NFormItem>
+    <NFormItem :label="$t('setting.pitch')" path="pitch">
+      <NSlider v-model:value="formData.pitch" :min="0" :max="2" />
+    </NFormItem>
+    <NFormItem :label="$t('setting.rate')" path="rate">
+      <NSlider v-model:value="formData.rate" :step="0.1" :min="0" :max="2" />
+    </NFormItem>
+    <NFormItem label="Default voice" path="useDefault">
+      <NSwitch v-model:value="formData.useDefault" />
+    </NFormItem>
+  </NForm>
 </template>

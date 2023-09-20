@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { nextTick, onMounted, reactive, ref } from 'vue'
-import { NCard, NCol, NDatePicker, NIcon, NNumberAnimation, NRow, NSpin, NStatistic } from 'naive-ui'
+import { NCol, NDatePicker, NIcon, NNumberAnimation, NRow, NSpin, NStatistic } from 'naive-ui'
 import type { ChartData, ChartOptions } from 'chart.js'
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js'
 import { Bar } from 'vue-chartjs'
@@ -91,62 +91,60 @@ onMounted(() => {
 
 <template>
   <NSpin :show="loading">
-    <NCard>
-      <div class="space-y-6">
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.statisticsPeriod') }}</span>
-          <div class="flex-1">
-            <NDatePicker
-              v-model:value="range"
-              type="daterange"
-              :shortcuts="rangeShortcuts"
-              @update:value="fetchStatistics"
-            />
-          </div>
+    <div class="space-y-6">
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.statisticsPeriod') }}</span>
+        <div class="flex-1">
+          <NDatePicker
+            v-model:value="range"
+            type="daterange"
+            :shortcuts="rangeShortcuts"
+            @update:value="fetchStatistics"
+          />
         </div>
-
-        <div class="flex items-center space-x-4">
-          <NRow>
-            <NCol :span="8" class="text-center">
-              <NStatistic :label="t('setting.statisticsPrompt')">
-                <template #prefix>
-                  <NIcon>
-                    <SvgIcon class="text-lg" icon="ri-chat-upload-line" />
-                  </NIcon>
-                </template>
-                <NNumberAnimation :duration="1000" :to="summary.promptTokens" />
-              </NStatistic>
-            </NCol>
-            <NCol :span="8" class="text-center">
-              <NStatistic :label="t('setting.statisticsCompletion')">
-                <template #prefix>
-                  <NIcon>
-                    <SvgIcon class="text-lg" icon="ri-chat-download-line" />
-                  </NIcon>
-                </template>
-                <NNumberAnimation :duration="1000" :to="summary.completionTokens" />
-              </NStatistic>
-            </NCol>
-            <NCol :span="8" class="text-center">
-              <NStatistic :label="t('setting.statisticsTotal')">
-                <template #prefix>
-                  <NIcon>
-                    <SvgIcon class="text-lg" icon="ri-question-answer-line" />
-                  </NIcon>
-                </template>
-                <NNumberAnimation :duration="1000" :to="summary.totalTokens" />
-              </NStatistic>
-            </NCol>
-          </NRow>
-        </div>
-
-        <Bar
-          v-if="showChart && chartData.labels?.length"
-          style="aspect-ratio: 3/2;"
-          :options="chartOptions"
-          :data="chartData"
-        />
       </div>
-    </NCard>
+
+      <div class="flex items-center space-x-4">
+        <NRow>
+          <NCol :span="8" class="text-center">
+            <NStatistic :label="t('setting.statisticsPrompt')">
+              <template #prefix>
+                <NIcon>
+                  <SvgIcon class="text-lg" icon="ri-chat-upload-line" />
+                </NIcon>
+              </template>
+              <NNumberAnimation :duration="1000" :to="summary.promptTokens" />
+            </NStatistic>
+          </NCol>
+          <NCol :span="8" class="text-center">
+            <NStatistic :label="t('setting.statisticsCompletion')">
+              <template #prefix>
+                <NIcon>
+                  <SvgIcon class="text-lg" icon="ri-chat-download-line" />
+                </NIcon>
+              </template>
+              <NNumberAnimation :duration="1000" :to="summary.completionTokens" />
+            </NStatistic>
+          </NCol>
+          <NCol :span="8" class="text-center">
+            <NStatistic :label="t('setting.statisticsTotal')">
+              <template #prefix>
+                <NIcon>
+                  <SvgIcon class="text-lg" icon="ri-question-answer-line" />
+                </NIcon>
+              </template>
+              <NNumberAnimation :duration="1000" :to="summary.totalTokens" />
+            </NStatistic>
+          </NCol>
+        </NRow>
+      </div>
+
+      <Bar
+        v-if="showChart && chartData.labels?.length"
+        style="aspect-ratio: 3/2;"
+        :options="chartOptions"
+        :data="chartData"
+      />
+    </div>
   </NSpin>
 </template>

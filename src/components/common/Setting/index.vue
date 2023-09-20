@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { computed, onMounted, ref, watch, watchEffect } from 'vue'
-import { NLayout, NTabPane, NTabs } from 'naive-ui'
+import { NCard, NLayout, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
 import Subscription from './Subscription.vue'
@@ -78,7 +78,9 @@ const show = computed({
                 <span class="ml-2">{{ $t('setting.speech') }}</span>
               </template>
               <div class="mt-4 min-h-[100px] max-w-[720px]">
-                <Speech />
+                <NCard>
+                  <Speech />
+                </NCard>
               </div>
             </NTabPane>
             <NTabPane name="subscription">
@@ -96,7 +98,9 @@ const show = computed({
                 <span class="ml-2">{{ $t('setting.statistics') }}</span>
               </template>
               <div class="mt-4 max-h-[780px] max-w-[1080px]">
-                <Statistics />
+                <NCard>
+                  <Statistics />
+                </NCard>
               </div>
             </NTabPane>
             <NTabPane name="about">
@@ -105,7 +109,9 @@ const show = computed({
                 <span class="ml-2">{{ $t('setting.about') }}</span>
               </template>
               <div class="mt-4 min-h-[100px] max-w-[1080px]">
-                <About />
+                <NCard>
+                  <About />
+                </NCard>
               </div>
             </NTabPane>
           </NTabs>

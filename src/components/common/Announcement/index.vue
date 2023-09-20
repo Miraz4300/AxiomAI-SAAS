@@ -11,17 +11,28 @@ const announceBody = ref('')
 const announceFooter = ref('')
 
 onMounted(async () => {
-  // Simulate a 3-second delay before showing the modal
-  setTimeout(async () => {
-    const response = await fetchUserAnnouncement<AnnouncementConfig>()
-    if (response.data) {
-      announceHeader.value = response.data.announceHeader || 'Loading...'
-      announceBody.value = response.data.announceBody || 'Loading...'
-      announceFooter.value = response.data.announceFooter || 'Loading...'
+  // Prevent showing the modal multiple times in a day
+  const lastShownDate = localStorage.getItem('lastShownDate')
+  const currentDate = new Date().toISOString().slice(0, 10)
 
-      show.value = announceBody.value.length > 20
-    }
-  }, 3000)
+  if (lastShownDate === currentDate)
+    return
+
+  const response = await fetchUserAnnouncement<AnnouncementConfig>()
+  if (response.data) {
+    announceHeader.value = response.data.announceHeader || 'Loading...'
+    announceBody.value = response.data.announceBody || 'Loading...'
+    announceFooter.value = response.data.announceFooter || 'Loading...'
+
+    show.value = announceBody.value.length > 20
+
+    if (show.value) {
+      setTimeout(() => {
+        localStorage.setItem('lastShownDate', currentDate)
+        show.value = true
+      }, 3000)
+    } // 3 seconds delay to show the modal
+  }
 })
 </script>
 

@@ -4,24 +4,26 @@ import { NButton, NCard, NCarousel } from 'naive-ui'
 
 <template>
   <div class="space-y-6">
-    <NCarousel autoplay effect="custom" :transition-props="{ name: 'creative' }" show-arrow style="width: 100%; height: 240px">
-      <img
-        class="carousel-img"
-        src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg"
-      >
-      <img
-        class="carousel-img"
-        src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg"
-      >
-      <img
-        class="carousel-img"
-        src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg"
-      >
-      <img
-        class="carousel-img"
-        src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg"
-      >
-    </NCarousel>
+    <div class="flex justify-center">
+      <NCarousel autoplay effect="custom" :transition-props="{ name: 'creative' }" show-arrow style="width: 100%; height: 240px">
+        <img
+          class="carousel-img"
+          src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg"
+        >
+        <img
+          class="carousel-img"
+          src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg"
+        >
+        <img
+          class="carousel-img"
+          src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg"
+        >
+        <img
+          class="carousel-img"
+          src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg"
+        >
+      </NCarousel>
+    </div>
     <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 md:grid-cols-4">
       <NCard title="Premium" hoverable>
         <div class="flex flex-col space-y-4">

@@ -152,5 +152,6 @@ export default {
     speakSound: 'Sound',
     pitch: 'Tone',
     rate: 'Speech speed',
+    merch: 'Merch',
   },
 }

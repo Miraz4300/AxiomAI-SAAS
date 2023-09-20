@@ -7,6 +7,7 @@ import Subscription from './Subscription.vue'
 import Statistics from './Statistics.vue'
 import About from './About.vue'
 import Speech from './Speech.vue'
+import Merch from './Merch.vue'
 import Sidebar from '@/views/chat/components/Sidebar/index.vue'
 import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -101,6 +102,15 @@ const show = computed({
                 <NCard>
                   <Statistics />
                 </NCard>
+              </div>
+            </NTabPane>
+            <NTabPane name="merch">
+              <template #tab>
+                <SvgIcon class="text-lg" icon="ri:shopping-bag-line" />
+                <span class="ml-2">{{ $t('setting.merch') }}</span>
+              </template>
+              <div class="mt-4 min-h-[100px]">
+                <Merch />
               </div>
             </NTabPane>
             <NTabPane name="about">

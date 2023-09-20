@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { NAlert, NButton, NCard, NModal, NTag } from 'naive-ui'
 import type { SubscriptionConfig } from '@/components/admin/model'

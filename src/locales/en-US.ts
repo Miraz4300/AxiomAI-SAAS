@@ -27,6 +27,7 @@ export default {
   },
   chat: {
     chat: 'Chat',
+    draw: 'Whiteboard',
     placeholderText: 'Ask me anything...(Shift + Enter = line break, "/" to trigger prompts)',
     placeholderMobile: 'Ask me anything...',
     copy: 'Copy',

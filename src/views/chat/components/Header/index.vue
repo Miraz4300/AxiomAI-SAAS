@@ -150,7 +150,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
         type="textarea"
         :autosize="{ minRows: 3, maxRows: 10 }"
         placeholder="Custom instructions for this conversation. How would you like AxiomAI to respond?"
-        @input="(val) => { if (currentChatHistory) currentChatHistory.prompt = val }"
+        @input="(val: string | undefined) => { if (currentChatHistory) currentChatHistory.prompt = val }"
       />
       <div class="my-4 border-b dark:border-b-neutral-700" />
     </div>

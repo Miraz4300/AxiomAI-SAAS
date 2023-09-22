@@ -13,7 +13,7 @@ import type { ChatMessage } from './chatgpt'
 import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './chatgpt'
 import { auth, getUserId } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
-import type { AnnouncementConfig, AuditConfig, CHATMODEL, ChatInfo, ChatOptions, Config, KeyConfig, MailConfig, SiteConfig, SubscriptionConfig, UserConfig, UserInfo } from './storage/model'
+import type { AnnouncementConfig, AuditConfig, CHATMODEL, ChatInfo, ChatOptions, Config, KeyConfig, MailConfig, MerchConfig, SiteConfig, SubscriptionConfig, UserConfig, UserInfo } from './storage/model'
 import { Status, UsageResponse, UserRole, chatModelOptions } from './storage/model'
 import {
   clearChat,
@@ -957,6 +957,31 @@ router.get('/user-announcement', auth, async (req, res) => {
   try {
     const thisConfig = await getOriginConfig()
     res.send({ status: 'Success', message: 'Successfully fetched', data: thisConfig.announcementConfig })
+  }
+  catch (error) {
+    res.status(500).send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/setting-merch', rootAuth, async (req, res) => {
+  try {
+    const config = req.body as MerchConfig
+
+    const thisConfig = await getOriginConfig()
+    thisConfig.merchConfig = config
+    const result = await updateConfig(thisConfig)
+    clearConfigCache()
+    res.send({ status: 'Success', message: 'Successfully', data: result.merchConfig })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.get('/user-merch', auth, async (req, res) => {
+  try {
+    const thisConfig = await getOriginConfig()
+    res.send({ status: 'Success', message: 'Successfully fetched', data: thisConfig.merchConfig })
   }
   catch (error) {
     res.status(500).send({ status: 'Fail', message: error.message, data: null })

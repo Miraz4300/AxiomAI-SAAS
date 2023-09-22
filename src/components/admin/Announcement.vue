@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NInput, NSpin, useMessage } from 'naive-ui'
+import { NButton, NInput, NSpin, NSwitch, useMessage } from 'naive-ui'
 import type { AnnouncementConfig, ConfigState } from './model'
 import { fetchChatConfig, fetchUpdateAnnouncement } from '@/api'
 import { t } from '@/locales'
@@ -44,6 +44,15 @@ onMounted(() => {
 <template>
   <NSpin :show="loading">
     <div class="p-4 space-y-5 min-h-[200px]">
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">Enable Announcement</span>
+        <div class="flex-1">
+          <NSwitch
+            :round="false" :value="config && config.announceEnabled"
+            @update:value="(val: boolean | undefined) => { if (config) config.announceEnabled = val }"
+          />
+        </div>
+      </div>
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">Header</span>
         <div class="flex-1">

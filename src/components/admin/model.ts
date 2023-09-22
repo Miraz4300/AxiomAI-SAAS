@@ -13,6 +13,7 @@ export class ConfigState {
   siteConfig?: SiteConfig
   subscriptionConfig?: SubscriptionConfig
   announcementConfig?: AnnouncementConfig
+  merchConfig?: MerchConfig
   mailConfig?: MailConfig
   auditConfig?: AuditConfig
 }
@@ -46,9 +47,23 @@ export class SubscriptionConfig {
 }
 
 export class AnnouncementConfig {
+  announceEnabled?: boolean
   announceHeader?: string
   announceBody?: string
   announceFooter?: string
+}
+
+export interface Product {
+  img: string
+  name: string
+  price: number
+  stock: boolean
+}
+
+export class MerchConfig {
+  lightBanner?: string
+  darkBanner?: string
+  products: Product[] = []
 }
 
 export class MailConfig {

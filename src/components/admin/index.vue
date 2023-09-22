@@ -9,6 +9,7 @@ import Key from './Keys.vue'
 import Site from './Site.vue'
 import Subscription from './Subscription.vue'
 import Announcement from './Announcement.vue'
+import Merch from './Merch.vue'
 import { SvgIcon } from '@/components/common'
 import { useUserStore } from '@/store'
 
@@ -110,6 +111,15 @@ const show = computed({
               </template>
               <NCard>
                 <Subscription />
+              </NCard>
+            </NTabPane>
+            <NTabPane v-if="userStore.userInfo.root" name="MerchConfig" tab="MerchConfig">
+              <template #tab>
+                <SvgIcon class="text-lg" icon="mdi:currency-usd" />
+                <span class="ml-2">Merch Settings</span>
+              </template>
+              <NCard>
+                <Merch />
               </NCard>
             </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="AnnouncementConfig" tab="AnnouncementConfig">

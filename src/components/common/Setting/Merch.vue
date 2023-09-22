@@ -1,193 +1,44 @@
 <script setup lang="ts">
-import { NButton, NCard, NCarousel } from 'naive-ui'
+import { computed, onMounted, ref } from 'vue'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { useAppStore } from '@/store'
+import Product from '@/components/common/ProductCard/Card.vue'
+import type { MerchConfig } from '@/components/admin/model'
+import { fetchUserMerch } from '@/api'
+
+const appStore = useAppStore()
+const theme = computed(() => appStore.theme)
+const { isMobile } = useBasicLayout()
+
+const lightBanner = ref('')
+const darkBanner = ref('')
+const merchConfig = ref<MerchConfig>()
+
+onMounted(async () => {
+  const response = await fetchUserMerch<MerchConfig>()
+  merchConfig.value = response.data
+  lightBanner.value = merchConfig.value?.lightBanner || ''
+  darkBanner.value = merchConfig.value?.darkBanner || ''
+})
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="space-y-4">
     <div class="flex justify-center">
-      <NCarousel autoplay effect="custom" :transition-props="{ name: 'creative' }" show-arrow style="width: 100%; height: 240px">
-        <img
-          class="carousel-img"
-          src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg"
-        >
-        <img
-          class="carousel-img"
-          src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg"
-        >
-        <img
-          class="carousel-img"
-          src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg"
-        >
-        <img
-          class="carousel-img"
-          src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg"
-        >
-      </NCarousel>
+      <div class="w-auto">
+        <img v-if="theme === 'light'" :src="lightBanner">
+        <img v-else :src="darkBanner">
+      </div>
     </div>
-    <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 md:grid-cols-4">
-      <NCard title="Premium" hoverable>
-        <div class="flex flex-col space-y-4">
-          <span>
-            Unlocks:
-            <br>
-            1. GPT-4 and other models
-            <br>
-            2. Higher avalibility of GPT-3.5 and GPT-4
-            <br>
-            3. Stable Diffusion Model (coming soon)
-            <br>
-            4. Mid-journey - 10/day (coming soon)
-          </span>
-          <NButton strong secondary type="primary">
-            Buy
-          </NButton>
-        </div>
-      </NCard>
-      <NCard title="Premium" hoverable>
-        <div class="flex flex-col space-y-4">
-          <span>
-            Unlocks:
-            <br>
-            1. GPT-4 and other models
-            <br>
-            2. Higher avalibility of GPT-3.5 and GPT-4
-            <br>
-            3. Stable Diffusion Model (coming soon)
-            <br>
-            4. Mid-journey - 10/day (coming soon)
-          </span>
-          <NButton strong secondary type="primary">
-            Buy
-          </NButton>
-        </div>
-      </NCard>
-      <NCard title="Premium" hoverable>
-        <div class="flex flex-col space-y-4">
-          <span>
-            Unlocks:
-            <br>
-            1. GPT-4 and other models
-            <br>
-            2. Higher avalibility of GPT-3.5 and GPT-4
-            <br>
-            3. Stable Diffusion Model (coming soon)
-            <br>
-            4. Mid-journey - 10/day (coming soon)
-          </span>
-          <NButton strong secondary type="primary">
-            Buy
-          </NButton>
-        </div>
-      </NCard>
-      <NCard title="Premium" hoverable>
-        <div class="flex flex-col space-y-4">
-          <span>
-            Unlocks:
-            <br>
-            1. GPT-4 and other models
-            <br>
-            2. Higher avalibility of GPT-3.5 and GPT-4
-            <br>
-            3. Stable Diffusion Model (coming soon)
-            <br>
-            4. Mid-journey - 10/day (coming soon)
-          </span>
-          <NButton strong secondary type="primary">
-            Buy
-          </NButton>
-        </div>
-      </NCard>
-      <NCard title="Premium" hoverable>
-        <div class="flex flex-col space-y-4">
-          <span>
-            Unlocks:
-            <br>
-            1. GPT-4 and other models
-            <br>
-            2. Higher avalibility of GPT-3.5 and GPT-4
-            <br>
-            3. Stable Diffusion Model (coming soon)
-            <br>
-            4. Mid-journey - 10/day (coming soon)
-          </span>
-          <NButton strong secondary type="primary">
-            Buy
-          </NButton>
-        </div>
-      </NCard>
-      <NCard title="Premium" hoverable>
-        <div class="flex flex-col space-y-4">
-          <span>
-            Unlocks:
-            <br>
-            1. GPT-4 and other models
-            <br>
-            2. Higher avalibility of GPT-3.5 and GPT-4
-            <br>
-            3. Stable Diffusion Model (coming soon)
-            <br>
-            4. Mid-journey - 10/day (coming soon)
-          </span>
-          <NButton strong secondary type="primary">
-            Buy
-          </NButton>
-        </div>
-      </NCard>
-      <NCard title="Premium" hoverable>
-        <div class="flex flex-col space-y-4">
-          <span>
-            Unlocks:
-            <br>
-            1. GPT-4 and other models
-            <br>
-            2. Higher avalibility of GPT-3.5 and GPT-4
-            <br>
-            3. Stable Diffusion Model (coming soon)
-            <br>
-            4. Mid-journey - 10/day (coming soon)
-          </span>
-          <NButton strong secondary type="primary">
-            Buy
-          </NButton>
-        </div>
-      </NCard>
-      <NCard title="Premium" hoverable>
-        <div class="flex flex-col space-y-4">
-          <span>
-            Unlocks:
-            <br>
-            1. GPT-4 and other models
-            <br>
-            2. Higher avalibility of GPT-3.5 and GPT-4
-            <br>
-            3. Stable Diffusion Model (coming soon)
-            <br>
-            4. Mid-journey - 10/day (coming soon)
-          </span>
-          <NButton strong secondary type="primary">
-            Buy
-          </NButton>
-        </div>
-      </NCard>
+    <div class="pl-4 pr-4 flex justify-center" :class="[isMobile ? 'flex-col space-y-4' : 'space-x-4']">
+      <Product
+        v-for="(product, index) in (merchConfig && merchConfig.products || [])"
+        :key="index"
+        :product-img="product.img"
+        :product-name="product.name"
+        :product-price="product.price"
+        :product-stock="product.stock"
+      />
     </div>
   </div>
 </template>
-
-<style scoped>
-.carousel-img {
-  width: 100%;
-  height: 240px;
-  object-fit: cover;
-}
-
-:deep(.creative-enter-from),
-:deep(.creative-leave-to) {
-  opacity: 0;
-  transform: scale(0.8);
-}
-
-:deep(.creative-enter-active),
-:deep(.creative-leave-active) {
-  transition: all 0.3s ease;
-}
-</style>

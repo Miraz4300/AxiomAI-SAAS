@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NCard, NInput, NSpin, NSwitch, useMessage } from 'naive-ui'
+import { NButton, NCard, NInput, NInputNumber, NSpin, NSwitch, useMessage } from 'naive-ui'
 import type { ConfigState, MerchConfig } from './model'
 import { fetchChatConfig, fetchUpdateMerch } from '@/api'
 import { t } from '@/locales'
@@ -115,9 +115,9 @@ onMounted(() => {
             <div class="flex items-center space-x-4">
               <span class="flex-shrink-0 w-[100px]">Product Price</span>
               <div class="flex-1">
-                <NInput
+                <NInputNumber
                   :value="product.price" placeholder="product price in taka" style="max-width: 30%"
-                  @input="(val: number | undefined) => { if (val !== undefined) product.price = val }"
+                  @update:value="(val: number | null) => { if (val !== null) product.price = val }"
                 />
               </div>
             </div>

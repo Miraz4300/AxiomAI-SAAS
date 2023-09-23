@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, h } from 'vue'
+import { computed, h, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { DropdownOption } from 'naive-ui'
 import { NDropdown, NText } from 'naive-ui'
@@ -8,6 +8,8 @@ import { useIconRender } from '@/hooks/useIconRender'
 import { useAuthStore, useUserStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { ADMIN_ROUTE, SETTING_ROUTE } from '@/router/routes'
+import type { FeaturesConfig } from '@/components/admin/model'
+import { fetchUserFeatures } from '@/api'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -100,6 +102,13 @@ async function handleDropdown(optionKey: string) {
     router.push(SETTING_ROUTE)
   }
 }
+
+const whiteboardEnabled = ref<boolean | null>(null)
+
+onMounted(async () => {
+  const response = await fetchUserFeatures<FeaturesConfig>()
+  whiteboardEnabled.value = response.data.whiteboardEnabled || false
+})
 </script>
 
 <template>
@@ -110,7 +119,7 @@ async function handleDropdown(optionKey: string) {
           <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[#0083A0] hover:dark:text-[#00B2DB]" :class="[isChatActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:message-3-line" />
         </MenuButton>
       </div>
-      <div class="flex w-full flex-col justify-center">
+      <div v-if="whiteboardEnabled" class="flex w-full flex-col justify-center">
         <MenuButton :tooltip="$t('chat.draw')" placement="right" @click="goDraw">
           <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[#0083A0] hover:dark:text-[#00B2DB]" :class="[isDrawActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:artboard-line" />
         </MenuButton>
@@ -131,12 +140,12 @@ async function handleDropdown(optionKey: string) {
   </div>
 
   <NLayoutFooter v-if="isMobile" class="bg-white dark:bg-[#202020]">
-    <div class="grid py-2 border-t dark:border-t-neutral-800 grid-cols-3">
+    <div class="grid py-2 border-t dark:border-t-neutral-800" :class="[whiteboardEnabled ? 'grid-cols-3' : 'grid-cols-2']">
       <a class="leading-4 text-center cursor-pointer" :class="[isChatActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goChat">
         <SvgIcon :class="[iconClass2]" icon="ri:message-3-line" />
         <p>{{ $t('chat.chat') }}</p>
       </a>
-      <a class="leading-4 text-center cursor-pointer" :class="[isDrawActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goDraw">
+      <a v-if="whiteboardEnabled" class="leading-4 text-center cursor-pointer" :class="[isDrawActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goDraw">
         <SvgIcon :class="[iconClass2]" icon="ri:artboard-line" />
         <p>{{ $t('chat.draw') }}</p>
       </a>

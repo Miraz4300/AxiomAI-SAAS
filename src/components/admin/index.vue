@@ -10,6 +10,7 @@ import Site from './Site.vue'
 import Subscription from './Subscription.vue'
 import Announcement from './Announcement.vue'
 import Merch from './Merch.vue'
+import Features from './Features.vue'
 import { SvgIcon } from '@/components/common'
 import { useUserStore } from '@/store'
 
@@ -129,6 +130,15 @@ const show = computed({
               </template>
               <NCard>
                 <Announcement />
+              </NCard>
+            </NTabPane>
+            <NTabPane v-if="userStore.userInfo.root" name="FeaturesConfig" tab="FeaturesConfig">
+              <template #tab>
+                <SvgIcon class="text-lg" icon="mdi:announcement" />
+                <span class="ml-2">Experimental Features</span>
+              </template>
+              <NCard>
+                <Features />
               </NCard>
             </NTabPane>
           </NTabs>

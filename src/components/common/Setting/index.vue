@@ -12,6 +12,8 @@ import Sidebar from '@/views/chat/components/Sidebar/index.vue'
 import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useSpeechStore } from '@/store/modules/speech'
+import type { FeaturesConfig } from '@/components/admin/model'
+import { fetchUserFeatures } from '@/api'
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
@@ -51,6 +53,13 @@ const show = computed({
   set(visible: boolean) {
     emit('update:visible', visible)
   },
+})
+
+const merchEnabled = ref<boolean | null>(null)
+
+onMounted(async () => {
+  const response = await fetchUserFeatures<FeaturesConfig>()
+  merchEnabled.value = response.data.merchEnabled || false
 })
 </script>
 
@@ -104,7 +113,7 @@ const show = computed({
                 </NCard>
               </div>
             </NTabPane>
-            <NTabPane name="merch">
+            <NTabPane v-if="merchEnabled" name="merch">
               <template #tab>
                 <SvgIcon class="text-lg" icon="ri:shopping-bag-line" />
                 <span class="ml-2">{{ $t('setting.merch') }}</span>

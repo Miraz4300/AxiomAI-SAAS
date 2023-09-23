@@ -11,7 +11,8 @@ import Header from './components/Header/index.vue'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStore, useChatStore, usePromptStore, useUserStore } from '@/store'
-import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding } from '@/api'
+import type { FeaturesConfig } from '@/components/admin/model'
+import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding, fetchUserFeatures } from '@/api'
 import { t } from '@/locales'
 import VoiceInput from '@/components/voice-input/index.vue'
 import AutoSpeak from '@/components/voice-output/auto-speak.vue'
@@ -41,6 +42,9 @@ const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActiv
 const usingContext = computed(() => currentChatHistory?.value?.usingContext ?? true)
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
+
+const chatFooterEnabled = ref<boolean | null>(null)
+const chatFooterText = ref<string | null>(null)
 
 const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
@@ -535,6 +539,12 @@ onMounted(() => {
   }
 })
 
+onMounted(async () => {
+  const response = await fetchUserFeatures<FeaturesConfig>()
+  chatFooterEnabled.value = response.data.chatFooterEnabled || false
+  chatFooterText.value = response.data.chatFooterText || ''
+})
+
 watch(() => chatStore.active, (_newVal, _oldVal) => {
   handleSyncChat()
 })
@@ -690,9 +700,7 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
           </div>
         </div>
       </div>
-      <div class="text-center text-xs text-black/60 dark:text-white/50 mt-2">
-        AxiomAI may produce inaccurate information about people, places, or facts. <a href="https://axiomai.s3.us-west-002.backblazeb2.com/bKash.png" target="_blank" rel="noreferrer" class="underline text-green-500">Donate</a> to keep the server fully operational.
-      </div>
+      <div v-if="chatFooterEnabled" class="text-center text-xs text-black/60 dark:text-white/50 mt-2" v-html="chatFooterText" />
     </footer>
   </div>
   <Announcement />

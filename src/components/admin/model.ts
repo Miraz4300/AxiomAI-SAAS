@@ -16,6 +16,7 @@ export class ConfigState {
   merchConfig?: MerchConfig
   mailConfig?: MailConfig
   auditConfig?: AuditConfig
+  featuresConfig?: FeaturesConfig
 }
 
 // https://platform.openai.com/docs/models/overview
@@ -163,4 +164,11 @@ export class UserInfo {
   constructor(roles: UserRole[]) {
     this.roles = roles
   }
+}
+
+export class FeaturesConfig {
+  chatFooterEnabled?: boolean
+  chatFooterText?: string
+  whiteboardEnabled?: boolean
+  merchEnabled?: boolean
 }

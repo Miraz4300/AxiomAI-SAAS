@@ -1,6 +1,6 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { get, post } from '@/utils/request'
-import type { AnnouncementConfig, AuditConfig, CHATMODEL, ConfigState, KeyConfig, MailConfig, MerchConfig, SiteConfig, Status, SubscriptionConfig, UserInfo } from '@/components/admin/model'
+import type { AnnouncementConfig, AuditConfig, CHATMODEL, ConfigState, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, Status, SubscriptionConfig, UserInfo } from '@/components/admin/model'
 import { useAuthStore, useSettingStore } from '@/store'
 
 export function fetchChatConfig<T = any>() {
@@ -323,5 +323,18 @@ export function fetchUpsertApiKey<T = any>(keyConfig: KeyConfig) {
   return post<T>({
     url: '/setting-key-upsert',
     data: keyConfig,
+  })
+}
+
+export function fetchUpdateFeatures<T = any>(config: FeaturesConfig) {
+  return post<T>({
+    url: '/setting-features',
+    data: config,
+  })
+}
+
+export function fetchUserFeatures<T = any>() {
+  return get<T>({
+    url: '/user-features',
   })
 }

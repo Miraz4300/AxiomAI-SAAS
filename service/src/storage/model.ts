@@ -184,6 +184,7 @@ export class Config {
     public subscriptionConfig?: SubscriptionConfig,
     public announcementConfig?: AnnouncementConfig,
     public merchConfig?: MerchConfig,
+    public featuresConfig?: FeaturesConfig,
     public mailConfig?: MailConfig,
     public auditConfig?: AuditConfig,
   ) { }
@@ -235,6 +236,15 @@ export class MerchConfig {
     public lightBanner?: string,
     public darkBanner?: string,
     public products?: Product[],
+  ) { }
+}
+
+export class FeaturesConfig {
+  constructor(
+    public chatFooterEnabled?: boolean,
+    public chatFooterText?: string,
+    public whiteboardEnabled?: boolean,
+    public merchEnabled?: boolean,
   ) { }
 }
 

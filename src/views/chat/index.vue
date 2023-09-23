@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
 import { NAutoComplete, NButton, NDivider, NInput, NSpin, NSwitch, NTooltip, useDialog, useMessage } from 'naive-ui'
+import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import Header from './components/Header/index.vue'
@@ -14,8 +15,6 @@ import { useAuthStore, useChatStore, usePromptStore, useUserStore } from '@/stor
 import type { FeaturesConfig } from '@/components/admin/model'
 import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding, fetchUserFeatures } from '@/api'
 import { t } from '@/locales'
-import VoiceInput from '@/components/voice-input/index.vue'
-import AutoSpeak from '@/components/voice-output/auto-speak.vue'
 import { useSpeechStore } from '@/store/modules/speech'
 import { debounce } from '@/utils/functions/debounce'
 
@@ -554,7 +553,8 @@ onUnmounted(() => {
     controller.abort()
 })
 
-const Message = defineAsyncComponent(() => import('./components/Message/index.vue'))
+const Speech = defineAsyncComponent(() => import('@/components/voice-output/auto-speak.vue'))
+const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.vue'))
 const Announcement = defineAsyncComponent(() => import('@/components/common/Announcement/index.vue'))
 </script>
 
@@ -674,8 +674,8 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
                       <SvgIcon icon="fluent:brain-circuit-24-filled" />
                     </span>
                   </ToolButton>
-                  <AutoSpeak v-if="!isMobile && speechStore.enable" />
-                  <VoiceInput v-if="!isMobile && speechStore.enable" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
+                  <Speech v-if="!isMobile && speechStore.enable" />
+                  <Voice v-if="!isMobile && speechStore.enable" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
                 </div>
                 <div class="flex items-center">
                   <div class="flex items-center text-neutral-400">

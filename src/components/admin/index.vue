@@ -116,7 +116,7 @@ const show = computed({
             </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="MerchConfig" tab="MerchConfig">
               <template #tab>
-                <SvgIcon class="text-lg" icon="mdi:currency-usd" />
+                <SvgIcon class="text-lg" icon="ri:shopping-bag-line" />
                 <span class="ml-2">Merch Settings</span>
               </template>
               <NCard>
@@ -134,7 +134,7 @@ const show = computed({
             </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="FeaturesConfig" tab="FeaturesConfig">
               <template #tab>
-                <SvgIcon class="text-lg" icon="mdi:announcement" />
+                <SvgIcon class="text-lg" icon="mdi:feature-search-outline" />
                 <span class="ml-2">Experimental Features</span>
               </template>
               <NCard>

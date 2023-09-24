@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, defineAsyncComponent, provide, ref } from 'vue'
+import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { NButton, NInput, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
 import { useAppStore, useAuthStore, useChatStore, useSettingStore, useUserStore } from '@/store'
@@ -32,8 +32,7 @@ const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
 const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActive)
 const nowSelectChatModel = ref<CHATMODEL | null>(null)
-const currentChatModel = computed(() => nowSelectChatModel.value ?? currentChatHistory.value?.chatModel ?? userStore.userInfo.config.chatModel)
-provide('nowSelectChatModel', nowSelectChatModel)
+const currentChatModel = computed(() => currentChatHistory.value?.chatModel ?? userStore.userInfo.config.chatModel)
 
 const { uuid } = route.params as { uuid: string }
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))

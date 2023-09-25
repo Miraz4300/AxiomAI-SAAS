@@ -133,7 +133,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
       </div>
     </div>
     <div v-if="!!authStore.token && isChatGPTAPI" class="absolute z-20 left-1/2 top-full -translate-x-1/2 cursor-pointer select-none rounded-b-md border bg-white px-4 dark:border-neutral-700 dark:bg-[#111114]" @click="show = true">
-      <span class="flex items-center space-x-2">
+      <span class="flex items-center space-x-2 hover:text-[#0083A0] hover:dark:text-[#00B2DB]">
         <SvgIcon icon="ri:sparkling-line" />
         <span>{{ currentChatModel }}</span>
         <SvgIcon icon="ri:arrow-down-s-line" />
@@ -152,7 +152,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
         :value="currentChatHistory && currentChatHistory.prompt"
         type="textarea"
         :autosize="{ minRows: 3, maxRows: 10 }"
-        placeholder="Custom instructions for this conversation. How would you like AxiomAI to respond?"
+        :placeholder="t('setting.promptTip')"
         @input="(val: string | undefined) => { if (currentChatHistory) currentChatHistory.prompt = val }"
       />
       <div class="my-4 border-b dark:border-b-neutral-700" />

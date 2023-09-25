@@ -3,7 +3,6 @@ import { onMounted, ref } from 'vue'
 import { NButton, NCard, NInput, NInputNumber, NSpin, NSwitch, useMessage } from 'naive-ui'
 import type { ConfigState, MerchConfig } from './model'
 import { fetchChatConfig, fetchUpdateMerch } from '@/api'
-import { t } from '@/locales'
 
 const ms = useMessage()
 
@@ -28,7 +27,7 @@ async function updateMerch() {
   try {
     const { data } = await fetchUpdateMerch(config.value as MerchConfig)
     config.value = data
-    ms.success(t('common.success'))
+    ms.success('Saved Successfully')
   }
   catch (error: any) {
     ms.error(error.message)

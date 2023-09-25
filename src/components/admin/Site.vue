@@ -4,7 +4,6 @@ import { NButton, NInput, NSpin, NSwitch, useMessage } from 'naive-ui'
 import type { ConfigState } from './model'
 import { SiteConfig } from './model'
 import { fetchChatConfig, fetchUpdateSite } from '@/api'
-import { t } from '@/locales'
 
 const ms = useMessage()
 
@@ -33,7 +32,7 @@ async function updateSiteInfo(site?: SiteConfig) {
   try {
     const { data } = await fetchUpdateSite(site)
     config.value = data
-    ms.success(t('common.success'))
+    ms.success('Saved Successfully')
   }
   catch (error: any) {
     ms.error(error.message)
@@ -51,7 +50,7 @@ onMounted(() => {
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.siteTitle') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Title</span>
           <div class="flex-1">
             <NInput
               :value="config && config.siteTitle" placeholder="" style="max-width: 30%"
@@ -60,7 +59,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.siteDomain') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Domain</span>
           <div class="flex-1">
             <NInput
               :value="config && config.siteDomain" placeholder="" style="max-width: 30%"
@@ -69,7 +68,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.loginEnabled') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Login Enabled</span>
           <div class="flex-1">
             <NSwitch
               :round="false"
@@ -80,16 +79,16 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.loginSalt') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Login Salt</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.loginSalt" :placeholder="$t('setting.loginSaltTip')" style="max-width: 30%"
+              :value="config && config.loginSalt" placeholder="Changes will invalidate all logged-in users." style="max-width: 30%"
               @input="(val: string | undefined) => { if (config) config.loginSalt = val }"
             />
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerEnabled') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Register Enabled</span>
           <div class="flex-1">
             <NSwitch
               :round="false"
@@ -99,7 +98,7 @@ onMounted(() => {
           </div>
         </div>
         <div v-show="config && config.registerEnabled" class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerReview') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Register Review</span>
           <div class="flex-1">
             <NSwitch
               :round="false"
@@ -109,10 +108,10 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.registerMails') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Email domains</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.registerMails" :placeholder="$t('setting.registerReviewTip')" style="max-width: 30%"
+              :value="config && config.registerMails" placeholder="Only email addresses with these suffixes are allowed to register on this website." style="max-width: 30%"
               @input="(val: string | undefined) => { if (config) config.registerMails = val }"
             />
           </div>

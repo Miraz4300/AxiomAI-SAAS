@@ -4,7 +4,6 @@ import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NSwitch, NTag, us
 import type { CHATMODEL } from './model'
 import { KeyConfig, Status, UserRole, apiModelOptions, userRoleOptions } from './model'
 import { fetchGetKeys, fetchUpdateApiKeyStatus, fetchUpsertApiKey } from '@/api'
-import { t } from '@/locales'
 import { useAuthStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
@@ -20,7 +19,7 @@ const keyConfig = ref(new KeyConfig('', 'ChatGPTAPI', [], [], ''))
 const keys = ref([])
 const columns = [
   {
-    title: 'Key',
+    title: 'API Key',
     key: 'key',
     resizable: true,
     width: 200,
@@ -29,12 +28,12 @@ const columns = [
     ellipsis: true,
   },
   {
-    title: 'Api Model',
+    title: 'Endpoint',
     key: 'keyModel',
     width: 190,
   },
   {
-    title: 'Chat Model',
+    title: 'Model',
     key: 'chatModels',
     width: 320,
     render(row: any) {
@@ -100,7 +99,7 @@ const columns = [
           type: 'error',
           onClick: () => handleUpdateApiKeyStatus(row._id as string, Status.Disabled),
         },
-        { default: () => t('common.delete') },
+        { default: () => ('Delete') },
       ))
       if (row.status === Status.Normal) {
         actions.push(h(
@@ -113,7 +112,7 @@ const columns = [
             type: 'info',
             onClick: () => handleEditKey(row),
           },
-          { default: () => t('common.edit') },
+          { default: () => ('Edit') },
         ))
       }
       return actions
@@ -158,10 +157,10 @@ async function handleGetKeys(page: number) {
 }
 async function handleUpdateApiKeyStatus(id: string, status: Status) {
   dialog.warning({
-    title: t('chat.deleteKey'),
-    content: t('chat.deleteKeyConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
+    title: ('Delete Key'),
+    content: ('Are you sure to delete this key?'),
+    positiveText: ('Yes'),
+    negativeText: ('No'),
     onPositiveClick: async () => {
       await fetchUpdateApiKeyStatus(id, status)
       ms.info('OK')
@@ -226,7 +225,7 @@ onMounted(async () => {
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.apiModel') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Endpoint</span>
           <div class="flex-1">
             <NSelect
               style="width: 100%"
@@ -236,12 +235,12 @@ onMounted(async () => {
             />
           </div>
           <p v-if="!isMobile">
-            <a v-if="keyConfig.keyModel === 'ChatGPTAPI'" target="_blank" href="https://platform.openai.com/account/api-keys">Get Api Key</a>
+            <a v-if="keyConfig.keyModel === 'ChatGPTAPI'" target="_blank" href="https://platform.openai.com/account/api-keys">Get API Key</a>
             <a v-else target="_blank" href="https://chat.openai.com/api/auth/session">Get Access Token</a>
           </p>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.apiKey') }}</span>
+          <span class="flex-shrink-0 w-[100px]">API Key</span>
           <div class="flex-1">
             <NInput
               v-model:value="keyConfig.key" type="textarea"
@@ -250,7 +249,7 @@ onMounted(async () => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.chatModels') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Model</span>
           <div class="flex-1">
             <NSelect
               style="width: 100%"
@@ -262,7 +261,7 @@ onMounted(async () => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.userRoles') }}</span>
+          <span class="flex-shrink-0 w-[100px]">User Roles</span>
           <div class="flex-1">
             <NSelect
               style="width: 100%"
@@ -274,7 +273,7 @@ onMounted(async () => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.status') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Status</span>
           <div class="flex-1">
             <NSwitch
               :round="false"
@@ -284,7 +283,7 @@ onMounted(async () => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.remark') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Remark</span>
           <div class="flex-1">
             <NInput
               v-model:value="keyConfig.remark" type="textarea"

@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { NCard, NLayout, NLayoutContent, NTabPane, NTabs } from 'naive-ui'
 import System from './System.vue'
 import Mail from './Mail.vue'
-import Audit from './Audit.vue'
+import Moderation from './Moderation.vue'
 import User from './User.vue'
 import Key from './Keys.vue'
 import Site from './Site.vue'
@@ -75,7 +75,7 @@ const show = computed({
                 <span class="ml-2">Moderation</span>
               </template>
               <NCard>
-                <Audit />
+                <Moderation />
               </NCard>
             </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="UserConfig" tab="UserConfig">

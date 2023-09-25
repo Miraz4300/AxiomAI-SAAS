@@ -3,7 +3,6 @@ import { onMounted, ref } from 'vue'
 import { NButton, NInput, NSpin, NSwitch, useMessage } from 'naive-ui'
 import type { ConfigState, FeaturesConfig } from './model'
 import { fetchChatConfig, fetchUpdateFeatures } from '@/api'
-import { t } from '@/locales'
 
 const ms = useMessage()
 
@@ -28,7 +27,7 @@ async function updateAnnouncement() {
   try {
     const { data } = await fetchUpdateFeatures(config.value as FeaturesConfig)
     config.value = data
-    ms.success(t('common.success'))
+    ms.success('Saved Successfully')
   }
   catch (error: any) {
     ms.error(error.message)

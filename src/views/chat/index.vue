@@ -112,7 +112,7 @@ async function onConversation() {
     {
       uuid: chatUuid,
       dateTime: new Date().toLocaleString(),
-      text: '',
+      text: 'thinking',
       loading: true,
       inversion: false,
       error: false,

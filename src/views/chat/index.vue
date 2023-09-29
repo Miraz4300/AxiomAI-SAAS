@@ -258,7 +258,7 @@ async function onRegenerate(index: number) {
     index,
     {
       dateTime: new Date().toLocaleString(),
-      text: '',
+      text: 'rethinking',
       inversion: false,
       responseCount,
       error: false,

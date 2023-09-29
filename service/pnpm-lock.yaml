@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@sentry/node':
-    specifier: ^7.70.0
-    version: 7.70.0
+    specifier: ^7.72.0
+    version: 7.72.0
   '@sentry/profiling-node':
     specifier: ^1.2.1
     version: 1.2.1
@@ -227,7 +227,7 @@ packages:
     resolution: {integrity: sha512-NfsJX4PdzhwSkfJukczyUiZGc7zNNWZcEAyqeISpDnn0PTfzMJR1aR8xAIPskBejIxBJbIgCCMzbaYa9SXepIg==}
     dependencies:
       '@esbuild-kit/core-utils': 3.3.2
-      get-tsconfig: 4.7.1
+      get-tsconfig: 4.7.2
     dev: false
 
   /@esbuild-kit/core-utils@3.3.2:
@@ -241,7 +241,7 @@ packages:
     resolution: {integrity: sha512-FxEMIkJKnodyA1OaCUoEvbYRkoZlLZ4d/eXFu9Fh8CbBBgP5EmZxrfTRyN0qpXZ4vOvqnE5YdRdcrmUUXuU+dA==}
     dependencies:
       '@esbuild-kit/core-utils': 3.3.2
-      get-tsconfig: 4.7.1
+      get-tsconfig: 4.7.2
     dev: false
 
   /@esbuild/android-arm64@0.18.20:
@@ -558,13 +558,13 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@sentry-internal/tracing@7.70.0:
-    resolution: {integrity: sha512-SpbE6wZhs6QwG2ORWCt8r28o1T949qkWx/KeRTCdK4Ub95PQ3Y3DgnqD8Wz//3q50Wt6EZDEibmz4t067g6PPg==}
+  /@sentry-internal/tracing@7.72.0:
+    resolution: {integrity: sha512-DToryaRSHk9R5RLgN4ktYEXZjQdqncOAWPqyyIurji8lIobXFRfmLtGL1wjoCK6sQNgWsjhSM9kXxwGnva1DNw==}
     engines: {node: '>=8'}
     dependencies:
-      '@sentry/core': 7.70.0
-      '@sentry/types': 7.70.0
-      '@sentry/utils': 7.70.0
+      '@sentry/core': 7.72.0
+      '@sentry/types': 7.72.0
+      '@sentry/utils': 7.72.0
       tslib: 2.6.2
     dev: false
 
@@ -574,6 +574,15 @@ packages:
     dependencies:
       '@sentry/types': 7.70.0
       '@sentry/utils': 7.70.0
+      tslib: 2.6.2
+    dev: false
+
+  /@sentry/core@7.72.0:
+    resolution: {integrity: sha512-G03JdQ5ZsFNRjcNNi+QvCjqOuBvYqU92Gs1T2iK3GE8dSBTu2khThydMpG4xrKZQLIpHOyiIhlFZiuPtZ66W8w==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.72.0
+      '@sentry/utils': 7.72.0
       tslib: 2.6.2
     dev: false
 
@@ -587,14 +596,14 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@sentry/node@7.70.0:
-    resolution: {integrity: sha512-GeGlnu3QnJX0GN2FvZ3E31e48ZhRzEpREyC0Wa4BRvYHnyiGvsQjo/0RKeq6vvlggRhVnuoMg/jESyUmdntrAA==}
+  /@sentry/node@7.72.0:
+    resolution: {integrity: sha512-R5kNCIdaDa92EN6oCLiGJehw5wxayOM53WF60Ap6EJHZb5U8dM2BnODmQ6SCRLNB677p+620oSV6CCU286IleQ==}
     engines: {node: '>=8'}
     dependencies:
-      '@sentry-internal/tracing': 7.70.0
-      '@sentry/core': 7.70.0
-      '@sentry/types': 7.70.0
-      '@sentry/utils': 7.70.0
+      '@sentry-internal/tracing': 7.72.0
+      '@sentry/core': 7.72.0
+      '@sentry/types': 7.72.0
+      '@sentry/utils': 7.72.0
       cookie: 0.5.0
       https-proxy-agent: 5.0.1
       lru_map: 0.3.3
@@ -611,7 +620,7 @@ packages:
     dependencies:
       '@sentry/core': 7.70.0
       '@sentry/hub': 7.70.0
-      '@sentry/node': 7.70.0
+      '@sentry/node': 7.72.0
       '@sentry/types': 7.70.0
       '@sentry/utils': 7.70.0
       detect-libc: 2.0.2
@@ -626,11 +635,24 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
+  /@sentry/types@7.72.0:
+    resolution: {integrity: sha512-g6u0mk62yGshx02rfFADIfyR/S9VXcf3RG2qQPuvykrWtOfN/BOTrZypF7I+MiqKwRW76r3Pcu2C/AB+6z9XQA==}
+    engines: {node: '>=8'}
+    dev: false
+
   /@sentry/utils@7.70.0:
     resolution: {integrity: sha512-0cChMH0lsGp+5I3D4wOHWwjFN19HVrGUs7iWTLTO5St3EaVbdeLbI1vFXHxMxvopbwgpeZafbreHw/loIdZKpw==}
     engines: {node: '>=8'}
     dependencies:
       '@sentry/types': 7.70.0
+      tslib: 2.6.2
+    dev: false
+
+  /@sentry/utils@7.72.0:
+    resolution: {integrity: sha512-o/MtqI7WJXuswidH0bSgBP40KN2lrnyQEIx5uoyJUJi/QEaboIsqbxU62vaFJpde8SYrbA+rTnP3J3ujF2gUag==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.72.0
       tslib: 2.6.2
     dev: false
 
@@ -1767,7 +1789,7 @@ packages:
       eslint: 8.49.0
       eslint-import-resolver-node: 0.3.9
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@6.7.2)(eslint-import-resolver-node@0.3.9)(eslint@8.49.0)
-      get-tsconfig: 4.7.1
+      get-tsconfig: 4.7.2
       is-glob: 4.0.3
       minimatch: 3.1.2
       resolve: 1.22.6
@@ -2344,6 +2366,12 @@ packages:
 
   /get-tsconfig@4.7.1:
     resolution: {integrity: sha512-sLtd6Bcwbi9IrAow/raCOTE9pmhvo5ksQo5v2lApUGJMzja64MUYhBp0G6X1S+f7IrBPn1HP+XkS2w2meoGcjg==}
+    dependencies:
+      resolve-pkg-maps: 1.0.0
+    dev: true
+
+  /get-tsconfig@4.7.2:
+    resolution: {integrity: sha512-wuMsz4leaj5hbGgg4IvDU0bqJagpftG5l5cXIAvo8uZrqn0NJqwtfupTN00VnkQJPcIRrxYrm1Ue24btpCha2A==}
     dependencies:
       resolve-pkg-maps: 1.0.0
 

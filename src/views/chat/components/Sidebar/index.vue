@@ -112,7 +112,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="!isMobile" class="min-w-[66px] max-w-[72px] flex flex-col items-center justify-between overflow-hidden py-7 pt-7 bg-[#e8eaf1] dark:bg-[#202020]">
+  <div v-if="!isMobile" class="min-w-[66px] max-w-[72px] flex flex-col items-center justify-between overflow-hidden py-7 pt-7 bg-[#e8eaf1] dark:bg-[#25272D]">
     <div class="mb-4 flex flex-col space-y-3 overflow-y-auto overflow-x-hidden px-2">
       <div class="flex w-full flex-col justify-center">
         <MenuButton :tooltip="$t('chat.chat')" placement="right" @click="goChat">

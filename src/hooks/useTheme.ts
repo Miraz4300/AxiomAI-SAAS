@@ -28,8 +28,8 @@ export function useTheme() {
           primaryColorPressed: '#0083A0',
           primaryColorSuppl: '#009BBD',
           placeholderColor: 'rgba(255, 255, 255, 0.38)', // reflects on placeholder tip text color
-          bodyColor: 'rgb(17, 17, 17)', // reflects on main body
-          cardColor: 'rgb(25, 25, 25)', // reflects on side menu
+          bodyColor: 'rgb(17, 17, 20)', // reflects on main body
+          cardColor: 'rgb(24, 24, 28)', // reflects on side menu
           modalColor: 'rgb(32, 33, 35)', // reflects on all modal
           popoverColor: 'rgb(56, 56, 60)', // reflects on side menu close button
         },

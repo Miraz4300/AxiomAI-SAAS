@@ -112,7 +112,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="!isMobile" class="min-w-[66px] max-w-[72px] flex flex-col items-center justify-between overflow-hidden py-7 pt-7 bg-[#e8eaf1] dark:bg-[#25272D]">
+  <div v-if="!isMobile" class="min-w-[70px] flex flex-col items-center justify-between overflow-hidden py-5 pt-6 bg-[#e8eaf1] dark:bg-[#25272D]">
     <div class="mb-4 flex flex-col space-y-3 overflow-y-auto overflow-x-hidden px-2">
       <div class="flex w-full flex-col justify-center">
         <MenuButton :tooltip="$t('chat.chat')" placement="right" @click="goChat">
@@ -127,14 +127,14 @@ onMounted(async () => {
     </div>
 
     <div class="siderbar-action flex select-none flex-col items-center space-y-2">
-      <div class="flex flex-col items-center space-y-2">
+      <div class="flex flex-col items-center space-y-3">
         <HoverButton v-if="userStore.userInfo.root" @click="router.push(ADMIN_ROUTE)">
           <SvgIcon class="text-xl text-black dark:text-white" icon="mdi:administrator" />
         </HoverButton>
         <NDropdown v-if="!!authStore.token" trigger="hover" :options="options" @select="handleDropdown">
           <UserAvatar />
         </NDropdown>
-        <UserRole :icon="false" />
+        <UserRole :icon="false" :round="true" />
       </div>
     </div>
   </div>

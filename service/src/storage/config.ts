@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
 import type { TextAuditServiceProvider } from 'src/utils/textAudit'
 import { isNotEmptyString, isTextAuditServiceProvider } from '../utils/is'
-import { AnnouncementConfig, AuditConfig, CHATMODELS, Config, KeyConfig, MailConfig, SiteConfig, SubscriptionConfig, TextAudioType, UserRole } from './model'
+import { AnnouncementConfig, AuditConfig, CHATMODELS, Config, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, SubscriptionConfig, TextAudioType, UserRole } from './model'
 import { getConfig, getKeys, upsertKey } from './mongo'
 
 dotenv.config()
@@ -52,6 +52,8 @@ export async function getOriginConfig() {
         process.env.SITE_DOMAIN),
       new SubscriptionConfig(),
       new AnnouncementConfig(),
+      new MerchConfig(),
+      new FeaturesConfig(),
       new MailConfig(
         process.env.SMTP_HOST,
         !Number.isNaN(+process.env.SMTP_PORT) ? +process.env.SMTP_PORT : 465,

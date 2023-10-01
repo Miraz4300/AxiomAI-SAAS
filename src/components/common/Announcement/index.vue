@@ -6,6 +6,7 @@ import { fetchUserAnnouncement } from '@/api'
 
 const show = ref(false)
 
+const announceEnabled = ref(false)
 const announceHeader = ref('')
 const announceBody = ref('')
 const announceFooter = ref('')
@@ -20,18 +21,17 @@ onMounted(async () => {
 
   const response = await fetchUserAnnouncement<AnnouncementConfig>()
   if (response.data) {
+    announceEnabled.value = response.data.announceEnabled || false
     announceHeader.value = response.data.announceHeader || 'Loading...'
     announceBody.value = response.data.announceBody || 'Loading...'
     announceFooter.value = response.data.announceFooter || 'Loading...'
 
-    show.value = announceBody.value.length > 20
-
-    if (show.value) {
+    if (announceEnabled.value) {
       setTimeout(() => {
         localStorage.setItem('lastShownDate', currentDate)
         show.value = true
-      }, 3000)
-    } // 3 seconds delay to show the modal
+      }, 3000) // 3 seconds delay to show the modal
+    }
   }
 })
 </script>

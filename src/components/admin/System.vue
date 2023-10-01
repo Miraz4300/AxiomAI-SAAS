@@ -3,7 +3,6 @@ import { onMounted, ref } from 'vue'
 import { NButton, NInput, NSpin, useMessage } from 'naive-ui'
 import { ConfigState } from './model'
 import { fetchChatConfig, fetchUpdateBaseSetting } from '@/api'
-import { t } from '@/locales'
 
 const ms = useMessage()
 
@@ -30,7 +29,7 @@ async function updateBaseSetting(baseConfig?: Partial<ConfigState>) {
   try {
     const { data } = await fetchUpdateBaseSetting(baseConfig)
     config.value = data
-    ms.success(t('common.success'))
+    ms.success('Saved Successfully')
   }
   catch (error: any) {
     ms.error(error.message)
@@ -48,37 +47,37 @@ onMounted(() => {
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.apiBaseUrl') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Api Base URL</span>
           <div class="flex-1">
             <NInput :value="config.apiBaseUrl" placeholder="https://api.openai.com, Only used by ChatGPTAPI" style="max-width: 30%" @input="(val: string | undefined) => { config.apiBaseUrl = val }" />
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.reverseProxy') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Reverse Proxy</span>
           <div class="flex-1">
             <NInput :value="config.reverseProxy" placeholder="Only used by ChatGPTUnofficialProxyAPI" style="max-width: 30%" @input="(val: string | undefined) => { config.reverseProxy = val }" />
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.timeout') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Timeout(ms)</span>
           <div class="flex-1">
             <NInput :value="config.timeoutMs !== undefined ? String(config.timeoutMs) : undefined" placeholder="" style="max-width: 30%" @input="(val: any) => { config.timeoutMs = typeof val === 'string' ? Number(val) : undefined }" />
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.socks') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Socks</span>
           <div class="flex-1">
             <NInput :value="config.socksProxy" placeholder="ip:port" style="max-width: 30%" @input="(val: string | undefined) => { config.socksProxy = val }" />
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.socksAuth') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Socks AUTH</span>
           <div class="flex-1">
             <NInput :value="config.socksAuth" placeholder="name:pasword" style="max-width: 30%" @input="(val: string | undefined) => { config.socksAuth = val }" />
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.httpsProxy') }}</span>
+          <span class="flex-shrink-0 w-[100px]">HTTPS Proxy</span>
           <div class="flex-1">
             <NInput :value="config.httpsProxy" placeholder="" style="max-width: 30%" @input="(val: string | undefined) => { config.httpsProxy = val }" />
           </div>

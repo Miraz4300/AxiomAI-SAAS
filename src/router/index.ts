@@ -21,6 +21,14 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/whiteboard',
+    name: 'Whiteboard',
+    component: () => import('@/views/whiteboard/index.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/auth/login',
     name: 'Login',
     component: () => import('@/views/login/index.vue'),

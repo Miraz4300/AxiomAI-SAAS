@@ -1,21 +1,21 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
 import { NButton, NInput, NSpin, NSwitch, useMessage } from 'naive-ui'
-import type { AnnouncementConfig, ConfigState } from './model'
-import { fetchChatConfig, fetchUpdateAnnouncement } from '@/api'
+import type { ConfigState, FeaturesConfig } from './model'
+import { fetchChatConfig, fetchUpdateFeatures } from '@/api'
 
 const ms = useMessage()
 
 const loading = ref(false)
 const saving = ref(false)
 
-const config = ref<AnnouncementConfig>()
+const config = ref<FeaturesConfig>()
 
 async function fetchConfig() {
   try {
     loading.value = true
     const { data } = await fetchChatConfig<ConfigState>()
-    config.value = data.announcementConfig
+    config.value = data.featuresConfig
   }
   finally {
     loading.value = false
@@ -25,7 +25,7 @@ async function fetchConfig() {
 async function updateAnnouncement() {
   saving.value = true
   try {
-    const { data } = await fetchUpdateAnnouncement(config.value as AnnouncementConfig)
+    const { data } = await fetchUpdateFeatures(config.value as FeaturesConfig)
     config.value = data
     ms.success('Saved Successfully')
   }
@@ -44,38 +44,38 @@ onMounted(() => {
   <NSpin :show="loading">
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Enable Announcement</span>
+        <span class="flex-shrink-0 w-[100px]">Chat Footer</span>
         <div class="flex-1">
           <NSwitch
-            :round="false" :value="config && config.announceEnabled"
-            @update:value="(val: boolean | undefined) => { if (config) config.announceEnabled = val }"
+            :round="false" :value="config && config.chatFooterEnabled"
+            @update:value="(val: boolean | undefined) => { if (config) config.chatFooterEnabled = val }"
           />
         </div>
       </div>
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Header</span>
+        <span class="flex-shrink-0 w-[100px]">Chat Footer Text</span>
         <div class="flex-1">
           <NInput
-            :value="config && config.announceHeader" placeholder=""
-            @input="(val: string | undefined) => { if (config) config.announceHeader = val }"
+            :round="false" :value="config && config.chatFooterText" placeholder="footer text | support html" clearable type="textarea" :autosize="{ minRows: 2, maxRows: 4 }"
+            @input="(val: string | undefined) => { if (config) config.chatFooterText = val }"
           />
         </div>
       </div>
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Body</span>
+        <span class="flex-shrink-0 w-[100px]">Whiteboard</span>
         <div class="flex-1">
-          <NInput
-            :value="config && config.announceBody" placeholder="" clearable type="textarea" :autosize="{ minRows: 4, maxRows: 20 }"
-            @input="(val: string | undefined) => { if (config) config.announceBody = val }"
+          <NSwitch
+            :round="false" :value="config && config.whiteboardEnabled"
+            @update:value="(val: boolean | undefined) => { if (config) config.whiteboardEnabled = val }"
           />
         </div>
       </div>
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Footer</span>
+        <span class="flex-shrink-0 w-[100px]">Merch</span>
         <div class="flex-1">
-          <NInput
-            :value="config && config.announceFooter" placeholder=""
-            @input="(val: string | undefined) => { if (config) config.announceFooter = val }"
+          <NSwitch
+            :round="false" :value="config && config.merchEnabled"
+            @update:value="(val: boolean | undefined) => { if (config) config.merchEnabled = val }"
           />
         </div>
       </div>

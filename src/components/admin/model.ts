@@ -13,8 +13,10 @@ export class ConfigState {
   siteConfig?: SiteConfig
   subscriptionConfig?: SubscriptionConfig
   announcementConfig?: AnnouncementConfig
+  merchConfig?: MerchConfig
   mailConfig?: MailConfig
   auditConfig?: AuditConfig
+  featuresConfig?: FeaturesConfig
 }
 
 // https://platform.openai.com/docs/models/overview
@@ -46,9 +48,23 @@ export class SubscriptionConfig {
 }
 
 export class AnnouncementConfig {
+  announceEnabled?: boolean
   announceHeader?: string
   announceBody?: string
   announceFooter?: string
+}
+
+export interface Product {
+  img: string
+  name: string
+  price: number
+  stock: boolean
+}
+
+export class MerchConfig {
+  lightBanner?: string
+  darkBanner?: string
+  products: Product[] = []
 }
 
 export class MailConfig {
@@ -148,4 +164,11 @@ export class UserInfo {
   constructor(roles: UserRole[]) {
     this.roles = roles
   }
+}
+
+export class FeaturesConfig {
+  chatFooterEnabled?: boolean
+  chatFooterText?: string
+  whiteboardEnabled?: boolean
+  merchEnabled?: boolean
 }

@@ -3,12 +3,14 @@ import { computed, ref } from 'vue'
 import { NCard, NLayout, NLayoutContent, NTabPane, NTabs } from 'naive-ui'
 import System from './System.vue'
 import Mail from './Mail.vue'
-import Audit from './Audit.vue'
+import Moderation from './Moderation.vue'
 import User from './User.vue'
 import Key from './Keys.vue'
 import Site from './Site.vue'
 import Subscription from './Subscription.vue'
 import Announcement from './Announcement.vue'
+import Merch from './Merch.vue'
+import Features from './Features.vue'
 import { SvgIcon } from '@/components/common'
 import { useUserStore } from '@/store'
 
@@ -73,7 +75,7 @@ const show = computed({
                 <span class="ml-2">Moderation</span>
               </template>
               <NCard>
-                <Audit />
+                <Moderation />
               </NCard>
             </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="UserConfig" tab="UserConfig">
@@ -112,6 +114,15 @@ const show = computed({
                 <Subscription />
               </NCard>
             </NTabPane>
+            <NTabPane v-if="userStore.userInfo.root" name="MerchConfig" tab="MerchConfig">
+              <template #tab>
+                <SvgIcon class="text-lg" icon="ri:shopping-bag-line" />
+                <span class="ml-2">Merch Settings</span>
+              </template>
+              <NCard>
+                <Merch />
+              </NCard>
+            </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="AnnouncementConfig" tab="AnnouncementConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:announcement" />
@@ -119,6 +130,15 @@ const show = computed({
               </template>
               <NCard>
                 <Announcement />
+              </NCard>
+            </NTabPane>
+            <NTabPane v-if="userStore.userInfo.root" name="FeaturesConfig" tab="FeaturesConfig">
+              <template #tab>
+                <SvgIcon class="text-lg" icon="mdi:feature-search-outline" />
+                <span class="ml-2">Experimental Features</span>
+              </template>
+              <NCard>
+                <Features />
               </NCard>
             </NTabPane>
           </NTabs>

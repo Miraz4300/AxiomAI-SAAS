@@ -27,10 +27,10 @@ export function useTheme() {
           primaryColorHover: '#009BBD',
           primaryColorPressed: '#0083A0',
           primaryColorSuppl: '#009BBD',
-          placeholderColor: 'rgba(255, 255, 255, 0.38)', // reflects on pre-text color
-          bodyColor: 'rgb(17, 17, 17)', // reflects on main body
-          cardColor: 'rgb(25, 25, 25)', // reflects on side menu
-          modalColor: 'rgb(32, 33, 35)', // reflects on settings
+          placeholderColor: 'rgba(255, 255, 255, 0.38)', // reflects on placeholder tip text color
+          bodyColor: 'rgb(17, 17, 20)', // reflects on main body
+          cardColor: 'rgb(24, 24, 28)', // reflects on side menu
+          modalColor: 'rgb(32, 33, 35)', // reflects on all modal
           popoverColor: 'rgb(56, 56, 60)', // reflects on side menu close button
         },
       }
@@ -41,10 +41,10 @@ export function useTheme() {
           primaryColor: '#0083A0',
           primaryColorHover: '#0083A0',
           primaryColorPressed: '#0083A0',
-          placeholderColor: 'rgba(0, 0, 0, 0.38)', // reflects on pre-text color
-          bodyColor: 'rgb(238, 233, 233)', // reflects on main body
+          placeholderColor: 'rgba(0, 0, 0, 0.38)', // reflects on placeholder tip text color
+          bodyColor: 'rgb(255, 255, 255)', // reflects on main body
           cardColor: 'rgb(255, 255, 255)', // reflects on side menu
-          modalColor: 'rgb(242, 242, 242)', // reflects on settings
+          modalColor: 'rgb(255, 255, 255)', // reflects on all modal
           popoverColor: 'rgb(255, 255, 255)', // reflects on side menu close button
         },
       }

@@ -3,7 +3,6 @@ import { onMounted, ref } from 'vue'
 import { NButton, NInput, NSpin, useMessage } from 'naive-ui'
 import type { ConfigState, SubscriptionConfig } from './model'
 import { fetchChatConfig, fetchUpdateSubscription } from '@/api'
-import { t } from '@/locales'
 
 const ms = useMessage()
 
@@ -28,7 +27,7 @@ async function updatePrice() {
   try {
     const { data } = await fetchUpdateSubscription(config.value as SubscriptionConfig)
     config.value = data
-    ms.success(t('common.success'))
+    ms.success('Saved Successfully')
   }
   catch (error: any) {
     ms.error(error.message)

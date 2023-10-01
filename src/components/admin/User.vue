@@ -3,7 +3,6 @@ import { h, onMounted, reactive, ref } from 'vue'
 import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
 import { fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
-import { t } from '@/locales'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
 const ms = useMessage()
@@ -57,7 +56,7 @@ const columns = [
     },
   },
   {
-    title: 'status',
+    title: 'Status',
     key: 'status',
     width: 200,
     render(row: any) {
@@ -80,7 +79,7 @@ const columns = [
           },
           onClick: () => handleUpdateUserStatus(row._id, Status.Deleted),
         },
-        { default: () => t('common.delete') },
+        { default: () => ('Delete') },
       ))
       if (row.status === Status.Normal) {
         actions.push(h(
@@ -93,7 +92,7 @@ const columns = [
             },
             onClick: () => handleEditUser(row),
           },
-          { default: () => t('chat.editUser') },
+          { default: () => ('Edit User') },
         ))
       }
       if (row.status === Status.PreVerify || row.status === Status.AdminVerify) {
@@ -104,7 +103,7 @@ const columns = [
             type: 'info',
             onClick: () => handleUpdateUserStatus(row._id, Status.Normal),
           },
-          { default: () => t('chat.verifiedUser') },
+          { default: () => ('Verified User') },
         ))
       }
       return actions
@@ -149,10 +148,10 @@ async function handleGetUsers(page: number) {
 async function handleUpdateUserStatus(userId: string, status: Status) {
   if (status === Status.Deleted) {
     dialog.warning({
-      title: t('chat.deleteUser'),
-      content: t('chat.deleteUserConfirm'),
-      positiveText: t('common.yes'),
-      negativeText: t('common.no'),
+      title: ('Delete User'),
+      content: ('Are you sure to delete this user? After deletion, this email can never be registered or logged in again.'),
+      positiveText: ('Yes'),
+      negativeText: ('No'),
       onPositiveClick: async () => {
         await fetchUpdateUserStatus(userId, status)
         ms.info('OK')
@@ -223,7 +222,7 @@ onMounted(async () => {
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.email') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Email</span>
           <div class="flex-1">
             <NInput
               v-model:value="userRef.email"
@@ -233,7 +232,7 @@ onMounted(async () => {
         </div>
 
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.password') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Password</span>
           <div class="flex-1">
             <NInput
               v-model:value="userRef.password"
@@ -243,7 +242,7 @@ onMounted(async () => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.userRoles') }}</span>
+          <span class="flex-shrink-0 w-[100px]">User Role</span>
           <div class="flex-1">
             <NSelect
               style="width: 100%"

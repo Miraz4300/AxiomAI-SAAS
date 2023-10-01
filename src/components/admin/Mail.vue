@@ -3,7 +3,6 @@ import { onMounted, ref } from 'vue'
 import { NButton, NInput, NSpin, NSwitch, useMessage } from 'naive-ui'
 import type { ConfigState, MailConfig } from './model'
 import { fetchChatConfig, fetchTestMail, fetchUpdateMail } from '@/api'
-import { t } from '@/locales'
 
 const ms = useMessage()
 
@@ -29,7 +28,7 @@ async function updateMailInfo() {
   try {
     const { data } = await fetchUpdateMail(config.value as MailConfig)
     config.value = data
-    ms.success(t('common.success'))
+    ms.success('Saved Successfully')
   }
   catch (error: any) {
     ms.error(error.message)
@@ -59,7 +58,7 @@ onMounted(() => {
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.smtpHost') }}</span>
+          <span class="flex-shrink-0 w-[100px]">SMTP Host</span>
           <div class="flex-1">
             <NInput
               :value="config && config.smtpHost" placeholder="" style="max-width: 30%"
@@ -68,7 +67,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.smtpPort') }}</span>
+          <span class="flex-shrink-0 w-[100px]">SMTP Port</span>
           <div class="flex-1">
             <NInput
               :value="config && config.smtpPort !== undefined ? String(config.smtpPort) : undefined"
@@ -78,7 +77,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.smtpTsl') }}</span>
+          <span class="flex-shrink-0 w-[100px]">TLS</span>
           <div class="flex-1">
             <NSwitch
               :round="false"
@@ -88,7 +87,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.smtpUserName') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Username</span>
           <div class="flex-1">
             <NInput
               :value="config && config.smtpUserName" placeholder="" style="max-width: 30%"
@@ -97,7 +96,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">{{ $t('setting.smtpPassword') }}</span>
+          <span class="flex-shrink-0 w-[100px]">Password</span>
           <div class="flex-1">
             <NInput
               :value="config && config.smtpPassword" placeholder="" style="max-width: 30%"

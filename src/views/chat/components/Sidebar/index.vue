@@ -1,13 +1,15 @@
 <script lang="ts" setup>
-import { computed, h } from 'vue'
+import { computed, h, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { DropdownOption } from 'naive-ui'
 import { NDropdown, NText } from 'naive-ui'
-import { HoverButton, SvgIcon, UserAvatar, UserRole } from '@/components/common'
+import { HoverButton, MenuButton, SvgIcon, UserAvatar, UserRole } from '@/components/common'
 import { useIconRender } from '@/hooks/useIconRender'
 import { useAuthStore, useUserStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { ADMIN_ROUTE, SETTING_ROUTE } from '@/router/routes'
+import type { FeaturesConfig } from '@/components/admin/model'
+import { fetchUserFeatures } from '@/api'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -16,17 +18,21 @@ const userInfo = computed(() => userStore.userInfo)
 
 const { iconRender } = useIconRender()
 const { isMobile } = useBasicLayout()
-const buttonClass = 'h-12 w-12 cursor-pointer rounded-xl bg-white dark:bg-[#34373c] text-[#0083A0] dark:text-[#00B2DB]'
-const iconClass = 'flex h-full m-auto text-center text-2xl'
 const iconClass2 = 'inline-block text-xl'
 
 const chatRouteRegex = /^\/chat\/\d+$/
 const isChatActive = computed(() => chatRouteRegex.test(router.currentRoute.value.path))
 const isSettingsActive = computed(() => router.currentRoute.value.path === '/user')
+const isDrawActive = computed(() => router.currentRoute.value.path === '/whiteboard')
 
 function goChat() {
   if (!chatRouteRegex.test(router.currentRoute.value.path))
     router.push('/')
+}
+
+function goDraw() {
+  if (router.currentRoute.value.path !== '/user')
+    router.push('/whiteboard')
 }
 
 function goSetting() {
@@ -96,19 +102,34 @@ async function handleDropdown(optionKey: string) {
     router.push(SETTING_ROUTE)
   }
 }
+
+const whiteboardEnabled = ref<boolean | null>(null)
+
+onMounted(async () => {
+  const response = await fetchUserFeatures<FeaturesConfig>()
+  whiteboardEnabled.value = response.data.whiteboardEnabled || false
+})
 </script>
 
 <template>
-  <div v-if="!isMobile" class="max-w-[72px] bg-[#e8eaf1] dark:bg-[#202020]">
-    <div class="flex h-full flex-col items-center justify-between px-2 py-7">
-      <div class="flex flex-col space-y-4">
-        <a :class="[buttonClass]" @click="goChat"><SvgIcon :class="[iconClass]" icon="ri:message-3-line" /></a>
+  <div v-if="!isMobile" class="min-w-[70px] flex flex-col items-center justify-between overflow-hidden py-6 pt-6 bg-[#e8eaf1] dark:bg-[#25272D]">
+    <div class="mb-4 flex flex-col space-y-3 overflow-y-auto overflow-x-hidden px-2">
+      <div class="flex w-full flex-col justify-center">
+        <MenuButton :tooltip="$t('chat.chat')" placement="right" @click="goChat">
+          <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[#0083A0] hover:dark:text-[#00B2DB]" :class="[isChatActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:message-3-line" />
+        </MenuButton>
       </div>
+      <div v-if="whiteboardEnabled" class="flex w-full flex-col justify-center">
+        <MenuButton :tooltip="$t('chat.draw')" placement="right" @click="goDraw">
+          <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[#0083A0] hover:dark:text-[#00B2DB]" :class="[isDrawActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:artboard-line" />
+        </MenuButton>
+      </div>
+    </div>
+
+    <div class="siderbar-action flex select-none flex-col items-center space-y-2">
       <div class="flex flex-col items-center space-y-2">
         <HoverButton v-if="userStore.userInfo.root" @click="router.push(ADMIN_ROUTE)">
-          <span class="text-xl text-black dark:text-white">
-            <SvgIcon icon="mdi:administrator" />
-          </span>
+          <SvgIcon class="text-xl text-black dark:text-white" icon="mdi:administrator" />
         </HoverButton>
         <NDropdown v-if="!!authStore.token" trigger="hover" :options="options" @select="handleDropdown">
           <UserAvatar />
@@ -119,10 +140,14 @@ async function handleDropdown(optionKey: string) {
   </div>
 
   <NLayoutFooter v-if="isMobile" class="bg-white dark:bg-[#202020]">
-    <div class="grid py-2 border-t dark:border-t-neutral-800 grid-cols-2">
+    <div class="grid py-2 border-t dark:border-t-neutral-800" :class="[whiteboardEnabled ? 'grid-cols-3' : 'grid-cols-2']">
       <a class="leading-4 text-center cursor-pointer" :class="[isChatActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goChat">
         <SvgIcon :class="[iconClass2]" icon="ri:message-3-line" />
         <p>{{ $t('chat.chat') }}</p>
+      </a>
+      <a v-if="whiteboardEnabled" class="leading-4 text-center cursor-pointer" :class="[isDrawActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goDraw">
+        <SvgIcon :class="[iconClass2]" icon="ri:artboard-line" />
+        <p>{{ $t('chat.draw') }}</p>
       </a>
       <a class="leading-4 text-center cursor-pointer" :class="[isSettingsActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goSetting">
         <SvgIcon :class="[iconClass2]" icon="ri:settings-3-line" />

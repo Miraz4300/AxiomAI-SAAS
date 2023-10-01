@@ -1,6 +1,6 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { get, post } from '@/utils/request'
-import type { AnnouncementConfig, AuditConfig, CHATMODEL, ConfigState, KeyConfig, MailConfig, SiteConfig, Status, SubscriptionConfig, UserInfo } from '@/components/admin/model'
+import type { AnnouncementConfig, AuditConfig, CHATMODEL, ConfigState, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, Status, SubscriptionConfig, UserInfo } from '@/components/admin/model'
 import { useAuthStore, useSettingStore } from '@/store'
 
 export function fetchChatConfig<T = any>() {
@@ -278,6 +278,19 @@ export function fetchUserAnnouncement<T = any>() {
   })
 }
 
+export function fetchUpdateMerch<T = any>(config: MerchConfig) {
+  return post<T>({
+    url: '/setting-merch',
+    data: config,
+  })
+}
+
+export function fetchUserMerch<T = any>() {
+  return get<T>({
+    url: '/user-merch',
+  })
+}
+
 export function fetchUpdateBaseSetting<T = any>(config: ConfigState) {
   return post<T>({
     url: '/setting-system',
@@ -310,5 +323,18 @@ export function fetchUpsertApiKey<T = any>(keyConfig: KeyConfig) {
   return post<T>({
     url: '/setting-key-upsert',
     data: keyConfig,
+  })
+}
+
+export function fetchUpdateFeatures<T = any>(config: FeaturesConfig) {
+  return post<T>({
+    url: '/setting-features',
+    data: config,
+  })
+}
+
+export function fetchUserFeatures<T = any>() {
+  return get<T>({
+    url: '/user-features',
   })
 }

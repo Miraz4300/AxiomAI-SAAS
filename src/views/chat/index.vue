@@ -5,16 +5,16 @@ import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
 import { NAutoComplete, NButton, NDivider, NInput, NSpin, NSwitch, NTooltip, useDialog, useMessage } from 'naive-ui'
+import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import Header from './components/Header/index.vue'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStore, useChatStore, usePromptStore, useUserStore } from '@/store'
-import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding } from '@/api'
+import type { FeaturesConfig } from '@/components/admin/model'
+import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding, fetchUserFeatures } from '@/api'
 import { t } from '@/locales'
-import VoiceInput from '@/components/voice-input/index.vue'
-import AutoSpeak from '@/components/voice-output/auto-speak.vue'
 import { useSpeechStore } from '@/store/modules/speech'
 import { debounce } from '@/utils/functions/debounce'
 
@@ -41,6 +41,9 @@ const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActiv
 const usingContext = computed(() => currentChatHistory?.value?.usingContext ?? true)
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
+
+const chatFooterEnabled = ref<boolean | null>(null)
+const chatFooterText = ref<string | null>(null)
 
 const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
@@ -109,7 +112,7 @@ async function onConversation() {
     {
       uuid: chatUuid,
       dateTime: new Date().toLocaleString(),
-      text: '',
+      text: 'thinking',
       loading: true,
       inversion: false,
       error: false,
@@ -255,7 +258,7 @@ async function onRegenerate(index: number) {
     index,
     {
       dateTime: new Date().toLocaleString(),
-      text: '',
+      text: 'rethinking',
       inversion: false,
       responseCount,
       error: false,
@@ -535,6 +538,12 @@ onMounted(() => {
   }
 })
 
+onMounted(async () => {
+  const response = await fetchUserFeatures<FeaturesConfig>()
+  chatFooterEnabled.value = response.data.chatFooterEnabled || false
+  chatFooterText.value = response.data.chatFooterText || ''
+})
+
 watch(() => chatStore.active, (_newVal, _oldVal) => {
   handleSyncChat()
 })
@@ -544,7 +553,8 @@ onUnmounted(() => {
     controller.abort()
 })
 
-const Message = defineAsyncComponent(() => import('./components/Message/index.vue'))
+const Speech = defineAsyncComponent(() => import('@/components/voice-output/auto-speak.vue'))
+const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.vue'))
 const Announcement = defineAsyncComponent(() => import('@/components/common/Announcement/index.vue'))
 </script>
 
@@ -553,24 +563,24 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
     <Header />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
-        <div id="image-wrapper" class="w-full max-w-screen-2xl m-auto dark:bg-[#111111]" :class="[isMobile ? 'p-2' : 'p-4']">
+        <div id="image-wrapper" class="w-full max-w-screen-2xl m-auto dark:bg-[#111114]" :class="[isMobile ? 'p-2' : 'p-4']">
           <NSpin :show="firstLoading">
             <template v-if="!dataSources.length">
               <div class="flex items-center justify-center" :class="[isMobile ? 'mt-[8vh]' : 'mt-[16vh]']">
                 <!-- AxiomAI is being introduced. -->
                 <div class="text-gray-800 w-full md:max-w-2xl lg:max-w-3xl md:h-full md:flex md:flex-col px-6 dark:text-gray-100">
                   <h1 class="text-4xl font-semibold text-center ml-auto mr-auto mb-10 sm:mb-16 flex gap-2 items-center justify-center">
-                    AxiomAI<a class="text-sm bg-gray-50 dark:bg-white/5 py-1 px-2 rounded-md">preview</a>
+                    AxiomAI<a class="text-sm bg-[#ECEEF1] dark:bg-white/5 py-1 px-2 rounded-md">preview</a>
                   </h1><div class="md:flex items-start text-center gap-3.5">
                     <div class="flex flex-col mb-8 md:mb-auto gap-3.5 flex-1">
                       <h2 class="flex gap-3 items-center m-auto text-lg font-normal md:flex-col md:gap-2">
                         <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>Examples
                       </h2><ul class="flex flex-col gap-3.5 w-full sm:max-w-md m-auto">
-                        <button class="w-full bg-gray-50 dark:bg-white/5 p-3 rounded-md hover:bg-[#d4d4d4] dark:hover:bg-[#3E3F4B]" @click="fillTextarea('Explain quantum computing in simple terms')">
+                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md hover:bg-[#E6E6E6] dark:hover:bg-[#3E3F4B] transition hover:scale-105 hover:shadow-md" @click="fillTextarea('Explain quantum computing in simple terms')">
                           "Explain quantum computing in simple terms" →
-                        </button><button class="w-full bg-gray-50 dark:bg-white/5 p-3 rounded-md hover:bg-[#d4d4d4] dark:hover:bg-[#3E3F4B]" @click="fillTextarea('Got any creative ideas for a 10 year old\'s birthday?')">
+                        </button><button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md hover:bg-[#E6E6E6] dark:hover:bg-[#3E3F4B] transition hover:scale-105 hover:shadow-md" @click="fillTextarea('Got any creative ideas for a 10 year old\'s birthday?')">
                           "Got any creative ideas for a 10 year old's birthday?" →
-                        </button><button class="w-full bg-gray-50 dark:bg-white/5 p-3 rounded-md hover:bg-[#d4d4d4] dark:hover:bg-[#3E3F4B]" @click="fillTextarea('How do I make an HTTP request in Javascript?')">
+                        </button><button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md hover:bg-[#E6E6E6] dark:hover:bg-[#3E3F4B] transition hover:scale-105 hover:shadow-md" @click="fillTextarea('How do I make an HTTP request in Javascript?')">
                           "How do I make an HTTP request in Javascript?" →
                         </button>
                       </ul>
@@ -578,11 +588,11 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
                       <h2 class="flex gap-3 items-center m-auto text-lg font-normal md:flex-col md:gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>Capabilities
                       </h2><ul class="flex flex-col gap-3.5 w-full sm:max-w-md m-auto">
-                        <li class="w-full bg-gray-50 dark:bg-white/5 p-3 rounded-md">
+                        <li class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md">
                           Remembers what user said earlier in the conversation
-                        </li><li class="w-full bg-gray-50 dark:bg-white/5 p-3 rounded-md">
+                        </li><li class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md">
                           Allows user to provide follow-up corrections
-                        </li><li class="w-full bg-gray-50 dark:bg-white/5 p-3 rounded-md">
+                        </li><li class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md">
                           Trained to decline inappropriate requests
                         </li>
                       </ul>
@@ -590,11 +600,11 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
                       <h2 class="flex gap-3 items-center m-auto text-lg font-normal md:flex-col md:gap-2">
                         <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>Limitations
                       </h2><ul class="flex flex-col gap-3.5 w-full sm:max-w-md m-auto">
-                        <li class="w-full bg-gray-50 dark:bg-white/5 p-3 rounded-md">
+                        <li class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md">
                           May occasionally generate incorrect information
-                        </li><li class="w-full bg-gray-50 dark:bg-white/5 p-3 rounded-md">
+                        </li><li class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md">
                           May occasionally produce harmful instructions or biased content
-                        </li><li class="w-full bg-gray-50 dark:bg-white/5 p-3 rounded-md">
+                        </li><li class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md">
                           Limited knowledge of world and events after 2021
                         </li>
                       </ul>
@@ -664,8 +674,8 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
                       <SvgIcon icon="fluent:brain-circuit-24-filled" />
                     </span>
                   </ToolButton>
-                  <AutoSpeak v-if="!isMobile && speechStore.enable" />
-                  <VoiceInput v-if="!isMobile && speechStore.enable" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
+                  <Speech v-if="!isMobile && speechStore.enable" />
+                  <Voice v-if="!isMobile && speechStore.enable" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
                 </div>
                 <div class="flex items-center">
                   <div class="flex items-center text-neutral-400">
@@ -690,9 +700,7 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
           </div>
         </div>
       </div>
-      <div class="text-center text-xs text-black/60 dark:text-white/50 mt-2">
-        AxiomAI may produce inaccurate information about people, places, or facts. <a href="https://axiomai.s3.us-west-002.backblazeb2.com/bKash.png" target="_blank" rel="noreferrer" class="underline text-green-500">Donate</a> to keep the server fully operational.
-      </div>
+      <div v-if="chatFooterEnabled" class="text-center text-xs text-black/60 dark:text-white/50 mt-2" v-html="chatFooterText" />
     </footer>
   </div>
   <Announcement />

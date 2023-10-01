@@ -44,7 +44,7 @@ const wrapClass = computed(() => {
     'min-w-[20px]',
     'rounded-md',
     isMobile.value ? 'p-2' : 'px-5 py-2',
-    props.inversion ? 'bg-[#005366]' : 'bg-[#F4F6F8]',
+    props.inversion ? 'bg-[#005366]' : 'bg-[#ECEEF1]',
     props.inversion ? 'dark:bg-[#005366]' : 'dark:bg-[#1E1E20]',
     props.inversion ? 'message-request' : 'message-reply',
     { 'text-red-500': props.error },
@@ -103,10 +103,9 @@ onUnmounted(() => {
 <template>
   <div class="text-[#E4E8EC]" :class="wrapClass">
     <div ref="textRef" class="leading-relaxed break-words">
-      <div v-if="!inversion" class="flex items-end">
-        <div v-if="!asRawText" class="w-full markdown-body" v-html="text" />
-        <div v-else class="w-full whitespace-pre-wrap" v-text="text" />
-        <span v-if="loading" class="dark:text-white text-black w-[4px] h-[20px] block animate-blink" />
+      <div v-if="!inversion">
+        <div v-if="!asRawText" class="markdown-body" :class="{ 'markdown-body-generate': loading }" v-html="text" />
+        <div v-else class="whitespace-pre-wrap" v-text="text" />
       </div>
       <div v-else class="whitespace-pre-wrap" v-text="text" />
     </div>

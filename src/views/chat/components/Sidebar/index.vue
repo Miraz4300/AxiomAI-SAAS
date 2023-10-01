@@ -134,7 +134,7 @@ onMounted(async () => {
         <NDropdown v-if="!!authStore.token" trigger="hover" :options="options" @select="handleDropdown">
           <UserAvatar />
         </NDropdown>
-        <UserRole :icon="false" :round="true" />
+        <UserRole :icon="false" />
       </div>
     </div>
   </div>

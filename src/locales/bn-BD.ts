@@ -60,7 +60,7 @@ export default {
     internetAccess: 'ইন্টারনেট সুবিধা',
     internetAccessTip: 'ইন্টারনেট থেকে রিয়েল-টাইম তথ্য পান এবং নির্ভুলতা উন্নত করুন (শীঘ্রই আসছে)',
     speech: 'Speech Synthesis',
-    text1: 'Help me study vocabulary for a GRE exam',
+    text1: 'Help me study vocabulary for the GRE examination',
     text2: 'Create a personal webpage for me after asking me three questions',
     text3: 'Come up with concetps for a retro-style arcade game',
     text4: 'Tell me a fun fact about the Old Dhaka',

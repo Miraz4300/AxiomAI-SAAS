@@ -118,7 +118,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
           <SvgIcon v-if="collapsed" class="text-xl" icon="ri:align-justify" />
           <SvgIcon v-else class="text-xl" icon="ri:align-right" />
         </ToolButton>
-        <span class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap max-w-[340px]" :class="[isMobile ? '' : 'text-base font-bold']">
+        <span class="flex-1 overflow-hidden select-none text-ellipsis whitespace-nowrap max-w-[340px]" :class="[isMobile ? '' : 'text-base font-bold']">
           {{ currentChatHistory?.title ?? '' }}
         </span>
       </div>
@@ -140,7 +140,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
 
   <NModal v-model:show="show" :auto-focus="false" :mask-closable="false" preset="card" style="width: 95%; max-width: 640px" title="Advanced">
     <div>
-      <p class="mb-1">
+      <p class="mb-1 select-none">
         {{ $t('setting.prompt') }}
       </p>
       <NInput
@@ -154,7 +154,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
       />
       <div class="my-4 border-b dark:border-b-neutral-700" />
     </div>
-    <div class="mb-2 space-y-3">
+    <div class="mb-2 space-y-3 select-none">
       <div class="flex items-center justify-between">
         <span>{{ $t('setting.model') }}</span>
         <div>

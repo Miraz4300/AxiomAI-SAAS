@@ -2,16 +2,15 @@
 import type { Ref } from 'vue'
 import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
-import { NAutoComplete, NButton, NDivider, NInput, NSpin, NSwitch, NTooltip, useDialog, useMessage } from 'naive-ui'
+import { NButton, NDivider, NInput, NSpin, NSwitch, NTooltip, useDialog, useMessage } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import Header from './components/Header/index.vue'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useAuthStore, useChatStore, usePromptStore, useUserStore } from '@/store'
+import { useAuthStore, useChatStore, useUserStore } from '@/store'
 import type { FeaturesConfig } from '@/components/admin/model'
 import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding, fetchUserFeatures } from '@/api'
 import { t } from '@/locales'
@@ -53,9 +52,6 @@ const inputRef = ref<Ref | null>(null)
 let loadingms: MessageReactive
 let allmsg: MessageReactive
 let prevScrollTop: number
-
-const promptStore = usePromptStore()
-const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
 
 // If the page is refreshed for unknown reasons, the loading status will not be reset, so it can be reset manually.
 dataSources.value.forEach((item, index) => {
@@ -491,36 +487,6 @@ async function handleToggleUsingContext() {
     ms.warning(t('chat.turnOffContext'))
 }
 
-// Build-in prompt
-const searchOptions = computed(() => {
-  if (prompt.value.startsWith('/')) {
-    return promptTemplate.value.filter((item: { key: string }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
-      return {
-        label: obj.value,
-        value: obj.value,
-      }
-    })
-  }
-  else {
-    return []
-  }
-})
-
-// value inverse rendering key
-function renderOption(option: { label: string }) {
-  for (const i of promptTemplate.value) {
-    if (i.value === option.label)
-      return [i.key]
-  }
-  return []
-}
-
-const placeholderText = computed(() => {
-  if (isMobile.value)
-    return t('chat.placeholderMobile')
-  return t('chat.placeholderText')
-})
-
 const buttonDisabled = computed(() => {
   return loading.value || !prompt.value || prompt.value.trim() === ''
 })
@@ -664,24 +630,17 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
       <div class="m-auto max-w-screen-2xl" :class="[isMobile ? 'pl-1' : 'px-4']">
         <div class="flex items-stretch space-x-2">
           <div class="relative flex-1">
-            <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption" placement="top">
-              <template #default="{ handleInput, handleBlur, handleFocus }">
-                <NInput
-                  ref="inputRef"
-                  v-model:value="prompt"
-                  clearable
-                  class="pb-10"
-                  :disabled="!!authStore.session?.auth && !authStore.token"
-                  type="textarea"
-                  :placeholder="placeholderText"
-                  :autosize="{ minRows: isMobile ? 1 : 2, maxRows: isMobile ? 4 : 8 }"
-                  @input="handleInput"
-                  @focus="handleFocus"
-                  @blur="handleBlur"
-                  @keypress="handleEnter"
-                />
-              </template>
-            </NAutoComplete>
+            <NInput
+              ref="inputRef"
+              v-model:value="prompt"
+              clearable
+              class="pb-10"
+              :disabled="!!authStore.session?.auth && !authStore.token"
+              type="textarea"
+              :placeholder="t('chat.placeholderText')"
+              :autosize="{ minRows: isMobile ? 1 : 2, maxRows: isMobile ? 4 : 8 }"
+              @keypress="handleEnter"
+            />
             <div class="absolute bottom-2 left-2 right-2">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">

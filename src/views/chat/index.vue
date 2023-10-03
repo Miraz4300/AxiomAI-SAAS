@@ -65,7 +65,7 @@ dataSources.value.forEach((item, index) => {
 
 // Generate random prompt text for example buttons
 const promptText: any[] = []
-for (let i = 1; i <= 15; i++)
+for (let i = 1; i <= 21; i++)
   promptText.push(t(`chat.text${i}`))
 
 function getRandomUniqueIndices(length: number, count: number) {
@@ -515,28 +515,11 @@ function renderOption(option: { label: string }) {
   return []
 }
 
-const placeholderText = ref<string>('')
-// Generate typing effect for placeholder text
-function generateTypingEffect() {
-  const randomText = promptText[Math.floor(Math.random() * promptText.length)]
-  let index = 0
-  let direction = 1
-
-  const intervalId = setInterval(() => {
-    placeholderText.value = randomText.substring(0, index)
-    index += direction
-
-    if (index > randomText.length) {
-      setTimeout(() => {
-        direction = -1
-      }, 20000) // Wait 40 seconds before erasing text
-    }
-    else if (index < 0) {
-      clearInterval(intervalId)
-      setTimeout(generateTypingEffect, 0) // Show next text immediately after erasing
-    }
-  }, 30) // Adjust speed based of typing and erasing
-}
+const placeholderText = computed(() => {
+  if (isMobile.value)
+    return t('chat.placeholderMobile')
+  return t('chat.placeholderText')
+})
 
 const buttonDisabled = computed(() => {
   return loading.value || !prompt.value || prompt.value.trim() === ''
@@ -567,7 +550,6 @@ onMounted(() => {
     if (chatModels != null && chatModels.filter(d => d.value === userStore.userInfo.config.chatModel).length <= 0)
       ms.error('The selected model doesn\'t exist, please choose another.', { duration: 4000 })
   }
-  generateTypingEffect()
 })
 
 onMounted(async () => {

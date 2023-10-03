@@ -13,7 +13,7 @@ const userInfo = computed(() => userStore.userInfo)
     <div class="flex">
       <UserAvatar />
     </div>
-    <div class="flex-1 min-w-0 ml-2">
+    <div class="flex-1 min-w-0 ml-2 select-none">
       <div class="flex gap-1">
         <h2 v-if="userInfo.name" class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
           {{ userInfo.name }}

@@ -140,7 +140,7 @@ onMounted(async () => {
   </div>
 
   <NLayoutFooter v-if="isMobile" class="bg-white dark:bg-[#202020]">
-    <div class="grid py-2 border-t dark:border-t-neutral-800" :class="[whiteboardEnabled ? 'grid-cols-3' : 'grid-cols-2']">
+    <div class="grid py-2 border-t dark:border-t-neutral-800 select-none" :class="[whiteboardEnabled ? 'grid-cols-3' : 'grid-cols-2']">
       <a class="leading-4 text-center cursor-pointer" :class="[isChatActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goChat">
         <SvgIcon :class="[iconClass2]" icon="ri:message-3-line" />
         <p>{{ $t('chat.chat') }}</p>

@@ -96,7 +96,7 @@ function isActive(uuid: number) {
               <span>
                 <SvgIcon icon="lucide:message-square" />
               </span>
-              <div class="relative flex-1 overflow-hidden break-all text-ellipsis whitespace-nowrap">
+              <div class="relative flex-1 overflow-hidden break-all text-ellipsis select-none whitespace-nowrap">
                 <NInput
                   v-if="item.isEdit"
                   v-model:value="item.title" size="tiny"

@@ -2,16 +2,15 @@
 import type { Ref } from 'vue'
 import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { storeToRefs } from 'pinia'
 import type { MessageReactive } from 'naive-ui'
-import { NAutoComplete, NButton, NDivider, NInput, NSpin, NSwitch, NTooltip, useDialog, useMessage } from 'naive-ui'
+import { NButton, NDivider, NInput, NSpin, NSwitch, NTooltip, useDialog, useMessage } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import Header from './components/Header/index.vue'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useAuthStore, useChatStore, usePromptStore, useUserStore } from '@/store'
+import { useAuthStore, useChatStore, useUserStore } from '@/store'
 import type { FeaturesConfig } from '@/components/admin/model'
 import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding, fetchUserFeatures } from '@/api'
 import { t } from '@/locales'
@@ -54,28 +53,23 @@ let loadingms: MessageReactive
 let allmsg: MessageReactive
 let prevScrollTop: number
 
-const promptStore = usePromptStore()
-const { promptList: promptTemplate } = storeToRefs<any>(promptStore)
-
 // If the page is refreshed for unknown reasons, the loading status will not be reset, so it can be reset manually.
 dataSources.value.forEach((item, index) => {
   if (item.loading)
     updateChatSome(+uuid, index, { loading: false })
 })
 
-// Generate random prompt text for example buttons
-const promptText: any[] = []
-for (let i = 1; i <= 21; i++)
-  promptText.push(t(`chat.text${i}`))
-
-function getRandomUniqueIndices(length: number, count: number) {
-  const indices = new Set<number>()
-  while (indices.size < count)
-    indices.add(Math.floor(Math.random() * length))
-  return Array.from(indices)
+// Generate random prompt text using Fisher-Yates shuffle algorithm
+const promptText: any[] = Array.from({ length: 23 }, (_, i) => t(`chat.text${i + 1}`))
+function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]
+  }
 }
 
-const randomPrompt = getRandomUniqueIndices(promptText.length, 3)
+shuffleArray(promptText)
+const randomPrompt = promptText.slice(0, 3)
 
 function fillTextarea(text: string) {
   if (authStore.session?.auth && authStore.token)
@@ -491,36 +485,6 @@ async function handleToggleUsingContext() {
     ms.warning(t('chat.turnOffContext'))
 }
 
-// Build-in prompt
-const searchOptions = computed(() => {
-  if (prompt.value.startsWith('/')) {
-    return promptTemplate.value.filter((item: { key: string }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
-      return {
-        label: obj.value,
-        value: obj.value,
-      }
-    })
-  }
-  else {
-    return []
-  }
-})
-
-// value inverse rendering key
-function renderOption(option: { label: string }) {
-  for (const i of promptTemplate.value) {
-    if (i.value === option.label)
-      return [i.key]
-  }
-  return []
-}
-
-const placeholderText = computed(() => {
-  if (isMobile.value)
-    return t('chat.placeholderMobile')
-  return t('chat.placeholderText')
-})
-
 const buttonDisabled = computed(() => {
   return loading.value || !prompt.value || prompt.value.trim() === ''
 })
@@ -590,14 +554,14 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
                       <h2 class="flex gap-3 items-center m-auto text-lg font-normal md:flex-col md:gap-2 select-none">
                         <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>Examples
                       </h2><ul class="flex flex-col gap-3.5 w-full sm:max-w-md m-auto">
-                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in fade-in zoom-in-50 hover:bg-[#67e8f9] dark:hover:bg-[#06b6d4] transition hover:scale-105 shadow-md shadow-cyan-500/50" @click="fillTextarea(promptText[randomPrompt[0]])">
-                          {{ promptText[randomPrompt[0]] }} →
+                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in fade-in zoom-in-50 hover:bg-[#67e8f9] dark:hover:bg-[#06b6d4] transition hover:scale-105 shadow-md shadow-cyan-500/50" @click="fillTextarea(randomPrompt[0])">
+                          {{ randomPrompt[0] }} →
                         </button>
-                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in delay-50 fade-in zoom-in-50 hover:bg-[#60a5fa] dark:hover:bg-[#3b82f6] transition hover:scale-105 shadow-md shadow-blue-500/50" @click="fillTextarea(promptText[randomPrompt[1]])">
-                          {{ promptText[randomPrompt[1]] }} →
+                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in delay-50 fade-in zoom-in-50 hover:bg-[#60a5fa] dark:hover:bg-[#3b82f6] transition hover:scale-105 shadow-md shadow-blue-500/50" @click="fillTextarea(randomPrompt[1])">
+                          {{ randomPrompt[1] }} →
                         </button>
-                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in delay-100 fade-in zoom-in-50 hover:bg-[#818cf8] dark:hover:bg-[#6366f1] transition hover:scale-105 shadow-md shadow-indigo-500/50" @click="fillTextarea(promptText[randomPrompt[2]])">
-                          {{ promptText[randomPrompt[2]] }} →
+                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in delay-100 fade-in zoom-in-50 hover:bg-[#818cf8] dark:hover:bg-[#6366f1] transition hover:scale-105 shadow-md shadow-indigo-500/50" @click="fillTextarea(randomPrompt[2])">
+                          {{ randomPrompt[2] }} →
                         </button>
                       </ul>
                     </div><div class="flex flex-col mb-8 md:mb-auto gap-3.5 flex-1">
@@ -664,24 +628,17 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
       <div class="m-auto max-w-screen-2xl" :class="[isMobile ? 'pl-1' : 'px-4']">
         <div class="flex items-stretch space-x-2">
           <div class="relative flex-1">
-            <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption" placement="top">
-              <template #default="{ handleInput, handleBlur, handleFocus }">
-                <NInput
-                  ref="inputRef"
-                  v-model:value="prompt"
-                  clearable
-                  class="pb-10"
-                  :disabled="!!authStore.session?.auth && !authStore.token"
-                  type="textarea"
-                  :placeholder="placeholderText"
-                  :autosize="{ minRows: isMobile ? 1 : 2, maxRows: isMobile ? 4 : 8 }"
-                  @input="handleInput"
-                  @focus="handleFocus"
-                  @blur="handleBlur"
-                  @keypress="handleEnter"
-                />
-              </template>
-            </NAutoComplete>
+            <NInput
+              ref="inputRef"
+              v-model:value="prompt"
+              clearable
+              class="pb-10"
+              :disabled="!!authStore.session?.auth && !authStore.token"
+              type="textarea"
+              :placeholder="t('chat.placeholderText')"
+              :autosize="{ minRows: isMobile ? 1 : 2, maxRows: isMobile ? 4 : 8 }"
+              @keypress="handleEnter"
+            />
             <div class="absolute bottom-2 left-2 right-2">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">

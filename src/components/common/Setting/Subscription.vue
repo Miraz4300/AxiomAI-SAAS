@@ -12,28 +12,11 @@ const show = ref(false)
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
 const Role = userInfo.value.roles[0]
-
-const premiumPrice = ref('')
-const premiumMSG = ref('')
-const mvpPrice = ref('')
-const mvpMSG = ref('')
-const supportPrice = ref('')
-const supportMSG = ref('')
-const subImageLink = ref('')
-const subURL = ref('')
+const subscriptionConfig = ref<SubscriptionConfig>()
 
 onMounted(async () => {
   const response = await fetchUserSubscription<SubscriptionConfig>()
-  if (response.data) {
-    premiumPrice.value = response.data.premiumPrice || 'Loading...'
-    premiumMSG.value = response.data.premiumMSG || 'Loading...'
-    mvpPrice.value = response.data.mvpPrice || 'Loading...'
-    mvpMSG.value = response.data.mvpMSG || 'Loading...'
-    supportPrice.value = response.data.supportPrice || 'Loading...'
-    supportMSG.value = response.data.supportMSG || 'Loading...'
-    subImageLink.value = response.data.subImageLink || 'Loading...'
-    subURL.value = response.data.subURL || 'Loading...'
-  }
+  subscriptionConfig.value = response.data
 })
 </script>
 
@@ -58,7 +41,7 @@ onMounted(async () => {
             <span>
               Unlocks:
               <br>
-              1. GPT-4 and other models
+              1. GPT-4 and GPT-4-0613
               <br>
               2. Higher avalibility of GPT-3.5 and GPT-4
               <br>
@@ -67,10 +50,10 @@ onMounted(async () => {
               4. Mid-journey - 10/day (coming soon)
             </span>
             <NButton v-if="Role === UserRole.Premium" strong secondary type="primary">
-              {{ premiumMSG }}
+              {{ subscriptionConfig?.premiumMSG }}
             </NButton>
             <NButton v-else strong secondary type="primary" @click="show = true">
-              {{ premiumPrice }}
+              {{ subscriptionConfig?.premiumPrice }}
             </NButton>
           </div>
         </NCard>
@@ -87,19 +70,19 @@ onMounted(async () => {
             <span>
               Unlocks:
               <br>
-              1. GPT-4 and other models
+              1. Everything includes in Premium
               <br>
-              2. Higher avalibility of GPT-3.5 and GPT-4
+              2. GPT-3-16k and GPT-4-32k
               <br>
               3. Stable Diffusion Model (coming soon)
               <br>
               4. Mid-journey - 30/day (coming soon)
             </span>
             <NButton v-if="Role === UserRole.MVP" strong secondary type="primary">
-              {{ mvpMSG }}
+              {{ subscriptionConfig?.mvpMSG }}
             </NButton>
             <NButton v-else strong secondary type="primary" @click="show = true">
-              {{ mvpPrice }}
+              {{ subscriptionConfig?.mvpPrice }}
             </NButton>
           </div>
         </NCard>
@@ -123,10 +106,10 @@ onMounted(async () => {
               2. Exclusive T-shirt
             </span>
             <NButton v-if="Role === UserRole.Support" strong secondary type="primary">
-              {{ supportMSG }}
+              {{ subscriptionConfig?.supportMSG }}
             </NButton>
             <NButton v-else strong secondary type="primary" @click="show = true">
-              {{ supportPrice }}
+              {{ subscriptionConfig?.supportPrice }}
             </NButton>
           </div>
         </NCard>
@@ -139,8 +122,8 @@ onMounted(async () => {
 
   <NModal v-model:show="show" style="max-width: 370px">
     <NCard :bordered="false" role="dialog" title="Buy subscription">
-      <a :href="subURL" target="_blank">
-        <img :src="subImageLink">
+      <a :href="subscriptionConfig?.subURL" target="_blank">
+        <img :src="subscriptionConfig?.subImageLink">
       </a>
     </NCard>
   </NModal>

@@ -12,11 +12,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - run: |
-          echo "The version for this build is：${GITHUB_REF_NAME} (But this variable is not available in the current context)"
-          echo The version for this build is：${{ github.ref_name }}
-          env
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -34,5 +29,4 @@ jobs:
         with:
           context: .
           push: true
-          labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/axiomai:latest

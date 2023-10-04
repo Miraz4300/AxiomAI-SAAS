@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import { datadogRum } from '@datadog/browser-rum'
-import * as Sentry from '@sentry/vue'
 import App from './App.vue'
 import { setupI18n } from './locales'
 import { setupAssets, setupScrollbarStyle } from './plugins'
@@ -15,7 +14,7 @@ async function bootstrap() {
   setupScrollbarStyle()
   setupStore(app)
   setupI18n(app)
-  const router = await setupRouter(app)
+  await setupRouter(app)
 
   if (VITE_GLOB_APP_ENVIRONMENT === 'production') {
   // Initialize Datadog RUM
@@ -34,22 +33,6 @@ async function bootstrap() {
       defaultPrivacyLevel: 'allow',
     })
     datadogRum.startSessionReplayRecording()
-
-    // Initialize Sentry Issue Tracking
-    Sentry.init({
-      app,
-      dsn: 'https://20e13cb921da2d5b62e9d6da7701efa6@o4505499531673600.ingest.sentry.io/4505759136088064',
-      environment: VITE_GLOB_APP_ENVIRONMENT,
-      release: VITE_GLOB_APP_VERSION,
-      integrations: [
-        new Sentry.BrowserTracing({
-          tracePropagationTargets: ['https://chat.axiomaibd.com'],
-          routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-        }),
-        new Sentry.Replay(),
-      ],
-      tracesSampleRate: 0.3,
-    })
   }
 
   app.mount('#app')

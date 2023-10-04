@@ -23,8 +23,6 @@
     "common:cleanup": "rimraf node_modules && rimraf pnpm-lock.yaml"
   },
   "dependencies": {
-    "@sentry/node": "^7.72.0",
-    "@sentry/profiling-node": "^1.2.1",
     "axios": "^1.5.0",
     "chatgpt": "^5.2.5",
     "connect-history-api-fallback": "^2.0.0",

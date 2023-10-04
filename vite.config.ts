@@ -2,7 +2,6 @@ import path from 'node:path'
 import process from 'node:process'
 import type { PluginOption } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
-import { sentryVitePlugin } from '@sentry/vite-plugin'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 
@@ -24,11 +23,6 @@ function setupPlugins({ VITE_GLOB_APP_PWA }: ImportMetaEnv): PluginOption[] {
           { src: 'axiomai-512x512.png', sizes: '512x512', type: 'image/png' },
         ],
       },
-    }),
-    sentryVitePlugin({
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-      org: 'deepspacelab-corp',
-      project: 'axiomai',
     }),
   ]
 }
@@ -55,7 +49,7 @@ export default defineConfig((env) => {
     },
     build: {
       reportCompressedSize: false,
-      sourcemap: true,
+      sourcemap: false,
       commonjsOptions: { ignoreTryCatch: false },
     },
   }

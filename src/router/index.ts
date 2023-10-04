@@ -77,5 +77,4 @@ setupPageGuard(router)
 export async function setupRouter(app: App) {
   app.use(router)
   await router.isReady()
-  return router // For sentry issue tracking
 }

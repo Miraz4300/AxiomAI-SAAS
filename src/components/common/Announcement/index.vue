@@ -5,11 +5,7 @@ import type { AnnouncementConfig } from '@/components/admin/model'
 import { fetchUserAnnouncement } from '@/api'
 
 const show = ref(false)
-
-const announceEnabled = ref(false)
-const announceHeader = ref('')
-const announceBody = ref('')
-const announceFooter = ref('')
+const announcementConfig = ref<AnnouncementConfig>()
 
 onMounted(async () => {
   // Prevent showing the modal multiple times in a day
@@ -20,29 +16,24 @@ onMounted(async () => {
     return
 
   const response = await fetchUserAnnouncement<AnnouncementConfig>()
-  if (response.data) {
-    announceEnabled.value = response.data.announceEnabled || false
-    announceHeader.value = response.data.announceHeader || 'Loading...'
-    announceBody.value = response.data.announceBody || 'Loading...'
-    announceFooter.value = response.data.announceFooter || 'Loading...'
+  announcementConfig.value = response.data
 
-    if (announceEnabled.value) {
-      setTimeout(() => {
-        localStorage.setItem('lastShownDate', currentDate)
-        show.value = true
-      }, 3000) // 3 seconds delay to show the modal
-    }
+  if (announcementConfig.value?.announceEnabled) {
+    setTimeout(() => {
+      localStorage.setItem('lastShownDate', currentDate)
+      show.value = true
+    }, 3000) // 3 seconds delay to show the modal
   }
 })
 </script>
 
 <template>
-  <NModal v-model:show="show" :auto-focus="false" :mask-closable="true" preset="card" style="width: 95%; max-width: 600px; max-height: 640px" :title="announceHeader">
+  <NModal v-model:show="show" :auto-focus="false" :mask-closable="true" preset="card" style="width: 95%; max-width: 600px; max-height: 640px" :title="announcementConfig?.announceHeader">
     <NScrollbar style="max-height: 510px">
-      <div class="pl-4 pr-4" v-html="announceBody" />
+      <div class="pl-4 pr-4" v-html="announcementConfig?.announceBody" />
     </NScrollbar>
     <template #footer>
-      {{ announceFooter }}
+      {{ announcementConfig?.announceFooter }}
     </template>
   </NModal>
 </template>

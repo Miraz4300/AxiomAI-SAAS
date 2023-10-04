@@ -1,6 +1,4 @@
 import process from 'node:process'
-import * as Sentry from '@sentry/node'
-import { ProfilingIntegration } from '@sentry/profiling-node'
 import express from 'express'
 import history from 'connect-history-api-fallback'
 import jwt from 'jsonwebtoken'
@@ -58,28 +56,6 @@ dotenv.config()
 
 const app = express()
 const router = express.Router()
-
-// Sentry Error Tracking
-Sentry.init({
-  dsn: 'https://065ae85c98143dc4c16eb4999272c64c@o4505499531673600.ingest.sentry.io/4505759091458048',
-  environment: 'production',
-  release: '3.0.0-preview15',
-  integrations: [
-    new Sentry.Integrations.Http({
-      tracing: true,
-    }),
-    new Sentry.Integrations.Express({
-      app,
-    }),
-    new ProfilingIntegration(),
-  ],
-  tracesSampleRate: 0.3, // Set tracesSampleRate to 0.5 to capture 50% of transactions for performance monitoring. Recommended to adjusting this value <1.0 in production
-  profilesSampleRate: 0.3, // Profiling sample rate is relative to tracesSampleRate
-})
-
-// Trace incoming requests [Sentry]
-app.use(Sentry.Handlers.requestHandler())
-app.use(Sentry.Handlers.tracingHandler())
 
 app.use(express.json())
 
@@ -1124,9 +1100,6 @@ router.post('/statistics/by-day', auth, async (req, res) => {
 })
 
 router.post('/voice', [auth, limiter], getAzureSubscriptionKey)
-
-// Sentry error handler
-app.use(Sentry.Handlers.errorHandler())
 
 app.use(history())
 app.use(express.static('public'))

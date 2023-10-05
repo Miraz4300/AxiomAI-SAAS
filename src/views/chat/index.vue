@@ -76,7 +76,7 @@ const randomPrompt = promptText.value.slice(0, 3)
 function fillTextarea(text: string) {
   if (authStore.session?.auth && authStore.token)
     prompt.value = text
-  // handleSubmit()
+  handleSubmit()
 }
 
 function handleSubmit() {

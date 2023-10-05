@@ -8,6 +8,7 @@ import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import Header from './components/Header/index.vue'
+import prompts from './components/prompts.json'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStore, useChatStore, useUserStore } from '@/store'
@@ -60,7 +61,7 @@ dataSources.value.forEach((item, index) => {
 })
 
 // Generate random prompt text using Fisher-Yates shuffle algorithm
-const promptText: any[] = Array.from({ length: 23 }, (_, i) => t(`chat.text${i + 1}`))
+const promptText = ref<any[]>(Array.from(prompts))
 function shuffleArray(array: any[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -68,12 +69,14 @@ function shuffleArray(array: any[]) {
   }
 }
 
-shuffleArray(promptText)
-const randomPrompt = promptText.slice(0, 3)
+shuffleArray(promptText.value)
+const randomPrompt = promptText.value.slice(0, 3)
 
+// Fill chat placeholder with generated prompt text and submit
 function fillTextarea(text: string) {
   if (authStore.session?.auth && authStore.token)
     prompt.value = text
+  // handleSubmit()
 }
 
 function handleSubmit() {
@@ -554,14 +557,14 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
                       <h2 class="flex gap-3 items-center m-auto text-lg font-normal md:flex-col md:gap-2">
                         <svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>Examples
                       </h2><ul class="flex flex-col gap-3.5 w-full sm:max-w-md m-auto">
-                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in fade-in zoom-in-50 hover:bg-[#67e8f9] dark:hover:bg-[#06b6d4] transition hover:scale-105 shadow-md shadow-cyan-500/50" @click="fillTextarea(randomPrompt[0])">
-                          {{ randomPrompt[0] }} →
+                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in fade-in zoom-in-50 hover:bg-[#67e8f9] dark:hover:bg-[#06b6d4] transition hover:scale-105 shadow-md shadow-cyan-500/50" @click="fillTextarea(randomPrompt[0].value)">
+                          {{ randomPrompt[0].key }} →
                         </button>
-                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in delay-50 fade-in zoom-in-50 hover:bg-[#60a5fa] dark:hover:bg-[#3b82f6] transition hover:scale-105 shadow-md shadow-blue-500/50" @click="fillTextarea(randomPrompt[1])">
-                          {{ randomPrompt[1] }} →
+                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in delay-50 fade-in zoom-in-50 hover:bg-[#60a5fa] dark:hover:bg-[#3b82f6] transition hover:scale-105 shadow-md shadow-blue-500/50" @click="fillTextarea(randomPrompt[1].value)">
+                          {{ randomPrompt[1].key }} →
                         </button>
-                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in delay-100 fade-in zoom-in-50 hover:bg-[#818cf8] dark:hover:bg-[#6366f1] transition hover:scale-105 shadow-md shadow-indigo-500/50" @click="fillTextarea(randomPrompt[2])">
-                          {{ randomPrompt[2] }} →
+                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in delay-100 fade-in zoom-in-50 hover:bg-[#818cf8] dark:hover:bg-[#6366f1] transition hover:scale-105 shadow-md shadow-indigo-500/50" @click="fillTextarea(randomPrompt[2].value)">
+                          {{ randomPrompt[2].key }} →
                         </button>
                       </ul>
                     </div><div class="flex flex-col mb-8 md:mb-auto gap-3.5 flex-1">

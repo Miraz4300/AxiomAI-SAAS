@@ -544,7 +544,7 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
     <Header />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
-        <div id="image-wrapper" class="w-full max-w-screen-2xl m-auto dark:bg-[#111114]" :class="[isMobile ? 'p-2' : 'p-4']">
+        <div id="image-wrapper" class="w-full max-w-screen-2xl pt-6 m-auto dark:bg-[#111114]" :class="[isMobile ? 'p-2' : 'p-4']">
           <NSpin :show="firstLoading">
             <template v-if="!dataSources.length">
               <div class="flex items-center justify-center" :class="[isMobile ? 'mt-[8vh]' : 'mt-[16vh]']">
@@ -613,14 +613,6 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
                   @delete="handleDelete(index)"
                   @response-history="(ev: number) => onResponseHistory(index, ev)"
                 />
-                <div class="sticky bottom-0 left-0 flex justify-center">
-                  <NButton v-if="loading" ghost @click="handleStop">
-                    <template #icon>
-                      <SvgIcon icon="ri:stop-circle-line" />
-                    </template>
-                    Stop Responding
-                  </NButton>
-                </div>
               </div>
             </template>
           </NSpin>
@@ -629,6 +621,14 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
     </main>
     <footer :class="footerClass">
       <div class="m-auto max-w-screen-2xl" :class="[isMobile ? 'pl-1' : 'px-4']">
+        <div v-if="loading" class="pb-4 flex justify-center">
+          <NButton ghost @click="handleStop">
+            <template #icon>
+              <SvgIcon icon="ri:stop-circle-line" />
+            </template>
+            Stop Responding
+          </NButton>
+        </div>
         <div class="flex items-stretch space-x-2">
           <div class="relative flex-1">
             <NInput

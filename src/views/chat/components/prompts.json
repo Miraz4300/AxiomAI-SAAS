@@ -114,5 +114,9 @@
     {
         "key": "Write a python script to automate send email reports",
         "value": "Write a script to automate sending daily email reports in Python, and walk me through how I would set it up."
+    },
+    {
+        "key": "Suggest me some great sci-fi movies to watch",
+        "value": "Suggest me some sci-fi movies with higer IMDB rating from year 2000 above to watch."
     }
 ]

@@ -78,7 +78,10 @@ function isActive(uuid: number) {
 
 <template>
   <NScrollbar class="px-4">
-    <NSpin :show="loadingRoom">
+    <NSpin :show="loadingRoom" :rotate="false" size="small">
+      <template #icon>
+        <SvgIcon icon="svg-spinners:180-ring-with-bg" />
+      </template>
       <div class="flex flex-col gap-2 text-sm">
         <template v-if="!dataSources.length">
           <div class="flex flex-col items-center mt-4 text-center text-neutral-300">

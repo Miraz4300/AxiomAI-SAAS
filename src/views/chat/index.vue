@@ -545,7 +545,10 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
         <div id="image-wrapper" class="w-full max-w-screen-2xl pt-6 m-auto dark:bg-[#111114]" :class="[isMobile ? 'p-2' : 'p-4']">
-          <NSpin :show="firstLoading">
+          <NSpin :show="firstLoading" :rotate="false">
+            <template #icon>
+              <SvgIcon icon="svg-spinners:180-ring-with-bg" />
+            </template>
             <template v-if="!dataSources.length">
               <div class="flex items-center justify-center" :class="[isMobile ? 'mt-[8vh]' : 'mt-[16vh]']">
                 <!-- AxiomAI is being introduced. -->

@@ -90,7 +90,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <NSpin :show="loading">
+  <NSpin :show="loading" :rotate="false" size="small">
+    <template #icon>
+      <SvgIcon icon="svg-spinners:180-ring-with-bg" />
+    </template>
     <div class="space-y-6">
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.statisticsPeriod') }}</span>

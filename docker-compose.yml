@@ -33,7 +33,7 @@ services:
       ROOT_USER:
 
       # Password salt
-      PASSWORD_MD5_SALT: anysalt
+      PASSWORD_MD5_SALT: 
 
       # For text to speech
       # Azure Subscription Key
@@ -51,14 +51,14 @@ services:
   # Nginx reverse proxy
   nginx:
     image: nginx:alpine
-    container_name: NginxAxiomAI
+    container_name: Nginx-AxiomAI
     restart: always
     ports:
       - '443:443'
     expose:
       - '443'
     volumes:
-      - nginxCONF:/etc/nginx # Needs to create nginxCONF volume manually
+      - nginxCONF:/etc/nginx
     links:
       - app
 
@@ -68,7 +68,7 @@ services:
     container_name: dd-agent
     restart: always
     environment:
-     - DD_API_KEY=c3d42e730bcd04c437b6c64379eae78a
+     - DD_API_KEY=
      - DD_SITE=datadoghq.com
      - DD_APM_ENABLED=true
      - DD_ENV="production"
@@ -82,4 +82,3 @@ services:
 
 volumes:
   nginxCONF:
-    external: true

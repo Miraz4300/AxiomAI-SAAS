@@ -15,7 +15,19 @@ async function fetchConfig() {
   try {
     loading.value = true
     const { data } = await fetchChatConfig<ConfigState>()
-    config.value = data.subscriptionConfig
+    if (data.subscriptionConfig) {
+      config.value = data.subscriptionConfig
+    }
+    else {
+      // Create a default SubscriptionConfig if it doesn't exist
+      config.value = {
+        premium: { price: '', details: '', message: '' },
+        mvp: { price: '', details: '', message: '' },
+        support: { price: '', details: '', message: '' },
+      }
+      // Save the default SubscriptionConfig to the database
+      await fetchUpdateSubscription(config.value)
+    }
   }
   finally {
     loading.value = false
@@ -42,89 +54,81 @@ onMounted(() => {
 
 <template>
   <NSpin :show="loading">
-    <div class="p-4 space-y-5 min-h-[200px]">
-      <div class="space-y-6">
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Premium</span>
-          <div class="flex-1">
+    <div class="flex flex-col p-4 space-y-6">
+      <div class="flex-col">
+        Premium:
+        <div class="flex flex-col space-y-2 w-full">
+          <NInput
+            :value="config && config.premium && config.premium.details" placeholder="premium details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
+            @input="(val: string | undefined) => { if (config && config.premium) config.premium.details = val }"
+          />
+          <div class="flex space-x-2">
             <NInput
-              :value="config && config.premiumPrice" placeholder="" style="max-width: 30%"
-              @input="(val: string | undefined) => { if (config) config.premiumPrice = val }"
+              :value="config && config.premium && config.premium.price" placeholder="premium price"
+              @input="(val: string | undefined) => { if (config && config.premium) config.premium.price = val }"
             />
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Premium MSG</span>
-          <div class="flex-1">
             <NInput
-              :value="config && config.premiumMSG" placeholder="" style="max-width: 30%"
-              @input="(val: string | undefined) => { if (config) config.premiumMSG = val }"
+              :value="config && config.premium && config.premium.message" placeholder="after buy message"
+              @input="(val: string | undefined) => { if (config && config.premium) config.premium.message = val }"
             />
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">MVP</span>
-          <div class="flex-1">
-            <NInput
-              :value="config && config.mvpPrice" placeholder="" style="max-width: 30%"
-              @input="(val: string | undefined) => { if (config) config.mvpPrice = val }"
-            />
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">MVP MSG</span>
-          <div class="flex-1">
-            <NInput
-              :value="config && config.mvpMSG" placeholder="" style="max-width: 30%"
-              @input="(val: string | undefined) => { if (config) config.mvpMSG = val }"
-            />
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Support</span>
-          <div class="flex-1">
-            <NInput
-              :value="config && config.supportPrice" placeholder="" style="max-width: 30%"
-              @input="(val: string | undefined) => { if (config) config.supportPrice = val }"
-            />
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Support MSG</span>
-          <div class="flex-1">
-            <NInput
-              :value="config && config.supportMSG" placeholder="" style="max-width: 30%"
-              @input="(val: string | undefined) => { if (config) config.supportMSG = val }"
-            />
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Forum Link</span>
-          <div class="flex-1">
-            <NInput
-              :value="config && config.subURL" placeholder="" style="max-width: 30%"
-              @input="(val: string | undefined) => { if (config) config.subURL = val }"
-            />
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">QR Code</span>
-          <div class="flex-1">
-            <NInput
-              :value="config && config.subImageLink" placeholder="" style="max-width: 30%"
-              @input="(val: string | undefined) => { if (config) config.subImageLink = val }"
-            />
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]" />
-          <div class="flex flex-wrap items-center gap-4">
-            <NButton :loading="saving" type="primary" @click="updatePrice()">
-              {{ $t('common.save') }}
-            </NButton>
           </div>
         </div>
       </div>
+      <div class="flex-col">
+        MVP:
+        <div class="flex flex-col space-y-2 w-full">
+          <NInput
+            :value="config && config.mvp && config.mvp.details" placeholder="mvp details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
+            @input="(val: string | undefined) => { if (config && config.mvp) config.mvp.details = val }"
+          />
+          <div class="flex space-x-2">
+            <NInput
+              :value="config && config.mvp && config.mvp.price" placeholder="mvp price"
+              @input="(val: string | undefined) => { if (config && config.mvp) config.mvp.price = val }"
+            />
+            <NInput
+              :value="config && config.mvp && config.mvp.message" placeholder="after buy message"
+              @input="(val: string | undefined) => { if (config && config.mvp) config.mvp.message = val }"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="flex-col">
+        Supporter:
+        <div class="flex flex-col space-y-2 w-full">
+          <NInput
+            :value="config && config.support && config.support.details" placeholder="supporter details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
+            @input="(val: string | undefined) => { if (config && config.support) config.support.details = val }"
+          />
+          <div class="flex space-x-2">
+            <NInput
+              :value="config && config.support && config.support.price" placeholder="supporter price"
+              @input="(val: string | undefined) => { if (config && config.support) config.support.price = val }"
+            />
+            <NInput
+              :value="config && config.support && config.support.message" placeholder="after buy message"
+              @input="(val: string | undefined) => { if (config && config.support) config.support.message = val }"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="flex-col">
+        Forum Link:
+        <NInput
+          :value="config && config.subURL" placeholder=""
+          @input="(val: string | undefined) => { if (config) config.subURL = val }"
+        />
+      </div>
+      <div class="flex-col">
+        QR Code:
+        <NInput
+          :value="config && config.subImageLink" placeholder=""
+          @input="(val: string | undefined) => { if (config) config.subImageLink = val }"
+        />
+      </div>
+      <NButton :loading="saving" type="primary" @click="updatePrice()">
+        {{ $t('common.save') }}
+      </NButton>
     </div>
   </NSpin>
 </template>

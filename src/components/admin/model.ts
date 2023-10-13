@@ -36,13 +36,16 @@ export class SiteConfig {
   siteDomain?: string
 }
 
+export interface SubData {
+  price?: string
+  details?: string
+  message?: string
+}
+
 export class SubscriptionConfig {
-  premiumPrice?: string
-  premiumMSG?: string
-  mvpPrice?: string
-  mvpMSG?: string
-  supportPrice?: string
-  supportMSG?: string
+  premium?: SubData
+  mvp?: SubData
+  support?: SubData
   subImageLink?: string
   subURL?: string
 }

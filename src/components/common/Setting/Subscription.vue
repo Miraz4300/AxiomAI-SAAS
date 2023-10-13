@@ -70,7 +70,7 @@ onMounted(async () => {
             <span>
               Unlocks:
               <br>
-              1. Everything includes in Premium
+              1. GPT-4 and GPT-4-0613
               <br>
               2. GPT-3-16k and GPT-4-32k
               <br>
@@ -101,7 +101,7 @@ onMounted(async () => {
               <br>
               Help us to keep the project alive and additionally you will get:
               <br>
-              1. Everything includes in MVP
+              1. Everything includes in Premium
               <br>
               2. Exclusive T-shirt
             </span>

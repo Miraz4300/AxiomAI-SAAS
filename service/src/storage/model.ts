@@ -202,14 +202,17 @@ export class SiteConfig {
   ) { }
 }
 
+export interface SubData {
+  price?: string
+  details?: string
+  message?: string
+}
+
 export class SubscriptionConfig {
   constructor(
-    public premiumPrice?: string,
-    public premiumMSG?: string,
-    public mvpPrice?: string,
-    public mvpMSG?: string,
-    public supportPrice?: string,
-    public supportMSG?: string,
+    public premium?: SubData,
+    public mvp?: SubData,
+    public support?: SubData,
     public subImageLink?: string,
     public subURL?: string,
   ) { }

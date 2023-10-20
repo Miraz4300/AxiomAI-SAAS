@@ -38,22 +38,12 @@ onMounted(async () => {
             </NTag>
           </template>
           <div class="flex flex-col space-y-4">
-            <span>
-              Unlocks:
-              <br>
-              1. GPT-4 and GPT-4-0613
-              <br>
-              2. Higher avalibility of GPT-3.5 and GPT-4
-              <br>
-              3. Stable Diffusion Model (coming soon)
-              <br>
-              4. Mid-journey - 10/day (coming soon)
-            </span>
+            <span v-html="subscriptionConfig?.premium && subscriptionConfig.premium.details" />
             <NButton v-if="Role === UserRole.Premium" strong secondary type="primary">
-              {{ subscriptionConfig?.premiumMSG }}
+              {{ subscriptionConfig?.premium && subscriptionConfig.premium.message }}
             </NButton>
             <NButton v-else strong secondary type="primary" @click="show = true">
-              {{ subscriptionConfig?.premiumPrice }}
+              {{ subscriptionConfig?.premium && subscriptionConfig.premium.price }}
             </NButton>
           </div>
         </NCard>
@@ -67,22 +57,12 @@ onMounted(async () => {
             </NTag>
           </template>
           <div class="flex flex-col space-y-4">
-            <span>
-              Unlocks:
-              <br>
-              1. Everything includes in Premium
-              <br>
-              2. GPT-3-16k and GPT-4-32k
-              <br>
-              3. Stable Diffusion Model (coming soon)
-              <br>
-              4. Mid-journey - 30/day (coming soon)
-            </span>
+            <span v-html="subscriptionConfig?.mvp && subscriptionConfig.mvp.details" />
             <NButton v-if="Role === UserRole.MVP" strong secondary type="primary">
-              {{ subscriptionConfig?.mvpMSG }}
+              {{ subscriptionConfig?.mvp && subscriptionConfig.mvp.message }}
             </NButton>
             <NButton v-else strong secondary type="primary" @click="show = true">
-              {{ subscriptionConfig?.mvpPrice }}
+              {{ subscriptionConfig?.mvp && subscriptionConfig.mvp.price }}
             </NButton>
           </div>
         </NCard>
@@ -96,20 +76,12 @@ onMounted(async () => {
             </NTag>
           </template>
           <div class="flex flex-col space-y-4">
-            <span>
-              Benefits for 3 months:
-              <br>
-              Help us to keep the project alive and additionally you will get:
-              <br>
-              1. Everything includes in MVP
-              <br>
-              2. Exclusive T-shirt
-            </span>
+            <span v-html="subscriptionConfig?.support && subscriptionConfig.support.details" />
             <NButton v-if="Role === UserRole.Support" strong secondary type="primary">
-              {{ subscriptionConfig?.supportMSG }}
+              {{ subscriptionConfig?.support && subscriptionConfig.support.message }}
             </NButton>
             <NButton v-else strong secondary type="primary" @click="show = true">
-              {{ subscriptionConfig?.supportPrice }}
+              {{ subscriptionConfig?.support && subscriptionConfig.support.price }}
             </NButton>
           </div>
         </NCard>

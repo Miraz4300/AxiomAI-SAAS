@@ -670,7 +670,7 @@ router.post('/user-login', authLimiter, async (req, res) => {
     const token = jwt.sign({
       name: user.name ? user.name : user.email,
       avatar: user.avatar,
-      description: user.description,
+      description: user.description ? user.description : 'Innovative and strategic problem solver.',
       userId: user._id,
       root: user.roles.includes(UserRole.Admin),
       config: user.config,

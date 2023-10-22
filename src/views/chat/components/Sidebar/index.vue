@@ -42,7 +42,7 @@ function goSetting() {
 
 function userHeader() {
   const { name, description } = userInfo.value
-  return h('div', { class: 'flex items-center p-3 min-w-[18rem]' }, [
+  return h('div', { class: 'flex items-center p-3 min-w-[16rem]' }, [
     h(UserAvatar, { class: 'mr-3' }),
     h('div', [
       h('div', { class: 'flex items-center gap-1' }, [

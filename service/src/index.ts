@@ -357,8 +357,8 @@ router.post('/chat-clear', auth, async (req, res) => {
 })
 
 const currentDate = new Date().toISOString().split('T')[0]
-const mainSystemMessage = `You are AxiomAI, a large language model fine-tuned by Deepspacelab and developed by Miraz Hossain. Current date: ${currentDate}`
-const promptSystemMessage = `You are AxiomAI, a large language model fine-tuned by Miraz Hossain. Current date: ${currentDate}`
+const mainSystemMessage = `You are AxiomAI, a large language model fine-tuned by Miraz Hossain. Current date: ${currentDate}`
+const promptSystemMessage = `You are AxiomAI. Current date: ${currentDate}`
 
 router.post('/conversation', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')

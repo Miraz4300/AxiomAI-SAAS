@@ -46,6 +46,7 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 appStore.UserFeatures()
 const chatFooterEnabled = computed(() => appStore.chatFooterEnabled)
 const chatFooterText = computed(() => appStore.chatFooterText)
+const internetAccessEnabled = computed(() => appStore.internetAccessEnabled)
 
 const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
@@ -653,7 +654,7 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
                   <Voice v-if="!isMobile && speechStore.enable" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
                 </div>
                 <div class="flex items-center">
-                  <div class="flex items-center text-neutral-400">
+                  <div v-show="internetAccessEnabled" class="flex items-center text-neutral-400">
                     <NTooltip :style="{ maxWidth: '300px' }" trigger="hover">
                       <template #trigger>
                         <SvgIcon icon="ri:question-line" />

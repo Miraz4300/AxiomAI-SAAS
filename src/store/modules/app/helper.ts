@@ -14,10 +14,11 @@ export interface AppState {
   chatFooterText?: string
   whiteboardEnabled?: boolean
   merchEnabled?: boolean
+  internetAccessEnabled?: boolean
 }
 
 export function defaultSetting(): AppState {
-  return { siderCollapsed: false, theme: 'auto', language: 'en-US', chatFooterEnabled: false, chatFooterText: '', whiteboardEnabled: false, merchEnabled: false }
+  return { siderCollapsed: false, theme: 'auto', language: 'en-US', chatFooterEnabled: false, chatFooterText: '', whiteboardEnabled: false, merchEnabled: false, internetAccessEnabled: false }
 }
 
 export function getLocalSetting(): AppState {

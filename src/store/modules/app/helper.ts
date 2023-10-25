@@ -10,10 +10,14 @@ export interface AppState {
   siderCollapsed: boolean
   theme: Theme
   language: Language
+  chatFooterEnabled?: boolean
+  chatFooterText?: string
+  whiteboardEnabled?: boolean
+  merchEnabled?: boolean
 }
 
 export function defaultSetting(): AppState {
-  return { siderCollapsed: false, theme: 'auto', language: 'en-US' }
+  return { siderCollapsed: false, theme: 'auto', language: 'en-US', chatFooterEnabled: false, chatFooterText: '', whiteboardEnabled: false, merchEnabled: false }
 }
 
 export function getLocalSetting(): AppState {

@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
+import { fetchUserFeatures } from '../../../api/'
 import type { AppState, Language, Theme } from './helper'
 import { getLocalSetting, setLocalSetting } from './helper'
 import { store } from '@/store'
+import type { FeaturesConfig } from '@/components/admin/model'
 
 export const useAppStore = defineStore('app-store', {
   state: (): AppState => getLocalSetting(),
@@ -21,6 +23,16 @@ export const useAppStore = defineStore('app-store', {
         this.language = language
         this.recordState()
       }
+    },
+
+    async UserFeatures() {
+      const response = await fetchUserFeatures()
+      const featuresConfig: FeaturesConfig = response.data
+      this.chatFooterEnabled = featuresConfig.chatFooterEnabled
+      this.chatFooterText = featuresConfig.chatFooterText
+      this.whiteboardEnabled = featuresConfig.whiteboardEnabled
+      this.merchEnabled = featuresConfig.merchEnabled
+      this.recordState()
     },
 
     recordState() {

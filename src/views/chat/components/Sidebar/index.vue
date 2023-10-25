@@ -1,17 +1,16 @@
 <script lang="ts" setup>
-import { computed, h, onMounted, ref } from 'vue'
+import { computed, h } from 'vue'
 import { useRouter } from 'vue-router'
 import type { DropdownOption } from 'naive-ui'
 import { NDropdown, NText } from 'naive-ui'
 import { HoverButton, MenuButton, SvgIcon, UserAvatar, UserRole } from '@/components/common'
 import { useIconRender } from '@/hooks/useIconRender'
-import { useAuthStore, useUserStore } from '@/store'
+import { useAppStore, useAuthStore, useUserStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { ADMIN_ROUTE, SETTING_ROUTE } from '@/router/routes'
-import type { FeaturesConfig } from '@/components/admin/model'
-import { fetchUserFeatures } from '@/api'
 
 const router = useRouter()
+const appStore = useAppStore()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
@@ -24,6 +23,7 @@ const chatRouteRegex = /^\/chat\/\d+$/
 const isChatActive = computed(() => chatRouteRegex.test(router.currentRoute.value.path))
 const isSettingsActive = computed(() => router.currentRoute.value.path === '/user')
 const isDrawActive = computed(() => router.currentRoute.value.path === '/whiteboard')
+const whiteboardEnabled = computed(() => appStore.whiteboardEnabled)
 
 function goChat() {
   if (!chatRouteRegex.test(router.currentRoute.value.path))
@@ -102,13 +102,6 @@ async function handleDropdown(optionKey: string) {
     router.push(SETTING_ROUTE)
   }
 }
-
-const whiteboardEnabled = ref<boolean | null>(null)
-
-onMounted(async () => {
-  const response = await fetchUserFeatures<FeaturesConfig>()
-  whiteboardEnabled.value = response.data.whiteboardEnabled || false
-})
 </script>
 
 <template>

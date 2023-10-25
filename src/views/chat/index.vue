@@ -11,9 +11,8 @@ import Header from './components/Header/index.vue'
 import prompts from './components/prompts.json'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useAuthStore, useChatStore, useUserStore } from '@/store'
-import type { FeaturesConfig } from '@/components/admin/model'
-import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding, fetchUserFeatures } from '@/api'
+import { useAppStore, useAuthStore, useChatStore, useUserStore } from '@/store'
+import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding } from '@/api'
 import { t } from '@/locales'
 import { useSpeechStore } from '@/store/modules/speech'
 import { debounce } from '@/utils/functions/debounce'
@@ -26,6 +25,7 @@ const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 const route = useRoute()
 const dialog = useDialog()
 const ms = useMessage()
+const appStore = useAppStore()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const chatStore = useChatStore()
@@ -42,8 +42,10 @@ const usingContext = computed(() => currentChatHistory?.value?.usingContext ?? t
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 const conversationList = computed(() => dataSources.value.filter(item => (!item.inversion && !!item.conversationOptions)))
 
-const chatFooterEnabled = ref<boolean | null>(null)
-const chatFooterText = ref<string | null>(null)
+// Call the action of fetching user features when the page is loaded
+appStore.UserFeatures()
+const chatFooterEnabled = computed(() => appStore.chatFooterEnabled)
+const chatFooterText = computed(() => appStore.chatFooterText)
 
 const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
@@ -519,12 +521,6 @@ onMounted(() => {
   }
 })
 
-onMounted(async () => {
-  const response = await fetchUserFeatures<FeaturesConfig>()
-  chatFooterEnabled.value = response.data.chatFooterEnabled || false
-  chatFooterText.value = response.data.chatFooterText || ''
-})
-
 watch(() => chatStore.active, (_newVal, _oldVal) => {
   handleSyncChat()
 })
@@ -679,7 +675,7 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
           </div>
         </div>
       </div>
-      <div v-if="chatFooterEnabled" class="text-center text-xs text-black/60 dark:text-white/50 mt-2" v-html="chatFooterText" />
+      <div v-show="chatFooterEnabled" class="text-center text-xs text-black/60 dark:text-white/50 mt-2" v-html="chatFooterText" />
     </footer>
   </div>
   <Announcement />

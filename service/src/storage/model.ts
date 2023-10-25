@@ -248,6 +248,7 @@ export class FeaturesConfig {
     public chatFooterText?: string,
     public whiteboardEnabled?: boolean,
     public merchEnabled?: boolean,
+    public internetAccessEnabled?: boolean,
   ) { }
 }
 

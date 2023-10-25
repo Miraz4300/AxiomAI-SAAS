@@ -32,6 +32,7 @@ export const useAppStore = defineStore('app-store', {
       this.chatFooterText = featuresConfig.chatFooterText
       this.whiteboardEnabled = featuresConfig.whiteboardEnabled
       this.merchEnabled = featuresConfig.merchEnabled
+      this.internetAccessEnabled = featuresConfig.internetAccessEnabled
       this.recordState()
     },
 

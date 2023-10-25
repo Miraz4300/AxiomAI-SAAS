@@ -174,4 +174,5 @@ export class FeaturesConfig {
   chatFooterText?: string
   whiteboardEnabled?: boolean
   merchEnabled?: boolean
+  internetAccessEnabled?: boolean
 }

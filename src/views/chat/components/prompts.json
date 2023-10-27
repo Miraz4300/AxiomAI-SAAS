@@ -118,5 +118,9 @@
     {
         "key": "Suggest me some great sci-fi movies to watch",
         "value": "Suggest me some sci-fi movies with higer IMDB rating from year 2000 above to watch."
+    },
+    {
+        "key": "Write a spreadsheet formula to convert a date to the weekday",
+        "value": "Can you write me a spreadsheet formula to convert a date in one column to the weekday (like Thursday)?"
     }
 ]

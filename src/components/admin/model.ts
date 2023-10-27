@@ -37,6 +37,8 @@ export class SiteConfig {
 }
 
 export interface SubData {
+  enabled?: boolean
+  title?: string
   price?: string
   details?: string
   message?: string
@@ -46,6 +48,7 @@ export class SubscriptionConfig {
   premium?: SubData
   mvp?: SubData
   support?: SubData
+  enterprise?: SubData
   subImageLink?: string
   subURL?: string
 }
@@ -113,7 +116,7 @@ export enum Status {
 export enum UserRole {
   Admin = 0,
   Free = 1,
-  Guest = 2,
+  Enterprise = 2,
   Premium = 3,
   MVP = 4,
   Support = 5,

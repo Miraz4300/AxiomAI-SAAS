@@ -203,6 +203,8 @@ export class SiteConfig {
 }
 
 export interface SubData {
+  enabled?: boolean
+  title?: string
   price?: string
   details?: string
   message?: string
@@ -213,6 +215,7 @@ export class SubscriptionConfig {
     public premium?: SubData,
     public mvp?: SubData,
     public support?: SubData,
+    public enterprise?: SubData,
     public subImageLink?: string,
     public subURL?: string,
   ) { }

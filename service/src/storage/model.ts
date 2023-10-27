@@ -18,10 +18,14 @@ export enum UserRole {
   Premium = 3,
   MVP = 4,
   Support = 5,
-  Contributor = 6,
-  Developer = 7,
-  Tester = 8,
-  Partner = 9,
+  Basic = 6,
+  'Basic+' = 7,
+  Contributor = 8,
+  Developer = 9,
+  Tester = 10,
+  Partner = 11,
+  Moderator = 12,
+  Sales = 13,
 }
 
 export class UserInfo {
@@ -216,6 +220,8 @@ export class SubscriptionConfig {
     public mvp?: SubData,
     public support?: SubData,
     public enterprise?: SubData,
+    public basic?: SubData,
+    public basicPlus?: SubData,
     public subImageLink?: string,
     public subURL?: string,
   ) { }

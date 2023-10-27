@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NInput, NSpin, useMessage } from 'naive-ui'
+import { NButton, NInput, NSpin, NSwitch, useMessage } from 'naive-ui'
 import type { ConfigState, SubscriptionConfig } from './model'
 import { fetchChatConfig, fetchUpdateSubscription } from '@/api'
 
@@ -21,9 +21,10 @@ async function fetchConfig() {
     else {
       // Create a default SubscriptionConfig if it doesn't exist
       config.value = {
-        premium: { price: '', details: '', message: '' },
-        mvp: { price: '', details: '', message: '' },
-        support: { price: '', details: '', message: '' },
+        premium: { enabled: false, title: '', price: '', details: '', message: '' },
+        mvp: { enabled: false, title: '', price: '', details: '', message: '' },
+        support: { enabled: false, title: '', price: '', details: '', message: '' },
+        enterprise: { enabled: false, title: '', price: '', details: '', message: '' },
       }
       // Save the default SubscriptionConfig to the database
       await fetchUpdateSubscription(config.value)
@@ -57,12 +58,20 @@ onMounted(() => {
     <div class="flex flex-col p-4 space-y-6">
       <div class="flex-col">
         Premium:
+        <NSwitch
+          :round="false" :value="config && config.premium && config.premium.enabled"
+          @update:value="(val: boolean | undefined) => { if (config && config.premium) config.premium.enabled = val }"
+        />
         <div class="flex flex-col space-y-2 w-full">
           <NInput
             :value="config && config.premium && config.premium.details" placeholder="premium details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
             @input="(val: string | undefined) => { if (config && config.premium) config.premium.details = val }"
           />
           <div class="flex space-x-2">
+            <NInput
+              :value="config && config.premium && config.premium.title" placeholder="premium title"
+              @input="(val: string | undefined) => { if (config && config.premium) config.premium.title = val }"
+            />
             <NInput
               :value="config && config.premium && config.premium.price" placeholder="premium price"
               @input="(val: string | undefined) => { if (config && config.premium) config.premium.price = val }"
@@ -76,12 +85,20 @@ onMounted(() => {
       </div>
       <div class="flex-col">
         MVP:
+        <NSwitch
+          :round="false" :value="config && config.mvp && config.mvp.enabled"
+          @update:value="(val: boolean | undefined) => { if (config && config.mvp) config.mvp.enabled = val }"
+        />
         <div class="flex flex-col space-y-2 w-full">
           <NInput
             :value="config && config.mvp && config.mvp.details" placeholder="mvp details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
             @input="(val: string | undefined) => { if (config && config.mvp) config.mvp.details = val }"
           />
           <div class="flex space-x-2">
+            <NInput
+              :value="config && config.mvp && config.mvp.title" placeholder="mvp title"
+              @input="(val: string | undefined) => { if (config && config.mvp) config.mvp.title = val }"
+            />
             <NInput
               :value="config && config.mvp && config.mvp.price" placeholder="mvp price"
               @input="(val: string | undefined) => { if (config && config.mvp) config.mvp.price = val }"
@@ -95,6 +112,10 @@ onMounted(() => {
       </div>
       <div class="flex-col">
         Supporter:
+        <NSwitch
+          :round="false" :value="config && config.support && config.support.enabled"
+          @update:value="(val: boolean | undefined) => { if (config && config.support) config.support.enabled = val }"
+        />
         <div class="flex flex-col space-y-2 w-full">
           <NInput
             :value="config && config.support && config.support.details" placeholder="supporter details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
@@ -102,12 +123,44 @@ onMounted(() => {
           />
           <div class="flex space-x-2">
             <NInput
+              :value="config && config.support && config.support.title" placeholder="supporter title"
+              @input="(val: string | undefined) => { if (config && config.support) config.support.title = val }"
+            />
+            <NInput
               :value="config && config.support && config.support.price" placeholder="supporter price"
               @input="(val: string | undefined) => { if (config && config.support) config.support.price = val }"
             />
             <NInput
               :value="config && config.support && config.support.message" placeholder="after buy message"
               @input="(val: string | undefined) => { if (config && config.support) config.support.message = val }"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="flex-col">
+        Enterprise:
+        <NSwitch
+          :round="false" :value="config && config.enterprise && config.enterprise.enabled"
+          @update:value="(val: boolean | undefined) => { if (config && config.enterprise) config.enterprise.enabled = val }"
+        />
+
+        <div class="flex flex-col space-y-2 w-full">
+          <NInput
+            :value="config && config.enterprise && config.enterprise.details" placeholder="enterprise details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
+            @input="(val: string | undefined) => { if (config && config.enterprise) config.enterprise.details = val }"
+          />
+          <div class="flex space-x-2">
+            <NInput
+              :value="config && config.enterprise && config.enterprise.title" placeholder="enterprise title"
+              @input="(val: string | undefined) => { if (config && config.enterprise) config.enterprise.title = val }"
+            />
+            <NInput
+              :value="config && config.enterprise && config.enterprise.price" placeholder="enterprise price"
+              @input="(val: string | undefined) => { if (config && config.enterprise) config.enterprise.price = val }"
+            />
+            <NInput
+              :value="config && config.enterprise && config.enterprise.message" placeholder="after buy message"
+              @input="(val: string | undefined) => { if (config && config.enterprise) config.enterprise.message = val }"
             />
           </div>
         </div>

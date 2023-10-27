@@ -654,7 +654,7 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
                   <Voice v-if="!isMobile && speechStore.enable" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
                 </div>
                 <div class="flex items-center">
-                  <div v-show="internetAccessEnabled" class="flex items-center text-neutral-400">
+                  <div v-if="internetAccessEnabled" class="flex items-center text-neutral-400">
                     <NTooltip :style="{ maxWidth: '300px' }" trigger="hover">
                       <template #trigger>
                         <SvgIcon icon="ri:question-line" />
@@ -676,7 +676,7 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
           </div>
         </div>
       </div>
-      <div v-show="chatFooterEnabled" class="text-center text-xs text-black/60 dark:text-white/50 mt-2" v-html="chatFooterText" />
+      <div v-if="chatFooterEnabled" class="text-center text-xs text-black/60 dark:text-white/50 mt-2" v-html="chatFooterText" />
     </footer>
   </div>
   <Announcement />

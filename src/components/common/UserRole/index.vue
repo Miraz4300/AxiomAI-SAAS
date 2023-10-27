@@ -33,6 +33,12 @@ function TagType(role: UserRole) {
   if (role === UserRole.MVP)
     return 'warning'
   if (role === UserRole.Support)
+    return 'warning'
+  if (role === UserRole.Enterprise)
+    return 'error'
+  if (role === UserRole.Basic)
+    return 'info'
+  if (role === UserRole['Basic+'])
     return 'info'
   return 'default'
 }
@@ -44,6 +50,12 @@ function IconName(role: UserRole) {
     return 'ri:award-fill'
   if (role === UserRole.Support)
     return 'ri:hearts-fill'
+  if (role === UserRole.Enterprise)
+    return 'ri:building-fill'
+  if (role === UserRole.Basic)
+    return 'ri:quill-pen-fill'
+  if (role === UserRole['Basic+'])
+    return 'ri:quill-pen-fill'
   return ''
 }
 

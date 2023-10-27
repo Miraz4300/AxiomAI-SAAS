@@ -49,6 +49,8 @@ export class SubscriptionConfig {
   mvp?: SubData
   support?: SubData
   enterprise?: SubData
+  basic?: SubData
+  basicPlus?: SubData
   subImageLink?: string
   subURL?: string
 }
@@ -120,10 +122,14 @@ export enum UserRole {
   Premium = 3,
   MVP = 4,
   Support = 5,
-  Contributor = 6,
-  Developer = 7,
-  Tester = 8,
-  Partner = 9,
+  Basic = 6,
+  'Basic+' = 7,
+  Contributor = 8,
+  Developer = 9,
+  Tester = 10,
+  Partner = 11,
+  Moderator = 12,
+  Sales = 13,
 }
 
 export class KeyConfig {

@@ -19,9 +19,11 @@ const roleMap: { [key: string]: UserRole } = {
   mvp: UserRole.MVP,
   support: UserRole.Support,
   enterprise: UserRole.Enterprise,
+  basic: UserRole.Basic,
+  basicPlus: UserRole['Basic+'],
 }
 
-const subscriptions = ['premium', 'mvp', 'support', 'enterprise'].map(type => ({
+const subscriptions = ['premium', 'mvp', 'support', 'enterprise', 'basic', 'basicPlus'].map(type => ({
   type,
   enabled: computed(() => subStore[`${type}Enabled`]),
   title: computed(() => subStore[`${type}Title`]),

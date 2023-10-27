@@ -31,6 +31,16 @@ export const useSubStore = defineStore('sub-store', {
       this.enterprisePrice = subData.enterprise?.price
       this.enterpriseDetails = subData.enterprise?.details
       this.enterpriseMessage = subData.enterprise?.message
+      this.basicEnabled = subData.basic?.enabled
+      this.basicTitle = subData.basic?.title
+      this.basicPrice = subData.basic?.price
+      this.basicDetails = subData.basic?.details
+      this.basicMessage = subData.basic?.message
+      this.basicPlusEnabled = subData.basicPlus?.enabled
+      this.basicPlusTitle = subData.basicPlus?.title
+      this.basicPlusPrice = subData.basicPlus?.price
+      this.basicPlusDetails = subData.basicPlus?.details
+      this.basicPlusMessage = subData.basicPlus?.message
       this.subImageLink = subData.subImageLink
       this.subURL = subData.subURL
       this.recordState()

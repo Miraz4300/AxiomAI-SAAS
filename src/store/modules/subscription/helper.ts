@@ -23,6 +23,16 @@ export interface SubState {
   enterprisePrice?: string
   enterpriseDetails?: string
   enterpriseMessage?: string
+  basicEnabled?: boolean
+  basicTitle?: string
+  basicPrice?: string
+  basicDetails?: string
+  basicMessage?: string
+  basicPlusEnabled?: boolean
+  basicPlusTitle?: string
+  basicPlusPrice?: string
+  basicPlusDetails?: string
+  basicPlusMessage?: string
   subImageLink?: string
   subURL?: string
 }
@@ -49,6 +59,16 @@ export function defaultSetting(): SubState {
     enterprisePrice: '',
     enterpriseDetails: '',
     enterpriseMessage: '',
+    basicEnabled: false,
+    basicTitle: '',
+    basicPrice: '',
+    basicDetails: '',
+    basicMessage: '',
+    basicPlusEnabled: false,
+    basicPlusTitle: '',
+    basicPlusPrice: '',
+    basicPlusDetails: '',
+    basicPlusMessage: '',
     subImageLink: '',
     subURL: '',
   }

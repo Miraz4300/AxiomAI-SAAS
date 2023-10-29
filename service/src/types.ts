@@ -54,3 +54,16 @@ export interface JWT {
   'azp': string
   'scope': string
 }
+
+export class TwoFAConfig {
+  enabled: boolean
+  userName: string
+  secretKey: string
+  otpauthUrl: string
+  constructor() {
+    this.enabled = false
+    this.userName = ''
+    this.secretKey = ''
+    this.otpauthUrl = ''
+  }
+}

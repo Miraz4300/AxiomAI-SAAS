@@ -106,5 +106,12 @@ export default {
     pitch: 'স্বর',
     rate: 'কথার গতি',
     merch: 'বণিক',
+    passwordConfig: 'পাসওয়ার্ড',
+    oldPassword: 'পুরানো পাসওয়ার্ড',
+    newPassword: 'নতুন পাসওয়ার্ড',
+    confirmNewPassword: 'পাসওয়ার্ড নিশ্চিত করুন',
+    twoFAConfig: '2এফএ',
+    disable2FA: 'Disable 2FA',
+    enable2FA: 'Enable 2FA',
   },
 }

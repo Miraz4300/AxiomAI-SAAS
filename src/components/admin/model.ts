@@ -185,3 +185,24 @@ export class FeaturesConfig {
   merchEnabled?: boolean
   internetAccessEnabled?: boolean
 }
+
+export class UserPassword {
+  oldPassword?: string
+  newPassword?: string
+  confirmPassword?: string
+}
+
+export class TwoFAConfig {
+  enabled: boolean
+  userName: string
+  secretKey: string
+  otpauthUrl: string
+  testCode: string
+  constructor() {
+    this.enabled = false
+    this.userName = ''
+    this.secretKey = ''
+    this.otpauthUrl = ''
+    this.testCode = ''
+  }
+}

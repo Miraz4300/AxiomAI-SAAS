@@ -106,5 +106,12 @@ export default {
     pitch: 'Tone',
     rate: 'Speech speed',
     merch: 'Merch',
+    passwordConfig: 'Password',
+    oldPassword: 'Old Password',
+    newPassword: 'New Password',
+    confirmNewPassword: 'Confirm Password',
+    twoFAConfig: '2FA',
+    disable2FA: 'Disable 2FA',
+    enable2FA: 'Enable 2FA',
   },
 }

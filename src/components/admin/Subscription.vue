@@ -228,13 +228,6 @@ onMounted(() => {
           @input="(val: string | undefined) => { if (config) config.subURL = val }"
         />
       </div>
-      <div class="flex-col">
-        QR Code:
-        <NInput
-          :value="config && config.subImageLink" placeholder=""
-          @input="(val: string | undefined) => { if (config) config.subImageLink = val }"
-        />
-      </div>
       <NButton :loading="saving" type="primary" @click="updatePrice()">
         {{ $t('common.save') }}
       </NButton>

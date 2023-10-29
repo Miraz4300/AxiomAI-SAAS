@@ -33,7 +33,6 @@ export interface SubState {
   basicPlusPrice?: string
   basicPlusDetails?: string
   basicPlusMessage?: string
-  subImageLink?: string
   subURL?: string
 }
 
@@ -69,7 +68,6 @@ export function defaultSetting(): SubState {
     basicPlusPrice: '',
     basicPlusDetails: '',
     basicPlusMessage: '',
-    subImageLink: '',
     subURL: '',
   }
 }

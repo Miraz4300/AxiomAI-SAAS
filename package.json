@@ -1,6 +1,6 @@
 {
   "name": "axiomai",
-  "version": "3.0.0-preview18",
+  "version": "3.0.0-preview19",
   "private": false,
   "description": "AxiomAI",
   "author": "Miraz4300 <miraz4300@gmail.com>",
@@ -31,6 +31,7 @@
     "microsoft-cognitiveservices-speech-sdk": "^1.32.0",
     "naive-ui": "^2.34.4",
     "pinia": "^2.1.6",
+    "qrcode.vue": "^3.4.1",
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.3.4",
     "vue-chartjs": "^5.2.0",

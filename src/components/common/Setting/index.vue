@@ -3,6 +3,8 @@ import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import { NCard, NLayout, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
+import Password from './Password.vue'
+import TwoFA from './TwoFA.vue'
 import Subscription from './Subscription.vue'
 import Statistics from './Statistics.vue'
 import About from './About.vue'
@@ -70,12 +72,28 @@ const show = computed({
           <NTabs v-model:value="active" type="line" animated>
             <NTabPane name="general">
               <template #tab>
-                <SvgIcon class="text-lg" icon="mdi:account-circle-outline" />
+                <SvgIcon class="text-lg" icon="mdi:user-outline" />
                 <span class="ml-2">{{ $t('setting.general') }}</span>
               </template>
               <div class="mt-4 min-h-[100px] max-w-[490px]">
                 <General />
               </div>
+            </NTabPane>
+            <NTabPane name="password">
+              <template #tab>
+                <SvgIcon class="text-lg" icon="ri-key-2-line" />
+                <span class="ml-2">{{ $t('setting.passwordConfig') }}</span>
+              </template>
+              <div class="mt-2 min-h-[100px] max-w-[490px]">
+                <Password />
+              </div>
+            </NTabPane>
+            <NTabPane name="2FA">
+              <template #tab>
+                <SvgIcon class="text-lg" icon="mdi:security-account-outline" />
+                <span class="ml-2">{{ $t('setting.twoFAConfig') }}</span>
+              </template>
+              <TwoFA />
             </NTabPane>
             <NTabPane v-if="!isMobile && speechStore.enable" name="speech">
               <template #tab>

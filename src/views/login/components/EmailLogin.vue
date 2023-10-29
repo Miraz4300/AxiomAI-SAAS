@@ -14,6 +14,8 @@ const authStore = useAuthStore()
 const loading = ref(false)
 const username = ref('')
 const password = ref('')
+const token = ref('')
+const need2FA = ref(false)
 
 const disabled = computed(() => !username.value.trim() || !password.value.trim() || loading.value)
 
@@ -79,9 +81,14 @@ async function handleLogin() {
 
   try {
     loading.value = true
-    const result = await fetchLogin(name, pwd)
+    const result = await fetchLogin(name, pwd, token.value)
+    if (result.data.need2FA) {
+      need2FA.value = true
+      ms.warning(result.message as string)
+      return
+    }
     await authStore.setToken(result.data.token)
-    ms.success('Login successful, welcome back.')
+    ms.success(result.message as string)
     // Redirect to the originally requested page or home page if no redirect query parameter exists
     const redirect = route.query.redirect
     router.replace(redirect ? decodeURIComponent(redirect as string) : '/')
@@ -106,6 +113,7 @@ async function handleLogin() {
     <NInputGroup>
       <NInput v-model:value="username" type="text" placeholder="Email" class="mb-2" />
       <NInput v-model:value="password" type="password" placeholder="Password" class="mb-2" @keypress="handlePress" />
+      <NInput v-if="need2FA" v-model:value="token" type="text" placeholder="Two-step verification" class="mb-2" @keypress="handlePress" />
     </NInputGroup>
     <NButton block type="primary" :disabled="disabled" :loading="loading" @click="handleLogin">
       Login

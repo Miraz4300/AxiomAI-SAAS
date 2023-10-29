@@ -19,19 +19,20 @@ const authMaxCount = (isNotEmptyString(AUTH_MAX_REQUEST_PER_MINUTE) && !Number.i
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000, // Maximum number of accesses within an hour
   max: maxCount,
-  statusCode: 200, // 200 means success，but the message is 'Your IP address has made excessive requests within 1 hour'
+  statusCode: 200, // 200 means success，but it will send the error message.
   keyGenerator: (req, _) => {
     return requestIp.getClientIp(req) // IP address from requestIp.mw(), as opposed to req.ip
   },
   message: async (req, res) => {
-    res.send({ status: 'Fail', message: 'Your IP address has made excessive requests within 1 hour', data: null })
+    const retryAfter = Math.ceil(res.get('Retry-After') / 60)
+    res.send({ status: 'Fail', message: `You've reached the current usages cap of your subscription. Try again after **${retryAfter} minutes** later.`, data: null })
   },
 })
 
 const authLimiter = rateLimit({
   windowMs: 60 * 1000, // Maximum number of accesses within a minute
   max: authMaxCount,
-  statusCode: 200, // 200 means success，but the message is 'Too many request from this IP in 1 minute'
+  statusCode: 200, // 200 means success，but it will send the error message.
   keyGenerator: (req, _) => {
     return requestIp.getClientIp(req) // IP address from requestIp.mw(), as opposed to req.ip
   },

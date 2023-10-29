@@ -64,6 +64,11 @@ const columns = [
     },
   },
   {
+    title: 'Remark',
+    key: 'remark',
+    width: 220,
+  },
+  {
     title: 'Action',
     key: '_id',
     width: 220,
@@ -95,7 +100,7 @@ const columns = [
           { default: () => ('Edit User') },
         ))
       }
-      if (row.status === Status.PreVerify || row.status === Status.AdminVerify) {
+      if (row.status === Status.Unverified || row.status === Status.AdminVerify) {
         actions.push(h(
           NButton,
           {
@@ -250,6 +255,15 @@ onMounted(async () => {
               :value="userRef.roles"
               :options="userRoleOptions"
               @update-value="(value: UserRole[]) => userRef.roles = value"
+            />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">Remark</span>
+          <div class="flex-1">
+            <NInput
+              v-model:value="userRef.remark" type="textarea"
+              :autosize="{ minRows: 1, maxRows: 2 }" placeholder=""
             />
           </div>
         </div>

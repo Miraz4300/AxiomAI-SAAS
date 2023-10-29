@@ -110,7 +110,7 @@ export enum Status {
   Deleted = 1,
   InversionDeleted = 2,
   ResponseDeleted = 3,
-  PreVerify = 4,
+  Unverified = 4,
   AdminVerify = 5,
   Disabled = 6,
 }
@@ -173,6 +173,7 @@ export class UserInfo {
   email?: string
   password?: string
   roles: UserRole[]
+  remark?: string
   constructor(roles: UserRole[]) {
     this.roles = roles
   }

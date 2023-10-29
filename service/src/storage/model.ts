@@ -224,7 +224,6 @@ export class SubscriptionConfig {
     public enterprise?: SubData,
     public basic?: SubData,
     public basicPlus?: SubData,
-    public subImageLink?: string,
     public subURL?: string,
   ) { }
 }

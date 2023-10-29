@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { NAlert, NButton, NCard, NModal, NTag } from 'naive-ui'
+import { computed } from 'vue'
+import { NAlert, NButton, NCard, NTag } from 'naive-ui'
 import { UserRole } from '@/components/admin/model'
 import { SvgIcon } from '@/components/common'
 import { useSubStore, useUserStore } from '@/store'
-
-const show = ref(false)
 
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
@@ -35,13 +33,12 @@ const subscriptions = ['premium', 'mvp', 'support', 'enterprise', 'basic', 'basi
 
 const enabledSubscriptions = computed(() => subscriptions.filter(sub => sub.enabled.value))
 const subURL = computed(() => subStore.subURL)
-const subImageLink = computed(() => subStore.subImageLink)
 
 function handleButtonClick(type: string) {
   if (type === 'enterprise')
     window.location.href = 'mailto:sales@axiomaibd.com'
   else
-    show.value = true
+    window.open(subURL.value, '_blank', 'noopener,noreferrer')
 }
 </script>
 
@@ -78,12 +75,4 @@ function handleButtonClick(type: string) {
       </NAlert>
     </div>
   </NCard>
-
-  <NModal v-model:show="show" style="max-width: 370px">
-    <NCard :bordered="false" role="dialog" title="Buy subscription">
-      <a :href="subURL" target="_blank" rel="noopener noreferrer">
-        <img :src="subImageLink" alt="Subscription Image">
-      </a>
-    </NCard>
-  </NModal>
 </template>

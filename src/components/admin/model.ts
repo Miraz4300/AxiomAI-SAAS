@@ -51,7 +51,6 @@ export class SubscriptionConfig {
   enterprise?: SubData
   basic?: SubData
   basicPlus?: SubData
-  subImageLink?: string
   subURL?: string
 }
 

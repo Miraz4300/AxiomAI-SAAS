@@ -6,7 +6,7 @@ export enum Status {
   Deleted = 1,
   InversionDeleted = 2,
   ResponseDeleted = 3,
-  PreVerify = 4,
+  Unverified = 4,
   AdminVerify = 5,
   Disabled = 6,
 }
@@ -41,15 +41,17 @@ export class UserInfo {
   updateTime?: string
   config?: UserConfig
   roles?: UserRole[]
+  remark?: string
   constructor(email: string, password: string) {
     this.name = email
     this.email = email
     this.password = password
-    this.status = Status.PreVerify
+    this.status = Status.Unverified
     this.createTime = new Date().toLocaleString()
     this.verifyTime = null
     this.updateTime = new Date().toLocaleString()
     this.roles = [UserRole.Free]
+    this.remark = null
   }
 }
 

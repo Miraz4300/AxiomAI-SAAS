@@ -537,7 +537,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
 
     const user = await getUser(username)
     if (user != null) {
-      if (user.status === Status.PreVerify) {
+      if (user.status === Status.Unverified) {
         await sendVerifyMail(username, await getUserVerifyUrl(username))
         throw new Error('A verification email has already been sent to your email address!')
       }
@@ -659,7 +659,7 @@ router.post('/user-login', authLimiter, async (req, res) => {
     const user = await getUser(username)
     if (user == null || user.password !== md5(password))
       throw new Error('User does not exist or incorrect password')
-    if (user.status === Status.PreVerify)
+    if (user.status === Status.Unverified)
       throw new Error('Please verify your email address first')
     if (user != null && user.status === Status.AdminVerify)
       throw new Error('Please wait for the admin to activate your account')
@@ -768,7 +768,7 @@ router.post('/user-status', rootAuth, async (req, res) => {
     const { userId, status } = req.body as { userId: string; status: Status }
     const user = await getUserById(userId)
     await updateUserStatus(userId, status)
-    if ((user.status === Status.PreVerify || user.status === Status.AdminVerify) && status === Status.Normal)
+    if ((user.status === Status.Unverified || user.status === Status.AdminVerify) && status === Status.Normal)
       await sendNoticeMail(user.email)
     res.send({ status: 'Success', message: 'Update successfully' })
   }
@@ -779,13 +779,13 @@ router.post('/user-status', rootAuth, async (req, res) => {
 
 router.post('/user-edit', rootAuth, async (req, res) => {
   try {
-    const { userId, email, password, roles } = req.body as { userId?: string; email: string; password: string; roles: UserRole[] }
+    const { userId, email, password, roles, remark } = req.body as { userId?: string; email: string; password: string; roles: UserRole[]; remark?: string }
     if (userId) {
-      await updateUser(userId, roles, password)
+      await updateUser(userId, roles, password, remark)
     }
     else {
       const newPassword = md5(password)
-      const user = await createUser(email, newPassword, roles)
+      const user = await createUser(email, newPassword, roles, remark)
       await updateUserStatus(user._id.toString(), Status.Normal)
     }
     res.send({ status: 'Success', message: 'Update successfully' })
@@ -810,7 +810,7 @@ router.post('/verification', authLimiter, async (req, res) => {
       throw new Error('The email address given has already been registered within our system!')
     if (user.status === Status.AdminVerify)
       throw new Error('Please wait for the admin to activate')
-    if (user.status !== Status.PreVerify)
+    if (user.status !== Status.Unverified)
       throw new Error('Account abnormality')
 
     const config = await getCacheConfig()

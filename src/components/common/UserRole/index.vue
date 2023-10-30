@@ -47,7 +47,7 @@ function IconName(role: UserRole) {
   if (role === UserRole.Premium)
     return 'ri:vip-diamond-fill'
   if (role === UserRole.MVP)
-    return 'ri:blaze-fill'
+    return 'ri:vip-crown-fill'
   if (role === UserRole.Support)
     return 'ri:hearts-fill'
   if (role === UserRole.Enterprise)

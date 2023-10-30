@@ -113,7 +113,7 @@ async function handleLogin() {
     <NInputGroup>
       <NInput v-model:value="username" type="text" placeholder="Email" class="mb-2" />
       <NInput v-model:value="password" type="password" placeholder="Password" class="mb-2" @keypress="handlePress" />
-      <NInput v-if="need2FA" v-model:value="token" type="text" placeholder="Two-step verification" class="mb-2" @keypress="handlePress" />
+      <NInput v-if="need2FA" v-model:value="token" type="text" placeholder="Enter an authenticator app code" class="mb-2" @keypress="handlePress" />
     </NInputGroup>
     <NButton block type="primary" :disabled="disabled" :loading="loading" @click="handleLogin">
       Login

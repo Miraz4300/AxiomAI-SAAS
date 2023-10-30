@@ -33,7 +33,7 @@ function TagType(role: UserRole) {
   if (role === UserRole.MVP)
     return 'warning'
   if (role === UserRole.Support)
-    return 'warning'
+    return 'success'
   if (role === UserRole.Enterprise)
     return 'error'
   if (role === UserRole.Basic)
@@ -47,7 +47,7 @@ function IconName(role: UserRole) {
   if (role === UserRole.Premium)
     return 'ri:vip-diamond-fill'
   if (role === UserRole.MVP)
-    return 'ri:award-fill'
+    return 'ri:blaze-fill'
   if (role === UserRole.Support)
     return 'ri:hearts-fill'
   if (role === UserRole.Enterprise)
@@ -55,7 +55,7 @@ function IconName(role: UserRole) {
   if (role === UserRole.Basic)
     return 'ri:quill-pen-fill'
   if (role === UserRole['Basic+'])
-    return 'ri:quill-pen-fill'
+    return 'ri:briefcase-4-fill'
   return ''
 }
 

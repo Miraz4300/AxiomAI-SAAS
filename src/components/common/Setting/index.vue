@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watchEffect } from 'vue'
 import { NCard, NLayout, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
@@ -41,9 +41,9 @@ onMounted(() => {
   if (!id)
     router.replace({ query: { id: active.value } })
 })
-watch(active, (newTab) => {
-  if (route.query.id !== newTab)
-    router.push({ query: { id: newTab } })
+watchEffect(() => {
+  if (route.query.id !== active.value)
+    router.push({ query: { id: active.value } })
 })
 
 const show = computed({

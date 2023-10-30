@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, onMounted, ref, watch, watchEffect } from 'vue'
+import { computed, onMounted, ref, watchEffect } from 'vue'
 import { NCard, NLayout, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
@@ -42,12 +42,8 @@ onMounted(() => {
     router.replace({ query: { id: active.value } })
 })
 watchEffect(() => {
-  const id = route.query.id
-  if (id)
-    active.value = id as string
-})
-watch(active, (newTab) => {
-  router.push({ query: { id: newTab } })
+  if (route.query.id !== active.value)
+    router.push({ query: { id: active.value } })
 })
 
 const show = computed({
@@ -81,7 +77,7 @@ const show = computed({
             </NTabPane>
             <NTabPane name="password">
               <template #tab>
-                <SvgIcon class="text-lg" icon="ri-key-2-line" />
+                <SvgIcon class="text-lg" icon="ri:key-line" />
                 <span class="ml-2">{{ $t('setting.passwordConfig') }}</span>
               </template>
               <div class="mt-2 min-h-[100px] max-w-[490px]">

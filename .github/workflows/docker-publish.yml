@@ -82,3 +82,9 @@ jobs:
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
+
+      # Deploy the stack after signing the Docker image
+      - name: Deploy stack
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          curl -X POST https://neuron.deepspacelab.tech/api/stacks/webhooks/a6189cb7-8b2f-48a6-b039-bf928b77e9b3

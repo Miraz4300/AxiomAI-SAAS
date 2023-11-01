@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { MessageReactive } from 'naive-ui'
 import { NButton, NDivider, NInput, NSpin, NSwitch, NTooltip, useDialog, useMessage } from 'naive-ui'
@@ -16,6 +16,7 @@ import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding
 import { t } from '@/locales'
 import { useSpeechStore } from '@/store/modules/speech'
 import { debounce } from '@/utils/functions/debounce'
+import type { CHATMODEL } from '@/components/admin/model'
 
 let controller = new AbortController()
 let lastChatInfo: any = {}
@@ -52,6 +53,11 @@ const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
+const nowSelectChatModel = ref<CHATMODEL | null>(null)
+const currentChatModel = computed(() => nowSelectChatModel.value ?? currentChatHistory.value?.chatModel ?? userStore.userInfo.config.chatModel)
+
+provide('nowSelectChatModel', nowSelectChatModel)
+provide('currentChatModel', currentChatModel)
 
 let loadingms: MessageReactive
 let allmsg: MessageReactive
@@ -94,6 +100,9 @@ async function onConversation() {
 
   if (!message || message.trim() === '')
     return
+
+  if (nowSelectChatModel.value && currentChatHistory.value)
+    currentChatHistory.value.chatModel = nowSelectChatModel.value
 
   controller = new AbortController()
 

@@ -26,8 +26,8 @@ services:
       # JWT secret key | Empty key will disable authentication system
       AUTH_SECRET_KEY:
 
-      # Allow anyone to signup
-      REGISTER_ENABLED: false
+      # Allow signup | set 'true' to enable signup and 'false' to disable signup
+      REGISTER_ENABLED: 
 
       # Root user email
       ROOT_USER:

@@ -32,6 +32,9 @@ const routes: RouteRecordRaw[] = [
     path: '/auth/login',
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
+    meta: {
+      hidden: true, // Hide this route from the sidebar
+    },
   },
   {
     path: '/admin',

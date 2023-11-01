@@ -82,7 +82,8 @@ onMounted(() => {
         <div v-if="config && config.enabled" class="flex items-center space-x-4">
           <div class="flex flex-wrap items-center gap-4">
             <NButton
-              :loading="saving" type="warning" @click="disable2FA()"
+              :loading="saving" type="error" :disabled="!config || !config.testCode || config.testCode.length !== 6"
+              @click="disable2FA()"
             >
               {{ $t('setting.disable2FA') }}
             </NButton>

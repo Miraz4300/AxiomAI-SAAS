@@ -112,7 +112,7 @@ async function handleDropdown(optionKey: string) {
           <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[#0083A0] hover:dark:text-[#00B2DB]" :class="[isChatActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:message-3-line" />
         </MenuButton>
       </div>
-      <div v-if="whiteboardEnabled" class="flex w-full flex-col justify-center">
+      <div v-if="!!authStore.token && whiteboardEnabled" class="flex w-full flex-col justify-center">
         <MenuButton :tooltip="$t('chat.draw')" placement="right" @click="goDraw">
           <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[#0083A0] hover:dark:text-[#00B2DB]" :class="[isDrawActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:artboard-line" />
         </MenuButton>
@@ -138,11 +138,11 @@ async function handleDropdown(optionKey: string) {
         <SvgIcon :class="[iconClass2]" icon="ri:message-3-line" />
         <p>{{ $t('chat.chat') }}</p>
       </a>
-      <a v-if="whiteboardEnabled" class="leading-4 text-center cursor-pointer" :class="[isDrawActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goDraw">
+      <a v-if="!!authStore.token && whiteboardEnabled" class="leading-4 text-center cursor-pointer" :class="[isDrawActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goDraw">
         <SvgIcon :class="[iconClass2]" icon="ri:artboard-line" />
         <p>{{ $t('chat.draw') }}</p>
       </a>
-      <a class="leading-4 text-center cursor-pointer" :class="[isSettingsActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goSetting">
+      <a v-if="!!authStore.token" class="leading-4 text-center cursor-pointer" :class="[isSettingsActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goSetting">
         <SvgIcon :class="[iconClass2]" icon="ri:settings-3-line" />
         <p>{{ $t('setting.setting') }}</p>
       </a>

@@ -13,7 +13,7 @@ services:
       - mongodb:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 104382009
+      MONGO_INITDB_ROOT_PASSWORD: 
       MONGO_INITDB_DATABASE: axiomdb
 
 volumes:

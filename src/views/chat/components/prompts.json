@@ -122,5 +122,9 @@
     {
         "key": "Write a spreadsheet formula to convert a date to the weekday",
         "value": "Can you write me a spreadsheet formula to convert a date in one column to the weekday (like Thursday)?"
+    },
+    {
+        "key": "Suggest fun activities to do indoors with my high-energy cat",
+        "value": "What are five fun and creative activities to do indoors with my dog who has a lot of energy?"
     }
 ]

@@ -43,7 +43,7 @@ function handleClear() {
   if (loading.value)
     return
 
-  dialog.info({
+  dialog.warning({
     title: t('chat.clearChat'),
     content: t('chat.clearChatConfirm'),
     positiveText: t('common.yes'),

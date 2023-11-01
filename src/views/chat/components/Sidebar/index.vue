@@ -82,7 +82,7 @@ type DropdownKey = 'settings' | 'logout'
 async function handleDropdown(optionKey: string) {
   const key = optionKey as DropdownKey
   if (key === 'logout') {
-    window.$dialog?.warning({
+    window.$dialog?.error({
       title: 'Logout',
       content: 'Are you sure to Logout?',
       positiveText: 'logout',

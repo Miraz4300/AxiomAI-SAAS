@@ -70,7 +70,7 @@ async function updateUserInfo(options: Partial<UserInfo>) {
 }
 
 function handleLogout() {
-  window.$dialog?.warning({
+  window.$dialog?.error({
     title: 'Logout',
     content: 'Are you sure to Logout?',
     positiveText: 'logout',
@@ -149,7 +149,7 @@ const divClass = 'flex items-center space-x-4'
       <NButton type="primary" @click="updateUserInfo({ avatar, name, description })">
         {{ $t('common.save') }}
       </NButton>
-      <NButton v-if="!!authStore.token" type="warning" @click="handleLogout">
+      <NButton v-if="!!authStore.token" type="error" @click="handleLogout">
         Logout
       </NButton>
     </div>

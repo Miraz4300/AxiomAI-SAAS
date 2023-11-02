@@ -9,6 +9,7 @@ const ms = useMessage()
 const loading = ref(false)
 const saving = ref(false)
 const config = ref<TwoFAConfig>()
+
 async function fetchConfig() {
   try {
     loading.value = true
@@ -19,6 +20,7 @@ async function fetchConfig() {
     loading.value = false
   }
 }
+
 async function update2FAInfo() {
   saving.value = true
   try {
@@ -33,6 +35,7 @@ async function update2FAInfo() {
   }
   saving.value = false
 }
+
 async function disable2FA() {
   saving.value = true
   try {
@@ -47,6 +50,7 @@ async function disable2FA() {
   }
   saving.value = false
 }
+
 onMounted(() => {
   fetchConfig()
 })
@@ -66,7 +70,7 @@ onMounted(() => {
         </div>
         <div v-if="config && config.enabled" class="flex flex-col space-y-2">
           <div>
-            <p class="text-xs text-[#b4bbc4] text-left">
+            <p class="text-xs text-black/60 dark:text-white/50 text-left">
               Enter the 6-digit dynamic verification code to disable the two-step verification.<br>
               Note: If you have lost your phone or cannot use the dynamic verification code, please contact at support@axiomaibd.com
             </p>

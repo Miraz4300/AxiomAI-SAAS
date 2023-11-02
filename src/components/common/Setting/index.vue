@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, onMounted, ref, watchEffect } from 'vue'
+import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import { NCard, NLayout, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
@@ -16,20 +16,10 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useSpeechStore } from '@/store/modules/speech'
 import { useAppStore } from '@/store'
 
-const props = defineProps<Props>()
-const emit = defineEmits<Emit>()
-
 const appStore = useAppStore()
 const merchEnabled = computed(() => appStore.merchEnabled)
 const { isMobile } = useBasicLayout()
 const speechStore = useSpeechStore()
-
-interface Props {
-  visible: boolean
-}
-interface Emit {
-  (e: 'update:visible', visible: boolean): void
-}
 
 const route = useRoute()
 const router = useRouter()
@@ -42,24 +32,19 @@ onMounted(() => {
     router.replace({ query: { id: active.value } })
 })
 watchEffect(() => {
-  if (route.query.id !== active.value)
-    router.push({ query: { id: active.value } })
+  const id = route.query.id
+  if (id)
+    active.value = id as string
 })
-
-const show = computed({
-  get() {
-    return props.visible
-  },
-  set(visible: boolean) {
-    emit('update:visible', visible)
-  },
+watch(active, (newTab) => {
+  router.push({ query: { id: newTab } })
 })
 </script>
 
 <template>
   <div class="flex h-full overflow-hidden" :class="[isMobile ? 'flex-col' : '']">
     <Sidebar v-if="!isMobile" />
-    <NLayout v-model:show="show">
+    <NLayout>
       <div class="min-h-full" :class="[isMobile ? 'p-4' : 'p-8']">
         <header class="mb-4 text-2xl font-bold text-black dark:text-white">
           {{ $t('setting.setting') }}

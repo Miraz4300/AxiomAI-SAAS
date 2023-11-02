@@ -41,13 +41,16 @@ function goSetting() {
 }
 
 function userHeader() {
-  const { name, description } = userInfo.value
+  const { email, name, description } = userInfo.value
   return h('div', { class: 'flex items-center p-3 min-w-[16rem]' }, [
     h(UserAvatar, { class: 'mr-3' }),
     h('div', [
       h('div', { class: 'flex items-center gap-1' }, [
         h(NText, { depth: 2, class: 'font-bold' }, { default: () => name }),
       ]),
+      h(NText, { depth: 3, class: 'text-xs' }, {
+        default: () => h('div', { innerText: email }),
+      }),
       h(NText, { depth: 3, class: 'text-xs' }, {
         default: () => h('div', { innerText: description }),
       }),

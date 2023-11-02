@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { NAvatar, NButton, NInput, NModal, NSelect, useMessage } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon, UserAvatar, UserRole } from '@/components/common'
 import { useAppStore, useAuthStore, useUserStore } from '@/store'
 import type { UserInfo } from '@/store/modules/user/helper'
-import type { TwoFAConfig } from '@/components/admin/model'
-import { fetchGetUser2FA } from '@/api'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
 import { router } from '@/router'
@@ -15,7 +13,6 @@ const appStore = useAppStore()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
-const config = ref<TwoFAConfig>()
 
 const { isMobile } = useBasicLayout()
 const ms = useMessage()
@@ -23,17 +20,13 @@ const show = ref(false)
 
 const theme = computed(() => appStore.theme)
 const avatar = ref(userInfo.value.avatar ?? '')
+const email = ref(userInfo.value.email ?? '')
 const name = ref(userInfo.value.name ?? '')
 const description = ref(userInfo.value.description ?? '')
 
 const images = ref(Array.from({ length: 16 }, (_, i) => `/assets/avatar_${i + 1}.jpg`))
 const hoverAvatar = ref('')
 const selectedAvatar = ref('')
-
-async function fetchConfig() {
-  const { data } = await fetchGetUser2FA<TwoFAConfig>()
-  config.value = data
-}
 
 function selectAvatar(avatarUrl: string) {
   selectedAvatar.value = avatarUrl
@@ -94,10 +87,6 @@ function goPass() {
   router.push('/user?id=password')
 }
 
-onMounted(() => {
-  fetchConfig()
-})
-
 const spanClass = 'flex-shrink-0 w-[80px]'
 const divClass = 'flex items-center space-x-4'
 </script>
@@ -120,7 +109,7 @@ const divClass = 'flex items-center space-x-4'
       <span :class="[spanClass]">{{ $t('setting.email') }}</span>
       <div class="flex-1 flex-col">
         <div class="flex-1">
-          <NInput :placeholder="config?.userName" disabled />
+          <NInput :placeholder="email" disabled />
         </div>
         <p class="cursor-pointer text-xs text-black/60 dark:text-white/50 hover:text-[#0083A0] hover:dark:text-[#00B2DB] text-right" @click="goPass">
           Need to change password? click here.

@@ -597,10 +597,11 @@ router.post('/session', async (req, res) => {
       key: string
       value: string
     }[] = []
-    let userInfo: { name: string; description: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig }
+    let userInfo: { email: string; name: string; description: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig }
     if (userId != null) {
       const user = await getUserById(userId)
       userInfo = {
+        email: user.email,
         name: user.name,
         description: user.description,
         avatar: user.avatar,
@@ -741,13 +742,13 @@ router.post('/user-reset-password', authLimiter, async (req, res) => {
 
 router.post('/user-info', auth, async (req, res) => {
   try {
-    const { name, avatar, description } = req.body as UserInfo
+    const { email, name, avatar, description } = req.body as UserInfo
     const userId = req.headers.userId.toString()
 
     const user = await getUserById(userId)
     if (user == null || user.status !== Status.Normal)
       throw new Error('User does not exist.')
-    await updateUserInfo(userId, { name, avatar, description } as UserInfo)
+    await updateUserInfo(userId, { email, name, avatar, description } as UserInfo)
     res.send({ status: 'Success', message: 'Update successful' })
   }
   catch (error) {

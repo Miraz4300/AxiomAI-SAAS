@@ -44,6 +44,7 @@ function addProduct() {
     name: '',
     price: 0,
     stock: false,
+    code: '',
   })
 }
 
@@ -126,6 +127,15 @@ onMounted(() => {
                 <NSwitch
                   :round="false" :value="product.stock"
                   @update:value="(val: boolean | undefined) => { if (val !== undefined) product.stock = val }"
+                />
+              </div>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span class="flex-shrink-0 w-[100px]">Product Code</span>
+              <div class="flex-1">
+                <NInput
+                  :value="product.code" placeholder="product code" style="max-width: 30%"
+                  @input="(val: string | undefined) => { product.code = val || '' }"
                 />
               </div>
             </div>

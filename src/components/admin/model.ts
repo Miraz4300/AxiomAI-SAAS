@@ -66,6 +66,7 @@ export interface Product {
   name: string
   price: number
   stock: boolean
+  code: string
 }
 
 export class MerchConfig {

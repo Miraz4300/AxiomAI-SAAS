@@ -22,7 +22,7 @@ onMounted(async () => {
     setTimeout(() => {
       localStorage.setItem('lastShownDate', currentDate)
       show.value = true
-    }, 5000) // 5 seconds delay to show the modal
+    }, 3000) // 3 seconds delay to show the modal
   }
 })
 </script>

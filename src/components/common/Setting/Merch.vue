@@ -25,7 +25,7 @@ onMounted(async () => {
         <img v-else :src="merchConfig?.darkBanner">
       </div>
     </div>
-    <div class="pt-4 grid gap-6" :class="[isMobile ? 'grid-cols-1' : 'pl-8 pr-8 grid-cols-2']">
+    <div class="pt-4 grid gap-6" :class="[isMobile ? 'grid-cols-1' : 'pl-12 pr-12 grid-cols-2']">
       <Product
         v-for="(product, index) in (merchConfig && merchConfig.products || [])"
         :key="index"

@@ -8,9 +8,6 @@
     "axiomai",
     "vuejs"
   ],
-  "engines": {
-    "node": "^16 || ^18 || ^19"
-  },
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-final",

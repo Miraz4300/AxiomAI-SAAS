@@ -25,17 +25,17 @@ const columns = [
   {
     title: 'Registration',
     key: 'createTime',
-    width: 220,
+    width: 200,
   },
   {
     title: 'Verification',
     key: 'verifyTime',
-    width: 220,
+    width: 200,
   },
   {
     title: 'Roles',
     key: 'status',
-    width: 200,
+    width: 180,
     render(row: any) {
       const roles = row.roles.map((role: UserRole) => {
         return h(
@@ -58,7 +58,7 @@ const columns = [
   {
     title: 'Status',
     key: 'status',
-    width: 200,
+    width: 100,
     render(row: any) {
       return Status[row.status]
     },
@@ -184,8 +184,8 @@ async function handleUpdateUserStatus(userId: string, status: Status) {
 
 async function handleDisable2FA(userId: string) {
   dialog.warning({
-    title: ('Delete User'),
-    content: ('Are you sure to delete this user?'),
+    title: ('Disable 2FA'),
+    content: ('Are you sure to disable 2FA for this user?'),
     positiveText: ('Yes'),
     negativeText: ('No'),
     onPositiveClick: async () => {

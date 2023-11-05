@@ -95,20 +95,29 @@ onMounted(() => {
         <div class="p-4 space-y-5 min-h-[200px]">
           <div class="space-y-6">
             <div class="flex items-center space-x-4">
-              <span class="flex-shrink-0 w-[100px]">Product Image</span>
-              <div class="flex-1">
-                <NInput
-                  :value="product.img" placeholder="product image url" style="max-width: 30%"
-                  @input="(val: string | undefined) => { product.img = val || '' }"
-                />
-              </div>
-            </div>
-            <div class="flex items-center space-x-4">
               <span class="flex-shrink-0 w-[100px]">Product Name</span>
               <div class="flex-1">
                 <NInput
                   :value="product.name" placeholder="product name" style="max-width: 30%"
                   @input="(val: string | undefined) => { product.name = val || '' }"
+                />
+              </div>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span class="flex-shrink-0 w-[100px]">Product Code</span>
+              <div class="flex-1">
+                <NInput
+                  :value="product.code" placeholder="product code" style="max-width: 30%"
+                  @input="(val: string | undefined) => { product.code = val || '' }"
+                />
+              </div>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span class="flex-shrink-0 w-[100px]">Product Image</span>
+              <div class="flex-1">
+                <NInput
+                  :value="product.img" placeholder="product image url" style="max-width: 30%"
+                  @input="(val: string | undefined) => { product.img = val || '' }"
                 />
               </div>
             </div>
@@ -127,15 +136,6 @@ onMounted(() => {
                 <NSwitch
                   :round="false" :value="product.stock"
                   @update:value="(val: boolean | undefined) => { if (val !== undefined) product.stock = val }"
-                />
-              </div>
-            </div>
-            <div class="flex items-center space-x-4">
-              <span class="flex-shrink-0 w-[100px]">Product Code</span>
-              <div class="flex-1">
-                <NInput
-                  :value="product.code" placeholder="product code" style="max-width: 30%"
-                  @input="(val: string | undefined) => { product.code = val || '' }"
                 />
               </div>
             </div>

@@ -572,7 +572,7 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
                         <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in delay-50 fade-in zoom-in-50 hover:bg-[#60a5fa] dark:hover:bg-[#3b82f6] transition hover:scale-105 shadow-md shadow-blue-500/50" @click="fillTextarea(randomPrompt[1].value)">
                           {{ randomPrompt[1].key }} →
                         </button>
-                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in delay-100 fade-in zoom-in-50 hover:bg-[#818cf8] dark:hover:bg-[#6366f1] transition hover:scale-105 shadow-md shadow-indigo-500/50" @click="fillTextarea(randomPrompt[2].value)">
+                        <button class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md animate-in delay-100 fade-in zoom-in-50 hover:bg-[#c084fc] dark:hover:bg-[#a855f7] transition hover:scale-105 shadow-md shadow-purple-500/50" @click="fillTextarea(randomPrompt[2].value)">
                           {{ randomPrompt[2].key }} →
                         </button>
                       </ul>

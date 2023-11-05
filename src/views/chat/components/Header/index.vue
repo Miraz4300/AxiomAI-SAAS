@@ -1,6 +1,5 @@
 <script setup lang='ts'>
-import { computed, defineAsyncComponent, inject, ref } from 'vue'
-import type { ComputedRef, Ref } from 'vue'
+import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { NButton, NInput, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
 import { useAppStore, useAuthStore, useChatStore, useSettingStore, useUserStore } from '@/store'
@@ -35,9 +34,6 @@ const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActiv
 
 const { uuid } = route.params as { uuid: string }
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
-
-const nowSelectChatModel = inject('nowSelectChatModel') as Ref<CHATMODEL | null>
-const currentChatModel = inject('currentChatModel') as ComputedRef<CHATMODEL>
 
 function handleClear() {
   if (loading.value)
@@ -75,7 +71,6 @@ function updateSettings(options: Partial<SettingsState>) {
 }
 
 async function handleSyncChatModel(chatModel: CHATMODEL) {
-  nowSelectChatModel.value = chatModel
   if (userStore.userInfo.config == null)
     userStore.userInfo.config = new UserConfig()
   userStore.userInfo.config.chatModel = chatModel
@@ -137,7 +132,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
     <div v-if="!!authStore.token && isChatGPTAPI" class="absolute z-20 left-1/2 top-full -translate-x-1/2 cursor-pointer select-none px-4 rounded-b-md border border-neutral-300 dark:border-neutral-700 bg-[#FFFFFF] dark:bg-[#111114]" @click="show = true">
       <span class="flex items-center space-x-2 hover:text-[#0083A0] hover:dark:text-[#00B2DB]">
         <SvgIcon icon="ri:sparkling-line" />
-        <span>{{ currentChatModel }}</span>
+        <span>{{ userStore.userInfo.config.chatModel }}</span>
         <SvgIcon icon="ri:arrow-down-s-line" />
       </span>
     </div>
@@ -165,7 +160,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
         <div>
           <NSelect
             style="width:215px"
-            :value="currentChatModel"
+            :value="userStore.userInfo.config.chatModel"
             :options="authStore.session?.chatModels"
             :disabled="!!authStore.session?.auth && !authStore.token"
             @update-value="(val: CHATMODEL) => handleSyncChatModel(val)"

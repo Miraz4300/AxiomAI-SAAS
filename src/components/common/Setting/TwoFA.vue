@@ -72,7 +72,7 @@ onMounted(() => {
           <div>
             <p class="text-xs text-black/60 dark:text-white/50 text-left">
               Enter the 6-digit dynamic verification code to disable the two-step verification.<br>
-              Note: If you have lost your phone or cannot use the dynamic verification code, please contact at support@axiomaibd.com
+              Note: If you have lost your phone or cannot use the dynamic verification code, please contact at <a href="mailto:support@axiomaibd.com" class="text-[#f59e0b]">support@axiomaibd.com</a>
             </p>
           </div>
           <div class="w-[200px]">
@@ -129,7 +129,7 @@ onMounted(() => {
                     </NButton>
                   </div>
                 </div>
-                <br>FAQ: How do I turn off two-step verification?<br>1. After logging in, go to settings > 2FA and enter the 6-digit verification code.<br>2. Contact at support@axiomaibd.com to reset your password to disable two-step verification.
+                <br>FAQ: How do I turn off two-step verification?<br>1. After logging in, go to settings > 2FA and enter the 6-digit verification code.<br>2. Contact at <a href="mailto:support@axiomaibd.com" class="text-[#f59e0b]">support@axiomaibd.com</a> to reset your password to disable two-step verification.
               </NStep>
             </NSteps>
           </div>

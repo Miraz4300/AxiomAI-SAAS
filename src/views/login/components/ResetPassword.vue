@@ -120,6 +120,7 @@ async function handleResetPassword() {
       Reset password
     </NButton>
   </div>
+
   <NModal v-model:show="showModal" :mask-closable="false">
     <div class="p-10 bg-white rounded dark:bg-slate-800">
       <div class="space-y-4">

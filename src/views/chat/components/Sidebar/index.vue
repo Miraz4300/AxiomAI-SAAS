@@ -112,12 +112,12 @@ async function handleDropdown(optionKey: string) {
     <div class="mb-4 flex flex-col space-y-3 overflow-y-auto overflow-x-hidden px-2">
       <div class="flex w-full flex-col justify-center">
         <MenuButton :tooltip="$t('chat.chat')" placement="right" @click="goChat">
-          <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[#0083A0] hover:dark:text-[#00B2DB]" :class="[isChatActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:message-3-line" />
+          <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[var(--primary-color-hover)] hover:dark:text-[var(--primary-color-hover)]" :class="[isChatActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:message-3-line" />
         </MenuButton>
       </div>
       <div v-if="!!authStore.token && whiteboardEnabled" class="flex w-full flex-col justify-center">
         <MenuButton :tooltip="$t('chat.draw')" placement="right" @click="goDraw">
-          <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[#0083A0] hover:dark:text-[#00B2DB]" :class="[isDrawActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:artboard-line" />
+          <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[var(--primary-color-hover)] hover:dark:text-[var(--primary-color-hover)]" :class="[isDrawActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:artboard-line" />
         </MenuButton>
       </div>
     </div>
@@ -137,15 +137,15 @@ async function handleDropdown(optionKey: string) {
 
   <NLayoutFooter v-if="isMobile" class="bg-white dark:bg-[#202020]">
     <div class="grid py-2 border-t dark:border-t-neutral-800 select-none" :class="[whiteboardEnabled ? 'grid-cols-3' : 'grid-cols-2']">
-      <a class="leading-4 text-center cursor-pointer" :class="[isChatActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goChat">
+      <a class="leading-4 text-center cursor-pointer" :class="[isChatActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" @click="goChat">
         <SvgIcon :class="[iconClass2]" icon="ri:message-3-line" />
         <p>{{ $t('chat.chat') }}</p>
       </a>
-      <a v-if="!!authStore.token && whiteboardEnabled" class="leading-4 text-center cursor-pointer" :class="[isDrawActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goDraw">
+      <a v-if="!!authStore.token && whiteboardEnabled" class="leading-4 text-center cursor-pointer" :class="[isDrawActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" @click="goDraw">
         <SvgIcon :class="[iconClass2]" icon="ri:artboard-line" />
         <p>{{ $t('chat.draw') }}</p>
       </a>
-      <a v-if="!!authStore.token" class="leading-4 text-center cursor-pointer" :class="[isSettingsActive ? 'text-[#0083A0] dark:text-[#00B2DB]' : 'text-slate-500 dark:text-[#fafafa]']" @click="goSetting">
+      <a v-if="!!authStore.token" class="leading-4 text-center cursor-pointer" :class="[isSettingsActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" @click="goSetting">
         <SvgIcon :class="[iconClass2]" icon="ri:settings-3-line" />
         <p>{{ $t('setting.setting') }}</p>
       </a>

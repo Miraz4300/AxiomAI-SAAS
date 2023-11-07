@@ -16,8 +16,8 @@ const { VITE_GLOB_APP_ENVIRONMENT, VITE_GLOB_APP_VERSION } = import.meta.env
       </center>
     </div>
     <p>
-      Environment: <a class="text-[#0083A0] dark:text-[#00B2DB]">{{ VITE_GLOB_APP_ENVIRONMENT }}</a><br>
-      Version: <a class="text-[#0083A0] dark:text-[#00B2DB]">{{ VITE_GLOB_APP_VERSION }}</a>
+      Environment: <a class="text-[var(--primary-color)]">{{ VITE_GLOB_APP_ENVIRONMENT }}</a><br>
+      Version: <a class="text-[var(--primary-color)]">{{ VITE_GLOB_APP_VERSION }}</a>
     </p>
     <div class="grid grid-cols-2">
       <p>
@@ -25,8 +25,8 @@ const { VITE_GLOB_APP_ENVIRONMENT, VITE_GLOB_APP_VERSION } = import.meta.env
         <br>
         <br>
         For support, collaboration or business query, please contact here<br>
-        Support:<a class="text-[#0083A0] dark:text-[#00B2DB]" href="mailto:support@axiomaibd.com"> Get support through email.</a><br>
-        Sales:<a class="text-[#0083A0] dark:text-[#00B2DB]" href="mailto:sales@axiomaibd.com"> Inquery about sales.</a>
+        Support:<a class="text-[var(--primary-color)]" href="mailto:support@axiomaibd.com"> Get support through email.</a><br>
+        Sales:<a class="text-[var(--primary-color)]" href="mailto:sales@axiomaibd.com"> Inquery about sales.</a>
       </p>
       <div class="flex items-center justify-end">
         <span class="text-[#000000] dark:text-[#C0C0C0]">

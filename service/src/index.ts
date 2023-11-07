@@ -363,15 +363,19 @@ router.post('/chat-clear', auth, async (req, res) => {
 
 const currentDate = new Date().toISOString().split('T')[0]
 const mainSystemMessage = `You are AxiomAI, a large language model fine-tuned by Miraz Hossain. Current date: ${currentDate}`
+const mainSystemMessage2 = `You are AxiomAI, a large language model fine-tuned by Miraz Hossain. Reply in bangla language. Current date: ${currentDate}`
 const promptSystemMessage = `You are AxiomAI. Current date: ${currentDate}`
+const promptSystemMessage2 = `You are AxiomAI. Reply in bangla language. Current date: ${currentDate}`
 
 router.post('/conversation', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
-  let { roomId, uuid, regenerate, prompt, options = {}, systemMessage, persona } = req.body as RequestProps
+  let { roomId, uuid, regenerate, prompt, options = {}, systemMessage, persona, language } = req.body as RequestProps
 
-  if (!systemMessage)
+  if (!systemMessage && language === 'en-US')
     systemMessage = mainSystemMessage
+  else if (!systemMessage && language === 'bn-BD')
+    systemMessage = mainSystemMessage2
 
   const personaLookup = {
     precise: { temperature: 0.2, top_p: 1.0 },
@@ -384,8 +388,10 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
   const room = await getChatRoom(userId, roomId)
   if (room == null)
     globalThis.console.error(`Unable to get chat room \t ${userId}\t ${roomId}`)
-  if (room != null && isNotEmptyString(room.prompt))
+  if (room != null && isNotEmptyString(room.prompt) && language === 'en-US')
     systemMessage = `${promptSystemMessage}. ${room.prompt}`
+  if (room != null && isNotEmptyString(room.prompt) && language === 'bn-BD')
+    systemMessage = `${promptSystemMessage2}. ${room.prompt}`
   let lastResponse
   let result
   let message: ChatInfo

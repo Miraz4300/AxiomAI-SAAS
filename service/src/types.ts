@@ -8,6 +8,7 @@ export interface RequestProps {
   options?: ChatContext
   systemMessage: string
   persona: string
+  language: string
 }
 
 export interface ChatContext {

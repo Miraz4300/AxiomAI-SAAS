@@ -130,7 +130,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
       </div>
     </div>
     <div v-if="!!authStore.token && isChatGPTAPI" class="absolute z-20 left-1/2 top-full -translate-x-1/2 cursor-pointer select-none px-4 rounded-b-md border border-neutral-300 dark:border-neutral-700 bg-[#FFFFFF] dark:bg-[#111114]" @click="show = true">
-      <span class="flex items-center space-x-2 hover:text-[#0083A0] hover:dark:text-[#00B2DB]">
+      <span class="flex items-center space-x-2 hover:text-[var(--primary-color-hover)]">
         <SvgIcon icon="ri:sparkling-line" />
         <span>{{ userStore.userInfo.config.chatModel }}</span>
         <SvgIcon icon="ri:arrow-down-s-line" />

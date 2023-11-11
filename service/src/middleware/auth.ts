@@ -23,7 +23,7 @@ async function auth(req, res, next) {
   }
   else {
     // fake userid
-    req.headers.userId = '6406d8c50afdd633882fa16f'
+    req.headers.userId = '6406d8c50afdd643002fa16f'
     next()
   }
 }

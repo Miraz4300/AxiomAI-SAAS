@@ -3,7 +3,7 @@ import { computed, h } from 'vue'
 import { useRouter } from 'vue-router'
 import type { DropdownOption } from 'naive-ui'
 import { NDropdown, NText } from 'naive-ui'
-import { HoverButton, MenuButton, SvgIcon, UserAvatar, UserRole } from '@/components/common'
+import { MenuButton, SvgIcon, UserAvatar, UserRole } from '@/components/common'
 import { useIconRender } from '@/hooks/useIconRender'
 import { useAppStore, useAuthStore, useUserStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -124,9 +124,9 @@ async function handleDropdown(optionKey: string) {
 
     <div class="siderbar-action flex select-none flex-col items-center space-y-2">
       <div class="flex flex-col items-center space-y-2">
-        <HoverButton v-if="userStore.userInfo.root" @click="router.push(ADMIN_ROUTE)">
+        <MenuButton v-if="userStore.userInfo.root" @click="router.push(ADMIN_ROUTE)">
           <SvgIcon class="text-xl text-black dark:text-white" icon="mdi:administrator" />
-        </HoverButton>
+        </MenuButton>
         <NDropdown v-if="!!authStore.token" trigger="hover" :options="options" @select="handleDropdown">
           <UserAvatar />
         </NDropdown>

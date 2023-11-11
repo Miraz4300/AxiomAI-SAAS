@@ -74,13 +74,19 @@ const options: DropdownOption[] = [
     icon: iconRender({ icon: 'ri:settings-3-line' }),
   },
   {
+    label: 'Administrator',
+    key: 'admin',
+    show: userStore.userInfo.root || false,
+    icon: iconRender({ icon: 'mdi:administrator' }),
+  },
+  {
     label: 'Logout',
     key: 'logout',
     icon: iconRender({ icon: 'ri:logout-circle-line' }),
   },
 ]
 
-type DropdownKey = 'settings' | 'logout'
+type DropdownKey = 'settings' | 'admin' | 'logout'
 
 async function handleDropdown(optionKey: string) {
   const key = optionKey as DropdownKey
@@ -104,6 +110,9 @@ async function handleDropdown(optionKey: string) {
   else if (key === 'settings' && router.currentRoute.value.path !== SETTING_ROUTE) {
     router.push(SETTING_ROUTE)
   }
+  else if (key === 'admin' && userStore.userInfo.root && router.currentRoute.value.path !== ADMIN_ROUTE) {
+    router.push(ADMIN_ROUTE)
+  }
 }
 </script>
 
@@ -124,9 +133,6 @@ async function handleDropdown(optionKey: string) {
 
     <div class="siderbar-action flex select-none flex-col items-center space-y-2">
       <div class="flex flex-col items-center space-y-2">
-        <MenuButton v-if="userStore.userInfo.root" @click="router.push(ADMIN_ROUTE)">
-          <SvgIcon class="text-xl text-black dark:text-white" icon="mdi:administrator" />
-        </MenuButton>
         <NDropdown v-if="!!authStore.token" trigger="hover" :options="options" @select="handleDropdown">
           <UserAvatar />
         </NDropdown>

@@ -61,14 +61,14 @@ export class UserConfig {
 }
 
 // https://platform.openai.com/docs/models/overview
-export type CHATMODEL = 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0613' | 'gpt-3.5-turbo-16k' | 'gpt-3.5-turbo-16k-0613' | 'gpt-4' | 'gpt-4-0613' | 'gpt-4-32k' | 'gpt-4-32k-0613' | 'llama-2-7b-chat' | 'llama-2-13b-chat' | 'llava-13b' | 'gpt-4-browsing'
+export type CHATMODEL = 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0613' | 'gpt-3.5-turbo-1106' | 'gpt-3.5-turbo-16k' | 'gpt-3.5-turbo-16k-0613' | 'gpt-4' | 'gpt-4-0613' | 'gpt-4-1106-preview' | 'gpt-4-32k' | 'gpt-4-32k-0613' | 'llama-2-7b-chat' | 'llama-2-13b-chat' | 'llava-13b' | 'gpt-4-browsing'
 
 export const CHATMODELS: CHATMODEL[] = [
-  'gpt-3.5-turbo', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-16k-0613', 'gpt-4', 'gpt-4-0613', 'gpt-4-32k', 'gpt-4-32k-0613', 'llama-2-7b-chat', 'llama-2-13b-chat', 'llava-13b', 'gpt-4-browsing',
+  'gpt-3.5-turbo', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-1106', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-16k-0613', 'gpt-4', 'gpt-4-0613', 'gpt-4-1106-preview', 'gpt-4-32k', 'gpt-4-32k-0613', 'llama-2-7b-chat', 'llama-2-13b-chat', 'llava-13b', 'gpt-4-browsing',
 ]
 
 export const chatModelOptions = [
-  'gpt-3.5-turbo', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-16k-0613', 'gpt-4', 'gpt-4-0613', 'gpt-4-32k', 'gpt-4-32k-0613', 'llama-2-7b-chat', 'llama-2-13b-chat', 'llava-13b', 'gpt-4-browsing',
+  'gpt-3.5-turbo', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-1106', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-16k-0613', 'gpt-4', 'gpt-4-0613', 'gpt-4-1106-preview', 'gpt-4-32k', 'gpt-4-32k-0613', 'llama-2-7b-chat', 'llama-2-13b-chat', 'llava-13b', 'gpt-4-browsing',
 ].map((model: string) => {
   let label = model
   if (model === 'llama-2-7b-chat')
@@ -188,9 +188,6 @@ export class Config {
     public apiBaseUrl?: string,
     public apiModel?: APIMODEL,
     public reverseProxy?: string,
-    public socksProxy?: string,
-    public socksAuth?: string,
-    public httpsProxy?: string,
     public siteConfig?: SiteConfig,
     public subscriptionConfig?: SubscriptionConfig,
     public announcementConfig?: AnnouncementConfig,

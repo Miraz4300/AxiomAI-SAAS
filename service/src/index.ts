@@ -982,7 +982,7 @@ router.post('/admin-verification', authLimiter, async (req, res) => {
 
 router.post('/setting-system', rootAuth, async (req, res) => {
   try {
-    const { apiKey, apiModel, apiBaseUrl, accessToken, timeoutMs, reverseProxy, socksProxy, socksAuth, httpsProxy } = req.body as Config
+    const { apiKey, apiModel, apiBaseUrl, accessToken, timeoutMs, reverseProxy } = req.body as Config
 
     const thisConfig = await getOriginConfig()
     thisConfig.apiKey = apiKey
@@ -991,9 +991,6 @@ router.post('/setting-system', rootAuth, async (req, res) => {
     thisConfig.accessToken = accessToken
     thisConfig.reverseProxy = reverseProxy
     thisConfig.timeoutMs = timeoutMs
-    thisConfig.socksProxy = socksProxy
-    thisConfig.socksAuth = socksAuth
-    thisConfig.httpsProxy = httpsProxy
     await updateConfig(thisConfig)
     clearConfigCache()
     const response = await chatConfig()

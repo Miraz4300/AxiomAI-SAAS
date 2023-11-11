@@ -60,6 +60,15 @@ const show = computed({
                 <System />
               </NCard>
             </NTabPane>
+            <NTabPane v-if="userStore.userInfo.root" name="SiteConfig" tab="SiteConfig">
+              <template #tab>
+                <SvgIcon class="text-lg" icon="mdi:web" />
+                <span class="ml-2">Site Settings</span>
+              </template>
+              <NCard>
+                <Site />
+              </NCard>
+            </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="MailConfig" tab="MailConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="tabler:mail-cog" />
@@ -78,15 +87,6 @@ const show = computed({
                 <Moderation />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="UserConfig" tab="UserConfig">
-              <template #tab>
-                <SvgIcon class="text-lg" icon="mdi:database-cog-outline" />
-                <span class="ml-2">User Settings</span>
-              </template>
-              <NCard>
-                <User />
-              </NCard>
-            </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="KeysConfig" tab="KeysConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="ri-key-2-line" />
@@ -96,13 +96,13 @@ const show = computed({
                 <Key />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="SiteConfig" tab="SiteConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="UserConfig" tab="UserConfig">
               <template #tab>
-                <SvgIcon class="text-lg" icon="mdi:web" />
-                <span class="ml-2">Site Settings</span>
+                <SvgIcon class="text-lg" icon="mdi:database-cog-outline" />
+                <span class="ml-2">User Settings</span>
               </template>
               <NCard>
-                <Site />
+                <User />
               </NCard>
             </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="SubscriptionConfig" tab="SubscriptionConfig">

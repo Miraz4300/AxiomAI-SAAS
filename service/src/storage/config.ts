@@ -35,13 +35,6 @@ export async function getOriginConfig() {
       process.env.OPENAI_API_BASE_URL,
       process.env.OPENAI_API_MODEL === 'ChatGPTUnofficialProxyAPI' ? 'ChatGPTUnofficialProxyAPI' : 'ChatGPTAPI',
       process.env.API_REVERSE_PROXY,
-      (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
-        ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`)
-        : '',
-      (process.env.SOCKS_PROXY_USERNAME && process.env.SOCKS_PROXY_PASSWORD)
-        ? (`${process.env.SOCKS_PROXY_USERNAME}:${process.env.SOCKS_PROXY_PASSWORD}`)
-        : '',
-      process.env.HTTPS_PROXY,
       new SiteConfig(
         process.env.SITE_TITLE || 'AxiomAI',
         isNotEmptyString(process.env.AUTH_SECRET_KEY),
@@ -68,11 +61,6 @@ export async function getOriginConfig() {
       config.siteConfig.loginSalt = process.env.AUTH_SECRET_KEY
     if (config.apiDisableDebug === undefined)
       config.apiDisableDebug = process.env.DISABLE_DEBUG === 'true'
-    if (config.socksAuth === undefined) {
-      config.socksAuth = (process.env.SOCKS_PROXY_USERNAME && process.env.SOCKS_PROXY_PASSWORD)
-        ? (`${process.env.SOCKS_PROXY_USERNAME}:${process.env.SOCKS_PROXY_PASSWORD}`)
-        : ''
-    }
     if (config.siteConfig.registerReview === undefined)
       config.siteConfig.registerReview = process.env.REGISTER_REVIEW === 'true'
   }

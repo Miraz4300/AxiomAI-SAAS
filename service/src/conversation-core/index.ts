@@ -2,9 +2,6 @@ import * as dotenv from 'dotenv'
 import 'isomorphic-fetch'
 import type { ChatGPTAPIOptions, ChatMessage, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
-import { SocksProxyAgent } from 'socks-proxy-agent'
-import { HttpsProxyAgent } from 'https-proxy-agent'
-import fetch from 'node-fetch'
 import jwt_decode from 'jwt-decode'
 import type { AuditConfig, CHATMODEL, KeyConfig, UserInfo } from '../storage/model'
 import { Status } from '../storage/model'
@@ -52,11 +49,19 @@ export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
 
     // Check if the model type includes '16k'
     if (model.toLowerCase().includes('16k')) {
-      // If it's a '16k' model, set the maxModelTokens to 16384 and maxResponseTokens to 4096
-      options.maxModelTokens = 16384
+      // Currently points to gpt-3.5-turbo-0613. Will point to gpt-3.5-turbo-1106 starting Dec 11, 2023.
+      // If it's a '16k' model, set the maxModelTokens to 16385 and maxResponseTokens to 4096
+      options.maxModelTokens = 16385
+      options.maxResponseTokens = 4096
+    }
+    else if (model.toLowerCase().includes('gpt-3.5-turbo-1106')) {
+      // Updated GPT 3.5 Turbo.
+      // If it's a 'gpt-3.5-turbo-1106' model, set the maxModelTokens to 16385 and maxResponseTokens to 4096
+      options.maxModelTokens = 16385
       options.maxResponseTokens = 4096
     }
     else if (model.toLowerCase().includes('32k')) {
+      // Currently points to gpt-4-32k-0613.
       // If it's a '32k' model, set the maxModelTokens to 32768 and maxResponseTokens to 8192
       options.maxModelTokens = 32768
       options.maxResponseTokens = 8192
@@ -65,6 +70,12 @@ export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
       // If it's a 'gpt-4' model, set the maxModelTokens and maxResponseTokens to 8192 and 2048 respectively
       options.maxModelTokens = 8192
       options.maxResponseTokens = 2048
+    }
+    else if (model.toLowerCase().includes('gpt-4-1106-preview')) {
+      // GPT-4 Turbo (1106 Preview)
+      // If it's a 'gpt-4-1106-preview' model, set the maxModelTokens and maxResponseTokens to 128000 and 4096 respectively
+      options.maxModelTokens = 128000
+      options.maxResponseTokens = 4096
     }
     else {
       // If none of the above, use the default values, set the maxModelTokens and maxResponseTokens to 8192 and 2048 respectively
@@ -75,8 +86,6 @@ export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
     if (isNotEmptyString(OPENAI_API_BASE_URL))
       options.apiBaseUrl = `${OPENAI_API_BASE_URL}/v1`
 
-    await setupProxy(options)
-
     return new ChatGPTAPI({ ...options })
   }
   else {
@@ -86,8 +95,6 @@ export async function initApi(key: KeyConfig, chatModel: CHATMODEL) {
       model,
       debug: !config.apiDisableDebug,
     }
-
-    await setupProxy(options)
 
     return new ChatGPTUnofficialProxyAPI({ ...options })
   }
@@ -204,33 +211,6 @@ async function chatConfig() {
     type: 'Success',
     data: config,
   })
-}
-
-async function setupProxy(options: ChatGPTAPIOptions | ChatGPTUnofficialProxyAPIOptions) {
-  const config = await getCacheConfig()
-  if (isNotEmptyString(config.socksProxy)) {
-    const agent = new SocksProxyAgent({
-      hostname: config.socksProxy.split(':')[0],
-      port: Number.parseInt(config.socksProxy.split(':')[1]),
-      userId: isNotEmptyString(config.socksAuth) ? config.socksAuth.split(':')[0] : undefined,
-      password: isNotEmptyString(config.socksAuth) ? config.socksAuth.split(':')[1] : undefined,
-
-    })
-    options.fetch = (url, options) => {
-      return fetch(url, { agent, ...options })
-    }
-  }
-  else {
-    if (isNotEmptyString(config.httpsProxy)) {
-      const httpsProxy = config.httpsProxy
-      if (httpsProxy) {
-        const agent = new HttpsProxyAgent(httpsProxy)
-        options.fetch = (url, options) => {
-          return fetch(url, { agent, ...options })
-        }
-      }
-    }
-  }
 }
 
 async function getMessageById(id: string): Promise<ChatMessage | undefined> {

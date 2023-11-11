@@ -65,24 +65,6 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Socks</span>
-          <div class="flex-1">
-            <NInput :value="config.socksProxy" placeholder="ip:port" style="max-width: 30%" @input="(val: string | undefined) => { config.socksProxy = val }" />
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Socks AUTH</span>
-          <div class="flex-1">
-            <NInput :value="config.socksAuth" placeholder="name:pasword" style="max-width: 30%" @input="(val: string | undefined) => { config.socksAuth = val }" />
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">HTTPS Proxy</span>
-          <div class="flex-1">
-            <NInput :value="config.httpsProxy" placeholder="" style="max-width: 30%" @input="(val: string | undefined) => { config.httpsProxy = val }" />
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]" />
           <NButton :loading="saving" type="primary" @click="updateBaseSetting(config)">
             {{ $t('common.save') }}

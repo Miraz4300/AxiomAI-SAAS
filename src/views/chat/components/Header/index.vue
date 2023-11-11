@@ -124,7 +124,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
       </div>
       <div v-if="dataSources.length" class="flex items-center space-x-2">
         <ExportButton />
-        <ToolButton :tooltip="!isMobile ? $t('chat.deleteMessage') : ''" @click="handleClear">
+        <ToolButton :tooltip="!isMobile ? $t('chat.clearChat') : ''" @click="handleClear">
           <SvgIcon class="text-xl" icon="ri:brush-2-line" />
         </ToolButton>
       </div>

@@ -25,16 +25,16 @@ export function useTheme() {
 
   const personaColors = {
     precise: {
-      dark: { primaryColor: '#14b8a6', primaryColorHover: '#2dd4bf', primaryColorPressed: '#5eead4', primaryColorSuppl: '#0d9488' },
-      light: { primaryColor: '#0d9488', primaryColorHover: '#0f766e', primaryColorPressed: '#115e59', primaryColorSuppl: '#0d9488' },
+      dark: { primaryColor: '#14b8a6', primaryColorHover: '#2dd4bf', primaryColorPressed: '#5eead4', primaryColorSuppl: '#0d9488', chatBox: '#0f766e' },
+      light: { primaryColor: '#0d9488', primaryColorHover: '#0f766e', primaryColorPressed: '#115e59', primaryColorSuppl: '#0d9488', chatBox: '#0f766e' },
     },
     balanced: {
-      dark: { primaryColor: '#00B2DB', primaryColorHover: '#00C4F0', primaryColorPressed: '#06D1FF', primaryColorSuppl: '#009BBD' },
-      light: { primaryColor: '#0083A0', primaryColorHover: '#0083A0', primaryColorPressed: '#0083A0', primaryColorSuppl: '' },
+      dark: { primaryColor: '#00B2DB', primaryColorHover: '#00C4F0', primaryColorPressed: '#06D1FF', primaryColorSuppl: '#009BBD', chatBox: '#005366' },
+      light: { primaryColor: '#0083A0', primaryColorHover: '#0083A0', primaryColorPressed: '#0083A0', primaryColorSuppl: '', chatBox: '#005366' },
     },
     creative: {
-      dark: { primaryColor: '#8b5cf6', primaryColorHover: '#a78bfa', primaryColorPressed: '#c4b5fd', primaryColorSuppl: '#7c3aed' },
-      light: { primaryColor: '#7c3aed', primaryColorHover: '#6d28d9', primaryColorPressed: '#5b21b6', primaryColorSuppl: '#7c3aed' },
+      dark: { primaryColor: '#8b5cf6', primaryColorHover: '#a78bfa', primaryColorPressed: '#c4b5fd', primaryColorSuppl: '#7c3aed', chatBox: '#6d28d9' },
+      light: { primaryColor: '#7c3aed', primaryColorHover: '#6d28d9', primaryColorPressed: '#5b21b6', primaryColorSuppl: '#7c3aed', chatBox: '#6d28d9' },
     },
   }
 
@@ -54,6 +54,7 @@ export function useTheme() {
       if (personaColorsSelected) {
         document.documentElement.style.setProperty('--primary-color', personaColorsSelected.primaryColor || '#000000')
         document.documentElement.style.setProperty('--primary-color-hover', personaColorsSelected.primaryColorHover || '#000000')
+        document.documentElement.style.setProperty('--chat-box', personaColorsSelected.chatBox || '#000000')
       }
     },
     { immediate: true },

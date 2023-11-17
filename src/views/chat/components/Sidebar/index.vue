@@ -23,11 +23,18 @@ const chatRouteRegex = /^\/chat\/\d+$/
 const isChatActive = computed(() => chatRouteRegex.test(router.currentRoute.value.path))
 const isSettingsActive = computed(() => router.currentRoute.value.path === '/user')
 const isDrawActive = computed(() => router.currentRoute.value.path === '/whiteboard')
+const isCDActive = computed(() => router.currentRoute.value.path === '/cognitive-docs')
 const whiteboardEnabled = computed(() => appStore.whiteboardEnabled)
+const cognitiveDocsEnabled = computed(() => appStore.cognitiveDocsEnabled)
 
 function goChat() {
   if (!chatRouteRegex.test(router.currentRoute.value.path))
     router.push('/')
+}
+
+function goCD() {
+  if (!chatRouteRegex.test(router.currentRoute.value.path))
+    router.push('/cognitive-docs')
 }
 
 function goDraw() {
@@ -122,6 +129,11 @@ async function handleDropdown(optionKey: string) {
       <div class="flex w-full flex-col justify-center">
         <MenuButton :tooltip="$t('chat.chat')" placement="right" @click="goChat">
           <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[var(--primary-color-hover)] hover:dark:text-[var(--primary-color-hover)]" :class="[isChatActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:message-3-line" />
+        </MenuButton>
+      </div>
+      <div v-if="!!authStore.token && cognitiveDocsEnabled" class="flex w-full flex-col justify-center">
+        <MenuButton :tooltip="$t('chat.cognitiveDocs')" placement="right" @click="goCD">
+          <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[var(--primary-color-hover)] hover:dark:text-[var(--primary-color-hover)]" :class="[isCDActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:file-pdf-line" />
         </MenuButton>
       </div>
       <div v-if="!!authStore.token && whiteboardEnabled" class="flex w-full flex-col justify-center">

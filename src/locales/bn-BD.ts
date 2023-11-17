@@ -26,6 +26,7 @@ export default {
   },
   chat: {
     chat: 'চ্যাট',
+    cognitiveDocs: 'কগনিটিভ ডক্স',
     draw: 'সাদা বোর্ড',
     placeholderText: 'আমাকে যে কোন কিছু জিজ্ঞাসা করুন...(Shift + Enter = লাইন বিরতি)',
     copy: 'Copy',

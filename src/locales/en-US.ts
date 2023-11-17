@@ -26,6 +26,7 @@ export default {
   },
   chat: {
     chat: 'Chat',
+    cognitiveDocs: 'Cognitive Docs',
     draw: 'Whiteboard',
     placeholderText: 'Ask me anything...(Shift + Enter = line break)',
     copy: 'Copy',

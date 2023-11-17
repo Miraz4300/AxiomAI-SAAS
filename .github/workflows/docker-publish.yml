@@ -87,4 +87,4 @@ jobs:
       - name: Deploy stack
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-          curl -X POST https://neuron.deepspacelab.tech/api/stacks/webhooks/a6189cb7-8b2f-48a6-b039-bf928b77e9b3
+          curl -X POST ${{ secrets.PORTAINER_STACK }}

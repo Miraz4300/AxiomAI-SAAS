@@ -262,6 +262,7 @@ export class FeaturesConfig {
     public whiteboardEnabled?: boolean,
     public merchEnabled?: boolean,
     public internetAccessEnabled?: boolean,
+    public cognitiveDocsEnabled?: boolean,
   ) { }
 }
 

@@ -182,6 +182,7 @@ export class FeaturesConfig {
   whiteboardEnabled?: boolean
   merchEnabled?: boolean
   internetAccessEnabled?: boolean
+  cognitiveDocsEnabled?: boolean
 }
 
 export class UserPassword {

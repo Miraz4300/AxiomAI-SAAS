@@ -33,6 +33,7 @@ export const useAppStore = defineStore('app-store', {
       this.whiteboardEnabled = featuresConfig.whiteboardEnabled
       this.merchEnabled = featuresConfig.merchEnabled
       this.internetAccessEnabled = featuresConfig.internetAccessEnabled
+      this.cognitiveDocsEnabled = featuresConfig.cognitiveDocsEnabled
       this.recordState()
     },
 

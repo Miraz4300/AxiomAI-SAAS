@@ -15,10 +15,11 @@ export interface AppState {
   whiteboardEnabled?: boolean
   merchEnabled?: boolean
   internetAccessEnabled?: boolean
+  cognitiveDocsEnabled?: boolean
 }
 
 export function defaultSetting(): AppState {
-  return { siderCollapsed: false, theme: 'auto', language: 'en-US', chatFooterEnabled: false, chatFooterText: '', whiteboardEnabled: false, merchEnabled: false, internetAccessEnabled: false }
+  return { siderCollapsed: false, theme: 'auto', language: 'en-US', chatFooterEnabled: false, chatFooterText: '', whiteboardEnabled: false, merchEnabled: false, internetAccessEnabled: false, cognitiveDocsEnabled: false }
 }
 
 export function getLocalSetting(): AppState {

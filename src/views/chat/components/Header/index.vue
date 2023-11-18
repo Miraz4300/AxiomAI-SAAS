@@ -6,7 +6,6 @@ import { useAppStore, useAuthStore, useChatStore, useSettingStore, useUserStore 
 import type { SettingsState } from '@/store/modules/settings/helper'
 import { fetchUpdateChatRoomPrompt, fetchUpdateUserChatModel } from '@/api'
 import { UserConfig } from '@/components/admin/model'
-import type { CHATMODEL } from '@/components/admin/model'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
@@ -70,7 +69,7 @@ function updateSettings(options: Partial<SettingsState>) {
   settingStore.updateSetting(options)
 }
 
-async function handleSyncChatModel(chatModel: CHATMODEL) {
+async function handleSyncChatModel(chatModel: string) {
   if (userStore.userInfo.config == null)
     userStore.userInfo.config = new UserConfig()
   userStore.userInfo.config.chatModel = chatModel
@@ -163,7 +162,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
             :value="userStore.userInfo.config.chatModel"
             :options="authStore.session?.chatModels"
             :disabled="!!authStore.session?.auth && !authStore.token"
-            @update-value="(val: CHATMODEL) => handleSyncChatModel(val)"
+            @update-value="(val) => handleSyncChatModel(val)"
           />
         </div>
       </div>

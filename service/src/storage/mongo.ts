@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 import dayjs from 'dayjs'
 import { md5 } from '../utils/security'
 import { ChatInfo, ChatRoom, ChatUsage, Status, UserConfig, UserInfo, UserRole } from './model'
-import type { CHATMODEL, ChatOptions, Config, KeyConfig, UsageResponse } from './model'
+import type { ChatOptions, Config, KeyConfig, UsageResponse } from './model'
 
 dotenv.config()
 
@@ -121,7 +121,7 @@ export async function updateRoomAccountId(userId: string, roomId: number, accoun
   return result.modifiedCount > 0
 }
 
-export async function updateRoomChatModel(userId: string, roomId: number, chatModel: CHATMODEL) {
+export async function updateRoomChatModel(userId: string, roomId: number, chatModel: string) {
   const query = { userId, roomId }
   const update = {
     $set: {
@@ -218,7 +218,7 @@ export async function updateUserInfo(userId: string, user: UserInfo) {
     , { $set: { name: user.name, description: user.description, avatar: user.avatar } })
 }
 
-export async function updateUserChatModel(userId: string, chatModel: CHATMODEL) {
+export async function updateUserChatModel(userId: string, chatModel: string) {
   return userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { 'config.chatModel': chatModel } })
 }

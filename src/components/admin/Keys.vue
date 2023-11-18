@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
 import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NSwitch, NTag, useDialog, useMessage } from 'naive-ui'
-import type { CHATMODEL } from './model'
 import { KeyConfig, Status, UserRole, apiModelOptions, userRoleOptions } from './model'
 import { fetchGetKeys, fetchUpdateApiKeyStatus, fetchUpsertApiKey } from '@/api'
 import { useAuthStore } from '@/store'
@@ -37,7 +36,7 @@ const columns = [
     key: 'chatModels',
     width: 320,
     render(row: any) {
-      const tags = row.chatModels.map((chatModel: CHATMODEL) => {
+      const tags = row.chatModels.map((chatModel: string) => {
         return h(
           NTag,
           {
@@ -256,7 +255,7 @@ onMounted(async () => {
               multiple
               :value="keyConfig.chatModels"
               :options="authStore.session?.chatModels"
-              @update-value="(value: CHATMODEL[]) => keyConfig.chatModels = value"
+              @update-value="value => keyConfig.chatModels = value"
             />
           </div>
         </div>

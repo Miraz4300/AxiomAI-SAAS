@@ -1,6 +1,6 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { get, post } from '@/utils/request'
-import type { AnnouncementConfig, AuditConfig, CHATMODEL, ConfigState, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, Status, SubscriptionConfig, UserInfo, UserPassword } from '@/components/admin/model'
+import type { AnnouncementConfig, AuditConfig, ConfigState, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, Status, SubscriptionConfig, UserInfo, UserPassword } from '@/components/admin/model'
 import { useAppStore, useAuthStore, useSettingStore } from '@/store'
 
 export function fetchChatConfig<T = any>() {
@@ -123,7 +123,7 @@ export function fetchUpdateUserInfo<T = any>(email: string, name: string, avatar
   })
 }
 
-export function fetchUpdateUserChatModel<T = any>(chatModel: CHATMODEL) {
+export function fetchUpdateUserChatModel<T = any>(chatModel: string) {
   return post<T>({
     url: '/user-chat-model',
     data: { chatModel },

@@ -1,33 +1,56 @@
 <script lang="ts" setup>
-import { NButton } from 'naive-ui'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-
-function goHome() {
-  router.push('/')
-}
+import { NCard, NUpload, NUploadDragger } from 'naive-ui'
+import { SvgIcon } from '@/components/common'
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center h-screen text-center bg-[#D1D1D1] dark:bg-[#202020] text-black dark:text-white">
-    <div class="flex items-center">
-      <h1 class="mr-6 pr-5 border-r-2 border-gray-500 dark:border-gray-500 h-14 text-3xl font-medium pt-2.5">
-        404
-      </h1>
-      <div>
-        <h2 class="text-base font-medium leading-1">
-          This page could not be found.
-        </h2>
-      </div>
+  <div class="h-full overflow-auto">
+    <div class="m-auto max-w-screen-lg p-4">
+      <header class="my-10 text-center">
+        <h1 class="mb-4 text-3xl font-bold">
+          <span>Document Parsing</span>
+        </h1><p class="text-lg text-neutral-400">
+          Upload PDF to easily get intelligent summaries and answers for your documents
+        </p>
+      </header>
+      <main>
+        <NUpload directory-dnd action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :max="5">
+          <NUploadDragger>
+            <div class="flex flex-col items-center justify-center">
+              <SvgIcon icon="solar:upload-square-linear" class="mb-4 text-[100px]" />
+              <h2 class="mb-2 text-base font-bold text-black dark:text-white">
+                Click or drag and drop files here to upload
+              </h2>
+              <p class="text-neutral-400">
+                <span>File type: PDF</span><span>｜ File size: Up to 10M</span>
+              </p>
+            </div>
+          </NUploadDragger>
+        </NUpload>
+      </main>
+      <footer class="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <NCard>
+          <SvgIcon icon="flat-color-icons:document" class="mb-4 text-[46px]" />
+          <h2 class="mb-4 text-lg text-black dark:text-white">
+            Document Summery
+          </h2>
+          Intelligently identify key information and quickly create concise summaries to help you grasp the essence of the document.
+        </NCard>
+        <NCard>
+          <SvgIcon icon="flat-color-icons:idea" class="mb-4 text-[46px]" />
+          <h2 class="mb-4 text-lg text-black dark:text-white">
+            Intelligent Q&A
+          </h2>
+          Answer questions based on document content and provide professional answers to enhance understanding of the document.
+        </NCard>
+        <NCard>
+          <SvgIcon icon="flat-color-icons:mind-map" class="mb-4 text-[46px]" />
+          <h2 class="mb-4 text-lg text-black dark:text-white">
+            Content Extraction
+          </h2>
+          Support reference content to improve reading efficiency.
+        </NCard>
+      </footer>
     </div>
-    <br>
-    <p class="text-sm text-center text-gray-800 dark:text-gray-400">
-      Requested URL was not found on this server. Try double-check your speeling.
-    </p>
-    <br>
-    <NButton type="primary" ghost @click="goHome">
-      Back to Home
-    </NButton>
   </div>
 </template>

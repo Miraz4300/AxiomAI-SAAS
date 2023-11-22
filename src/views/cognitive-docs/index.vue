@@ -14,7 +14,12 @@ import { SvgIcon } from '@/components/common'
         </p>
       </header>
       <main>
-        <NUpload directory-dnd action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :max="5">
+        <NUpload
+          accept=".pdf"
+          directory-dnd
+          action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
+          :max="1"
+        >
           <NUploadDragger>
             <div class="flex flex-col items-center justify-center">
               <SvgIcon icon="solar:upload-square-linear" class="mb-4 text-[100px]" />

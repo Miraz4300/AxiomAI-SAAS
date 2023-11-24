@@ -192,7 +192,7 @@ router.get('/chat-history', auth, async (req, res) => {
     const lastId = req.query.lastId as string
     if (!roomId || !await existsChatRoom(userId, roomId)) {
       res.send({ status: 'Success', message: null, data: [] })
-      // res.send({ status: 'Fail', message: 'Unknow room', data: null })
+      // res.send({ status: 'Fail', message: 'Unknown room', data: null })
       return
     }
     const chats = await getChats(roomId, !isNotEmptyString(lastId) ? null : Number.parseInt(lastId))
@@ -263,7 +263,7 @@ router.get('/chat-response-history', auth, async (req, res) => {
     const index = +req.query.index
     if (!roomId || !await existsChatRoom(userId, roomId)) {
       res.send({ status: 'Success', message: null, data: [] })
-      // res.send({ status: 'Fail', message: 'Unknow room', data: null })
+      // res.send({ status: 'Fail', message: 'Unknown room', data: null })
       return
     }
     const chat = await getChat(roomId, uuid)
@@ -380,7 +380,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
   const personaLookup = {
     precise: { temperature: 0.2, top_p: 1.0 },
     balanced: { temperature: 0.8, top_p: 0.85 },
-    creative: { temperature: 1.5, top_p: 0.6 },
+    creative: { temperature: 1.5, top_p: 0.7 },
   }
   const { temperature, top_p } = personaLookup[persona] || personaLookup.balanced
 

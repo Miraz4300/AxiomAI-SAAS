@@ -21,12 +21,34 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/whiteboard',
-    name: 'Whiteboard',
-    component: () => import('@/views/whiteboard/index.vue'),
+    path: '/cognitive-docs',
+    name: 'CognitiveDocs',
+    component: () => import('@/views/chat/layout/Layout.vue'),
     meta: {
       requiresAuth: true,
     },
+    children: [
+      {
+        path: '/cognitive-docs',
+        name: 'CognitiveDocs',
+        component: () => import('@/views/cognitive-docs/index.vue'),
+      },
+    ],
+  },
+  {
+    path: '/whiteboard',
+    name: 'Whiteboard',
+    component: () => import('@/views/chat/layout/Layout.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+    children: [
+      {
+        path: '/whiteboard',
+        name: 'Whiteboard',
+        component: () => import('@/views/whiteboard/index.vue'),
+      },
+    ],
   },
   {
     path: '/auth/login',

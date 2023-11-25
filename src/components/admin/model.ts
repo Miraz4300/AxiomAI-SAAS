@@ -16,11 +16,8 @@ export class ConfigState {
   featuresConfig?: FeaturesConfig
 }
 
-// https://platform.openai.com/docs/models/overview
-export type CHATMODEL = 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0613' | 'gpt-3.5-turbo-1106' | 'gpt-3.5-turbo-16k' | 'gpt-3.5-turbo-16k-0613' | 'gpt-4' | 'gpt-4-0613' | 'gpt-4-1106-preview' | 'gpt-4-32k' | 'gpt-4-32k-0613' | 'llama-2-7b-chat' | 'llama-2-13b-chat' | 'llava-13b'
-
 export class UserConfig {
-  chatModel?: CHATMODEL
+  chatModel?: string
 }
 
 export class SiteConfig {
@@ -31,6 +28,7 @@ export class SiteConfig {
   registerReview?: boolean
   registerMails?: string
   siteDomain?: string
+  chatModels?: string
 }
 
 export interface SubData {
@@ -133,11 +131,11 @@ export class KeyConfig {
   _id?: string
   key: string
   keyModel: APIMODEL
-  chatModels: CHATMODEL[]
+  chatModels: string[]
   userRoles: UserRole[]
   status: Status
   remark: string
-  constructor(key: string, keyModel: APIMODEL, chatModels: CHATMODEL[], userRoles: UserRole[], remark: string) {
+  constructor(key: string, keyModel: APIMODEL, chatModels: string[], userRoles: UserRole[], remark: string) {
     this.key = key
     this.keyModel = keyModel
     this.chatModels = chatModels

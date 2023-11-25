@@ -33,12 +33,12 @@ function goChat() {
 }
 
 function goCD() {
-  if (!chatRouteRegex.test(router.currentRoute.value.path))
+  if (router.currentRoute.value.path !== '/cognitive-docs')
     router.push('/cognitive-docs')
 }
 
 function goDraw() {
-  if (router.currentRoute.value.path !== '/user')
+  if (router.currentRoute.value.path !== '/whiteboard')
     router.push('/whiteboard')
 }
 

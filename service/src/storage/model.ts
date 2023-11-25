@@ -57,32 +57,8 @@ export class UserInfo {
 }
 
 export class UserConfig {
-  chatModel: CHATMODEL
+  chatModel: string
 }
-
-// https://platform.openai.com/docs/models/overview
-export type CHATMODEL = 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0613' | 'gpt-3.5-turbo-1106' | 'gpt-3.5-turbo-16k' | 'gpt-3.5-turbo-16k-0613' | 'gpt-4' | 'gpt-4-0613' | 'gpt-4-1106-preview' | 'gpt-4-32k' | 'gpt-4-32k-0613' | 'llama-2-7b-chat' | 'llama-2-13b-chat' | 'llava-13b'
-
-export const CHATMODELS: CHATMODEL[] = [
-  'gpt-3.5-turbo', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-1106', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-16k-0613', 'gpt-4', 'gpt-4-0613', 'gpt-4-1106-preview', 'gpt-4-32k', 'gpt-4-32k-0613', 'llama-2-7b-chat', 'llama-2-13b-chat', 'llava-13b',
-]
-
-export const chatModelOptions = [
-  'gpt-3.5-turbo', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-1106', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-16k-0613', 'gpt-4', 'gpt-4-0613', 'gpt-4-1106-preview', 'gpt-4-32k', 'gpt-4-32k-0613', 'llama-2-7b-chat', 'llama-2-13b-chat', 'llava-13b',
-].map((model: string) => {
-  let label = model
-  if (model === 'llama-2-7b-chat')
-    label = 'llama-2-7b'
-  else if (model === 'llama-2-13b-chat')
-    label = 'llama-2-13b'
-  else if (model === 'llava-13b')
-    label = 'LLaVA: vision'
-  return {
-    label,
-    key: model,
-    value: model,
-  }
-})
 
 export class ChatRoom {
   _id: ObjectId
@@ -94,7 +70,7 @@ export class ChatRoom {
   status: Status = Status.Normal
   // only access token used
   accountId?: string
-  chatModel: CHATMODEL
+  chatModel: string
   constructor(userId: string, title: string, roomId: number) {
     this.userId = userId
     this.title = title
@@ -207,6 +183,7 @@ export class SiteConfig {
     public registerReview?: boolean,
     public registerMails?: string,
     public siteDomain?: string,
+    public chatModels?: string,
   ) { }
 }
 
@@ -298,11 +275,11 @@ export class KeyConfig {
   _id: ObjectId
   key: string
   keyModel: APIMODEL
-  chatModels: CHATMODEL[]
+  chatModels: string[]
   userRoles: UserRole[]
   status: Status
   remark: string
-  constructor(key: string, keyModel: APIMODEL, chatModels: CHATMODEL[], userRoles: UserRole[], remark: string) {
+  constructor(key: string, keyModel: APIMODEL, chatModels: string[], userRoles: UserRole[], remark: string) {
     this.key = key
     this.keyModel = keyModel
     this.chatModels = chatModels

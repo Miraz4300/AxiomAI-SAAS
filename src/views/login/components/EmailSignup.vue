@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
-import { NButton, NDivider, NInput, NModal, useMessage } from 'naive-ui'
+import { NButton, NCheckbox, NDivider, NInput, NModal, useMessage } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import { fetchRegister } from '@/api'
 import { SvgIcon } from '@/components/common'
@@ -29,6 +29,7 @@ const disabled = computed(() => !username.value.trim() || !password.value.trim()
 
 const showConfirmPassword = ref(false)
 const confirmPassword = ref('')
+const agreed = ref(false)
 
 function handlePasswordInput() {
   showConfirmPassword.value = password.value.trim() !== ''
@@ -80,11 +81,12 @@ async function handleRegister() {
         v-model:value="confirmPassword"
         type="password"
         placeholder="Confirm Password"
-        class="mb-4"
+        class="mb-2"
         :status="confirmPasswordStatus"
       />
+      <NCheckbox v-model:checked="agreed" size="medium" label="I acknowledged and agreed to the terms of use" :disabled="!confirmPassword" class="mb-4" />
     </NInputGroup>
-    <NButton block type="primary" :disabled="disabled || password !== confirmPassword" :loading="loading" @click="handleRegister">
+    <NButton block type="primary" :disabled="disabled || password !== confirmPassword || !agreed" :loading="loading" @click="handleRegister">
       Signup
     </NButton>
   </div>

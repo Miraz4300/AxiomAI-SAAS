@@ -84,7 +84,7 @@ async function handleRegister() {
         class="mb-2"
         :status="confirmPasswordStatus"
       />
-      <NCheckbox v-model:checked="agreed" size="medium" label="I acknowledged and agreed to the terms of use" :disabled="!confirmPassword" class="mb-4" />
+      <NCheckbox v-model:checked="agreed" size="small" label="I acknowledged and agreed to the terms of use" :disabled="!confirmPassword" class="mb-4" />
     </NInputGroup>
     <NButton block type="primary" :disabled="disabled || password !== confirmPassword || !agreed" :loading="loading" @click="handleRegister">
       Signup

@@ -1,6 +1,7 @@
 <script setup lang='ts'>
-import { computed, ref } from 'vue'
+import { onMounted, ref, watch, watchEffect } from 'vue'
 import { NCard, NLayout, NLayoutContent, NTabPane, NTabs } from 'naive-ui'
+import { useRoute, useRouter } from 'vue-router'
 import System from './System.vue'
 import Mail from './Mail.vue'
 import Moderation from './Moderation.vue'
@@ -14,35 +15,30 @@ import Features from './Features.vue'
 import { SvgIcon } from '@/components/common'
 import { useUserStore } from '@/store'
 
-const props = defineProps<Props>()
-
-const emit = defineEmits<Emit>()
-
 const userStore = useUserStore()
-
-interface Props {
-  visible: boolean
-}
-
-interface Emit {
-  (e: 'update:visible', visible: boolean): void
-}
-
 const active = ref('Config')
+const route = useRoute()
+const router = useRouter()
 
-const show = computed({
-  get() {
-    return props.visible
-  },
-  set(visible: boolean) {
-    emit('update:visible', visible)
-  },
+onMounted(() => {
+  const id = route.query.id
+  active.value = id ? id as string : 'Config'
+  if (!id)
+    router.replace({ query: { id: active.value } })
+})
+watchEffect(() => {
+  const id = route.query.id
+  if (id)
+    active.value = id as string
+})
+watch(active, (newTab) => {
+  router.push({ query: { id: newTab } })
 })
 </script>
 
 <template>
   <NLayout position="absolute">
-    <NLayoutContent v-model:show="show">
+    <NLayoutContent>
       <div class="min-h-full p-8">
         <header class="mb-4">
           <h2 class="mb-2 text-2xl font-bold text-black dark:text-white">
@@ -51,7 +47,7 @@ const show = computed({
         </header>
         <div>
           <NTabs v-model:value="active" type="line" animated>
-            <NTabPane v-if="userStore.userInfo.root" name="Config" tab="Config">
+            <NTabPane v-if="userStore.userInfo.root" name="Config">
               <template #tab>
                 <SvgIcon class="text-lg" icon="tabler:server-cog" />
                 <span class="ml-2">System Settings</span>
@@ -60,7 +56,7 @@ const show = computed({
                 <System />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="SiteConfig" tab="SiteConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="SiteConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:web" />
                 <span class="ml-2">Site Settings</span>
@@ -69,7 +65,7 @@ const show = computed({
                 <Site />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="MailConfig" tab="MailConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="MailConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="tabler:mail-cog" />
                 <span class="ml-2">Mail Settings</span>
@@ -78,7 +74,7 @@ const show = computed({
                 <Mail />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="AuditConfig" tab="AuditConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="AuditConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:security" />
                 <span class="ml-2">Moderation</span>
@@ -87,7 +83,7 @@ const show = computed({
                 <Moderation />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="KeysConfig" tab="KeysConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="KeysConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="ri-key-2-line" />
                 <span class="ml-2">Keys Settings</span>
@@ -96,7 +92,7 @@ const show = computed({
                 <Key />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="UserConfig" tab="UserConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="UserConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:database-cog-outline" />
                 <span class="ml-2">User Settings</span>
@@ -105,7 +101,7 @@ const show = computed({
                 <User />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="SubscriptionConfig" tab="SubscriptionConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="SubscriptionConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:currency-usd" />
                 <span class="ml-2">Subscription Price</span>
@@ -114,7 +110,7 @@ const show = computed({
                 <Subscription />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="MerchConfig" tab="MerchConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="MerchConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="ri:shopping-bag-line" />
                 <span class="ml-2">Merch Settings</span>
@@ -123,7 +119,7 @@ const show = computed({
                 <Merch />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="AnnouncementConfig" tab="AnnouncementConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="AnnouncementConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:announcement" />
                 <span class="ml-2">Announcement</span>
@@ -132,7 +128,7 @@ const show = computed({
                 <Announcement />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="FeaturesConfig" tab="FeaturesConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="FeaturesConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:feature-search-outline" />
                 <span class="ml-2">Experimental Features</span>

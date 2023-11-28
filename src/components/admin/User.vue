@@ -38,13 +38,26 @@ const columns = [
     width: 180,
     render(row: any) {
       const roles = row.roles.map((role: UserRole) => {
+        const tagType = (() => {
+          if (role === UserRole.Premium)
+            return 'success'
+          if (role === UserRole.MVP)
+            return 'warning'
+          if (role === UserRole.Support)
+            return 'success'
+          if (role === UserRole.Enterprise)
+            return 'error'
+          if (role === UserRole.Basic || role === UserRole['Basic+'])
+            return 'info'
+          return 'default'
+        })()
         return h(
           NTag,
           {
             style: {
               marginRight: '6px',
             },
-            type: 'info',
+            type: tagType,
             bordered: false,
           },
           {
@@ -60,7 +73,21 @@ const columns = [
     key: 'status',
     width: 100,
     render(row: any) {
-      return Status[row.status]
+      const status = Status[row.status]
+      const tagType = row.status === Status.Normal ? 'success' : 'error'
+      return h(
+        NTag,
+        {
+          style: {
+            marginRight: '6px',
+          },
+          type: tagType,
+          bordered: false,
+        },
+        {
+          default: () => status,
+        },
+      )
     },
   },
   {

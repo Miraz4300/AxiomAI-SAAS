@@ -130,10 +130,10 @@ export function fetchUpdateUserChatModel<T = any>(chatModel: string) {
   })
 }
 
-export function fetchGetUsers<T = any>(page: number, size: number) {
+export function fetchGetUsers<T = any>(page: number, size: number, searchQuery?: string) {
   return get<T>({
     url: '/users',
-    data: { page, size },
+    data: { page, size, search: searchQuery },
   })
 }
 

@@ -798,7 +798,8 @@ router.get('/users', rootAuth, async (req, res) => {
   try {
     const page = +req.query.page
     const size = +req.query.size
-    const data = await getUsers(page, size)
+    const searchQuery = req.query.search as string || '' // Retrieve search query from request query parameters
+    const data = await getUsers(page, size, searchQuery)
     res.send({ status: 'Success', message: 'Get successfully', data })
   }
   catch (error) {

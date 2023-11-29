@@ -13,7 +13,6 @@ const show = ref(false)
 const handleSaving = ref(false)
 const userRef = ref(new UserInfo([UserRole.Free]))
 const users = ref<UserInfo[]>([])
-const shadowList = ref<UserInfo[]>([])
 const searchQuery = ref('')
 const columns = [
   {
@@ -232,18 +231,24 @@ function handleNewUser() {
   show.value = true
 }
 
-function handleSearch() {
-  const query = searchQuery.value.toLowerCase() // Convert to lowercase for case-insensitive search
-  if (query.trim() === '') {
-    // If search query is empty, show the shadow list
-    users.value = [...shadowList.value]
+async function handleSearch() {
+  const query = searchQuery.value.toLowerCase().trim() // Convert to lowercase for case-insensitive search
+  if (query === '') {
+    // If search query is empty, show all users
+    await handleGetUsers(pagination.page)
   }
   else {
-    // Filter the shadow list based on the search query
-    const filteredUsers = shadowList.value.filter((user) => {
-      return user?.email?.toLowerCase().includes(query)
+    // Fetch the filtered data from the server
+    const filteredData = await fetchGetUsers(1, pagination.itemCount, query)
+    // Update the users array with the filtered results
+    users.value.length = 0
+    filteredData.data.users.forEach((user: never) => {
+      users.value.push(user)
     })
-    users.value = filteredUsers
+    // Update pagination information
+    pagination.page = 1
+    pagination.pageCount = filteredData.data.total / pagination.pageSize + (filteredData.data.total % pagination.pageSize === 0 ? 0 : 1)
+    pagination.itemCount = filteredData.data.total
   }
 }
 
@@ -267,13 +272,11 @@ async function handleUpdateUser() {
 
 onMounted(async () => {
   await handleGetUsers(pagination.page)
-  // Copy the users to the shadowList array
-  shadowList.value = [...users.value]
 })
 </script>
 
 <template>
-  <div class="p-4 space-y-5 min-h-[740px]">
+  <div class="p-4 space-y-5 max-h-[740px]">
     <div class="space-y-6">
       <NSpace vertical :size="12">
         <div class="flex justify-between">

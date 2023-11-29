@@ -55,7 +55,7 @@ const columns = [
     },
   },
   {
-    title: 'User Roles',
+    title: 'Roles',
     key: 'userRoles',
     width: 200,
     render(row: any) {

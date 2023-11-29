@@ -75,7 +75,15 @@ const columns = [
     width: 100,
     render(row: any) {
       const status = Status[row.status]
-      const tagType = row.status === Status.Normal ? 'success' : 'error'
+      const tagType = (() => {
+        if (row.status === Status.Normal)
+          return 'success'
+        if (row.status === Status.Unverified)
+          return 'warning'
+        if (row.status === Status.Disabled)
+          return 'error'
+        return 'default'
+      })()
       return h(
         NTag,
         {
@@ -102,18 +110,35 @@ const columns = [
     width: 220,
     render(row: any) {
       const actions: any[] = []
-      actions.push(h(
-        NButton,
-        {
-          size: 'small',
-          type: 'error',
-          style: {
-            marginRight: '6px',
+
+      if (row.status !== Status.Disabled) {
+        actions.push(h(
+          NButton,
+          {
+            size: 'small',
+            type: 'error',
+            style: {
+              marginRight: '6px',
+            },
+            onClick: () => handleUpdateUserStatus(row._id, Status.Disabled),
           },
-          onClick: () => handleUpdateUserStatus(row._id, Status.Deleted),
-        },
-        { default: () => ('Delete') },
-      ))
+          { default: () => ('Disable') },
+        ))
+      }
+      if (row.status === Status.Disabled) {
+        actions.push(h(
+          NButton,
+          {
+            size: 'small',
+            type: 'default',
+            style: {
+              marginRight: '6px',
+            },
+            onClick: () => handleUpdateUserStatus(row._id, Status.Normal),
+          },
+          { default: () => ('Restore') },
+        ))
+      }
       if (row.status === Status.Normal) {
         actions.push(h(
           NButton,
@@ -192,10 +217,10 @@ async function handleGetUsers(page: number) {
 }
 
 async function handleUpdateUserStatus(userId: string, status: Status) {
-  if (status === Status.Deleted) {
+  if (status === Status.Disabled) {
     dialog.warning({
-      title: ('Delete User'),
-      content: ('Are you sure to delete this user? After deletion, this email can never be registered or logged in again.'),
+      title: ('Disable User'),
+      content: ('Are you sure to disable this user account?'),
       positiveText: ('Yes'),
       negativeText: ('No'),
       onPositiveClick: async () => {

@@ -253,27 +253,17 @@ export async function getUser(email: string): Promise<UserInfo> {
 export async function getUsers(page: number, size: number, searchQuery?: string): Promise<{ users: UserInfo[]; total: number }> {
   const query = { status: { $ne: Status.Deleted } }
 
-  // Include search query in the filter if provided
-  if (searchQuery && searchQuery.trim() !== '')
+  // If a search query is provided, add it to the query
+  if (searchQuery?.trim())
     query['email'] = { $regex: new RegExp(searchQuery, 'i') }
 
-  const cursor = userCol.find(query)
   const total = await userCol.countDocuments(query)
-  const skip = (page - 1) * size
-  const limit = size
-  const pagedCursor = cursor.skip(skip).limit(limit)
-  const users: UserInfo[] = []
-  await pagedCursor.forEach(doc => users.push(doc))
-  users.forEach((user) => {
-    initUserInfo(user)
-  })
-  // Convert createTime to Date and sort
-  users.sort((a, b) => {
-    const dateA = new Date(a.createTime)
-    const dateB = new Date(b.createTime)
-    return dateB.getTime() - dateA.getTime() // Descending order
-  })
-  return { users, total }
+  const users: UserInfo[] = (await userCol.find(query).toArray()) as UserInfo[]
+  users.forEach(initUserInfo)
+  users.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime()) // Sort users by createTime in descending order
+  const start = (page - 1) * size
+  const pagedUsers = users.slice(start, start + size)
+  return { users: pagedUsers, total }
 }
 
 export async function getUserById(userId: string): Promise<UserInfo> {

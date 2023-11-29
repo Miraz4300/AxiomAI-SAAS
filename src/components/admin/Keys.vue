@@ -32,7 +32,7 @@ const columns = [
     width: 190,
   },
   {
-    title: 'Model',
+    title: 'Models',
     key: 'chatModels',
     width: 320,
     render(row: any) {
@@ -169,7 +169,7 @@ async function handleUpdateApiKeyStatus(id: string, status: Status) {
 }
 async function handleUpdateKeyConfig() {
   if (!keyConfig.value.key) {
-    ms.error('Api key is required')
+    ms.error('API key is required')
     return
   }
   handleSaving.value = true

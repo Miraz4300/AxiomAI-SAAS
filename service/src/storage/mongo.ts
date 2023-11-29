@@ -255,7 +255,7 @@ export async function getUsers(page: number, size: number, searchQuery?: string)
 
   // Include search query in the filter if provided
   if (searchQuery && searchQuery.trim() !== '')
-    query['email'] = { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search on email
+    query['email'] = { $regex: new RegExp(searchQuery, 'i') }
 
   const cursor = userCol.find(query).sort({ createTime: -1 })
   const total = await userCol.countDocuments(query)
@@ -266,7 +266,13 @@ export async function getUsers(page: number, size: number, searchQuery?: string)
   await pagedCursor.forEach(doc => users.push(doc))
   users.forEach((user) => {
     initUserInfo(user)
+    // Convert createTime to the new date format
+    const [datePart, timePart] = user.createTime.split(', ')
+    const [month, day, year] = datePart.split('/')
+    user.createTime = `${day}/${month}/${year}, ${timePart}`
   })
+  // Sort users by the new date format
+  users.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime())
   return { users, total }
 }
 

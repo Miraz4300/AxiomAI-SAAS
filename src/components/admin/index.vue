@@ -115,7 +115,7 @@ watch(active, (newTab) => {
             </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="KeysConfig">
               <template #tab>
-                <SvgIcon class="text-lg" icon="ri-key-2-line" />
+                <SvgIcon class="text-lg" icon="ri:key-line" />
                 <span class="ml-2">Keys Settings</span>
               </template>
               <NCard>
@@ -124,8 +124,8 @@ watch(active, (newTab) => {
             </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="UserConfig">
               <template #tab>
-                <SvgIcon class="text-lg" icon="mdi:database-cog-outline" />
-                <span class="ml-2">User Settings</span>
+                <SvgIcon class="text-lg" icon="tabler:user-cog" />
+                <span class="ml-2">User Management</span>
               </template>
               <NCard>
                 <User />

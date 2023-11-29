@@ -76,8 +76,6 @@ const columns = [
     render(row: any) {
       const status = Status[row.status]
       const tagType = (() => {
-        if (row.status === Status.Normal)
-          return 'success'
         if (row.status === Status.Unverified)
           return 'warning'
         if (row.status === Status.Disabled)
@@ -130,7 +128,8 @@ const columns = [
           NButton,
           {
             size: 'small',
-            tertiary: true,
+            strong: true,
+            secondary: true,
             type: 'success',
             style: {
               marginRight: '6px',
@@ -233,7 +232,7 @@ async function handleUpdateUserStatus(userId: string, status: Status) {
   }
   else if (status === Status.Normal) {
     dialog.success({
-      title: ('Restore User'),
+      title: ('Restore Account'),
       content: ('Are you sure to restore this user account?'),
       positiveText: ('Yes'),
       negativeText: ('No'),

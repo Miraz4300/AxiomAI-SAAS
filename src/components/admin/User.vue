@@ -4,6 +4,7 @@ import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NTag, useDialog, 
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
 import { fetchDisableUser2FAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { SvgIcon } from '@/components/common'
 
 const ms = useMessage()
 const dialog = useDialog()
@@ -26,17 +27,17 @@ const columns = [
   {
     title: 'Registration',
     key: 'createTime',
-    width: 200,
+    width: 180,
   },
   {
     title: 'Verification',
     key: 'verifyTime',
-    width: 200,
+    width: 180,
   },
   {
     title: 'Roles',
     key: 'status',
-    width: 180,
+    width: 140,
     render(row: any) {
       const roles = row.roles.map((role: UserRole) => {
         const tagType = (() => {
@@ -76,6 +77,8 @@ const columns = [
     render(row: any) {
       const status = Status[row.status]
       const tagType = (() => {
+        if (row.status === Status.Normal)
+          return 'success'
         if (row.status === Status.Unverified)
           return 'warning'
         if (row.status === Status.Disabled)
@@ -89,7 +92,6 @@ const columns = [
             marginRight: '6px',
           },
           type: tagType,
-          bordered: false,
         },
         {
           default: () => status,
@@ -100,7 +102,7 @@ const columns = [
   {
     title: 'Remark',
     key: 'remark',
-    width: 220,
+    width: 200,
   },
   {
     title: 'Action',
@@ -120,7 +122,12 @@ const columns = [
             },
             onClick: () => handleUpdateUserStatus(row._id, Status.Disabled),
           },
-          { default: () => ('Disable') },
+          {
+            default: () => [
+              h(SvgIcon, { icon: 'mdi:user-off-outline' }),
+              h('span', { class: 'ml-1' }, 'Disable'),
+            ],
+          },
         ))
       }
       if (row.status === Status.Disabled) {
@@ -136,7 +143,12 @@ const columns = [
             },
             onClick: () => handleUpdateUserStatus(row._id, Status.Normal),
           },
-          { default: () => ('Restore') },
+          {
+            default: () => [
+              h(SvgIcon, { icon: 'mdi:account-check' }),
+              h('span', { class: 'ml-1' }, 'Restore'),
+            ],
+          },
         ))
       }
       if (row.status === Status.Normal) {
@@ -150,7 +162,12 @@ const columns = [
             },
             onClick: () => handleEditUser(row),
           },
-          { default: () => ('Edit User') },
+          {
+            default: () => [
+              h(SvgIcon, { icon: 'ri:edit-2-line' }),
+              h('span', { class: 'ml-1' }, 'Edit User'),
+            ],
+          },
         ))
       }
       if (row.status === Status.Unverified || row.status === Status.AdminVerify) {
@@ -161,7 +178,12 @@ const columns = [
             type: 'info',
             onClick: () => handleUpdateUserStatus(row._id, Status.Normal),
           },
-          { default: () => ('Verified User') },
+          {
+            default: () => [
+              h(SvgIcon, { icon: 'ri:verified-badge-line' }),
+              h('span', { class: 'ml-1' }, 'Verified'),
+            ],
+          },
         ))
       }
       if (row.secretKey) {
@@ -219,7 +241,7 @@ async function handleGetUsers(page: number) {
 async function handleUpdateUserStatus(userId: string, status: Status) {
   if (status === Status.Disabled) {
     dialog.error({
-      title: ('Disable User'),
+      title: ('Disable Account'),
       content: ('Are you sure to disable this user account?'),
       positiveText: ('Yes'),
       negativeText: ('No'),
@@ -317,17 +339,23 @@ onMounted(async () => {
   <div class="p-4 space-y-5 max-h-[740px]">
     <div class="space-y-6">
       <NSpace vertical :size="12">
-        <div class="flex justify-between">
+        <NSpace justify="space-between">
           <NButton @click="handleNewUser()">
+            <template #icon>
+              <SvgIcon icon="ri:add-line" />
+            </template>
             Add user
           </NButton>
           <div class="flex space-x-2">
             <NInput v-model:value="searchQuery" placeholder="Search by email" clearable />
             <NButton @click="handleSearch">
+              <template #icon>
+                <SvgIcon icon="ri:search-line" />
+              </template>
               Search
             </NButton>
           </div>
-        </div>
+        </NSpace>
         <NDataTable
           remote
           :loading="loading"

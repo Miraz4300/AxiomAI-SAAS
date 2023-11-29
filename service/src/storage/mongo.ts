@@ -250,8 +250,13 @@ export async function getUser(email: string): Promise<UserInfo> {
   return userInfo
 }
 
-export async function getUsers(page: number, size: number): Promise<{ users: UserInfo[]; total: number }> {
+export async function getUsers(page: number, size: number, searchQuery?: string): Promise<{ users: UserInfo[]; total: number }> {
   const query = { status: { $ne: Status.Deleted } }
+
+  // Include search query in the filter if provided
+  if (searchQuery && searchQuery.trim() !== '')
+    query['email'] = { $regex: new RegExp(searchQuery, 'i') } // Case-insensitive search on email
+
   const cursor = userCol.find(query).sort({ createTime: -1 })
   const total = await userCol.countDocuments(query)
   const skip = (page - 1) * size

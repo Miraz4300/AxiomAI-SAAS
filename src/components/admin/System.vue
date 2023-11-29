@@ -47,7 +47,7 @@ onMounted(() => {
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Api Base URL</span>
+          <span class="flex-shrink-0 w-[100px]">API Base URL</span>
           <div class="flex-1">
             <NInput :value="config.apiBaseUrl" placeholder="https://api.openai.com, Only used by ChatGPTAPI" style="max-width: 30%" @input="(val: string | undefined) => { config.apiBaseUrl = val }" />
           </div>
@@ -59,7 +59,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Timeout(ms)</span>
+          <span class="flex-shrink-0 w-[100px]">Timeout (ms)</span>
           <div class="flex-1">
             <NInput :value="config.timeoutMs !== undefined ? String(config.timeoutMs) : undefined" placeholder="" style="max-width: 30%" @input="(val: any) => { config.timeoutMs = typeof val === 'string' ? Number(val) : undefined }" />
           </div>

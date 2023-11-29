@@ -88,7 +88,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Register Enabled</span>
+          <span class="flex-shrink-0 w-[100px]">Registration Enabled</span>
           <div class="flex-1">
             <NSwitch
               :round="false"
@@ -98,7 +98,7 @@ onMounted(() => {
           </div>
         </div>
         <div v-show="config && config.registerEnabled" class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Register Review</span>
+          <span class="flex-shrink-0 w-[100px]">Registration Review</span>
           <div class="flex-1">
             <NSwitch
               :round="false"

@@ -368,7 +368,7 @@ onMounted(async () => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Role</span>
+          <span class="flex-shrink-0 w-[100px]">Roles</span>
           <div class="flex-1">
             <NSelect
               style="width: 100%"

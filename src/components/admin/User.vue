@@ -130,7 +130,8 @@ const columns = [
           NButton,
           {
             size: 'small',
-            type: 'default',
+            tertiary: true,
+            type: 'success',
             style: {
               marginRight: '6px',
             },
@@ -144,7 +145,7 @@ const columns = [
           NButton,
           {
             size: 'small',
-            type: 'primary',
+            type: 'default',
             style: {
               marginRight: '8px',
             },
@@ -218,9 +219,22 @@ async function handleGetUsers(page: number) {
 
 async function handleUpdateUserStatus(userId: string, status: Status) {
   if (status === Status.Disabled) {
-    dialog.warning({
+    dialog.error({
       title: ('Disable User'),
       content: ('Are you sure to disable this user account?'),
+      positiveText: ('Yes'),
+      negativeText: ('No'),
+      onPositiveClick: async () => {
+        await fetchUpdateUserStatus(userId, status)
+        ms.info('OK')
+        await handleGetUsers(pagination.page)
+      },
+    })
+  }
+  else if (status === Status.Normal) {
+    dialog.success({
+      title: ('Restore User'),
+      content: ('Are you sure to restore this user account?'),
       positiveText: ('Yes'),
       negativeText: ('No'),
       onPositiveClick: async () => {

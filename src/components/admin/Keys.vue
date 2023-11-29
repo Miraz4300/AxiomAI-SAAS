@@ -197,7 +197,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="p-4 space-y-5 min-h-[750px]">
+  <div class="p-4 space-y-5 min-h-[740px]">
     <div class="space-y-6">
       <NSpace vertical :size="12">
         <NSpace>

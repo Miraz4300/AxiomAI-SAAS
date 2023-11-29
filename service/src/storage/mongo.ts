@@ -271,8 +271,12 @@ export async function getUsers(page: number, size: number, searchQuery?: string)
     const [month, day, year] = datePart.split('/')
     user.createTime = `${day}/${month}/${year}, ${timePart}`
   })
-  // Sort users by the new date format
-  users.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime())
+  // Convert the date to a format that JavaScript can recognize and sort users by the new date format
+  users.sort((a, b) => {
+    const aDate = new Date(a.createTime.split('/').reverse().join('/'))
+    const bDate = new Date(b.createTime.split('/').reverse().join('/'))
+    return bDate.getTime() - aDate.getTime()
+  })
   return { users, total }
 }
 

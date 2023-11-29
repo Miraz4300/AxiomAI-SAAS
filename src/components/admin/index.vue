@@ -12,13 +12,35 @@ import Subscription from './Subscription.vue'
 import Announcement from './Announcement.vue'
 import Merch from './Merch.vue'
 import Features from './Features.vue'
-import { SvgIcon } from '@/components/common'
-import { useUserStore } from '@/store'
+import { SvgIcon, ToolButton } from '@/components/common'
+import { useAuthStore, useUserStore } from '@/store'
 
+const authStore = useAuthStore()
 const userStore = useUserStore()
 const active = ref('Config')
 const route = useRoute()
 const router = useRouter()
+
+function handleLogout() {
+  window.$dialog?.error({
+    title: 'Logout',
+    content: 'Are you sure to Logout?',
+    positiveText: 'logout',
+    negativeText: 'cancel',
+    onPositiveClick: async () => {
+      await authStore.removeToken()
+    },
+  })
+}
+
+function goHome() {
+  // Redirect to the originally requested page or home page if no redirect query parameter exists
+  const redirect = route.query.redirect
+  router.replace(redirect ? decodeURIComponent(redirect as string) : '/')
+  setTimeout(() => {
+    location.reload()
+  }, 1000)
+}
 
 onMounted(() => {
   const id = route.query.id
@@ -40,9 +62,17 @@ watch(active, (newTab) => {
   <NLayout position="absolute">
     <NLayoutContent>
       <div class="min-h-full p-8">
-        <header class="mb-4">
+        <header class="mb-4 flex justify-between">
           <h2 class="mb-2 text-2xl font-bold text-black dark:text-white">
             Administrator Settings
+          </h2>
+          <h2 class="flex space-x-2 text-2xl">
+            <ToolButton v-if="!!authStore.token" @click="goHome">
+              <SvgIcon class="text-xl" icon="ri:home-3-line" />
+            </ToolButton>
+            <ToolButton v-if="!!authStore.token" @click="handleLogout">
+              <SvgIcon class="text-xl" icon="ri:logout-circle-line" />
+            </ToolButton>
           </h2>
         </header>
         <div>

@@ -124,6 +124,7 @@ onMounted(() => {
               placeholder="English comma separated"
               type="textarea"
               :autosize="{ minRows: 1, maxRows: 4 }"
+              style="max-width: 30%"
               @input="(val) => { if (config) config.chatModels = val }"
             />
           </div>

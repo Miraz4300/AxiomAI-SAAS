@@ -5,6 +5,7 @@ import { KeyConfig, Status, UserRole, apiModelOptions, userRoleOptions } from '.
 import { fetchGetKeys, fetchUpdateApiKeyStatus, fetchUpsertApiKey } from '@/api'
 import { useAuthStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { SvgIcon } from '@/components/common'
 
 const ms = useMessage()
 const dialog = useDialog()
@@ -98,7 +99,12 @@ const columns = [
           type: 'error',
           onClick: () => handleUpdateApiKeyStatus(row._id as string, Status.Disabled),
         },
-        { default: () => ('Delete') },
+        {
+          default: () => [
+            h(SvgIcon, { icon: 'ri:delete-bin-6-line' }),
+            h('span', { class: 'ml-1' }, 'Delete'),
+          ],
+        },
       ))
       if (row.status === Status.Normal) {
         actions.push(h(
@@ -111,7 +117,12 @@ const columns = [
             type: 'default',
             onClick: () => handleEditKey(row),
           },
-          { default: () => ('Edit') },
+          {
+            default: () => [
+              h(SvgIcon, { icon: 'ri:edit-2-line' }),
+              h('span', { class: 'ml-1' }, 'Edit Key'),
+            ],
+          },
         ))
       }
       return actions
@@ -155,7 +166,7 @@ async function handleGetKeys(page: number) {
   loading.value = false
 }
 async function handleUpdateApiKeyStatus(id: string, status: Status) {
-  dialog.warning({
+  dialog.error({
     title: ('Delete Key'),
     content: ('Are you sure to delete this key?'),
     positiveText: ('Yes'),
@@ -202,6 +213,9 @@ onMounted(async () => {
       <NSpace vertical :size="12">
         <NSpace>
           <NButton @click="handleNewKey()">
+            <template #icon>
+              <SvgIcon icon="ri:add-line" />
+            </template>
             Add key
           </NButton>
         </NSpace>

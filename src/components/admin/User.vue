@@ -12,7 +12,9 @@ const loading = ref(false)
 const show = ref(false)
 const handleSaving = ref(false)
 const userRef = ref(new UserInfo([UserRole.Free]))
-const users = ref([])
+const users = ref<UserInfo[]>([])
+const shadowList = ref<UserInfo[]>([])
+const searchQuery = ref('')
 const columns = [
   {
     title: 'Email',
@@ -173,6 +175,7 @@ const pagination = reactive ({
     handleGetUsers(pagination.page)
   },
 })
+
 async function handleGetUsers(page: number) {
   if (loading.value)
     return
@@ -188,6 +191,7 @@ async function handleGetUsers(page: number) {
   pagination.itemCount = data.total
   loading.value = false
 }
+
 async function handleUpdateUserStatus(userId: string, status: Status) {
   if (status === Status.Deleted) {
     dialog.warning({
@@ -228,10 +232,26 @@ function handleNewUser() {
   show.value = true
 }
 
+function handleSearch() {
+  const query = searchQuery.value.toLowerCase() // Convert to lowercase for case-insensitive search
+  if (query.trim() === '') {
+    // If search query is empty, show the shadow list
+    users.value = [...shadowList.value]
+  }
+  else {
+    // Filter the shadow list based on the search query
+    const filteredUsers = shadowList.value.filter((user) => {
+      return user?.email?.toLowerCase().includes(query)
+    })
+    users.value = filteredUsers
+  }
+}
+
 function handleEditUser(user: UserInfo) {
   userRef.value = user
   show.value = true
 }
+
 async function handleUpdateUser() {
   handleSaving.value = true
   try {
@@ -247,18 +267,26 @@ async function handleUpdateUser() {
 
 onMounted(async () => {
   await handleGetUsers(pagination.page)
+  // Copy the users to the shadowList array
+  shadowList.value = [...users.value]
 })
 </script>
 
 <template>
-  <div class="p-4 space-y-5 min-h-[750px]">
+  <div class="p-4 space-y-5 min-h-[740px]">
     <div class="space-y-6">
       <NSpace vertical :size="12">
-        <NSpace>
+        <div class="flex justify-between">
           <NButton @click="handleNewUser()">
             New User
           </NButton>
-        </NSpace>
+          <div class="flex space-x-2">
+            <NInput v-model:value="searchQuery" placeholder="Search by Email" clearable />
+            <NButton @click="handleSearch">
+              Search
+            </NButton>
+          </div>
+        </div>
         <NDataTable
           remote
           :loading="loading"

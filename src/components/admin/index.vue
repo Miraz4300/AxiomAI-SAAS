@@ -63,17 +63,17 @@ watch(active, (newTab) => {
     <NLayoutContent>
       <div class="min-h-full p-8">
         <header class="mb-4 flex justify-between">
-          <h2 class="mb-2 text-2xl font-bold text-black dark:text-white">
+          <div class="mb-2 text-2xl font-bold text-black dark:text-white">
             Administrator Settings
-          </h2>
-          <h2 class="flex space-x-2 text-2xl">
+          </div>
+          <div class="flex space-x-2">
             <ToolButton v-if="!!authStore.token" @click="goHome">
               <SvgIcon class="text-xl" icon="ri:home-3-line" />
             </ToolButton>
             <ToolButton v-if="!!authStore.token" @click="handleLogout">
               <SvgIcon class="text-xl" icon="ri:logout-circle-line" />
             </ToolButton>
-          </h2>
+          </div>
         </header>
         <div>
           <NTabs v-model:value="active" type="line" animated>

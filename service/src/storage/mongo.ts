@@ -257,7 +257,7 @@ export async function getUsers(page: number, size: number, searchQuery?: string)
   if (searchQuery && searchQuery.trim() !== '')
     query['email'] = { $regex: new RegExp(searchQuery, 'i') }
 
-  const cursor = userCol.find(query).sort({ createTime: -1 })
+  const cursor = userCol.find(query)
   const total = await userCol.countDocuments(query)
   const skip = (page - 1) * size
   const limit = size
@@ -266,16 +266,12 @@ export async function getUsers(page: number, size: number, searchQuery?: string)
   await pagedCursor.forEach(doc => users.push(doc))
   users.forEach((user) => {
     initUserInfo(user)
-    // Convert createTime to the new date format
-    const [datePart, timePart] = user.createTime.split(', ')
-    const [month, day, year] = datePart.split('/')
-    user.createTime = `${day}/${month}/${year}, ${timePart}`
   })
-  // Convert the date to a format that JavaScript can recognize and sort users by the new date format
+  // Convert createTime to Date and sort
   users.sort((a, b) => {
-    const aDate = new Date(a.createTime.split('/').reverse().join('/'))
-    const bDate = new Date(b.createTime.split('/').reverse().join('/'))
-    return bDate.getTime() - aDate.getTime()
+    const dateA = new Date(a.createTime)
+    const dateB = new Date(b.createTime)
+    return dateB.getTime() - dateA.getTime() // Descending order
   })
   return { users, total }
 }

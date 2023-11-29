@@ -108,7 +108,7 @@ const columns = [
             style: {
               marginRight: '6px',
             },
-            type: 'info',
+            type: 'default',
             onClick: () => handleEditKey(row),
           },
           { default: () => ('Edit') },
@@ -202,7 +202,7 @@ onMounted(async () => {
       <NSpace vertical :size="12">
         <NSpace>
           <NButton @click="handleNewKey()">
-            New Key
+            Add key
           </NButton>
         </NSpace>
         <NDataTable
@@ -248,7 +248,7 @@ onMounted(async () => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Model</span>
+          <span class="flex-shrink-0 w-[100px]">Models</span>
           <div class="flex-1">
             <NSelect
               style="width: 100%"
@@ -260,7 +260,7 @@ onMounted(async () => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">User Roles</span>
+          <span class="flex-shrink-0 w-[100px]">Roles</span>
           <div class="flex-1">
             <NSelect
               style="width: 100%"
@@ -272,7 +272,7 @@ onMounted(async () => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Status</span>
+          <span class="flex-shrink-0 w-[100px]">Enabled</span>
           <div class="flex-1">
             <NSwitch
               :round="false"

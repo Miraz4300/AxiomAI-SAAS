@@ -319,10 +319,10 @@ onMounted(async () => {
       <NSpace vertical :size="12">
         <div class="flex justify-between">
           <NButton @click="handleNewUser()">
-            New User
+            Add user
           </NButton>
           <div class="flex space-x-2">
-            <NInput v-model:value="searchQuery" placeholder="Search by Email" clearable />
+            <NInput v-model:value="searchQuery" placeholder="Search by email" clearable />
             <NButton @click="handleSearch">
               Search
             </NButton>
@@ -352,7 +352,7 @@ onMounted(async () => {
           <div class="flex-1">
             <NInput
               v-model:value="userRef.email"
-              :disabled="userRef._id !== undefined" placeholder="email"
+              :disabled="userRef._id !== undefined" placeholder="user's email address"
             />
           </div>
         </div>
@@ -363,12 +363,12 @@ onMounted(async () => {
             <NInput
               v-model:value="userRef.password"
               type="password"
-              placeholder="password"
+              placeholder="authentication password"
             />
           </div>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">User Role</span>
+          <span class="flex-shrink-0 w-[100px]">Role</span>
           <div class="flex-1">
             <NSelect
               style="width: 100%"

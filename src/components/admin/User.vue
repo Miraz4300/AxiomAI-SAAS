@@ -225,6 +225,13 @@ const pagination = reactive ({
   },
 })
 
+const duration = ref()
+const durationOption = ref([
+  { label: '3 Days', value: 3 },
+  { label: '7 Days', value: 7 },
+  { label: '30 Days', value: 30 },
+])
+
 async function handleGetUsers(page: number) {
   if (loading.value)
     return
@@ -340,6 +347,14 @@ function handleEditUser(user: UserInfo) {
 async function handleUpdateUser() {
   handleSaving.value = true
   try {
+    if (duration.value) {
+    // Calculate the expiration date as dd-mm-yyyy, hh:mm AM/PM format
+      const currentDate = new Date()
+      currentDate.setDate(currentDate.getDate() + duration.value)
+      const formattedDate = `${String(currentDate.getDate()).padStart(2, '0')}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${currentDate.getFullYear()}, ${currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`
+      userRef.value.remark = `Expires on ${formattedDate}`
+    }
+
     await fetchUpdateUser(userRef.value)
     await handleGetUsers(pagination.page)
     show.value = false
@@ -400,11 +415,10 @@ onMounted(async () => {
           <div class="flex-1">
             <NInput
               v-model:value="userRef.email"
-              :disabled="userRef._id !== undefined" placeholder="user's email address"
+              :disabled="userRef._id !== undefined" placeholder="user email address"
             />
           </div>
         </div>
-
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">Password</span>
           <div class="flex-1">
@@ -428,10 +442,20 @@ onMounted(async () => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">Duration</span>
+          <div class="flex-1">
+            <NSelect
+              v-model:value="duration"
+              style="width: 100%"
+              :options="durationOption"
+            />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">Remark</span>
           <div class="flex-1">
             <NInput
-              v-model:value="userRef.remark" type="textarea"
+              v-model:value="userRef.remark" type="textarea" clearable
               :autosize="{ minRows: 1, maxRows: 2 }" placeholder=""
             />
           </div>

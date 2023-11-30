@@ -66,7 +66,7 @@ onMounted(() => {
               <span class="flex-shrink-0 w-[100px]">Light Banner</span>
               <div class="flex-1">
                 <NInput
-                  :value="config && config.lightBanner" placeholder="banner for light theme" style="max-width: 30%"
+                  :value="config && config.lightBanner" placeholder="banner for light theme" style="width: 100%; max-width: 720px"
                   @input="(val: string | undefined) => { if (config && val !== undefined) config.lightBanner = val }"
                 />
               </div>
@@ -75,7 +75,7 @@ onMounted(() => {
               <span class="flex-shrink-0 w-[100px]">Dark Banner</span>
               <div class="flex-1">
                 <NInput
-                  :value="config && config.darkBanner" placeholder="banner for dark theme" style="max-width: 30%"
+                  :value="config && config.darkBanner" placeholder="banner for dark theme" style="width: 100%; max-width: 720px"
                   @input="(val: string | undefined) => { if (config && val !== undefined) config.darkBanner = val }"
                 />
               </div>
@@ -98,7 +98,7 @@ onMounted(() => {
               <span class="flex-shrink-0 w-[100px]">Product Name</span>
               <div class="flex-1">
                 <NInput
-                  :value="product.name" placeholder="product name" style="max-width: 30%"
+                  :value="product.name" placeholder="product name" style="width: 100%; max-width: 720px"
                   @input="(val: string | undefined) => { product.name = val || '' }"
                 />
               </div>
@@ -107,7 +107,7 @@ onMounted(() => {
               <span class="flex-shrink-0 w-[100px]">Product Code</span>
               <div class="flex-1">
                 <NInput
-                  :value="product.code" placeholder="product code" style="max-width: 30%"
+                  :value="product.code" placeholder="product code" style="width: 100%; max-width: 720px"
                   @input="(val: string | undefined) => { product.code = val || '' }"
                 />
               </div>
@@ -116,7 +116,7 @@ onMounted(() => {
               <span class="flex-shrink-0 w-[100px]">Product Image</span>
               <div class="flex-1">
                 <NInput
-                  :value="product.img" placeholder="product image url" style="max-width: 30%"
+                  :value="product.img" placeholder="product image url" style="width: 100%; max-width: 720px"
                   @input="(val: string | undefined) => { product.img = val || '' }"
                 />
               </div>
@@ -125,7 +125,7 @@ onMounted(() => {
               <span class="flex-shrink-0 w-[100px]">Product Price</span>
               <div class="flex-1">
                 <NInputNumber
-                  :value="product.price" placeholder="product price in taka" style="max-width: 30%"
+                  :value="product.price" placeholder="product price in taka" style="width: 100%; max-width: 720px"
                   @update:value="(val: number | null) => { if (val !== null) product.price = val }"
                 />
               </div>

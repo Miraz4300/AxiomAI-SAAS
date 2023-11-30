@@ -76,7 +76,7 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               :value="config && config.sensitiveWords"
-              placeholder="One word per line" style="max-width: 30%"
+              placeholder="One word per line" style="width: 100%; max-width: 720px"
               type="textarea"
               :autosize="{ minRows: 1, maxRows: 4 }"
               @input="(val: string | undefined) => { if (config) config.sensitiveWords = val }"
@@ -108,7 +108,7 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               :value="config && config.options && config.options.apiKey"
-              placeholder="" style="max-width: 30%"
+              placeholder="" style="width: 100%; max-width: 720px"
               @input="(val: string) => { if (config && config.options) config.options.apiKey = val }"
             />
           </div>
@@ -118,7 +118,7 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               :value="config && config.options && config.options.apiSecret"
-              placeholder="" style="max-width: 30%"
+              placeholder="" style="width: 100%; max-width: 720px"
               @input="(val: string) => { if (config && config.options) config.options.apiSecret = val }"
             />
           </div>
@@ -128,7 +128,7 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               :value="config && config.options && config.options.label"
-              placeholder="English comma separated, If empty, only politics." style="max-width: 30%"
+              placeholder="English comma separated, If empty, only politics." style="width: 100%; max-width: 720px"
               @input="(val: string | undefined) => { if (config && config.options) config.options.label = val }"
             />
             <p v-if="config && config.provider === 'baidu'">
@@ -141,7 +141,7 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               v-model:value="testText"
-              placeholder="" style="max-width: 30%"
+              placeholder="" style="width: 100%; max-width: 720px"
             />
           </div>
         </div>

@@ -61,7 +61,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">SMTP Host</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.smtpHost" placeholder="" style="max-width: 30%"
+              :value="config && config.smtpHost" placeholder="" style="width: 100%; max-width: 720px"
               @input="(val: string | undefined) => { if (config) config.smtpHost = val }"
             />
           </div>
@@ -71,7 +71,7 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               :value="config && config.smtpPort !== undefined ? String(config.smtpPort) : undefined"
-              placeholder="" style="max-width: 30%"
+              placeholder="" style="width: 100%; max-width: 720px"
               @input="(val: any) => { if (config) config.smtpPort = typeof val === 'string' ? Number(val) : undefined }"
             />
           </div>
@@ -90,7 +90,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">Username</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.smtpUserName" placeholder="" style="max-width: 30%"
+              :value="config && config.smtpUserName" placeholder="" style="width: 100%; max-width: 720px"
               @input="(val: string | undefined) => { if (config) config.smtpUserName = val }"
             />
           </div>
@@ -99,7 +99,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">Password</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.smtpPassword" placeholder="" style="max-width: 30%"
+              :value="config && config.smtpPassword" placeholder="" style="width: 100%; max-width: 720px"
               @input="(val: string | undefined) => { if (config) config.smtpPassword = val }"
             />
           </div>

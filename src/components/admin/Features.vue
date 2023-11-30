@@ -52,7 +52,7 @@ onMounted(() => {
           />
         </div>
       </div>
-      <div class="flex items-center space-x-4">
+      <div v-if="config && config.chatFooterEnabled" class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">Footer Text</span>
         <div class="flex-1">
           <NInput

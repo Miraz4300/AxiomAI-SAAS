@@ -65,7 +65,7 @@ onMounted(() => {
           :round="false" :value="config && config.premium && config.premium.enabled"
           @update:value="(val: boolean | undefined) => { if (config && config.premium) config.premium.enabled = val }"
         />
-        <div class="flex flex-col space-y-2 w-full">
+        <div v-if="config && config.premium && config.premium.enabled" class="flex flex-col space-y-2 w-full">
           <NInput
             :value="config && config.premium && config.premium.details" placeholder="premium details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
             @input="(val: string | undefined) => { if (config && config.premium) config.premium.details = val }"
@@ -92,7 +92,7 @@ onMounted(() => {
           :round="false" :value="config && config.mvp && config.mvp.enabled"
           @update:value="(val: boolean | undefined) => { if (config && config.mvp) config.mvp.enabled = val }"
         />
-        <div class="flex flex-col space-y-2 w-full">
+        <div v-if="config && config.mvp && config.mvp.enabled" class="flex flex-col space-y-2 w-full">
           <NInput
             :value="config && config.mvp && config.mvp.details" placeholder="mvp details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
             @input="(val: string | undefined) => { if (config && config.mvp) config.mvp.details = val }"
@@ -119,7 +119,7 @@ onMounted(() => {
           :round="false" :value="config && config.support && config.support.enabled"
           @update:value="(val: boolean | undefined) => { if (config && config.support) config.support.enabled = val }"
         />
-        <div class="flex flex-col space-y-2 w-full">
+        <div v-if="config && config.support && config.support.enabled" class="flex flex-col space-y-2 w-full">
           <NInput
             :value="config && config.support && config.support.details" placeholder="supporter details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
             @input="(val: string | undefined) => { if (config && config.support) config.support.details = val }"
@@ -146,7 +146,7 @@ onMounted(() => {
           :round="false" :value="config && config.enterprise && config.enterprise.enabled"
           @update:value="(val: boolean | undefined) => { if (config && config.enterprise) config.enterprise.enabled = val }"
         />
-        <div class="flex flex-col space-y-2 w-full">
+        <div v-if="config && config.enterprise && config.enterprise.enabled" class="flex flex-col space-y-2 w-full">
           <NInput
             :value="config && config.enterprise && config.enterprise.details" placeholder="enterprise details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
             @input="(val: string | undefined) => { if (config && config.enterprise) config.enterprise.details = val }"
@@ -173,7 +173,7 @@ onMounted(() => {
           :round="false" :value="config && config.basic && config.basic.enabled"
           @update:value="(val: boolean | undefined) => { if (config && config.basic) config.basic.enabled = val }"
         />
-        <div class="flex flex-col space-y-2 w-full">
+        <div v-if="config && config.basic && config.basic.enabled" class="flex flex-col space-y-2 w-full">
           <NInput
             :value="config && config.basic && config.basic.details" placeholder="basic details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
             @input="(val: string | undefined) => { if (config && config.basic) config.basic.details = val }"
@@ -200,7 +200,7 @@ onMounted(() => {
           :round="false" :value="config && config.basicPlus && config.basicPlus.enabled"
           @update:value="(val: boolean | undefined) => { if (config && config.basicPlus) config.basicPlus.enabled = val }"
         />
-        <div class="flex flex-col space-y-2 w-full">
+        <div v-if="config && config.basicPlus && config.basicPlus.enabled" class="flex flex-col space-y-2 w-full">
           <NInput
             :value="config && config.basicPlus && config.basicPlus.details" placeholder="basic+ details" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
             @input="(val: string | undefined) => { if (config && config.basicPlus) config.basicPlus.details = val }"

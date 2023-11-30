@@ -84,7 +84,7 @@ const columns = [
     width: 220,
   },
   {
-    title: 'Action',
+    title: 'Actions',
     key: '_id',
     width: 220,
     render(row: KeyConfig) {
@@ -216,7 +216,7 @@ onMounted(async () => {
             <template #icon>
               <SvgIcon icon="ri:add-line" />
             </template>
-            Add key
+            Add Key
           </NButton>
         </NSpace>
         <NDataTable

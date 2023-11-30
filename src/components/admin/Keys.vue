@@ -35,7 +35,7 @@ const columns = [
   {
     title: 'Models',
     key: 'chatModels',
-    width: 320,
+    width: 350,
     render(row: any) {
       const tags = row.chatModels.map((chatModel: string) => {
         return h(
@@ -43,6 +43,7 @@ const columns = [
           {
             style: {
               marginRight: '6px',
+              marginTop: '6px',
             },
             type: 'info',
             bordered: false,
@@ -66,6 +67,7 @@ const columns = [
           {
             style: {
               marginRight: '6px',
+              marginTop: '6px',
             },
             type: 'info',
             bordered: false,
@@ -135,7 +137,7 @@ const pagination = reactive({
   pageCount: 1,
   itemCount: 1,
   prefix({ itemCount }: { itemCount: number | undefined }) {
-    return `Total is ${itemCount}.`
+    return `Total key: ${itemCount}`
   },
   showSizePicker: true,
   pageSizes: [100],

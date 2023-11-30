@@ -424,6 +424,16 @@ onMounted(async () => {
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]" />
+          <div class="flex-1">
+            <NAvatar
+              round
+              :size="120"
+              :src="userRef.avatar ? userRef.avatar : defaultAvatar"
+            />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">Email</span>
           <div class="flex-1">
             <NInput

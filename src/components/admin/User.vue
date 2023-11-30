@@ -3,12 +3,10 @@ import { h, onMounted, reactive, ref } from 'vue'
 import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
 import { fetchDisableUser2FAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
-import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { SvgIcon } from '@/components/common'
 
 const ms = useMessage()
 const dialog = useDialog()
-const { isMobile } = useBasicLayout()
 const loading = ref(false)
 const show = ref(false)
 const handleSaving = ref(false)
@@ -27,12 +25,12 @@ const columns = [
   {
     title: 'Registration Time',
     key: 'createTime',
-    width: 160,
+    width: 170,
   },
   {
     title: 'Verification Time',
     key: 'verifyTime',
-    width: 160,
+    width: 170,
   },
   {
     title: 'Roles',
@@ -102,7 +100,7 @@ const columns = [
   {
     title: 'Remark',
     key: 'remark',
-    width: 230,
+    width: 210,
   },
   {
     title: 'Actions',
@@ -120,7 +118,7 @@ const columns = [
             style: {
               marginRight: '6px',
             },
-            onClick: () => handleUpdateUserStatus(row._id, Status.Disabled),
+            onClick: () => handleUpdateUserStatus(row._id, Status.Disabled, 'disable'),
           },
           {
             default: () => [
@@ -141,7 +139,7 @@ const columns = [
             style: {
               marginRight: '6px',
             },
-            onClick: () => handleUpdateUserStatus(row._id, Status.Normal),
+            onClick: () => handleUpdateUserStatus(row._id, Status.Normal, 'restore'),
           },
           {
             default: () => [
@@ -176,7 +174,7 @@ const columns = [
           {
             size: 'small',
             type: 'info',
-            onClick: () => handleUpdateUserStatus(row._id, Status.Normal),
+            onClick: () => handleUpdateUserStatus(row._id, Status.Normal, 'verify'),
           },
           {
             default: () => [
@@ -243,32 +241,49 @@ async function handleGetUsers(page: number) {
   loading.value = false
 }
 
-async function handleUpdateUserStatus(userId: string, status: Status) {
+async function handleUpdateUserStatus(userId: string, status: Status, action: string) {
   if (status === Status.Disabled) {
-    dialog.error({
-      title: ('Disable Account'),
-      content: ('Are you sure to disable this user account?'),
-      positiveText: ('Yes'),
-      negativeText: ('No'),
-      onPositiveClick: async () => {
-        await fetchUpdateUserStatus(userId, status)
-        ms.info('OK')
-        await handleGetUsers(pagination.page)
-      },
-    })
+    if (action === 'disable') {
+      dialog.error({
+        title: ('Disable Account'),
+        content: ('Are you sure to disable this user account?'),
+        positiveText: ('Yes'),
+        negativeText: ('No'),
+        onPositiveClick: async () => {
+          await fetchUpdateUserStatus(userId, status)
+          ms.info('Account disabled')
+          await handleGetUsers(pagination.page)
+        },
+      })
+    }
   }
   else if (status === Status.Normal) {
-    dialog.success({
-      title: ('Restore Account'),
-      content: ('Are you sure to restore this user account?'),
-      positiveText: ('Yes'),
-      negativeText: ('No'),
-      onPositiveClick: async () => {
-        await fetchUpdateUserStatus(userId, status)
-        ms.info('OK')
-        await handleGetUsers(pagination.page)
-      },
-    })
+    if (action === 'restore') {
+      dialog.success({
+        title: ('Restore Account'),
+        content: ('Are you sure to restore this user account?'),
+        positiveText: ('Yes'),
+        negativeText: ('No'),
+        onPositiveClick: async () => {
+          await fetchUpdateUserStatus(userId, status)
+          ms.info('Account restored')
+          await handleGetUsers(pagination.page)
+        },
+      })
+    }
+    else if (action === 'verify') {
+      dialog.info({
+        title: ('Verify Account'),
+        content: ('Are you sure to verify this user account?'),
+        positiveText: ('Yes'),
+        negativeText: ('No'),
+        onPositiveClick: async () => {
+          await fetchUpdateUserStatus(userId, status)
+          ms.info('Account verified')
+          await handleGetUsers(pagination.page)
+        },
+      })
+    }
   }
   else {
     await fetchUpdateUserStatus(userId, status)
@@ -341,7 +356,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="p-4 space-y-5 max-h-[740px]">
+  <div class="p-4 space-y-5 md:max-h-[740px] sm:min-h-[740px]">
     <div class="space-y-6">
       <NSpace vertical :size="12">
         <NSpace justify="space-between">
@@ -351,23 +366,6 @@ onMounted(async () => {
             </template>
             Add User
           </NButton>
-          <p class="text-sm bg-[#ECEEF1] dark:bg-white/5 py-1 px-2 rounded-md">
-            <a class="text-[#3b82f6]">
-              Total user: {{ users.length }}
-              | Total normal: {{ users.filter((user) => user.status === Status.Normal).length }}
-              | Total unverified: {{ users.filter((user) => user.status === Status.Unverified).length }}
-              | Total disabled: {{ users.filter((user) => user.status === Status.Disabled).length }}
-            </a>
-            <a class="text-[#f59e0b]">
-              | Total subscribed: {{ users.filter((user) => !user.roles.includes(UserRole.Free) && !user.roles.includes(UserRole.Admin)).length }}
-              | Total premium: {{ users.filter((user) => user.roles.includes(UserRole.Premium)).length }}
-              | Total MVP: {{ users.filter((user) => user.roles.includes(UserRole.MVP)).length }}
-              | Total enterprise: {{ users.filter((user) => user.roles.includes(UserRole.Enterprise)).length }}
-              | Total support: {{ users.filter((user) => user.roles.includes(UserRole.Support)).length }}
-              | Total basic: {{ users.filter((user) => user.roles.includes(UserRole.Basic)).length }}
-              | Total basic+: {{ users.filter((user) => user.roles.includes(UserRole['Basic+'])).length }}
-            </a>
-          </p>
           <div class="flex space-x-2">
             <NInput v-model:value="searchQuery" placeholder="Search by email address" clearable />
             <NButton @click="handleSearch">
@@ -394,7 +392,7 @@ onMounted(async () => {
     </div>
   </div>
 
-  <NModal v-model:show="show" :auto-focus="false" preset="card" :style="{ width: !isMobile ? '33%' : '100%' }">
+  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 33%">
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">

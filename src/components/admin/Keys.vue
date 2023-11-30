@@ -4,13 +4,11 @@ import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NSwitch, NTag, us
 import { KeyConfig, Status, UserRole, apiModelOptions, userRoleOptions } from './model'
 import { fetchGetKeys, fetchUpdateApiKeyStatus, fetchUpsertApiKey } from '@/api'
 import { useAuthStore } from '@/store'
-import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { SvgIcon } from '@/components/common'
 
 const ms = useMessage()
 const dialog = useDialog()
 const authStore = useAuthStore()
-const { isMobile } = useBasicLayout()
 
 const loading = ref(false)
 const show = ref(false)
@@ -210,7 +208,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="p-4 space-y-5 max-h-[740px]">
+  <div class="p-4 space-y-5 md:max-h-[740px] sm:min-h-[740px]">
     <div class="space-y-6">
       <NSpace vertical :size="12">
         <NSpace>
@@ -236,7 +234,7 @@ onMounted(async () => {
     </div>
   </div>
 
-  <NModal v-model:show="show" :auto-focus="false" preset="card" :style="{ width: !isMobile ? '50%' : '100%' }">
+  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 50%">
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">
@@ -249,10 +247,8 @@ onMounted(async () => {
               @update-value="value => keyConfig.keyModel = value"
             />
           </div>
-          <p v-if="!isMobile">
-            <a v-if="keyConfig.keyModel === 'ChatGPTAPI'" target="_blank" href="https://platform.openai.com/account/api-keys">Get API Key</a>
-            <a v-else target="_blank" href="https://chat.openai.com/api/auth/session">Get Access Token</a>
-          </p>
+          <a v-if="keyConfig.keyModel === 'ChatGPTAPI'" target="_blank" href="https://platform.openai.com/account/api-keys">Get API Key</a>
+          <a v-else target="_blank" href="https://chat.openai.com/api/auth/session">Get Access Token</a>
         </div>
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">API Key</span>

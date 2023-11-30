@@ -53,7 +53,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">Title</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.siteTitle" placeholder="" style="max-width: 30%"
+              :value="config && config.siteTitle" placeholder="" style="width: 100%; max-width: 720px"
               @input="(val: string | undefined) => { if (config) config.siteTitle = val }"
             />
           </div>
@@ -62,7 +62,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">Domain</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.siteDomain" placeholder="" style="max-width: 30%"
+              :value="config && config.siteDomain" placeholder="" style="width: 100%; max-width: 720px"
               @input="(val: string | undefined) => { if (config) config.siteDomain = val }"
             />
           </div>
@@ -82,7 +82,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">Login Salt</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.loginSalt" placeholder="Changes will invalidate all logged-in users." style="max-width: 30%"
+              :value="config && config.loginSalt" placeholder="Changes will invalidate all logged-in users." style="width: 100%; max-width: 720px"
               @input="(val: string | undefined) => { if (config) config.loginSalt = val }"
             />
           </div>
@@ -111,7 +111,7 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">Email domains</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.registerMails" placeholder="Only email addresses with these suffixes are allowed to register on this website." style="max-width: 30%"
+              :value="config && config.registerMails" placeholder="Only email addresses with these suffixes are allowed to register on this website." style="width: 100%; max-width: 720px"
               @input="(val: string | undefined) => { if (config) config.registerMails = val }"
             />
           </div>
@@ -124,7 +124,7 @@ onMounted(() => {
               placeholder="English comma separated"
               type="textarea"
               :autosize="{ minRows: 1, maxRows: 4 }"
-              style="max-width: 30%"
+              style="width: 100%; max-width: 720px"
               @input="(val) => { if (config) config.chatModels = val }"
             />
           </div>

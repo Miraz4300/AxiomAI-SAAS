@@ -407,7 +407,7 @@ onMounted(async () => {
     </div>
   </div>
 
-  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 33%">
+  <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 720px">
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
         <div class="flex items-center space-x-4">

@@ -49,19 +49,19 @@ onMounted(() => {
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">API Base URL</span>
           <div class="flex-1">
-            <NInput :value="config.apiBaseUrl" placeholder="https://api.openai.com, Only used by ChatGPTAPI" style="max-width: 30%" @input="(val: string | undefined) => { config.apiBaseUrl = val }" />
+            <NInput :value="config.apiBaseUrl" placeholder="https://api.openai.com, Only used by ChatGPTAPI" style="width: 100%; max-width: 720px" @input="(val: string | undefined) => { config.apiBaseUrl = val }" />
           </div>
         </div>
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">Reverse Proxy</span>
           <div class="flex-1">
-            <NInput :value="config.reverseProxy" placeholder="Only used by ChatGPTUnofficialProxyAPI" style="max-width: 30%" @input="(val: string | undefined) => { config.reverseProxy = val }" />
+            <NInput :value="config.reverseProxy" placeholder="Only used by ChatGPTUnofficialProxyAPI" style="width: 100%; max-width: 720px" @input="(val: string | undefined) => { config.reverseProxy = val }" />
           </div>
         </div>
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">Timeout (ms)</span>
           <div class="flex-1">
-            <NInput :value="config.timeoutMs !== undefined ? String(config.timeoutMs) : undefined" placeholder="" style="max-width: 30%" @input="(val: any) => { config.timeoutMs = typeof val === 'string' ? Number(val) : undefined }" />
+            <NInput :value="config.timeoutMs !== undefined ? String(config.timeoutMs) : undefined" placeholder="" style="width: 100%; max-width: 720px" @input="(val: any) => { config.timeoutMs = typeof val === 'string' ? Number(val) : undefined }" />
           </div>
         </div>
         <div class="flex items-center space-x-4">

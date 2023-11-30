@@ -25,12 +25,12 @@ const columns = [
     maxWidth: 200,
   },
   {
-    title: 'Registration',
+    title: 'Registration Time',
     key: 'createTime',
     width: 180,
   },
   {
-    title: 'Verification',
+    title: 'Verification Time',
     key: 'verifyTime',
     width: 180,
   },
@@ -105,7 +105,7 @@ const columns = [
     width: 200,
   },
   {
-    title: 'Action',
+    title: 'Actions',
     key: '_id',
     width: 220,
     render(row: any) {
@@ -207,7 +207,7 @@ const pagination = reactive ({
   pageCount: 1,
   itemCount: 1,
   prefix({ itemCount }: { itemCount: number | undefined }) {
-    return `Total is ${itemCount}.`
+    return `Total user: ${itemCount}`
   },
   showSizePicker: true,
   pageSizes: [25, 50, 100],
@@ -344,10 +344,27 @@ onMounted(async () => {
             <template #icon>
               <SvgIcon icon="ri:add-line" />
             </template>
-            Add user
+            Add User
           </NButton>
+          <p class="text-sm bg-[#ECEEF1] dark:bg-white/5 py-1 px-2 rounded-md">
+            <a class="text-[#3b82f6]">
+              Total user: {{ users.length }}
+              | Total normal: {{ users.filter((user) => user.status === Status.Normal).length }}
+              | Total unverified: {{ users.filter((user) => user.status === Status.Unverified).length }}
+              | Total disabled: {{ users.filter((user) => user.status === Status.Disabled).length }}
+            </a>
+            <a class="text-[#f59e0b]">
+              | Total subscribed: {{ users.filter((user) => !user.roles.includes(UserRole.Free) && !user.roles.includes(UserRole.Admin)).length }}
+              | Total premium: {{ users.filter((user) => user.roles.includes(UserRole.Premium)).length }}
+              | Total MVP: {{ users.filter((user) => user.roles.includes(UserRole.MVP)).length }}
+              | Total enterprise: {{ users.filter((user) => user.roles.includes(UserRole.Enterprise)).length }}
+              | Total support: {{ users.filter((user) => user.roles.includes(UserRole.Support)).length }}
+              | Total basic: {{ users.filter((user) => user.roles.includes(UserRole.Basic)).length }}
+              | Total basic+: {{ users.filter((user) => user.roles.includes(UserRole['Basic+'])).length }}
+            </a>
+          </p>
           <div class="flex space-x-2">
-            <NInput v-model:value="searchQuery" placeholder="Search by email" clearable />
+            <NInput v-model:value="searchQuery" placeholder="Search by email address" clearable />
             <NButton @click="handleSearch">
               <template #icon>
                 <SvgIcon icon="ri:search-line" />

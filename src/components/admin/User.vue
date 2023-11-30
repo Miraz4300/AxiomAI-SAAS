@@ -354,7 +354,7 @@ onMounted(async () => {
               | Total disabled: {{ users.filter((user) => user.status === Status.Disabled).length }}
             </a>
             <a class="text-[#f59e0b]">
-              | Total subscribed: {{ users.filter((user) => user.status !== undefined && user.status !== Status.Normal).length }}
+              | Total subscribed: {{ users.filter((user) => !user.roles.includes(UserRole.Free) && !user.roles.includes(UserRole.Admin)).length }}
               | Total premium: {{ users.filter((user) => user.roles.includes(UserRole.Premium)).length }}
               | Total MVP: {{ users.filter((user) => user.roles.includes(UserRole.MVP)).length }}
               | Total enterprise: {{ users.filter((user) => user.roles.includes(UserRole.Enterprise)).length }}

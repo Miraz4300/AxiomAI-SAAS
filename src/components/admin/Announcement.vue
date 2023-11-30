@@ -52,7 +52,7 @@ onMounted(() => {
           />
         </div>
       </div>
-      <div class="flex items-center space-x-4">
+      <div v-if="config && config.announceEnabled" class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">Header</span>
         <div class="flex-1">
           <NInput
@@ -61,7 +61,7 @@ onMounted(() => {
           />
         </div>
       </div>
-      <div class="flex items-center space-x-4">
+      <div v-if="config && config.announceEnabled" class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">Body</span>
         <div class="flex-1">
           <NInput
@@ -70,7 +70,7 @@ onMounted(() => {
           />
         </div>
       </div>
-      <div class="flex items-center space-x-4">
+      <div v-if="config && config.announceEnabled" class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">Footer</span>
         <div class="flex-1">
           <NInput

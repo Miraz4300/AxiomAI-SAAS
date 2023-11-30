@@ -71,7 +71,7 @@ watch(active, (newTab) => {
             </NTabPane>
             <NTabPane name="2FA">
               <template #tab>
-                <SvgIcon class="text-lg" icon="mdi:security-account-outline" />
+                <SvgIcon class="text-lg" icon="mdi:shield-account-outline" />
                 <span class="ml-2">{{ $t('setting.twoFAConfig') }}</span>
               </template>
               <TwoFA />

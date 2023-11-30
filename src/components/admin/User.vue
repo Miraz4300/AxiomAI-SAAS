@@ -27,17 +27,17 @@ const columns = [
   {
     title: 'Registration Time',
     key: 'createTime',
-    width: 180,
+    width: 160,
   },
   {
     title: 'Verification Time',
     key: 'verifyTime',
-    width: 180,
+    width: 160,
   },
   {
     title: 'Roles',
     key: 'status',
-    width: 140,
+    width: 120,
     render(row: any) {
       const roles = row.roles.map((role: UserRole) => {
         const tagType = (() => {
@@ -102,7 +102,7 @@ const columns = [
   {
     title: 'Remark',
     key: 'remark',
-    width: 200,
+    width: 230,
   },
   {
     title: 'Actions',
@@ -194,7 +194,12 @@ const columns = [
             type: 'warning',
             onClick: () => handleDisable2FA(row._id),
           },
-          { default: () => ('Disable 2FA') },
+          {
+            default: () => [
+              h(SvgIcon, { icon: 'mdi:shield-off' }),
+              h('span', { class: 'ml-1' }, 'Disable 2FA'),
+            ],
+          },
         ))
       }
       return actions

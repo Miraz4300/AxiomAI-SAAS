@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
-import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
+import { NAvatar, NButton, NDataTable, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
 import { fetchDisableUser2FAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
 import { SvgIcon } from '@/components/common'
@@ -13,6 +13,7 @@ const handleSaving = ref(false)
 const userRef = ref(new UserInfo([UserRole.Free]))
 const users = ref<UserInfo[]>([])
 const searchQuery = ref('')
+const defaultAvatar = '/assets/avatar_1.jpg'
 const columns = [
   {
     title: 'Email',
@@ -21,6 +22,18 @@ const columns = [
     width: 200,
     minWidth: 100,
     maxWidth: 200,
+    render(row: any) {
+      return h('div', { class: 'flex items-center gap-3' }, {
+        default: () => [
+          h(NAvatar, {
+            round: true,
+            size: 'medium',
+            src: row.avatar ? row.avatar : defaultAvatar,
+          }),
+          h('span', { class: 'font-medium antialiased' }, row.email),
+        ],
+      })
+    },
   },
   {
     title: 'Registration Time',
@@ -410,6 +423,16 @@ onMounted(async () => {
   <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 720px">
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="space-y-6">
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]" />
+          <div class="flex-1">
+            <NAvatar
+              round
+              :size="120"
+              :src="userRef.avatar ? userRef.avatar : defaultAvatar"
+            />
+          </div>
+        </div>
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">Email</span>
           <div class="flex-1">

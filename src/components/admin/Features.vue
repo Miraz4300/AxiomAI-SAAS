@@ -53,7 +53,7 @@ onMounted(() => {
         </div>
       </div>
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Chat Footer Text</span>
+        <span class="flex-shrink-0 w-[100px]">Footer Text</span>
         <div class="flex-1">
           <NInput
             :round="false" :value="config && config.chatFooterText" placeholder="footer text | support html" clearable type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" style="width: 100%; max-width: 720px"

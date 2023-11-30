@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
-import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
+import { NAvatar, NButton, NDataTable, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
 import { fetchDisableUser2FAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
 import { SvgIcon } from '@/components/common'
@@ -13,6 +13,7 @@ const handleSaving = ref(false)
 const userRef = ref(new UserInfo([UserRole.Free]))
 const users = ref<UserInfo[]>([])
 const searchQuery = ref('')
+const defaultAvatar = '/assets/avatar_1.jpg'
 const columns = [
   {
     title: 'Email',
@@ -21,6 +22,18 @@ const columns = [
     width: 200,
     minWidth: 100,
     maxWidth: 200,
+    render(row: any) {
+      return h('div', { class: 'flex items-center gap-3' }, {
+        default: () => [
+          h(NAvatar, {
+            round: true,
+            size: 'medium',
+            src: row.avatar ? row.avatar : defaultAvatar,
+          }),
+          h('span', { class: 'font-medium antialiased' }, row.email),
+        ],
+      })
+    },
   },
   {
     title: 'Registration Time',

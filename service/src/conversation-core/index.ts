@@ -48,14 +48,14 @@ export async function initApi(key: KeyConfig, chatModel: string) {
 
     if (model.toLowerCase().includes('16k')) {
       // Currently points to gpt-3.5-turbo-0613. Will point to gpt-3.5-turbo-1106 starting Dec 11, 2023.
-      // If it's a '16k' model, set the maxModelTokens to 16385 and maxResponseTokens to 4096
-      options.maxModelTokens = 16385
+      // If it's a '16k' model, set the maxModelTokens to 16384 and maxResponseTokens to 4096
+      options.maxModelTokens = 16384
       options.maxResponseTokens = 4096
     }
-    else if (model.toLowerCase().includes('gpt-3.5-turbo-1106')) {
+    else if (model.toLowerCase().includes('turbo-1106')) {
       // Updated GPT 3.5 Turbo.
-      // If it's a 'gpt-3.5-turbo-1106' model, set the maxModelTokens to 16385 and maxResponseTokens to 4096
-      options.maxModelTokens = 16385
+      // If it's a 'gpt-3.5-turbo-1106' model, set the maxModelTokens to 16384 and maxResponseTokens to 4096
+      options.maxModelTokens = 16384
       options.maxResponseTokens = 4096
     }
     else if (model.toLowerCase().includes('32k')) {
@@ -69,11 +69,11 @@ export async function initApi(key: KeyConfig, chatModel: string) {
       options.maxModelTokens = 8192
       options.maxResponseTokens = 2048
     }
-    else if (model.toLowerCase().includes('gpt-4-1106-preview')) {
+    else if (model.toLowerCase().includes('1106-preview')) {
       // GPT-4 Turbo (1106 Preview)
-      // If it's a 'gpt-4-1106-preview' model, set the maxModelTokens and maxResponseTokens to 128000 and 4096 respectively
-      options.maxModelTokens = 128000
-      options.maxResponseTokens = 4096
+      // If it's a 'gpt-4-1106-preview' model, set the maxModelTokens and maxResponseTokens to 131072 and 32768 respectively
+      options.maxModelTokens = 131072
+      options.maxResponseTokens = 32768
     }
     else {
       // If none of the above, use the default values, set the maxModelTokens and maxResponseTokens to 4096 and 1024 respectively

@@ -586,9 +586,9 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
                         <li class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md">
                           May occasionally generate incorrect information
                         </li><li class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md">
-                          May occasionally produce harmful instructions or biased content
+                          May sometimes generate harmful or biased instructions
                         </li><li class="w-full bg-[#ECEEF1] dark:bg-white/5 p-3 rounded-md">
-                          Limited knowledge of world and events after 2021
+                          Last training cut-off date in October 2023
                         </li>
                       </ul>
                     </div>

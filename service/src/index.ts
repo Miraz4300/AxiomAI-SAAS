@@ -361,11 +361,10 @@ router.post('/chat-clear', auth, async (req, res) => {
   }
 })
 
-const currentDate = new Date().toISOString().split('T')[0]
-const mainSystemMessage = `You are AxiomAI, a large language model fine-tuned by Miraz Hossain. Current date: ${currentDate}`
-const mainSystemMessage2 = `You are AxiomAI, a large language model fine-tuned by Miraz Hossain. Reply in bangla language. Current date: ${currentDate}`
-const promptSystemMessage = `You are AxiomAI. Current date: ${currentDate}`
-const promptSystemMessage2 = `You are AxiomAI. Reply in bangla language. Current date: ${currentDate}`
+const mainSystemMessage = 'You are AxiomAI, a large language model fine-tuned by Miraz Hossain'
+const mainSystemMessage2 = 'You are AxiomAI, a large language model fine-tuned by Miraz Hossain. Reply in bangla language'
+const promptSystemMessage = 'You are AxiomAI'
+const promptSystemMessage2 = 'You are AxiomAI. Reply in bangla language'
 
 router.post('/conversation', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')

@@ -90,7 +90,7 @@ async function handlePreviousResponse(next: number) {
       </p>
       <p v-else class="text-xs text-neutral-500 dark:text-[#A6AEB9] select-none" :class="[inversion ? 'text-right' : 'text-left']">
         <NSpace size="small">
-          AxiomAI | {{ new Date(dateTime as string).toLocaleString() }}
+          AxiomAI - {{ new Date(dateTime as string).toLocaleString() }}
           <template v-if="usage">
             <NPopover trigger="hover">
               <template #trigger>

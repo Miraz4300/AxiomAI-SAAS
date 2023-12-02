@@ -1,11 +1,8 @@
-<script lang="ts" setup>
-</script>
-
 <template>
   <main class="w-screen h-screen flex items-center justify-center gap-8 dark:bg-slate-900">
     <div class="h-screen flex-1 flex flex-col items-center py-16 px-4">
-      <div class="flex gap-3 items-center">
-        <img class="w-16 h-16" src="/favicon.png" alt="AxiomAI Logo">
+      <div class="flex gap-3 items-center select-none">
+        <img class="w-16 h-16" src="/favicon.png" alt="AxiomAI Logo" draggable="false">
         <p class="flex gap-2 font-logo text-slate-800 dark:text-slate-100 font-semibold text-4xl text-center">
           <span class="flex py-2 items-center flex-col">
             AxiomAI

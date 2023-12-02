@@ -54,7 +54,7 @@ onMounted(async () => {
         <EmailSignup v-else-if="currentTab === 'emailSignup'" />
         <ResetPassword v-else />
         <div class="w-full flex justify-between">
-          <NButton v-show="currentTab !== 'emailLogin' && currentTab !== 'resetPassword'" text type="primary" @click="currentTab = 'emailLogin'">
+          <NButton v-show="currentTab === 'emailSignup' || currentTab === 'resetPassword'" text type="primary" @click="currentTab = 'emailLogin'">
             ← Go back to login
           </NButton>
           <NButton v-show="currentTab !== 'emailSignup' && currentTab !== 'resetPassword'" text type="primary" @click="currentTab = 'emailSignup'">

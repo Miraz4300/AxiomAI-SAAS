@@ -3,7 +3,7 @@
     <div class="relative hidden flex-1 flex-col justify-center px-5 pt-8 md:flex md:px-6 md:py-[22px] lg:px-8 dark:bg-black bg-slate-800">
       <div class="relative flex w-full grow flex-col items-center justify-center">
         <div class="flex gap-6 items-center select-none">
-          <img class="w-[120px] h-[120px]" src="/favicon.png" alt="AxiomAI Logo" draggable="false">
+          <img class="w-[115px] h-[115px]" src="/favicon.png" alt="AxiomAI Logo" draggable="false">
           <p class="flex gap-2 font-logo text-white font-semibold text-6xl text-center">
             <span class="flex py-2 items-center flex-col">
               AxiomAI

@@ -18,10 +18,6 @@ function setupPlugins({ VITE_GLOB_APP_PWA }: ImportMetaEnv): PluginOption[] {
         name: 'AxiomAI',
         short_name: 'AxiomAI',
         description: 'Generates human-like responses to text-based inputs powered by GPT',
-        icons: [
-          { src: 'axiomai-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'axiomai-512x512.png', sizes: '512x512', type: 'image/png' },
-        ],
       },
     }),
   ]

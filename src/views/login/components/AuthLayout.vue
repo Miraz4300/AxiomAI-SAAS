@@ -3,7 +3,7 @@
     <div class="relative hidden flex-1 flex-col justify-center px-5 pt-8 md:flex md:px-6 md:py-[22px] lg:px-8 dark:bg-black bg-slate-800">
       <div class="relative flex w-full grow flex-col items-center justify-center">
         <div class="flex gap-4 items-center select-none">
-          <img class="w-[110px] h-[110px]" src="/favicon.png" alt="AxiomAI Logo" draggable="false">
+          <div class="bg-brand-logo bg-contain w-[110px] h-[110px]" draggable="false" />
           <p class="flex gap-2 font-logo text-white font-semibold text-6xl text-center">
             <span class="flex py-2 items-center flex-col">
               AxiomAI
@@ -19,7 +19,7 @@
       </div>
       <div class="mt-10 flex flex-col justify-center items-center">
         <div class="flex gap-1 items-center select-none">
-          <img class="w-[24px] h-[24px]" src="/favicon.png" alt="AxiomAI Logo" draggable="false">
+          <div class="bg-brand-logo bg-contain w-[24px] h-[24px]" draggable="false" />
           <p class="flex gap-2 font-logo text-black dark:text-white font-semibold text-lg text-center">
             <span class="flex py-2 items-center flex-col">
               AxiomAI

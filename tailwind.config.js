@@ -15,8 +15,7 @@ module.exports = {
         blink: 'blink 1.2s infinite steps(1, start)',
       },
       backgroundImage: {
-        'sign-in-background': 'url(\'/images/sign-in-background.svg\')',
-        'sign-in-background-dark': 'url(\'/images/sign-in-background-dark.svg\')',
+        'brand-logo': 'url(\'/favicon.png\')',
       },
       keyframes: {
         blink: {

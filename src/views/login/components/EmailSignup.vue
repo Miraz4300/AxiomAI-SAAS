@@ -69,7 +69,7 @@ async function handleRegister() {
 
 <template>
   <NDivider class="my-2">
-    <span class="text-slate-600 dark:text-slate-200 font-semibold">
+    <span class="text-black dark:text-white font-semibold">
       Signup
     </span>
   </NDivider>
@@ -86,9 +86,9 @@ async function handleRegister() {
         :status="confirmPasswordStatus"
       />
       <NCheckbox v-model:checked="agreed" size="small" class="mb-4">
-        <span>
+        <span class="text-black dark:text-white">
           I acknowledge and agree to the
-          <span class="text-[#fb923c] font-semibold cursor-pointer" @click="tosModal = true">
+          <span class="text-[#fb923c] dark:text-[#F59E0B] font-semibold cursor-pointer" @click="tosModal = true">
             terms of service
           </span>
         </span>

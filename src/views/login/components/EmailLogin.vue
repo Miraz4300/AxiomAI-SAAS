@@ -105,7 +105,7 @@ async function handleLogin() {
 
 <template>
   <NDivider class="my-2">
-    <span class="text-slate-600 dark:text-slate-200 font-semibold">
+    <span class="text-black dark:text-white font-semibold">
       Login
     </span>
   </NDivider>

@@ -19,6 +19,7 @@ export function useTheme() {
     cardColor: isDark.value ? 'rgb(24, 24, 28)' : 'rgb(255, 255, 255)', // reflects on card background
     modalColor: isDark.value ? 'rgb(32, 33, 35)' : 'rgb(255, 255, 255)', // reflects on modal background
     popoverColor: isDark.value ? 'rgb(56, 56, 60)' : 'rgb(255, 255, 255)', // reflects on side menu close button
+    dividerColor: isDark.value ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)', // reflects on divider color
   })
 
   const themeOverrides = ref<GlobalThemeOverrides>({ common: getCommonOverrides() })

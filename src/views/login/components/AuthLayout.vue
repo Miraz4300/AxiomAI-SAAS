@@ -1,21 +1,24 @@
 <template>
-  <main class="w-screen h-screen flex items-center justify-center gap-8 dark:bg-slate-900">
-    <div class="h-screen flex-1 flex flex-col items-center py-16 px-4">
-      <div class="flex gap-3 items-center select-none">
-        <img class="w-16 h-16" src="/favicon.png" alt="AxiomAI Logo" draggable="false">
-        <p class="flex gap-2 font-logo text-slate-800 dark:text-slate-100 font-semibold text-4xl text-center">
-          <span class="flex py-2 items-center flex-col">
-            AxiomAI
-            <span class="font-light text-xs typewriter">powered by GPT</span>
-          </span>
-        </p>
+  <div class="flex min-h-full w-screen flex-col sm:supports-[min-height:100dvh]:min-h-[100dvh] md:grid md:grid-cols-2 lg:grid-cols-[50%_50%]">
+    <div class="relative hidden flex-1 flex-col justify-center px-5 pt-8 md:flex md:px-6 md:py-[22px] lg:px-8 dark:bg-black bg-slate-800">
+      <div class="relative flex w-full grow flex-col items-center justify-center">
+        <div class="flex gap-6 items-center select-none">
+          <img class="w-17 h-17" src="/favicon.png" alt="AxiomAI Logo" draggable="false">
+          <p class="flex gap-2 font-logo text-white font-semibold text-7xl text-center">
+            <span class="flex py-2 items-center flex-col">
+              AxiomAI
+              <span class="font-light text-sm typewriter">powered by GPT</span>
+            </span>
+          </p>
+        </div>
       </div>
-      <div class="flex flex-col flex-1 w-full justify-center items-center">
+    </div>
+    <div class="relative flex grow flex-col items-center justify-between bg-white dark:bg-gray-800">
+      <div class="relative flex w-full grow flex-col items-center justify-center">
         <slot />
       </div>
     </div>
-    <div class="hidden lg:block h-screen flex-1 bg-sign-in-background dark:bg-sign-in-background-dark" />
-  </main>
+  </div>
 </template>
 
 <style scoped>

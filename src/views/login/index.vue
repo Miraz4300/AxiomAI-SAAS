@@ -42,25 +42,25 @@ onMounted(async () => {
   <AuthLayout>
     <div class="px-4 rounded w-full max-w-lg">
       <header class="mb-8 text-center">
-        <h1 class="text-3xl md:text-3xl font-medium text-slate-700 dark:text-slate-200">
-          Welcome back
+        <h1 class="text-3xl md:text-[32px] font-medium text-black dark:text-white">
+          Get started
         </h1>
       </header>
       <div class="flex flex-col gap-4">
-        <p class="text-slate-500 dark:text-slate-200 text-base text-center">
+        <p class="text-black dark:text-white text-base text-center">
           Discover AxiomAI: Log in for endless possibilities or create an account to unleash GPT's potential.
         </p>
         <EmailLogin v-if="currentTab === 'emailLogin'" />
         <EmailSignup v-else-if="currentTab === 'emailSignup'" />
         <ResetPassword v-else />
         <div class="w-full flex justify-between">
-          <NButton v-show="currentTab === 'emailSignup' || currentTab === 'resetPassword'" text type="primary" @click="currentTab = 'emailLogin'">
+          <NButton v-show="currentTab === 'emailSignup' || currentTab === 'resetPassword'" quaternary type="primary" @click="currentTab = 'emailLogin'">
             ← Go back to login
           </NButton>
-          <NButton v-show="currentTab !== 'emailSignup' && currentTab !== 'resetPassword'" text type="primary" @click="currentTab = 'emailSignup'">
+          <NButton v-show="currentTab !== 'emailSignup' && currentTab !== 'resetPassword'" quaternary type="primary" @click="currentTab = 'emailSignup'">
             Create account
           </NButton>
-          <NButton v-show="currentTab !== 'resetPassword' && currentTab !== 'emailSignup'" text type="primary" @click="currentTab = 'resetPassword'">
+          <NButton v-show="currentTab !== 'resetPassword' && currentTab !== 'emailSignup'" quaternary type="primary" @click="currentTab = 'resetPassword'">
             Forgot password?
           </NButton>
         </div>

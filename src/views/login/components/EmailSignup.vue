@@ -130,7 +130,7 @@ async function handleRegister() {
             Terms of Service (ToS)
           </h2>
           <NScrollbar style="max-height: 510px">
-            <div class="pl-4 pr-4 prose dark:prose-dark">
+            <div class="md:text-justify pl-4 pr-4 prose dark:prose-dark">
               <p>
                 Before using the services provided by this website (AxiomAI), please be sure to carefully read and understand these Terms of Service (hereinafter referred to as "these Terms").
                 <br>
@@ -142,22 +142,23 @@ async function handleRegister() {
                 <li>
                   1. This website (AxiomAI) is designed to help you work and study more efficiently and solve the problems you encounter in your work and study. In order to maintain the security and healthy development of the Internet, as well as protect your personal rights and interests, we solemnly remind you: when using this service, you must act in good faith and with caution; you must not use this service to intentionally or negligently endanger national security and activities prohibited by laws and administrative regulations such as social public interests, disrupting economic order and social order, infringing on the legitimate rights and interests of others, etc. Please do not input, generate, publish, export, or disseminate content that involves the following content prohibited by national laws and regulations:
                   <br>
-                  <ol>
-                    <li>- Endangering national security, leaking state secrets, subverting state power, and undermining national unity;</li>
-                    <li>- Damaging national honor and interests;</li>
-                    <li>- Distort, vilify, blaspheme or deny the deeds and spirit of heroes and martyrs, insult, slander or otherwise infringe on the names, portraits, reputation and honor of heroes and martyrs;</li>
-                    <li>- Promote terrorism or extremism or incite the implementation of terrorist activities or extremist activities;</li>
-                    <li>- Inciting ethnic hatred, ethnic discrimination, and undermining ethnic unity;</li>
-                    <li>- Undermining national religious policies and promoting cults and feudal superstitions;</li>
-                    <li>- Spread rumors and disrupt economic and social order;</li>
-                    <li>- Spread obscenity, pornography, gambling, violence, murder, terror or instigate crime;</li>
-                    <li>- Insulting or slandering others, infringing on others' reputation, privacy and other legitimate rights and interests;</li>
-                    <li>- Contains content that is false, harmful, threatening, intrusive on others' privacy, harassing, infringing, defamatory, vulgar, obscene, or otherwise morally objectionable;</li>
-                    <li>- Other contents restricted or prohibited by Chinese laws, regulations, rules, regulations and any legally binding norms.</li>
-                  </ol>
+                  <br>
+                  <ul class="list-disc ml-8">
+                    <li>Endangering national security, leaking state secrets, subverting state power, and undermining national unity</li>
+                    <li>Damaging national honor and interests</li>
+                    <li>Distort, vilify, blaspheme or deny the deeds and spirit of heroes and martyrs, insult, slander or otherwise infringe on the names, portraits, reputation and honor of heroes and martyrs</li>
+                    <li>Promote terrorism or extremism or incite the implementation of terrorist activities or extremist activities</li>
+                    <li>Inciting ethnic hatred, ethnic discrimination, and undermining ethnic unity</li>
+                    <li>Undermining national religious policies and promoting cults and feudal superstitions</li>
+                    <li>Spread rumors and disrupt economic and social order</li>
+                    <li>Spread obscenity, pornography, gambling, violence, murder, terror or instigate crime</li>
+                    <li>Insulting or slandering others, infringing on other's reputation, privacy and other legitimate rights and interests</li>
+                    <li>Contains content that is false, harmful, threatening, intrusive on others' privacy, harassing, infringing, defamatory, vulgar, obscene, or otherwise morally objectionable</li>
+                    <li>Other contents restricted or prohibited by Chinese laws, regulations, rules, regulations and any legally binding norms</li>
+                  </ul>
                 </li>
                 <br>
-                <li>2. You agree and promise that when using this service, you will strictly abide by the relevant laws and regulations of the country and industry, and will not upload confidential documents and data related to the country and the financial industry, and will not upload non-public information and data, customer information, and payment and settlement basis. No personal privacy information will be entered into the core code of the facility or system;</li>
+                <li>2. You agree and promise that when using this service, you will strictly abide by the relevant laws and regulations of the country and industry, and will not upload confidential documents and data related to the country and the financial industry, and will not upload non-public information and data, customer information, and payment and settlement basis. No personal privacy information will be entered into the core code of the facility or system.</li>
                 <br>
                 <li>3. In order to limit sensitive content to the maximum extent and ensure service continuity, we have the right to refuse to reply to questions involving sensitive information. If the reply contains sensitive information, we will filter or delete the sensitive content. We cannot guarantee the integrity of the reply. At the same time, your IP will be recorded. If illegal use is found, this site will fully cooperate with the relevant departments to crack down!</li>
                 <br>

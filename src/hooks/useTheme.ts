@@ -15,7 +15,7 @@ export function useTheme() {
 
   const getCommonOverrides = () => ({
     placeholderColor: isDark.value ? 'rgba(255, 255, 255, 0.38)' : 'rgba(0, 0, 0, 0.38)', // reflects on placeholder tip text color
-    bodyColor: isDark.value ? 'rgb(21, 21, 25)' : 'rgb(255, 255, 255)', // reflects on main body
+    bodyColor: isDark.value ? 'rgb(17, 17, 20)' : 'rgb(255, 255, 255)', // reflects on main body
     cardColor: isDark.value ? 'rgb(24, 24, 28)' : 'rgb(255, 255, 255)', // reflects on card background
     modalColor: isDark.value ? 'rgb(32, 33, 35)' : 'rgb(255, 255, 255)', // reflects on modal background
     popoverColor: isDark.value ? 'rgb(56, 56, 60)' : 'rgb(255, 255, 255)', // reflects on side menu close button

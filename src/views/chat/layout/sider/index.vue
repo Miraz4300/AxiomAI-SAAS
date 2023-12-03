@@ -80,6 +80,7 @@ watch(
     position="absolute"
     bordered
     :style="getMobileClass"
+    style="background-color: #121216"
     @update-collapsed="handleUpdateCollapsed"
   >
     <div class="flex flex-col h-full" :style="mobileSafeArea">

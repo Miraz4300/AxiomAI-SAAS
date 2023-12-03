@@ -106,7 +106,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
 </script>
 
 <template>
-  <header class="relative border-b border-b-neutral-300 dark:border-b-neutral-800 bg-[#FFFFFF] dark:bg-[#111114]">
+  <header class="relative border-b border-b-neutral-300 dark:border-b-neutral-800 bg-[#FFFFFF] dark:bg-[#151519]">
     <div class="m-auto flex h-14 max-w-screen-2xl items-center justify-between" :class="[isMobile ? 'px-2' : 'px-4']">
       <div class="flex min-w-0 flex-1 items-center space-x-2 overflow-hidden pr-2">
         <ToolButton
@@ -128,7 +128,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
         </ToolButton>
       </div>
     </div>
-    <div v-if="!!authStore.token && isChatGPTAPI" class="absolute z-20 left-1/2 top-full -translate-x-1/2 cursor-pointer select-none px-4 rounded-b-md border border-neutral-300 dark:border-neutral-700 bg-[#FFFFFF] dark:bg-[#111114]" @click="show = true">
+    <div v-if="!!authStore.token && isChatGPTAPI" class="absolute z-20 left-1/2 top-full -translate-x-1/2 cursor-pointer select-none px-4 rounded-b-md border border-neutral-300 dark:border-neutral-800 bg-[#FFFFFF] dark:bg-[#202026]" @click="show = true">
       <span class="flex items-center space-x-2 hover:text-[var(--primary-color-hover)]">
         <SvgIcon icon="ri:sparkling-line" />
         <span>{{ userStore.userInfo.config.chatModel }}</span>

@@ -541,7 +541,7 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
     <Header />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
-        <div id="image-wrapper" class="w-full max-w-screen-2xl pt-6 m-auto dark:bg-[#111114]" :class="[isMobile ? 'p-2' : 'p-4']">
+        <div id="image-wrapper" class="w-full max-w-screen-2xl pt-6 m-auto dark:bg-[#151519]" :class="[isMobile ? 'p-2' : 'p-4']">
           <NSpin :show="firstLoading" :rotate="false">
             <template #icon>
               <SvgIcon icon="svg-spinners:180-ring-with-bg" />

@@ -45,7 +45,7 @@ function handleButtonClick(type: string) {
 <template>
   <NCard title="Subscription">
     <div class="space-y-4">
-      <p class="text-gray-500 dark:text-gray-400">
+      <p class="text-neutral-600 dark:text-neutral-300">
         Purchase your subscription here to activate it for a duration of 30 days.<br>
         After purschasing, subscription will be activated within 3 hours.
       </p>

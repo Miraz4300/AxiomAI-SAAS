@@ -124,7 +124,7 @@ async function handleDropdown(optionKey: string) {
 </script>
 
 <template>
-  <div v-if="!isMobile" class="min-w-[70px] flex flex-col items-center justify-between overflow-hidden py-6 pt-6 bg-[#e8eaf1] dark:bg-[#1D1E23]">
+  <div v-if="!isMobile" class="min-w-[70px] flex flex-col items-center justify-between overflow-hidden py-6 pt-6 bg-[#e8eaf1] dark:bg-[#25272D]">
     <div class="mb-4 flex flex-col space-y-3 overflow-y-auto overflow-x-hidden px-2">
       <div class="flex w-full flex-col justify-center">
         <MenuButton :tooltip="$t('chat.chat')" placement="right" @click="goChat">

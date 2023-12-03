@@ -3,7 +3,7 @@
     <div class="relative hidden flex-1 flex-col justify-center px-5 pt-8 md:flex md:px-6 md:py-[22px] lg:px-8 bg-[#E8EAF1] dark:bg-black">
       <div class="relative flex w-full grow flex-col items-center justify-center">
         <div class="flex gap-4 items-center select-none">
-          <div class="bg-brand-logo bg-contain w-[110px] h-[110px]" draggable="false" />
+          <div class="bg-brand-logo bg-contain w-[105px] h-[105px]" draggable="false" />
           <p class="flex gap-2 font-logo text-black dark:text-white font-semibold antialiased text-6xl text-center">
             <span class="flex py-2 items-center flex-col">
               AxiomAI
@@ -19,14 +19,14 @@
       </div>
       <div class="mt-10 flex flex-col justify-center items-center">
         <div class="flex gap-1 items-center select-none">
-          <div class="bg-brand-logo bg-contain w-[24px] h-[24px]" draggable="false" />
+          <div class="bg-brand-logo bg-contain w-[22px] h-[22px]" draggable="false" />
           <p class="flex gap-2 font-logo text-black dark:text-white font-semibold antialiased text-lg text-center">
             <span class="flex py-2 items-center flex-col">
               AxiomAI
             </span>
           </p>
         </div>
-        <a class="py-2 text-xs text-black dark:text-gray-500">AxiomAI © 2023 | Deepspacelab Corp.</a>
+        <a class="py-2 text-xs text-black dark:text-gray-500">AxiomAI © 2023 | Deepspacelab</a>
       </div>
     </div>
   </div>

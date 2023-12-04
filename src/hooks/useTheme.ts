@@ -15,14 +15,24 @@ export function useTheme() {
 
   const getCommonOverrides = () => ({
     placeholderColor: isDark.value ? 'rgba(255, 255, 255, 0.38)' : 'rgba(0, 0, 0, 0.38)', // reflects on placeholder tip text color
-    bodyColor: isDark.value ? 'rgb(17, 17, 20)' : 'rgb(255, 255, 255)', // reflects on main body
-    cardColor: isDark.value ? 'rgb(24, 24, 28)' : 'rgb(255, 255, 255)', // reflects on card background
-    modalColor: isDark.value ? 'rgb(32, 33, 35)' : 'rgb(255, 255, 255)', // reflects on modal background
+    bodyColor: isDark.value ? 'rgb(13, 17, 23)' : 'rgb(255, 255, 255)', // reflects on main body
+    cardColor: isDark.value ? 'rgb(13, 17, 23)' : 'rgb(255, 255, 255)', // reflects on card background
+    modalColor: isDark.value ? 'rgb(22, 27, 34)' : 'rgb(255, 255, 255)', // reflects on modal background
     popoverColor: isDark.value ? 'rgb(56, 56, 60)' : 'rgb(255, 255, 255)', // reflects on side menu close button
     dividerColor: isDark.value ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)', // reflects on divider color
   })
 
   const themeOverrides = ref<GlobalThemeOverrides>({ common: getCommonOverrides() })
+  const inputThemeOverrides = computed(() => ({
+    Input: {
+      color: isDark.value ? 'rgb(22, 27, 34)' : 'rgba(255, 255, 255, 0.1)',
+    },
+  }))
+  const dropdownThemeOverrides = computed(() => ({
+    Dropdown: {
+      color: isDark.value ? 'rgb(22, 27, 34)' : 'rgb(255, 255, 255)',
+    },
+  }))
 
   const personaColors = {
     precise: {
@@ -61,5 +71,5 @@ export function useTheme() {
     { immediate: true },
   )
 
-  return { theme, themeOverrides }
+  return { theme, themeOverrides, inputThemeOverrides, dropdownThemeOverrides }
 }

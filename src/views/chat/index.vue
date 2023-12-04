@@ -16,6 +16,7 @@ import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding
 import { t } from '@/locales'
 import { useSpeechStore } from '@/store/modules/speech'
 import { debounce } from '@/utils/functions/debounce'
+import { useTheme } from '@/hooks/useTheme'
 
 let controller = new AbortController()
 let lastChatInfo: any = {}
@@ -31,6 +32,7 @@ const userStore = useUserStore()
 const chatStore = useChatStore()
 const speechStore = useSpeechStore()
 
+const { inputThemeOverrides } = useTheme()
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom, scrollTo } = useScroll()
@@ -541,7 +543,7 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
     <Header />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
-        <div id="image-wrapper" class="w-full max-w-screen-2xl pt-6 m-auto dark:bg-[#111114]" :class="[isMobile ? 'p-2' : 'p-4']">
+        <div id="image-wrapper" class="w-full max-w-screen-2xl pt-6 m-auto dark:bg-[#0D1117]" :class="[isMobile ? 'p-2' : 'p-4']">
           <NSpin :show="firstLoading" :rotate="false">
             <template #icon>
               <SvgIcon icon="svg-spinners:180-ring-with-bg" />
@@ -640,6 +642,7 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
               type="textarea"
               :placeholder="t('chat.placeholderText')"
               :autosize="{ minRows: isMobile ? 1 : 2, maxRows: isMobile ? 4 : 8 }"
+              :theme-overrides="inputThemeOverrides.Input"
               @keypress="handleEnter"
             />
             <div class="absolute bottom-2 left-2 right-2">

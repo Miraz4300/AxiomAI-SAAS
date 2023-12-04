@@ -12,7 +12,7 @@ function handleClick() {
 
 <template>
   <button
-    class="h-12 w-12 shrink-0 cursor-pointer rounded-xl bg-white dark:bg-gray-700"
+    class="h-12 w-12 shrink-0 cursor-pointer rounded-xl bg-white dark:bg-[#232B36]"
     @click="handleClick"
   >
     <slot />

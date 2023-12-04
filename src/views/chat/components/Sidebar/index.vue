@@ -126,7 +126,7 @@ async function handleDropdown(optionKey: string) {
 </script>
 
 <template>
-  <div v-if="!isMobile" class="min-w-[70px] flex flex-col items-center justify-between overflow-hidden py-6 pt-6 bg-[#e8eaf1] dark:bg-[#161B22]">
+  <div v-if="!isMobile" class="min-w-[70px] flex flex-col items-center justify-between overflow-hidden py-6 pt-6 bg-[var(--sbc)] dark:bg-[var(--sbc)]">
     <div class="mb-4 flex flex-col space-y-3 overflow-y-auto overflow-x-hidden px-2">
       <div class="flex w-full flex-col justify-center">
         <MenuButton :tooltip="$t('chat.chat')" placement="right" @click="goChat">
@@ -155,7 +155,7 @@ async function handleDropdown(optionKey: string) {
     </div>
   </div>
 
-  <NLayoutFooter v-if="isMobile" class="bg-white dark:bg-[#161B22]">
+  <NLayoutFooter v-if="isMobile" class="bg-[var(--sbc)] dark:bg-[var(--sbc)]">
     <div class="grid py-2 border-t dark:border-t-neutral-800 select-none" :class="[whiteboardEnabled ? 'grid-cols-3' : 'grid-cols-2']">
       <a class="leading-4 text-center cursor-pointer" :class="[isChatActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" @click="goChat">
         <SvgIcon :class="[iconClass2]" icon="ri:message-3-line" />

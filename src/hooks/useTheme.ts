@@ -8,10 +8,15 @@ export function useTheme() {
   const settingStore = useSettingStore()
 
   const OsTheme = useOsTheme()
-
   const isDark = computed(() => appStore.theme === 'auto' ? OsTheme.value === 'dark' : appStore.theme === 'dark')
-
   const theme = computed(() => isDark.value ? darkTheme : lightTheme)
+
+  const bodyTheme = computed(() => ({
+    cbc: isDark.value ? '#0D1117' : '#FFFFFF', // reflects on chat body
+    sbc: isDark.value ? '#161B22' : '#E8EAF1', // reflects on sidebar background
+    rbc: isDark.value ? '#161B22' : '#ECEEF1', // reflects on chat response background
+    hc: isDark.value ? '#0D1117' : '#FFFFFF', // reflects on header background
+  }))
 
   const getCommonOverrides = () => ({
     placeholderColor: isDark.value ? 'rgba(255, 255, 255, 0.38)' : 'rgba(0, 0, 0, 0.38)', // reflects on placeholder tip text color
@@ -67,6 +72,11 @@ export function useTheme() {
         document.documentElement.style.setProperty('--primary-color-hover', personaColorsSelected.primaryColorHover || '#000000')
         document.documentElement.style.setProperty('--chat-box', personaColorsSelected.chatBox || '#000000')
       }
+
+      document.documentElement.style.setProperty('--cbc', bodyTheme.value.cbc)
+      document.documentElement.style.setProperty('--sbc', bodyTheme.value.sbc)
+      document.documentElement.style.setProperty('--rbc', bodyTheme.value.rbc)
+      document.documentElement.style.setProperty('--hc', bodyTheme.value.hc)
     },
     { immediate: true },
   )

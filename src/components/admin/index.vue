@@ -62,10 +62,10 @@ watch(active, (newTab) => {
   <NLayout position="absolute">
     <NLayoutContent>
       <div class="min-h-full p-8">
-        <header class="mb-4 flex justify-between">
-          <div class="mb-2 text-2xl font-bold text-black dark:text-white">
+        <div class="mb-4 flex justify-between">
+          <p class="mb-2 text-2xl font-bold text-black dark:text-white">
             Administrator Settings
-          </div>
+          </p>
           <div class="flex space-x-2">
             <ToolButton v-if="!!authStore.token" @click="goHome">
               <SvgIcon class="text-xl" icon="ri:home-3-line" />
@@ -74,7 +74,7 @@ watch(active, (newTab) => {
               <SvgIcon class="text-xl" icon="ri:logout-circle-line" />
             </ToolButton>
           </div>
-        </header>
+        </div>
         <div>
           <NTabs v-model:value="active" type="line" animated>
             <NTabPane v-if="userStore.userInfo.root" name="systemConfig">

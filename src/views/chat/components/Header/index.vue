@@ -106,7 +106,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
 </script>
 
 <template>
-  <header class="relative border-b border-b-neutral-300 dark:border-b-neutral-800 bg-[var(--hc)] dark:bg-[var(--hc)]">
+  <div class="relative border-b border-b-neutral-300 dark:border-b-neutral-800 bg-[var(--hc)] dark:bg-[var(--hc)]">
     <div class="m-auto flex h-14 max-w-screen-2xl items-center justify-between" :class="[isMobile ? 'px-2' : 'px-4']">
       <div class="flex min-w-0 flex-1 items-center space-x-2 overflow-hidden pr-2">
         <ToolButton
@@ -135,7 +135,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
         <SvgIcon icon="ri:arrow-down-s-line" />
       </span>
     </div>
-  </header>
+  </div>
 
   <NModal v-model:show="show" :auto-focus="false" :mask-closable="false" preset="card" style="width: 95%; max-width: 640px" title="Advanced">
     <div>

@@ -102,7 +102,7 @@ async function handleRegister() {
   <NModal v-model:show="mailsentModal" :mask-closable="false">
     <div class="p-10 bg-white rounded dark:bg-slate-800">
       <div class="space-y-4">
-        <header class="space-y-2">
+        <span class="space-y-2">
           <SvgIcon class="m-auto" style="width: 100px; height: 100px;" icon="mdi:email-check-outline" />
           <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-neutral-200">
             Verification email sent
@@ -113,7 +113,7 @@ async function handleRegister() {
           <p class="text-sm text-center text-slate-500 dark:text-slate-500">
             if you don't receive the email, please wait at least one or two minutes.
           </p>
-        </header>
+        </span>
         <br>
         <NButton text type="primary" ghost @click="goHome">
           ← Back to Login

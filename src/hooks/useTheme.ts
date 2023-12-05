@@ -23,7 +23,7 @@ export function useTheme() {
     bodyColor: isDark.value ? 'rgb(13, 17, 23)' : 'rgb(255, 255, 255)', // reflects on main body
     cardColor: isDark.value ? 'rgb(13, 17, 23)' : 'rgb(255, 255, 255)', // reflects on card background
     modalColor: isDark.value ? 'rgb(22, 27, 34)' : 'rgb(255, 255, 255)', // reflects on modal background
-    popoverColor: isDark.value ? 'rgb(22, 27, 34)' : 'rgb(255, 255, 255)', // reflects on popover background
+    popoverColor: isDark.value ? 'rgb(33, 38, 45)' : 'rgb(255, 255, 255)', // reflects on popover background
     dividerColor: isDark.value ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)', // reflects on divider color
   })
 

@@ -41,11 +41,9 @@ onMounted(async () => {
 <template>
   <AuthLayout>
     <div class="px-4 rounded w-full max-w-lg">
-      <header class="mb-8 text-center">
-        <h1 class="text-3xl md:text-[32px] font-medium text-black dark:text-white">
-          Get started
-        </h1>
-      </header>
+      <p class="mb-8 text-center text-3xl md:text-[32px] font-medium text-black dark:text-white">
+        Get started
+      </p>
       <div class="flex flex-col gap-4">
         <p class="text-black dark:text-white text-base text-center">
           Discover AxiomAI: Log in for endless possibilities or create an account to unleash GPT's potential.

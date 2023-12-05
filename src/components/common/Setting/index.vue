@@ -46,9 +46,9 @@ watch(active, (newTab) => {
     <Sidebar v-if="!isMobile" />
     <NLayout>
       <div class="min-h-full" :class="[isMobile ? 'p-4' : 'p-8']">
-        <header class="mb-4 text-2xl font-bold text-black dark:text-white">
+        <p class="mb-4 text-2xl font-bold text-black dark:text-white">
           {{ $t('setting.setting') }}
-        </header>
+        </p>
         <NLayoutContent>
           <NTabs v-model:value="active" type="line" animated>
             <NTabPane name="general">

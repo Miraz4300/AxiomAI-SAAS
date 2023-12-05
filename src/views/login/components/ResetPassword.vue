@@ -124,18 +124,18 @@ async function handleResetPassword() {
   <NModal v-model:show="showModal" :mask-closable="false">
     <div class="p-10 bg-white rounded dark:bg-slate-800">
       <div class="space-y-4">
-        <header class="space-y-2">
+        <span class="space-y-2">
           <SvgIcon class="m-auto" style="width: 100px; height: 100px;" :icon="getIcon" />
-          <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-neutral-200">
+          <p class="text-2xl font-bold text-center text-slate-800 dark:text-neutral-200">
             {{ successMessage ? 'Password reset email sent' : 'Password successfully changed' }}
-          </h2>
+          </p>
           <p class="text-base text-center">
             {{ successMessage || successResetPassMessage }}
           </p>
           <p class="text-sm text-center text-slate-500 dark:text-slate-500">
             {{ successMessage ? 'if you don\'t receive the email, please wait at least one or two minutes.' : 'now you can login by clicking the button below' }}
           </p>
-        </header>
+        </span>
         <br>
         <NButton text type="primary" ghost @click="goHome">
           ← Back to Login

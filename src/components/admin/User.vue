@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
 import type { DropdownOption } from 'naive-ui'
-import { NAlert, NAvatar, NButton, NDataTable, NDropdown, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
+import { NAlert, NAvatar, NBadge, NButton, NDataTable, NDropdown, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
 import { fetchDisableUser2FAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
 import { SvgIcon } from '@/components/common'
@@ -136,12 +136,21 @@ const columns = [
     render(row: any) {
       const actions: any[] = []
 
+      // NBadge for Send Message icon
+      const getSendMessageIcon = () => {
+        const iconContent = h(SvgIcon, { icon: 'ri:notification-4-line' })
+        if (row.message)
+          return h(NBadge, { dot: true }, { default: () => iconContent })
+        else
+          return iconContent
+      }
+
       // Dropdown options of Send Message, Disable Account, Restore Account, Verify Account & Disable 2FA
       const dropdownOptions: DropdownOption[] = [
         {
           label: 'Send Message',
           key: 'sendMessage',
-          icon: () => h(SvgIcon, { icon: 'ri:notification-4-line' }),
+          icon: getSendMessageIcon,
         },
         {
           label: 'Disable Account',
@@ -170,12 +179,7 @@ const columns = [
       ]
 
       actions.push(h(
-        NButton,
-        {
-          size: 'small',
-          type: 'primary',
-          onClick: () => handleEditUser(row),
-        },
+        NButton, { size: 'small', type: 'primary', onClick: () => handleEditUser(row) },
         {
           default: () => [
             h(SvgIcon, { icon: 'ri:edit-2-line' }),
@@ -183,31 +187,40 @@ const columns = [
           ],
         },
       ))
-      actions.push(h(
-        NDropdown,
-        {
-          trigger: 'hover',
-          options: dropdownOptions,
-          onSelect: key => handleDropdownSelect(key, row),
-        },
-        {
-          default: () => h(
-            NButton,
-            {
-              size: 'small',
-              strong: true,
-              secondary: true,
-              circle: true,
-              type: 'default',
-            },
-            {
-              default: () => [
-                h(SvgIcon, { icon: 'mdi:chevron-down' }),
-              ],
-            },
-          ),
-        },
-      ))
+      // Check if row.message exists and wrap the NDropdown with NBadge
+      if (row.message) {
+        actions.push(h(
+          NBadge, { dot: true, processing: true }, {
+            default: () => h(
+              NDropdown, { trigger: 'hover', options: dropdownOptions, onSelect: key => handleDropdownSelect(key, row) },
+              {
+                default: () => h(
+                  NButton, { size: 'small', strong: true, secondary: true, type: 'default' },
+                  {
+                    default: () => [
+                      h(SvgIcon, { icon: 'mdi:chevron-down' }),
+                    ],
+                  }),
+              }),
+          }),
+        )
+      }
+      else {
+        actions.push(h(
+          NDropdown, { trigger: 'hover', options: dropdownOptions, onSelect: key => handleDropdownSelect(key, row) },
+          {
+            default: () => h(
+              NButton, { size: 'small', strong: true, secondary: true, type: 'default' },
+              {
+                default: () => [
+                  h(SvgIcon, { icon: 'mdi:chevron-down' }),
+                ],
+              },
+            ),
+          },
+        ))
+      }
+
       // Render all actions button through NSpace
       return h(NSpace, {
         align: 'center',
@@ -218,6 +231,7 @@ const columns = [
     },
   },
 ]
+
 const pagination = reactive ({
   page: 1,
   pageSize: 50,
@@ -533,11 +547,11 @@ onMounted(async () => {
 
   <NModal v-model:show="show2" :auto-focus="false" preset="card" title="Notification Message" style="width: 95%; max-width: 720px">
     <NAlert type="info">
-      This will send a notification to the user.
+      This will send a notification to the user. Support HTML tags.
     </NAlert>
     <div class="mt-4 p-4 space-y-5 min-h-[200px]">
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">User:</span>
+        <span class="flex-shrink-0 w-[100px]">User</span>
         <div class="flex-1">
           <NInput
             v-model:value="userRef.email"

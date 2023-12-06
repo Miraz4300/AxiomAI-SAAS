@@ -89,32 +89,15 @@ const columns = [
     width: 220,
     render(row: KeyConfig) {
       const actions: any[] = []
-      actions.push(h(
-        NButton,
-        {
-          size: 'small',
-          style: {
-            marginRight: '6px',
-          },
-          type: 'error',
-          onClick: () => handleUpdateApiKeyStatus(row._id as string, Status.Disabled),
-        },
-        {
-          default: () => [
-            h(SvgIcon, { icon: 'ri:delete-bin-6-line' }),
-            h('span', { class: 'ml-1' }, 'Delete'),
-          ],
-        },
-      ))
       if (row.status === Status.Normal) {
         actions.push(h(
           NButton,
           {
             size: 'small',
+            type: 'primary',
             style: {
               marginRight: '6px',
             },
-            type: 'default',
             onClick: () => handleEditKey(row),
           },
           {
@@ -125,6 +108,20 @@ const columns = [
           },
         ))
       }
+      actions.push(h(
+        NButton,
+        {
+          size: 'small',
+          type: 'error',
+          onClick: () => handleUpdateApiKeyStatus(row._id as string, Status.Disabled),
+        },
+        {
+          default: () => [
+            h(SvgIcon, { icon: 'ri:delete-bin-6-line' }),
+            h('span', { class: 'ml-1' }, 'Delete'),
+          ],
+        },
+      ))
       return actions
     },
   },
@@ -236,78 +233,76 @@ onMounted(async () => {
 
   <NModal v-model:show="show" :auto-focus="false" preset="card" title="Key Information" style="width: 95%; max-width: 980px">
     <div class="p-4 space-y-5 min-h-[200px]">
-      <div class="space-y-6">
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Endpoint</span>
-          <div class="flex-1">
-            <NSelect
-              style="width: 100%"
-              :value="keyConfig.keyModel"
-              :options="apiModelOptions"
-              @update-value="value => keyConfig.keyModel = value"
-            />
-          </div>
-          <a v-if="keyConfig.keyModel === 'ChatGPTAPI'" target="_blank" href="https://platform.openai.com/account/api-keys">Get API Key</a>
-          <a v-else target="_blank" href="https://chat.openai.com/api/auth/session">Get Access Token</a>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">Endpoint</span>
+        <div class="flex-1">
+          <NSelect
+            style="width: 100%"
+            :value="keyConfig.keyModel"
+            :options="apiModelOptions"
+            @update-value="value => keyConfig.keyModel = value"
+          />
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">API Key</span>
-          <div class="flex-1">
-            <NInput
-              v-model:value="keyConfig.key" type="textarea"
-              :autosize="{ minRows: 3, maxRows: 4 }" placeholder=""
-            />
-          </div>
+        <a v-if="keyConfig.keyModel === 'ChatGPTAPI'" target="_blank" href="https://platform.openai.com/account/api-keys">Get API Key</a>
+        <a v-else target="_blank" href="https://chat.openai.com/api/auth/session">Get Access Token</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">API Key</span>
+        <div class="flex-1">
+          <NInput
+            v-model:value="keyConfig.key" type="textarea"
+            :autosize="{ minRows: 3, maxRows: 4 }" placeholder=""
+          />
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Models</span>
-          <div class="flex-1">
-            <NSelect
-              style="width: 100%"
-              multiple
-              :value="keyConfig.chatModels"
-              :options="authStore.session?.chatModels"
-              @update-value="value => keyConfig.chatModels = value"
-            />
-          </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">Models</span>
+        <div class="flex-1">
+          <NSelect
+            style="width: 100%"
+            multiple
+            :value="keyConfig.chatModels"
+            :options="authStore.session?.chatModels"
+            @update-value="value => keyConfig.chatModels = value"
+          />
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Roles</span>
-          <div class="flex-1">
-            <NSelect
-              style="width: 100%"
-              multiple
-              :value="keyConfig.userRoles"
-              :options="userRoleOptions"
-              @update-value="(value: UserRole[]) => keyConfig.userRoles = value"
-            />
-          </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">Roles</span>
+        <div class="flex-1">
+          <NSelect
+            style="width: 100%"
+            multiple
+            :value="keyConfig.userRoles"
+            :options="userRoleOptions"
+            @update-value="(value: UserRole[]) => keyConfig.userRoles = value"
+          />
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Enabled</span>
-          <div class="flex-1">
-            <NSwitch
-              :round="false"
-              :value="keyConfig.status === Status.Normal"
-              @update:value="(val: any) => { keyConfig.status = val ? Status.Normal : Status.Disabled }"
-            />
-          </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">Enabled</span>
+        <div class="flex-1">
+          <NSwitch
+            :round="false"
+            :value="keyConfig.status === Status.Normal"
+            @update:value="(val: any) => { keyConfig.status = val ? Status.Normal : Status.Disabled }"
+          />
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Remark</span>
-          <div class="flex-1">
-            <NInput
-              v-model:value="keyConfig.remark" type="textarea"
-              :autosize="{ minRows: 1, maxRows: 2 }" placeholder="" style="max-width: 50%"
-            />
-          </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">Remark</span>
+        <div class="flex-1">
+          <NInput
+            v-model:value="keyConfig.remark" type="textarea"
+            :autosize="{ minRows: 1, maxRows: 2 }" placeholder="" style="max-width: 50%"
+          />
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]" />
-          <NButton type="primary" :loading="handleSaving" @click="handleUpdateKeyConfig()">
-            {{ $t('common.save') }}
-          </NButton>
-        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]" />
+        <NButton type="primary" :loading="handleSaving" @click="handleUpdateKeyConfig()">
+          {{ $t('common.save') }}
+        </NButton>
       </div>
     </div>
   </NModal>

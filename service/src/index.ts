@@ -618,13 +618,14 @@ router.post('/session', async (req, res) => {
       }
     })
 
-    let userInfo: { email: string; name: string; description: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig }
+    let userInfo: { email: string; name: string; description: string; message: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig }
     if (userId != null) {
       const user = await getUserById(userId)
       userInfo = {
         email: user.email,
         name: user.name,
         description: user.description,
+        message: user.message,
         avatar: user.avatar,
         userId: user._id.toString(),
         root: user.roles.includes(UserRole.Admin),
@@ -763,13 +764,13 @@ router.post('/user-reset-password', authLimiter, async (req, res) => {
 
 router.post('/user-info', auth, async (req, res) => {
   try {
-    const { email, name, avatar, description } = req.body as UserInfo
+    const { email, name, avatar, description, message } = req.body as UserInfo
     const userId = req.headers.userId.toString()
 
     const user = await getUserById(userId)
     if (user == null || user.status !== Status.Normal)
       throw new Error('User does not exist.')
-    await updateUserInfo(userId, { email, name, avatar, description } as UserInfo)
+    await updateUserInfo(userId, { email, name, avatar, description, message } as UserInfo)
     res.send({ status: 'Success', message: 'Update successful' })
   }
   catch (error) {
@@ -822,9 +823,9 @@ router.post('/user-status', rootAuth, async (req, res) => {
 
 router.post('/user-edit', rootAuth, async (req, res) => {
   try {
-    const { userId, email, password, roles, remark } = req.body as { userId?: string; email: string; password: string; roles: UserRole[]; remark?: string }
+    const { userId, email, password, roles, remark, message } = req.body as { userId?: string; email: string; password: string; roles: UserRole[]; remark?: string; message?: string }
     if (userId) {
-      await updateUser(userId, roles, password, remark)
+      await updateUser(userId, roles, password, remark, message)
     }
     else {
       const newPassword = md5(password)

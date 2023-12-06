@@ -410,6 +410,7 @@ async function handleUpdateUser() {
     await fetchUpdateUser(userRef.value)
     await handleGetUsers(pagination.page)
     show.value = false
+    show2.value = false
   }
   catch (error: any) {
     ms.error(error.message)
@@ -530,7 +531,7 @@ onMounted(async () => {
     </div>
   </NModal>
 
-  <NModal v-model:show="show2" :auto-focus="false" preset="card" title="User Message" style="width: 95%; max-width: 720px">
+  <NModal v-model:show="show2" :auto-focus="false" preset="card" title="Notification Message" style="width: 95%; max-width: 720px">
     <NAlert type="info">
       This will send a notification to the user.
     </NAlert>

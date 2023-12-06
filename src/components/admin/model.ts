@@ -170,6 +170,7 @@ export class UserInfo {
   password?: string
   roles: UserRole[]
   remark?: string
+  message?: string
   status?: Status
   constructor(roles: UserRole[]) {
     this.roles = roles

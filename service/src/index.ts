@@ -618,14 +618,13 @@ router.post('/session', async (req, res) => {
       }
     })
 
-    let userInfo: { email: string; name: string; description: string; message: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig }
+    let userInfo: { email: string; name: string; description: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig }
     if (userId != null) {
       const user = await getUserById(userId)
       userInfo = {
         email: user.email,
         name: user.name,
         description: user.description,
-        message: user.message,
         avatar: user.avatar,
         userId: user._id.toString(),
         root: user.roles.includes(UserRole.Admin),
@@ -764,13 +763,13 @@ router.post('/user-reset-password', authLimiter, async (req, res) => {
 
 router.post('/user-info', auth, async (req, res) => {
   try {
-    const { email, name, avatar, description, message } = req.body as UserInfo
+    const { email, name, avatar, description } = req.body as UserInfo
     const userId = req.headers.userId.toString()
 
     const user = await getUserById(userId)
     if (user == null || user.status !== Status.Normal)
       throw new Error('User does not exist.')
-    await updateUserInfo(userId, { email, name, avatar, description, message } as UserInfo)
+    await updateUserInfo(userId, { email, name, avatar, description } as UserInfo)
     res.send({ status: 'Success', message: 'Update successful' })
   }
   catch (error) {
@@ -1075,8 +1074,12 @@ router.post('/setting-announcement', rootAuth, async (req, res) => {
 
 router.get('/user-announcement', auth, async (req, res) => {
   try {
+    const userId = req.headers.userId.toString()
+    const user = await getUserById(userId)
+
     const thisConfig = await getOriginConfig()
-    res.send({ status: 'Success', message: 'Successfully fetched', data: thisConfig.announcementConfig })
+    const userMessage = user.message
+    res.send({ status: 'Success', message: 'Successfully fetched', data: { userMessage, announcementConfig: thisConfig.announcementConfig } })
   }
   catch (error) {
     res.status(500).send({ status: 'Fail', message: error.message, data: null })

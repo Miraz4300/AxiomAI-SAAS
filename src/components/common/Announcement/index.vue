@@ -1,70 +1,72 @@
 <script setup lang="ts">
-import { computed, h, onMounted, ref } from 'vue'
+import { h, onMounted, ref } from 'vue'
 import { useNotification } from 'naive-ui'
 import type { AnnouncementConfig } from '@/components/admin/model'
 import { fetchUserAnnouncement } from '@/api'
-import { useUserStore } from '@/store'
-
-const userStore = useUserStore()
-const userInfo = computed(() => userStore.userInfo)
 
 const notification = useNotification()
-const message = ref(userInfo.value.message ?? '')
 const announcementConfig = ref<AnnouncementConfig>()
+const userMessage = ref<string>('')
 
 // Prevent showing the notification multiple times in a day
 const lastShownDate = localStorage.getItem('lastShownDate')
 const lastShownMessage = localStorage.getItem('lastShownMessage')
 const currentDate = new Date().toISOString().slice(0, 10)
 
+// For announcement
 function showNotification() {
   notification.create({
     title: announcementConfig.value?.announceHeader,
-    content: () => {
-      return h('div', { class: 'dark:bg-[#1B2129]', innerHTML: announcementConfig.value?.announceBody })
-    }, // Render the content as a div with dark background as it is conflicting with other css styles
+    // Render the content as a div with dark background as it is conflicting with other css styles
+    content: () => h('div', { class: 'dark:bg-[#1B2129]', innerHTML: announcementConfig.value?.announceBody }),
     meta: announcementConfig.value?.announceFooter,
     duration: 10000,
     keepAliveOnHover: true,
   })
 }
 
+// For user message
 function showMessage() {
-  notification.create({
-    title: 'Message',
-    content: () => {
-      return h('div', { class: 'dark:bg-[#1B2129]', innerHTML: message.value })
-    }, // Render the content as a div with dark background as it is conflicting with other css styles
-    meta: '',
-    duration: 60000,
-    keepAliveOnHover: true,
-  })
+  if (userMessage.value) {
+    notification.create({
+      title: 'Message',
+      // Render the content as a div with dark background as it is conflicting with other css styles
+      content: () => h('div', { class: 'dark:bg-[#1B2129]', innerHTML: userMessage.value }),
+      meta: '',
+      duration: 60000,
+      keepAliveOnHover: true,
+    })
+  }
 }
 
-onMounted(async () => {
-  if (lastShownDate === currentDate)
-    return
+async function fetchData() {
+  // Check if either message or notification has been shown today
+  if (lastShownDate !== currentDate || lastShownMessage !== currentDate) {
+    const response = await fetchUserAnnouncement<{
+      userMessage: string
+      announcementConfig: AnnouncementConfig
+    }>()
 
-  const response = await fetchUserAnnouncement<AnnouncementConfig>()
-  announcementConfig.value = response.data
+    if (response.data) {
+      announcementConfig.value = response.data.announcementConfig
+      userMessage.value = response.data.userMessage
 
-  if (announcementConfig.value?.announceEnabled) {
-    setTimeout(() => {
-      localStorage.setItem('lastShownDate', currentDate)
-      showNotification()
-    }, 3000) // 3 seconds delay to show the notification
+      if (lastShownDate !== currentDate && announcementConfig.value?.announceEnabled) {
+        setTimeout(() => {
+          localStorage.setItem('lastShownDate', currentDate)
+          showNotification()
+        }, 3000)
+      }
+
+      if (lastShownMessage !== currentDate && userMessage.value) {
+        setTimeout(() => {
+          localStorage.setItem('lastShownMessage', currentDate)
+          showMessage()
+        }, 5000)
+      }
+    }
   }
-})
+}
 
-onMounted(async () => {
-  if (lastShownMessage === currentDate)
-    return
-
-  if (message.value.length > 10) {
-    setTimeout(() => {
-      localStorage.setItem('lastShownMessage', currentDate)
-      showMessage()
-    }, 5000) // 5 seconds delay to show the notification
-  }
-})
+onMounted(fetchData)
 </script>

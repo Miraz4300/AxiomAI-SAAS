@@ -9,7 +9,6 @@ export interface UserInfo {
   email: string
   name: string
   description: string
-  message?: string
   root: boolean
   config: UserConfig
   roles: UserRole[]
@@ -26,7 +25,6 @@ export function defaultSetting(): UserState {
       email: '',
       name: '',
       description: '',
-      message: '',
       root: false,
       config: { chatModel: 'gpt-3.5-turbo' },
       roles: [],

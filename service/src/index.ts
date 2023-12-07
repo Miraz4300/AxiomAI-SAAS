@@ -822,9 +822,9 @@ router.post('/user-status', rootAuth, async (req, res) => {
 
 router.post('/user-edit', rootAuth, async (req, res) => {
   try {
-    const { userId, email, password, roles, remark } = req.body as { userId?: string; email: string; password: string; roles: UserRole[]; remark?: string }
+    const { userId, email, password, roles, remark, message } = req.body as { userId?: string; email: string; password: string; roles: UserRole[]; remark?: string; message?: string }
     if (userId) {
-      await updateUser(userId, roles, password, remark)
+      await updateUser(userId, roles, password, remark, message)
     }
     else {
       const newPassword = md5(password)
@@ -1074,8 +1074,12 @@ router.post('/setting-announcement', rootAuth, async (req, res) => {
 
 router.get('/user-announcement', auth, async (req, res) => {
   try {
+    const userId = req.headers.userId.toString()
+    const user = await getUserById(userId)
+
     const thisConfig = await getOriginConfig()
-    res.send({ status: 'Success', message: 'Successfully fetched', data: thisConfig.announcementConfig })
+    const userMessage = user.message
+    res.send({ status: 'Success', message: 'Successfully fetched', data: { userMessage, announcementConfig: thisConfig.announcementConfig } })
   }
   catch (error) {
     res.status(500).send({ status: 'Fail', message: error.message, data: null })

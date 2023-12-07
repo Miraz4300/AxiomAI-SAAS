@@ -43,6 +43,7 @@ export class UserInfo {
   roles?: UserRole[]
   remark?: string
   secretKey?: string // 2FA secret key
+  message?: string // Notification message
   constructor(email: string, password: string) {
     this.name = email
     this.email = email

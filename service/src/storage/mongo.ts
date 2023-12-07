@@ -295,15 +295,15 @@ export async function updateUserStatus(userId: string, status: Status) {
   return await userCol.updateOne({ _id: new ObjectId(userId) }, { $set: { status, verifyTime: new Date().toLocaleString() } })
 }
 
-export async function updateUser(userId: string, roles: UserRole[], password: string, remark?: string) {
+export async function updateUser(userId: string, roles: UserRole[], password: string, remark?: string, message?: string) {
   const user = await getUserById(userId)
   const query = { _id: new ObjectId(userId) }
   if (user.password !== password && user.password) {
     const newPassword = md5(password)
-    return await userCol.updateOne(query, { $set: { roles, verifyTime: new Date().toLocaleString(), password: newPassword, remark } })
+    return await userCol.updateOne(query, { $set: { roles, verifyTime: new Date().toLocaleString(), password: newPassword, remark, message } })
   }
   else {
-    return await userCol.updateOne(query, { $set: { roles, verifyTime: new Date().toLocaleString(), remark } })
+    return await userCol.updateOne(query, { $set: { roles, verifyTime: new Date().toLocaleString(), remark, message } })
   }
 }
 

@@ -1,5 +1,73 @@
 [
     {
+        "key": "Suggest some names for my online clothing store",
+        "value": "Come up with 5 sophisticated names for my clothing store. Include a short sentence explaining what it means!"
+    },
+    {
+        "key": "Compare business strategies for transistioning from budget...",
+        "value": "Compare shifting business strategies from budget to luxury and luxury to budget, using a brief table to outline different aspects"
+    },
+    {
+        "key": "Compare the pros and cons of different programming...",
+        "value": "Compare the pros and cons of different programming languages in a brief table."
+    },
+    {
+        "key": "Suggest fun activities for a family on a rainy day",
+        "value": "Can you suggest fun activities for a family of 4 to do indoors on a rainy day?,"
+    },
+    {
+        "key": "Brainstrom edge cases for a function with birthdate as input",
+        "value": "Can you brainstorm some edge cases for a function that takes birthdate as input and returns the horoscope?"
+    },
+    {
+        "key": "Write a thank-you note to my interviewer",
+        "value": "Write 2-3 sentences to thank my interviewer, reiterating my excitement for the job opportunity while keeping it cool. Don't make it too formal."
+    },
+    {
+        "key": "Organize the last ten years of worldwide volcanic activity...",
+        "value": "Organize the last ten years of worldwide volcanic activity into a table"
+    },
+    {
+        "key": "How to make bbq pizza to enjoy with my family",
+        "value": "Write step-by-step instructions to make BBQ pizza and give me the ingredient list"
+    },
+    {
+        "key": "Explain airplane turbulence to a inexperienced flyer",
+        "value": "Can you explain airplane turbulence to someone who has never flown before? Make it conversational and concise."
+    },
+    {
+        "key": "Compare design principals for mobile and desktop software",
+        "value": "Compare design principles for mobile apps and desktop software in a concise table."
+    },
+    {
+        "key": "Tell me a story about space exploration",
+        "value": "Tell me a story about space exploration."
+    },
+    {
+        "key": "Tell me a story about the history of Bangladesh",
+        "value": "Tell me a story about the history of Bangladesh."
+    },
+    {
+        "key": "Help me pick a gift for my girlfriend's birthday",
+        "value": "Help me pick a gift for my girlfriend's birthday."
+    },
+    {
+        "key": "Compare storytelling techniques in novels and films",
+        "value": "Compare storytelling techniques in novels and films in a concise table."
+    },
+    {
+        "key": "Help me pick an outfit that will look good on camera",
+        "value": "I have a photoshoot tomorrow. Can you recommend me some colors and outfit options that will look good on camera?"
+    },
+    {
+        "key": "Help me study vocabulary for the GRE examination",
+        "value": "Help me study vocabulary: write a sentence for me to fill in the blank, and I'll try to pick the correct option."
+    },
+    {
+        "key": "Plan a trip for refreshment in Saint Martin Island",
+        "value": "Plan a trip for refreshment in Saint Martin Island."
+    },
+    {
         "key": "Tell me a fun fact about the Old Dhaka",
         "value": "Tell me a fun fact about the Old Dhaka."
     },
@@ -14,6 +82,18 @@
     {
         "key": "Show me a code snippet of a website's sticky header",
         "value": "Show me a code snippet of a website's sticky header in CSS and JavaScript."
+    },
+    {
+        "key": "Suggest me some great sci-fi movies to watch",
+        "value": "Suggest me some sci-fi movies with higer IMDB rating from year 2000 above to watch."
+    },
+    {
+        "key": "Write a spreadsheet formula to convert a date to the weekday",
+        "value": "Can you write me a spreadsheet formula to convert a date in one column to the weekday (like Thursday)?"
+    },
+    {
+        "key": "Suggest fun activities to do with my high-energy cat",
+        "value": "What are five fun and creative activities to do indoors with my dog who has a lot of energy?"
     },
     {
         "key": "Help me debug a linked list problem",
@@ -36,30 +116,6 @@
         "value": "Explain superconductors like I'm five years old."
     },
     {
-        "key": "Explain airplane turbulence to a inexperienced flyer",
-        "value": "Can you explain airplane turbulence to someone who has never flown before? Make it conversational and concise."
-    },
-    {
-        "key": "Compare design principals for mobile and desktop software",
-        "value": "Compare design principles for mobile apps and desktop software in a concise table."
-    },
-    {
-        "key": "Compare storytelling techniques in novels and films",
-        "value": "Compare storytelling techniques in novels and films in a concise table."
-    },
-    {
-        "key": "Help me pick an outfit that will look good on camera",
-        "value": "I have a photoshoot tomorrow. Can you recommend me some colors and outfit options that will look good on camera?"
-    },
-    {
-        "key": "Help me study vocabulary for the GRE examination",
-        "value": "Help me study vocabulary: write a sentence for me to fill in the blank, and I'll try to pick the correct option."
-    },
-    {
-        "key": "Plan a trip for refreshment in Saint Martin Island",
-        "value": "Plan a trip for refreshment in Saint Martin Island."
-    },
-    {
         "key": "Recommend resturant to eat Biryani and Kacchi",
         "value": "Help me to find some good restaurants in Dhaka which is known for good Biryani and Kacchi."
     },
@@ -76,8 +132,8 @@
         "value": "Suggest me some good netflix series to watch with my family."
     },
     {
-        "key": "How Bangabondhu Satellite works?",
-        "value": "How Bangabondhu Satellite works? Make it conversational and concise."
+        "key": "Explain how Bangabondhu Satellite works?",
+        "value": "How Bangabondhu Satellite works? Explain it and make it conversational and concise."
     },
     {
         "key": "Explain indian stock market scam that took place in 1992",
@@ -92,18 +148,6 @@
         "value": "How to become a good DevOps Engineer? Suggest me some good learning path and resources."
     },
     {
-        "key": "Tell me a story about space exploration",
-        "value": "Tell me a story about space exploration."
-    },
-    {
-        "key": "Tell me a story about the history of Bangladesh",
-        "value": "Tell me a story about the history of Bangladesh."
-    },
-    {
-        "key": "Help me pick a gift for my girlfriend's birthday",
-        "value": "Help me pick a gift for my girlfriend's birthday."
-    },
-    {
         "key": "Brainstrom ideas for a new startup business",
         "value": "Creative and unique brainstrom ideas for a new startup business in terms of Bangladesh's perspective."
     },
@@ -114,17 +158,5 @@
     {
         "key": "Write a python script to automate send email reports",
         "value": "Write a script to automate sending daily email reports in Python, and walk me through how I would set it up."
-    },
-    {
-        "key": "Suggest me some great sci-fi movies to watch",
-        "value": "Suggest me some sci-fi movies with higer IMDB rating from year 2000 above to watch."
-    },
-    {
-        "key": "Write a spreadsheet formula to convert a date to the weekday",
-        "value": "Can you write me a spreadsheet formula to convert a date in one column to the weekday (like Thursday)?"
-    },
-    {
-        "key": "Suggest fun activities to do with my high-energy cat",
-        "value": "What are five fun and creative activities to do indoors with my dog who has a lot of energy?"
     }
 ]

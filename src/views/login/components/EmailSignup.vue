@@ -122,7 +122,7 @@ async function handleRegister() {
     </div>
   </NModal>
 
-  <NModal v-model:show="tosModal" style="width: 95%; max-width: 1280px; max-height: 640px">
+  <NModal v-model:show="tosModal" style="width: 95%; max-width: 1280px; height: 95%; max-height: 640px">
     <div class="p-10 bg-white rounded dark:bg-slate-800">
       <div class="space-y-4">
         <header class="space-y-2">

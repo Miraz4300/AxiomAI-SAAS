@@ -3,6 +3,9 @@ import { useAuthStoreWithout, useUserStore } from '@/store'
 
 export function setupPageGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
+    // Start the loading bar before each navigation
+    window.$loadingBar?.start()
+
     const authStore = useAuthStoreWithout()
     const userStore = useUserStore()
 
@@ -42,5 +45,10 @@ export function setupPageGuard(router: Router) {
         next({ name: '500' }) // Redirect to Error page in case of non-authentication related errors
       }
     }
+  })
+
+  router.afterEach(() => {
+    // Stop the loading bar after each navigation, regardless of whether it was successful or not
+    window.$loadingBar?.finish()
   })
 }

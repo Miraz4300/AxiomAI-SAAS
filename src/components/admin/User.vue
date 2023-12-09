@@ -347,7 +347,7 @@ function handleNewUser() {
 }
 
 async function handleSearch() {
-  const query = searchQuery.value.toLowerCase().trim() // Convert to lowercase for case-insensitive search
+  const query = searchQuery.value.toLowerCase().trim()
   if (query === '') {
     // If search query is empty, show all users
     await handleGetUsers(pagination.page)

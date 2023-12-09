@@ -37,9 +37,6 @@ function goHome() {
   // Redirect to the originally requested page or home page if no redirect query parameter exists
   const redirect = route.query.redirect
   router.replace(redirect ? decodeURIComponent(redirect as string) : '/')
-  setTimeout(() => {
-    location.reload()
-  }, 1000)
 }
 
 onMounted(() => {

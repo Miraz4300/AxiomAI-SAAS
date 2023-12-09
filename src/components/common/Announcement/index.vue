@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { h, onMounted, ref } from 'vue'
-import { useNotification } from 'naive-ui'
+import { NButton, useNotification } from 'naive-ui'
 import type { AnnouncementConfig } from '@/components/admin/model'
 import { fetchUserAnnouncement } from '@/api'
 
@@ -17,7 +17,7 @@ const currentDate = new Date().toISOString().slice(0, 10)
 function showNotification() {
   notification.create({
     title: announcementConfig.value?.announceHeader,
-    // Render the content as a div with dark background as it is conflicting with other css styles
+    // Render the content as a div with dark background. Reason(bug): conflicting with other css styles
     content: () => h('div', { class: 'dark:bg-[#1B2129]', innerHTML: announcementConfig.value?.announceBody }),
     meta: announcementConfig.value?.announceFooter,
     duration: 10000,
@@ -25,15 +25,16 @@ function showNotification() {
   })
 }
 
-// For user message
+// For user notification message
 function showMessage() {
   if (userMessage.value) {
-    notification.create({
+    const n = notification.create({
       title: 'Message',
-      // Render the content as a div with dark background as it is conflicting with other css styles
+      // Render the content as a div with dark background. Reason(bug): conflicting with other css styles
       content: () => h('div', { class: 'dark:bg-[#1B2129]', innerHTML: userMessage.value }),
-      meta: '',
-      duration: 60000,
+      meta: 'From admin',
+      action: () => h(NButton, { text: true, type: 'primary', onClick: () => { n.destroy() } }, 'Mark as Read'),
+      duration: 30000,
       keepAliveOnHover: true,
     })
   }

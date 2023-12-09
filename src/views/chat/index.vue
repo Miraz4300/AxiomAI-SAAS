@@ -67,15 +67,14 @@ dataSources.value.forEach((item, index) => {
 
 // Generate random prompt text using Fisher-Yates shuffle algorithm
 const promptText = ref<any[]>(Array.from(prompts))
+const randomPrompt = shuffleArray(promptText.value).slice(0, 3)
 function shuffleArray(array: any[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]]
   }
+  return array
 }
-
-shuffleArray(promptText.value)
-const randomPrompt = promptText.value.slice(0, 3)
 
 // Fill chat placeholder with generated prompt text and submit
 function fillTextarea(text: string) {

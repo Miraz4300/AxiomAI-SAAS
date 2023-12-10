@@ -12,10 +12,9 @@ export function useTheme() {
   const theme = computed(() => isDark.value ? darkTheme : lightTheme)
 
   const bodyTheme = computed(() => ({
-    cbc: isDark.value ? '#0D1117' : '#FFFFFF', // reflects on chat body
+    pbc: isDark.value ? '#0D1117' : '#FFFFFF', // primary body color for other components
     sbc: isDark.value ? '#161B22' : '#E8EAF1', // reflects on sidebar background
     rbc: isDark.value ? '#161B22' : '#ECEEF1', // reflects on chat response background
-    hc: isDark.value ? '#0D1117' : '#FFFFFF', // reflects on header background
   }))
 
   const getCommonOverrides = () => ({
@@ -73,10 +72,9 @@ export function useTheme() {
         document.documentElement.style.setProperty('--chat-box', personaColorsSelected.chatBox || '#000000')
       }
 
-      document.documentElement.style.setProperty('--cbc', bodyTheme.value.cbc)
+      document.documentElement.style.setProperty('--pbc', bodyTheme.value.pbc)
       document.documentElement.style.setProperty('--sbc', bodyTheme.value.sbc)
       document.documentElement.style.setProperty('--rbc', bodyTheme.value.rbc)
-      document.documentElement.style.setProperty('--hc', bodyTheme.value.hc)
     },
     { immediate: true },
   )

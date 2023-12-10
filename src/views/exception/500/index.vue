@@ -10,7 +10,7 @@ function goHome() {
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center h-screen text-center bg-[var(--cbc)] dark:bg-[var(--cbc)] text-black dark:text-white">
+  <div class="flex flex-col items-center justify-center h-screen text-center bg-[var(--pbc)] dark:bg-[var(--pbc)] text-black dark:text-white">
     <div class="flex items-center">
       <h1 class="mr-6 pr-5 border-r-2 border-gray-500 dark:border-gray-500 h-14 text-3xl font-medium pt-2.5">
         500

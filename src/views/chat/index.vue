@@ -496,13 +496,6 @@ const buttonDisabled = computed(() => {
   return loading.value || !prompt.value || prompt.value.trim() === ''
 })
 
-const footerClass = computed(() => {
-  let classes = ['p-4']
-  if (isMobile.value)
-    classes = ['sticky', 'left-0', 'bottom-0', 'right-0', 'p-2', 'pr-3', 'overflow-hidden']
-  return classes
-})
-
 function handleVoiceChange(v: string[]) {
   prompt.value = v.filter(item => !!item).join('')
 }
@@ -538,11 +531,11 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
 </script>
 
 <template>
-  <div class="flex flex-col w-full h-full">
+  <div class="flex h-full flex-col">
     <Header />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
-        <div id="image-wrapper" class="w-full max-w-screen-2xl pt-6 m-auto bg-[var(--cbc)] dark:bg-[var(--cbc)]" :class="[isMobile ? 'p-2' : 'p-4']">
+        <div id="image-wrapper" class="w-full max-w-screen-2xl pt-6 m-auto" :class="[isMobile ? 'p-2' : 'p-4']">
           <NSpin :show="firstLoading" :rotate="false">
             <template #icon>
               <SvgIcon icon="svg-spinners:180-ring-with-bg" />
@@ -620,7 +613,7 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
         </div>
       </div>
     </main>
-    <footer :class="footerClass">
+    <footer :class="[isMobile ? 'p-2 pr-3' : 'p-4']">
       <div class="m-auto max-w-screen-2xl" :class="[isMobile ? 'pl-1' : 'px-4']">
         <div v-if="loading" class="pb-4 flex justify-center">
           <NButton ghost @click="handleStop">
@@ -677,8 +670,8 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
             </div>
           </div>
         </div>
+        <div v-if="chatFooterEnabled" class="text-center text-xs text-black/60 dark:text-white/50 mt-2" v-html="chatFooterText" />
       </div>
-      <div v-if="chatFooterEnabled" class="text-center text-xs text-black/60 dark:text-white/50 mt-2" v-html="chatFooterText" />
     </footer>
   </div>
   <Announcement />

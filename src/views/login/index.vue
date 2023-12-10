@@ -1,28 +1,11 @@
 <script setup lang="ts">
 import { NButton } from 'naive-ui'
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import EmailSignup from './components/EmailSignup.vue'
 import EmailLogin from './components/EmailLogin.vue'
 import ResetPassword from './components/ResetPassword.vue'
 import AuthLayout from './components/AuthLayout.vue'
-
-interface Props {
-  visible: boolean
-}
-
-const props = defineProps<Props>()
-
-const emit = defineEmits<Emit>()
-
-interface Emit {
-  (e: 'update:visible', visible: boolean): void
-}
-
-const show = computed({
-  get: () => props.visible,
-  set: (visible: boolean) => emit('update:visible', visible),
-})
 
 const route = useRoute()
 const sign = ref('')
@@ -31,10 +14,8 @@ const currentTab = ref('emailLogin')
 
 onMounted(async () => {
   sign.value = route.query.verifyresetpassword as string
-  if (sign.value) {
+  if (sign.value)
     currentTab.value = 'resetPassword'
-    show.value = true
-  }
 })
 </script>
 

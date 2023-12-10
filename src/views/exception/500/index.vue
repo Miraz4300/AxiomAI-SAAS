@@ -17,14 +17,14 @@ function goHome() {
       </h1>
       <div>
         <h2 class="text-base font-medium leading-1">
-          Internal server error.
+          Black Hole Encounter
         </h2>
       </div>
     </div>
     <br>
     <p class="text-sm text-center text-gray-800 dark:text-gray-400">
-      Don't worry, we're working to resolve the issue as quickly as possible.<br>
-      you can check the realtime server status <a class="text-blue-600 dark:text-blue-500" href="https://axiomai.statuspage.io" target="_blank">here</a>
+      An unexpected error occurred. It's as mysterious as a black hole. Our developers are working to bring back the light.<br>
+      Check realtime server status <a class="text-blue-600 dark:text-blue-500" href="https://axiomai.statuspage.io" target="_blank">here</a>
     </p>
     <br>
     <NButton type="primary" ghost @click="goHome">

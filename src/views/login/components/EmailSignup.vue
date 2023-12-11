@@ -44,11 +44,11 @@ async function handleRegister() {
     loading.value = true
     const result = await fetchRegister(name, pwd)
     if (result.message === authInfoType.UNVERIFIED || result.message === authInfoType.UNVERIFIED2 || result.message === authInfoType.AASV)
-      router.push({ name: 'Info', query: { code: result.message } })
+      router.push({ name: 'Exception', query: { code: result.message } })
   }
   catch (error: any) {
     if (error.errorCode === authErrorType.PERMISSION)
-      router.push({ name: 'Error', query: { code: error.errorCode } })
+      router.push({ name: 'Exception', query: { code: error.errorCode } })
     else
       ms.error(error.message ?? 'An unexpected error occurred')
   }

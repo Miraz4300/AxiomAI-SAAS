@@ -60,16 +60,8 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/auth/service',
-    name: 'Info',
-    component: () => import('@/views/exception/authInfo/index.vue'),
-    meta: {
-      hidden: true,
-    },
-  },
-  {
-    path: '/auth/error',
-    name: 'Error',
-    component: () => import('@/views/exception/authError/index.vue'),
+    name: 'Exception',
+    component: () => import('@/views/exception/authException/index.vue'),
     meta: {
       hidden: true,
     },

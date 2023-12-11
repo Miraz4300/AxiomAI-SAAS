@@ -44,7 +44,7 @@ const message = messages[code] || 'Unknown status.'
 const icon = icons[code] || 'mdi:alert-circle-outline'
 
 function goHome() {
-  router.push('/')
+  router.replace({ name: 'Login' })
 }
 </script>
 

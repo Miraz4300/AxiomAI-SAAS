@@ -64,6 +64,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/exception/authException/index.vue'),
     meta: {
       hidden: true,
+      replaceRoute: true,
     },
   },
   {

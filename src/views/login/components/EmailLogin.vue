@@ -36,13 +36,13 @@ async function handleVerify(verifytoken: string) {
     loading.value = true
     const result = await fetchVerify(secretKey)
     if (result.message === authInfoType.VERIFIED || result.message === authInfoType.PERMISSION || result.message === authInfoType.PERMISSION2)
-      router.push({ name: 'Exception', query: { code: result.message } })
+      router.replace({ name: 'Exception', query: { code: result.message } })
     else
       ms.success(result.message as string)
   }
   catch (error: any) {
     if (error.errorCode === authErrorType.USDV)
-      router.push({ name: 'Exception', query: { code: error.errorCode } })
+      router.replace({ name: 'Exception', query: { code: error.errorCode } })
     else
       ms.error(error.message ?? 'An unexpected error occurred')
     authStore.removeToken()
@@ -101,7 +101,7 @@ async function handleLogin() {
   }
   catch (error: any) {
     if (error.errorCode === authErrorType.UNVERIFIED || error.errorCode === authErrorType.ABNORMAL || error.errorCode === authErrorType.PERMISSION)
-      router.push({ name: 'Exception', query: { code: error.errorCode } })
+      router.replace({ name: 'Exception', query: { code: error.errorCode } })
     else
       ms.error(error.message ?? 'An unexpected error occurred')
     password.value = ''

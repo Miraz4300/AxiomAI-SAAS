@@ -17,16 +17,17 @@ function goHome() {
       </h1>
       <div>
         <h2 class="text-base font-medium leading-1">
-          This page could not be found.
+          Galactic Anomaly
         </h2>
       </div>
     </div>
     <br>
     <p class="text-sm text-center text-gray-800 dark:text-gray-400">
-      Requested URL was not found on this server. Try double-check your speeling.
+      An unexpected anomaly in the galaxy has caused the requested information to disappear into the unknown.<br>
+      Our astronomers are on it, but in the meantime, try a different route.
     </p>
     <br>
-    <NButton type="primary" ghost @click="goHome">
+    <NButton ghost type="default" @click="goHome">
       Back to Home
     </NButton>
   </div>

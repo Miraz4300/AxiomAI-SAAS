@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { NButton, NDivider, NInput, useMessage } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
+import { authErrorType, authInfoType } from '../components/authEnum'
 import { fetchLogin, fetchVerify, fetchVerifyAdmin } from '@/api'
 import { useAuthStore } from '@/store'
 
@@ -34,11 +35,16 @@ async function handleVerify(verifytoken: string) {
   try {
     loading.value = true
     const result = await fetchVerify(secretKey)
-    ms.success(result.message as string)
-    router.replace('/')
+    if (result.message === authInfoType.VERIFIED || result.message === authInfoType.PERMISSION || result.message === authInfoType.PERMISSION2)
+      router.push({ name: 'Exception', query: { code: result.message } })
+    else
+      ms.success(result.message as string)
   }
   catch (error: any) {
-    ms.error(error.message ?? 'error')
+    if (error.errorCode === authErrorType.USDV)
+      router.push({ name: 'Exception', query: { code: error.errorCode } })
+    else
+      ms.error(error.message ?? 'An unexpected error occurred')
     authStore.removeToken()
   }
   finally {
@@ -58,7 +64,7 @@ async function handleVerifyAdmin(verifytoken: string) {
     router.replace('/')
   }
   catch (error: any) {
-    ms.error(error.message ?? 'error')
+    ms.error(error.message ?? 'An unexpected error occurred')
   }
   finally {
     loading.value = false
@@ -94,7 +100,10 @@ async function handleLogin() {
     router.replace(redirect ? decodeURIComponent(redirect as string) : '/')
   }
   catch (error: any) {
-    ms.error(error.message ?? 'error')
+    if (error.errorCode === authErrorType.UNVERIFIED || error.errorCode === authErrorType.ABNORMAL || error.errorCode === authErrorType.PERMISSION)
+      router.push({ name: 'Exception', query: { code: error.errorCode } })
+    else
+      ms.error(error.message ?? 'An unexpected error occurred')
     password.value = ''
   }
   finally {

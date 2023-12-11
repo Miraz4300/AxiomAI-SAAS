@@ -55,7 +55,15 @@ const routes: RouteRecordRaw[] = [
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
     meta: {
-      hidden: true, // Hide this route from the sidebar
+      hidden: true,
+    },
+  },
+  {
+    path: '/auth/service',
+    name: 'Exception',
+    component: () => import('@/views/exception/authException/index.vue'),
+    meta: {
+      hidden: true,
     },
   },
   {

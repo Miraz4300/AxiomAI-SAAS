@@ -1,32 +1,18 @@
 <script setup lang='ts'>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { NButton, NDivider, NInput, NModal, useMessage } from 'naive-ui'
+import { NButton, NDivider, NInput, useMessage } from 'naive-ui'
+import { authErrorType, authInfoType } from '../components/authEnum'
 import { fetchResetPassword, fetchSendResetMail } from '@/api'
-import { SvgIcon } from '@/components/common'
 
 const route = useRoute()
 const router = useRouter()
-
-function goHome() {
-  router.push('/')
-  setTimeout(() => {
-    location.reload()
-  }, 1000)
-}
 
 const ms = useMessage()
 const loading = ref(false)
 const username = ref('')
 const password = ref('')
 const sign = ref('')
-const showModal = ref(false)
-const successMessage = ref('')
-const successResetPassMessage = ref('')
-
-const getIcon = computed(() => {
-  return successMessage.value ? 'fluent:password-20-regular' : 'iconoir:password-pass'
-})
 
 const disabled = computed(() => !username.value.trim() || !password.value.trim() || loading.value)
 
@@ -58,11 +44,14 @@ async function handleSendResetMail() {
   try {
     loading.value = true
     const result = await fetchSendResetMail(name)
-    successMessage.value = result.message as string
-    showModal.value = true
+    if (result.message === authInfoType.SRPM)
+      router.push({ name: 'Exception', query: { code: result.message } })
   }
   catch (error: any) {
-    ms.error(error.message ?? 'error')
+    if (error.errorCode === authErrorType.NOTFOUND || error.errorCode === authErrorType.UNVERIFIED || error.errorCode === authErrorType.ABNORMAL)
+      router.push({ name: 'Exception', query: { code: error.errorCode } })
+    else
+      ms.error(error.message ?? 'An unexpected error occurred')
   }
   finally {
     loading.value = false
@@ -82,11 +71,11 @@ async function handleResetPassword() {
   try {
     loading.value = true
     const result = await fetchResetPassword(name, pwd, sign.value)
-    successResetPassMessage.value = result.message as string
-    showModal.value = true
+    if (result.message === authInfoType.PRSC)
+      router.push({ name: 'Exception', query: { code: result.message } })
   }
   catch (error: any) {
-    ms.error(error.message ?? 'error')
+    ms.error(error.message ?? 'An unexpected error occurred')
   }
   finally {
     loading.value = false
@@ -120,27 +109,4 @@ async function handleResetPassword() {
       Reset password
     </NButton>
   </div>
-
-  <NModal v-model:show="showModal" :mask-closable="false">
-    <div class="p-10 bg-white rounded dark:bg-slate-800">
-      <div class="space-y-4">
-        <span class="space-y-2">
-          <SvgIcon class="m-auto" style="width: 100px; height: 100px;" :icon="getIcon" />
-          <p class="text-2xl font-bold text-center text-slate-800 dark:text-neutral-200">
-            {{ successMessage ? 'Password reset email sent' : 'Password successfully changed' }}
-          </p>
-          <p class="text-base text-center">
-            {{ successMessage || successResetPassMessage }}
-          </p>
-          <p class="text-sm text-center text-slate-500 dark:text-slate-500">
-            {{ successMessage ? 'if you don\'t receive the email, please wait at least one or two minutes.' : 'now you can login by clicking the button below' }}
-          </p>
-        </span>
-        <br>
-        <NButton text type="primary" ghost @click="goHome">
-          ← Back to Login
-        </NButton>
-      </div>
-    </div>
-  </NModal>
 </template>

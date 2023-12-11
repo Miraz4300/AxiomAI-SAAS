@@ -35,7 +35,7 @@ async function handleVerify(verifytoken: string) {
   try {
     loading.value = true
     const result = await fetchVerify(secretKey)
-    if (result.message === authInfoType.PERMISSION || result.message === authInfoType.PERMISSION2)
+    if (result.message === authInfoType.VERIFIED || result.message === authInfoType.PERMISSION || result.message === authInfoType.PERMISSION2)
       router.push({ name: 'Info', query: { code: result.message } })
     else
       ms.success(result.message as string)

@@ -985,7 +985,7 @@ router.post('/verification', authLimiter, async (req, res) => {
       throw new Error('Account abnormality')
 
     const config = await getCacheConfig()
-    let message = 'Verification successful'
+    let message = authInfoType.VERIFIED
     if (config.siteConfig.registerReview) {
       await verifyUser(username, Status.AdminVerify)
       await sendVerifyMailAdmin(process.env.ROOT_USER, username, await getUserVerifyUrlAdmin(username))

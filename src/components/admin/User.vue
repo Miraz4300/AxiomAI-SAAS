@@ -167,7 +167,7 @@ const columns = [
         {
           label: 'Verify Account',
           key: 'verifyUser',
-          disabled: row.status !== Status.Unverified || row.status === Status.AdminVerify,
+          show: row.status === Status.Unverified || row.status === Status.AdminVerify,
           icon: () => h(SvgIcon, { icon: 'ri:verified-badge-line' }),
         },
         {

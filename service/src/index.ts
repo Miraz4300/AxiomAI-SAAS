@@ -15,6 +15,7 @@ import { auth, getUserId } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AnnouncementConfig, AuditConfig, ChatInfo, ChatOptions, Config, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, SubscriptionConfig, UserConfig, UserInfo } from './storage/model'
 import { Status, UsageResponse, UserRole } from './storage/model'
+import { authErrorType, authInfoType } from './storage/authEnum'
 import {
   clearChat,
   createChatRoom,
@@ -549,10 +550,13 @@ router.post('/user-register', authLimiter, async (req, res) => {
     if (user != null) {
       if (user.status === Status.Unverified) {
         await sendVerifyMail(username, await getUserVerifyUrl(username))
-        throw new Error('A verification email has already been sent to your email address!')
+        res.send({ status: 'Success', message: authInfoType.UNVERIFIED2, data: null })
+        return
       }
-      if (user.status === Status.AdminVerify)
-        throw new Error('Please wait for the admin to activate your account')
+      if (user.status === Status.AdminVerify) {
+        res.send({ status: 'Fail', errorCode: authErrorType.PERMISSION, data: null })
+        return
+      }
       res.send({ status: 'Fail', message: 'The email address given has already been registered within our system!', data: null })
       return
     }
@@ -561,11 +565,11 @@ router.post('/user-register', authLimiter, async (req, res) => {
     await createUser(username, newPassword, isRoot ? [UserRole.Admin] : [UserRole.Free])
 
     if (isRoot) {
-      res.send({ status: 'Success', message: 'The administrative account has been activated', data: null })
+      res.send({ status: 'Success', message: authInfoType.AASV, data: null })
     }
     else {
       await sendVerifyMail(username, await getUserVerifyUrl(username))
-      res.send({ status: 'Success', message: 'A verification email has been sent to your email address.', data: null })
+      res.send({ status: 'Success', message: authInfoType.UNVERIFIED, data: null })
     }
   }
   catch (error) {
@@ -680,18 +684,24 @@ router.post('/session', async (req, res) => {
 router.post('/user-login', authLimiter, async (req, res) => {
   try {
     const { username, password, token } = req.body as { username: string; password: string; token?: string }
+
     if (!username || !password || !isEmail(username))
       throw new Error('Username or password is empty')
-
     const user = await getUser(username)
     if (user == null || user.password !== md5(password))
       throw new Error('User does not exist or incorrect password')
-    if (user.status === Status.Unverified)
-      throw new Error('Please verify your email address first')
-    if (user != null && user.status === Status.AdminVerify)
-      throw new Error('Please wait for the admin to activate your account')
-    if (user.status !== Status.Normal)
-      throw new Error('⚠️ Account status abnormal')
+    if (user.status === Status.Unverified) {
+      res.send({ status: 'Fail', errorCode: authErrorType.UNVERIFIED, data: null })
+      return
+    }
+    if (user != null && user.status === Status.AdminVerify) {
+      res.send({ status: 'Fail', errorCode: authErrorType.PERMISSION, data: null })
+      return
+    }
+    if (user.status !== Status.Normal) {
+      res.send({ status: 'Fail', errorCode: authErrorType.ABNORMAL, data: null })
+      return
+    }
     if (user.secretKey) {
       if (token) {
         const verified = speakeasy.totp.verify({
@@ -727,14 +737,25 @@ router.post('/user-login', authLimiter, async (req, res) => {
 router.post('/user-send-reset-mail', authLimiter, async (req, res) => {
   try {
     const { username } = req.body as { username: string }
+
     if (!username || !isEmail(username))
       throw new Error('Please enter a correctly formatted email address')
-
     const user = await getUser(username)
-    if (user == null || user.status !== Status.Normal)
-      throw new Error('Account status abnormal.')
+    if (user == null) {
+      res.send({ status: 'Fail', errorCode: authErrorType.NOTFOUND, data: null })
+      return
+    }
+    if (user.status === Status.Unverified) {
+      res.send({ status: 'Fail', errorCode: authErrorType.UNVERIFIED, data: null })
+      return
+    }
+    if (user.status === Status.Disabled) {
+      res.send({ status: 'Fail', errorCode: authErrorType.ABNORMAL, data: null })
+      return
+    }
+
     await sendResetPasswordMail(username, await getUserResetPasswordUrl(username))
-    res.send({ status: 'Success', message: 'A link to reset your password has been sent to your email', data: null })
+    res.send({ status: 'Success', message: authInfoType.SRPM, data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -754,7 +775,7 @@ router.post('/user-reset-password', authLimiter, async (req, res) => {
 
     updateUserPassword(user._id.toString(), md5(password))
 
-    res.send({ status: 'Success', message: 'The password reset has been completed successfully.', data: null })
+    res.send({ status: 'Success', message: authInfoType.PRSC, data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -950,12 +971,16 @@ router.post('/verification', authLimiter, async (req, res) => {
     const user = await getUser(username)
     if (user == null)
       throw new Error('The email not exists')
-    if (user.status === Status.Deleted)
-      throw new Error('The email has been blocked')
+    if (user.status === Status.Deleted) {
+      res.send({ status: 'Fail', errorCode: authErrorType.USDV, data: null })
+      return
+    }
     if (user.status === Status.Normal)
       throw new Error('The email address given has already been registered within our system!')
-    if (user.status === Status.AdminVerify)
-      throw new Error('Please wait for the admin to activate')
+    if (user.status === Status.AdminVerify) {
+      res.send({ status: 'Success', errorCode: authInfoType.PERMISSION2, data: null })
+      return
+    }
     if (user.status !== Status.Unverified)
       throw new Error('Account abnormality')
 
@@ -964,7 +989,7 @@ router.post('/verification', authLimiter, async (req, res) => {
     if (config.siteConfig.registerReview) {
       await verifyUser(username, Status.AdminVerify)
       await sendVerifyMailAdmin(process.env.ROOT_USER, username, await getUserVerifyUrlAdmin(username))
-      message = 'Verification successful, Please wait for the admin to activate your account'
+      message = authInfoType.PERMISSION
     }
     else {
       await verifyUser(username, Status.Normal)

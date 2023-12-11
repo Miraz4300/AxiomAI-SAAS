@@ -1,30 +1,18 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
 import { NButton, NCheckbox, NDivider, NInput, NModal, NScrollbar, useMessage } from 'naive-ui'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { authErrorType, authInfoType } from '../components/authEnum'
 import { fetchRegister } from '@/api'
-import { SvgIcon } from '@/components/common'
 
-const route = useRoute()
 const router = useRouter()
-
-function goHome() {
-  // Redirect to the originally requested page or home page if no redirect query parameter exists
-  const redirect = route.query.redirect
-  router.replace(redirect ? decodeURIComponent(redirect as string) : '/')
-  setTimeout(() => {
-    location.reload()
-  }, 1000)
-}
 
 const ms = useMessage()
 
 const loading = ref(false)
 const username = ref('')
 const password = ref('')
-const mailsentModal = ref(false)
 const tosModal = ref(false)
-const successMessage = ref('')
 
 const disabled = computed(() => !username.value.trim() || !password.value.trim() || loading.value)
 
@@ -55,11 +43,14 @@ async function handleRegister() {
   try {
     loading.value = true
     const result = await fetchRegister(name, pwd)
-    successMessage.value = result.message as string
-    mailsentModal.value = true
+    if (result.message === authInfoType.UNVERIFIED || result.message === authInfoType.UNVERIFIED2 || result.message === authInfoType.AASV)
+      router.push({ name: 'Info', query: { code: result.message } })
   }
   catch (error: any) {
-    ms.error(error.message ?? 'error')
+    if (error.errorCode === authErrorType.PERMISSION)
+      router.push({ name: 'Error', query: { code: error.errorCode } })
+    else
+      ms.error(error.message ?? 'An unexpected error occurred')
   }
   finally {
     loading.value = false
@@ -98,29 +89,6 @@ async function handleRegister() {
       Signup
     </NButton>
   </div>
-
-  <NModal v-model:show="mailsentModal" :mask-closable="false">
-    <div class="p-10 bg-white rounded dark:bg-slate-800">
-      <div class="space-y-4">
-        <span class="space-y-2">
-          <SvgIcon class="m-auto" style="width: 100px; height: 100px;" icon="mdi:email-check-outline" />
-          <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-neutral-200">
-            Verification email sent
-          </h2>
-          <p class="text-base text-center">
-            {{ successMessage }}
-          </p>
-          <p class="text-sm text-center text-slate-500 dark:text-slate-500">
-            if you don't receive the email, please wait at least one or two minutes.
-          </p>
-        </span>
-        <br>
-        <NButton text type="primary" ghost @click="goHome">
-          ← Back to Login
-        </NButton>
-      </div>
-    </div>
-  </NModal>
 
   <NModal v-model:show="tosModal" style="width: 95%; max-width: 1280px; height: 95%; max-height: 640px">
     <div class="p-10 bg-white rounded dark:bg-slate-800">

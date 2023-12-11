@@ -6,7 +6,7 @@ import { SvgIcon } from '@/components/common'
 
 const route = useRoute()
 const router = useRouter()
-const code = route.query.code as string
+const code = route.query.code as string || 'UNKNOWN_ERROR_CHANNEL_AE'
 
 const isError = Object.values(authErrorType).includes(code as any)
 const hasIcon = Object.values(authInfoType).includes(code as any)
@@ -41,7 +41,7 @@ const icons: Record<string, string> = {
 }
 
 const message = messages[code] || 'Unknown status.'
-const icon = icons[code]
+const icon = icons[code] || 'mdi:alert-circle-outline'
 
 function goHome() {
   router.push('/')

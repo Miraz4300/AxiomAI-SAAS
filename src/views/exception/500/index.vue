@@ -23,11 +23,11 @@ function goHome() {
     </div>
     <br>
     <p class="text-sm text-center text-gray-800 dark:text-gray-400">
-      An unexpected error occurred. It's as mysterious as a black hole. Our developers are working to bring back the light.<br>
-      Check realtime server status <a class="text-blue-600 dark:text-blue-500" href="https://axiomai.statuspage.io" target="_blank">here</a>
+      An unexpected error occurred. It's as mysterious as a black hole.<br>
+      Our developers are working to bring back the light.
     </p>
     <br>
-    <NButton type="primary" ghost @click="goHome">
+    <NButton ghost type="default" @click="goHome">
       Back to Home
     </NButton>
   </div>

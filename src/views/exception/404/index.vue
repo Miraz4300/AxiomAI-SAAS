@@ -27,7 +27,7 @@ function goHome() {
       Our astronomers are on it, but in the meantime, try a different route.
     </p>
     <br>
-    <NButton type="primary" ghost @click="goHome">
+    <NButton ghost type="default" @click="goHome">
       Back to Home
     </NButton>
   </div>

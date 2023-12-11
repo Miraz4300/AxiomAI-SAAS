@@ -158,7 +158,7 @@ watch(active, (newTab) => {
             <NTabPane v-if="userStore.userInfo.root" name="featuresConfig">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:puzzle-plus-outline" />
-                <span class="ml-2">Experimental Features</span>
+                <span class="ml-2">Feature Flags</span>
               </template>
               <NCard>
                 <Features />

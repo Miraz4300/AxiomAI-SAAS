@@ -21,19 +21,23 @@ function goHome() {
           The administrative account has been activated!
         </p>
         <p v-if="successCode === authInfoType.SRPM">
-          <SvgIcon class="m-auto w-[150px] h-[150px]" icon="fluent:password-20-regular" />
+          <SvgIcon class="m-auto mb-4 w-[150px] h-[150px]" icon="fluent:password-20-regular" />
           A link to reset your password has been sent to your email address!
         </p>
         <p v-if="successCode === authInfoType.PRSC">
-          <SvgIcon class="m-auto w-[150px] h-[150px]" icon="iconoir:password-pass" />
+          <SvgIcon class="m-auto mb-4 w-[150px] h-[150px]" icon="iconoir:password-pass" />
           Your password has been reset successfully!
         </p>
+        <p v-if="successCode === authInfoType.VERIFIED">
+          <SvgIcon class="m-auto mb-4 w-[150px] h-[150px]" icon="ri:verified-badge-line" />
+          Your email address has been verified successfully!
+        </p>
         <p v-if="successCode === authInfoType.UNVERIFIED">
-          <SvgIcon class="m-auto w-[150px] h-[150px]" icon="mdi:email-check-outline" />
+          <SvgIcon class="m-auto mb-4 w-[150px] h-[150px]" icon="mdi:email-check-outline" />
           A verification email has been sent to your email address. Please check your inbox!
         </p>
         <p v-if="successCode === authInfoType.UNVERIFIED2">
-          <SvgIcon class="m-auto w-[150px] h-[150px]" icon="mdi:email-check-outline" />
+          <SvgIcon class="m-auto mb-4 w-[150px] h-[150px]" icon="mdi:email-check-outline" />
           A verification email has already been sent to your email address! Please check your inbox!
         </p>
         <p v-if="successCode === authInfoType.PERMISSION">

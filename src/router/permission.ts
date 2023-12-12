@@ -17,12 +17,6 @@ export function setupPageGuard(router: Router) {
     if (!to.meta.requiresAuth && !to.meta.requiresAdmin)
       return next()
 
-    // Replace the current history entry for Auth Exception route
-    if (from.meta.replaceRoute) {
-      await router.replace(to.fullPath)
-      return
-    }
-
     try {
       const data = await authStore.getSession()
 

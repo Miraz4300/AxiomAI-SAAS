@@ -58,7 +58,7 @@ const icon = icons[code] || 'mdi:alert-circle-outline'
       <p class="mb-5 text-center">
         {{ isError ? 'Error' : 'Status' }} code: {{ code }}
       </p>
-      <NButton ghost type="default" @click="router.replace('Login')">
+      <NButton ghost type="default" @click="router.replace('/')">
         {{ isError ? 'Go back' : 'Back to login' }}
       </NButton>
     </div>

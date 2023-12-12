@@ -3,10 +3,6 @@ import { NButton } from 'naive-ui'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-
-function goHome() {
-  router.replace('/')
-}
 </script>
 
 <template>
@@ -27,7 +23,7 @@ function goHome() {
       Our developers are working to bring back the light.
     </p>
     <br>
-    <NButton ghost type="default" @click="goHome">
+    <NButton ghost type="default" @click="router.replace('/')">
       Back to Home
     </NButton>
   </div>

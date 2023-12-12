@@ -58,7 +58,7 @@ watch(active, (newTab) => {
             Administrator Settings
           </p>
           <div class="flex space-x-2">
-            <ToolButton v-if="!!authStore.token" @click="router.replace('Chat')">
+            <ToolButton v-if="!!authStore.token" @click="router.replace('/')">
               <SvgIcon class="text-xl" icon="ri:home-3-line" />
             </ToolButton>
             <ToolButton v-if="!!authStore.token" @click="handleLogout">

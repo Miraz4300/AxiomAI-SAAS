@@ -51,7 +51,7 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/admin',
+    path: '/axiomNODE',
     name: 'Admin',
     component: () => import('@/components/admin/index.vue'),
     meta: {

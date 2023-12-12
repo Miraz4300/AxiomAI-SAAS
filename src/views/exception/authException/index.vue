@@ -20,9 +20,9 @@ const messages: Record<string, string> = {
   [authErrorType.USDV]: 'Account has been blocked. Please contact the admin to resolve the issue.',
   // Success messages
   [authInfoType.AASV]: 'The administrative account has been activated!',
-  [authInfoType.SRPM]: 'A link to reset your password has been sent to your email address!',
-  [authInfoType.PRSC]: 'Your password has been reset successfully!',
-  [authInfoType.VERIFIED]: 'Your email address has been verified successfully!',
+  [authInfoType.SRPM]: 'Please check your email address for instructions to reset your password.',
+  [authInfoType.PRSC]: 'The password reset process has been completed successfully.',
+  [authInfoType.VERIFIED]: 'Your email has been successfully verified. Please login to your account.',
   [authInfoType.UNVERIFIED]: 'A verification email has been sent to your email address. Please check your inbox!',
   [authInfoType.UNVERIFIED2]: 'A verification email has already been sent to your email address! Please check your inbox!',
   [authInfoType.PERMISSION]: 'Verification successful, Please wait for the admin to activate your account.',

@@ -4,6 +4,7 @@ import { NLayout, NLayoutContent } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import Sidebar from '../components/Sidebar/index.vue'
 import Sider from './sider/index.vue'
+import Announcement from '@/components/common/Announcement/index.vue'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAppStore, useChatStore } from '@/store'
 
@@ -32,5 +33,6 @@ const getContainerClass = computed(() => ['h-full', { 'pl-[260px]': !isMobile.va
       </NLayoutContent>
     </NLayout>
     <Sidebar v-if="isMobile" />
+    <Announcement />
   </div>
 </template>

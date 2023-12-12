@@ -31,22 +31,17 @@ const cognitiveDocsEnabled = computed(() => appStore.cognitiveDocsEnabled)
 
 function goChat() {
   if (!chatRouteRegex.test(router.currentRoute.value.path))
-    router.push('/')
+    router.replace('/')
 }
 
 function goCD() {
   if (router.currentRoute.value.path !== '/cognitive-docs')
-    router.push('/cognitive-docs')
+    router.replace('/cognitive-docs')
 }
 
 function goDraw() {
   if (router.currentRoute.value.path !== '/whiteboard')
-    router.push('/whiteboard')
-}
-
-function goSetting() {
-  if (router.currentRoute.value.path !== '/user')
-    router.push('/user')
+    router.replace('/whiteboard')
 }
 
 function userHeader() {
@@ -165,7 +160,7 @@ async function handleDropdown(optionKey: string) {
         <SvgIcon :class="[iconClass2]" icon="ri:artboard-line" />
         <p>{{ $t('chat.draw') }}</p>
       </a>
-      <a v-if="!!authStore.token" class="leading-4 text-center cursor-pointer" :class="[isSettingsActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" @click="goSetting">
+      <a v-if="!!authStore.token" class="leading-4 text-center cursor-pointer" :class="[isSettingsActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" @click="router.replace(SETTING_ROUTE)">
         <SvgIcon :class="[iconClass2]" icon="ri:settings-3-line" />
         <p>{{ $t('setting.setting') }}</p>
       </a>

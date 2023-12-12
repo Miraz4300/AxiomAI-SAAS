@@ -21,28 +21,13 @@ const { iconRender } = useIconRender()
 const { isMobile } = useBasicLayout()
 const iconClass2 = 'inline-block text-xl'
 
-const chatRouteRegex = /^\/chat\/\d+$/
+const chatRouteRegex = /^\/chat(\/\w+)?$/
 const isChatActive = computed(() => chatRouteRegex.test(router.currentRoute.value.path))
 const isSettingsActive = computed(() => router.currentRoute.value.path === '/user')
 const isDrawActive = computed(() => router.currentRoute.value.path === '/whiteboard')
 const isCDActive = computed(() => router.currentRoute.value.path === '/cognitive-docs')
 const whiteboardEnabled = computed(() => appStore.whiteboardEnabled)
 const cognitiveDocsEnabled = computed(() => appStore.cognitiveDocsEnabled)
-
-function goChat() {
-  if (!chatRouteRegex.test(router.currentRoute.value.path))
-    router.replace('/')
-}
-
-function goCD() {
-  if (router.currentRoute.value.path !== '/cognitive-docs')
-    router.replace('/cognitive-docs')
-}
-
-function goDraw() {
-  if (router.currentRoute.value.path !== '/whiteboard')
-    router.replace('/whiteboard')
-}
 
 function userHeader() {
   const { email, name, description } = userInfo.value
@@ -124,17 +109,17 @@ async function handleDropdown(optionKey: string) {
   <div v-if="!isMobile" class="min-w-[70px] flex flex-col items-center justify-between overflow-hidden py-6 pt-6 bg-[var(--sbc)] dark:bg-[var(--sbc)]">
     <div class="mb-4 flex flex-col space-y-3 overflow-y-auto overflow-x-hidden px-2">
       <div class="flex w-full flex-col justify-center">
-        <MenuButton :tooltip="$t('chat.chat')" placement="right" @click="goChat">
+        <MenuButton :tooltip="$t('chat.chat')" placement="right" @click="router.replace('/')">
           <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[var(--primary-color-hover)] hover:dark:text-[var(--primary-color-hover)]" :class="[isChatActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:message-3-line" />
         </MenuButton>
       </div>
       <div v-if="!!authStore.token && cognitiveDocsEnabled" class="flex w-full flex-col justify-center">
-        <MenuButton :tooltip="$t('chat.cognitiveDocs')" placement="right" @click="goCD">
+        <MenuButton :tooltip="$t('chat.cognitiveDocs')" placement="right" @click="router.replace('/cognitive-docs')">
           <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[var(--primary-color-hover)] hover:dark:text-[var(--primary-color-hover)]" :class="[isCDActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:file-pdf-line" />
         </MenuButton>
       </div>
       <div v-if="!!authStore.token && whiteboardEnabled" class="flex w-full flex-col justify-center">
-        <MenuButton :tooltip="$t('chat.draw')" placement="right" @click="goDraw">
+        <MenuButton :tooltip="$t('chat.draw')" placement="right" @click="router.replace('/whiteboard')">
           <SvgIcon class="inline-block text-2xl transition hover:scale-110 hover:text-[var(--primary-color-hover)] hover:dark:text-[var(--primary-color-hover)]" :class="[isDrawActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" icon="ri:artboard-line" />
         </MenuButton>
       </div>
@@ -152,11 +137,11 @@ async function handleDropdown(optionKey: string) {
 
   <NLayoutFooter v-if="isMobile" class="bg-[var(--sbc)] dark:bg-[var(--sbc)]">
     <div class="grid py-2 border-t dark:border-t-neutral-800 select-none" :class="[whiteboardEnabled ? 'grid-cols-3' : 'grid-cols-2']">
-      <a class="leading-4 text-center cursor-pointer" :class="[isChatActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" @click="goChat">
+      <a class="leading-4 text-center cursor-pointer" :class="[isChatActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" @click="router.replace('/')">
         <SvgIcon :class="[iconClass2]" icon="ri:message-3-line" />
         <p>{{ $t('chat.chat') }}</p>
       </a>
-      <a v-if="!!authStore.token && whiteboardEnabled" class="leading-4 text-center cursor-pointer" :class="[isDrawActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" @click="goDraw">
+      <a v-if="!!authStore.token && whiteboardEnabled" class="leading-4 text-center cursor-pointer" :class="[isDrawActive ? `text-[var(--primary-color)]` : 'text-slate-500 dark:text-[#fafafa]']" @click="router.replace('/whiteboard')">
         <SvgIcon :class="[iconClass2]" icon="ri:artboard-line" />
         <p>{{ $t('chat.draw') }}</p>
       </a>

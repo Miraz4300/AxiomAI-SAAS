@@ -527,7 +527,6 @@ onUnmounted(() => {
 
 const Speech = defineAsyncComponent(() => import('@/components/voice-output/auto-speak.vue'))
 const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.vue'))
-const Announcement = defineAsyncComponent(() => import('@/components/common/Announcement/index.vue'))
 </script>
 
 <template>
@@ -674,5 +673,4 @@ const Announcement = defineAsyncComponent(() => import('@/components/common/Anno
       </div>
     </footer>
   </div>
-  <Announcement />
 </template>

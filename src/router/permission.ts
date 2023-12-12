@@ -9,8 +9,7 @@ export function setupPageGuard(router: Router) {
     const authStore = useAuthStoreWithout()
     const userStore = useUserStore()
 
-    // If the user is already authenticated and tries to access the login page,
-    // redirect them to the chat page.
+    // If the user is already authenticated and tries to access the login page, redirect them to the chat page.
     if (to.path === '/auth/login' && authStore.token)
       return next({ name: 'Chat' })
 
@@ -42,6 +41,7 @@ export function setupPageGuard(router: Router) {
         return next({ name: 'Login', query: { redirect: to.fullPath } }) // Redirect to login page in case of invalid token | TODO: Check if this is the correct error message
       }
       else {
+        window.$loadingBar?.error() // Show loading bar as error
         next({ name: '500' }) // Redirect to Error page in case of non-authentication related errors
       }
     }

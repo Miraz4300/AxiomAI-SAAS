@@ -67,19 +67,22 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: '/404',
+    path: '/iarnf',
     name: '404',
     component: () => import('@/views/exception/404/index.vue'),
+    meta: { skipNav: true },
   },
   {
-    path: '/500',
+    path: '/anise',
     name: '500',
     component: () => import('@/views/exception/500/index.vue'),
+    meta: { skipNav: true },
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'notFound',
     component: () => import('@/views/exception/404/index.vue'),
+    meta: { skipNav: true },
   },
 ]
 

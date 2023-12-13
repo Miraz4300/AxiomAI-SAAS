@@ -9,9 +9,7 @@ const routes: RouteRecordRaw[] = [
     name: 'Root',
     component: () => import('@/views/chat/layout/Layout.vue'),
     redirect: '/chat',
-    meta: {
-      requiresAuth: true,
-    },
+    meta: { requiresAuth: true },
     children: [
       {
         path: '/chat/:uuid?',
@@ -34,9 +32,7 @@ const routes: RouteRecordRaw[] = [
     path: '/auth',
     name: 'Auth',
     redirect: '/login',
-    meta: {
-      hidden: true,
-    },
+    meta: { hidden: true },
     children: [
       {
         path: '/login',
@@ -54,26 +50,22 @@ const routes: RouteRecordRaw[] = [
     path: '/axiomNODE',
     name: 'Admin',
     component: () => import('@/components/admin/index.vue'),
-    meta: {
-      requiresAdmin: true,
-    },
+    meta: { requiresAdmin: true },
   },
   {
     path: '/user',
     name: 'User',
     component: () => import('@/components/common/Setting/index.vue'),
-    meta: {
-      requiresAuth: true,
-    },
+    meta: { requiresAuth: true },
   },
   {
-    path: '/iarnf',
+    path: '/error404',
     name: '404',
     component: () => import('@/views/exception/404/index.vue'),
     meta: { skipNav: true },
   },
   {
-    path: '/anise',
+    path: '/error500',
     name: '500',
     component: () => import('@/views/exception/500/index.vue'),
     meta: { skipNav: true },

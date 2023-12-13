@@ -42,7 +42,7 @@ watch(active, (newTab) => {
 </script>
 
 <template>
-  <div class="flex h-full overflow-hidden" :class="[isMobile ? 'flex-col' : '']">
+  <div class="flex h-full overflow-hidden" :class="{ 'flex-col': isMobile }">
     <Sidebar v-if="!isMobile" />
     <NLayout>
       <div class="min-h-full" :class="[isMobile ? 'p-4' : 'p-8']">

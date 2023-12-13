@@ -90,7 +90,7 @@ const divClass = 'flex items-center space-x-4'
 <template>
   <div class="space-y-6" :class="[isMobile ? 'p-2' : 'p-4']">
     <div class="flex items-center space-x-4">
-      <span :class="[isMobile ? '' : 'flex-shrink-0 w-[80px]']" />
+      <span :class="{ 'flex-shrink-0 w-[80px]': !isMobile }" />
       <div>
         <UserAvatar :size="100" :avatar-change="true" @click="show = true" />
       </div>

@@ -179,7 +179,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
       </p>
       <div class="flex items-center" :class="[isMobile ? 'flex-wrap' : 'justify-between']">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.persona') }}</span>
-        <div :class="[isMobile ? 'mt-3' : '']">
+        <div :class="{ 'mt-3': isMobile }">
           <NRadioGroup v-model:value="persona" size="medium">
             <NRadioButton :value="precise">
               {{ $t('setting.persona1') }}

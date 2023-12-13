@@ -22,7 +22,7 @@ const getContainerClass = computed(() => ['h-full', { 'pl-[260px]': !isMobile.va
 </script>
 
 <template>
-  <div class="flex h-full overflow-hidden" :class="[isMobile ? 'flex-col' : '']">
+  <div class="flex h-full overflow-hidden" :class="{ 'flex-col': isMobile }">
     <Sidebar v-if="!isMobile" />
     <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
       <Sider />

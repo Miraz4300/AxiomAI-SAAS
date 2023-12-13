@@ -33,12 +33,6 @@ function handleLogout() {
   })
 }
 
-function goHome() {
-  // Redirect to the originally requested page or home page if no redirect query parameter exists
-  const redirect = route.query.redirect
-  router.replace(redirect ? decodeURIComponent(redirect as string) : '/')
-}
-
 onMounted(() => {
   const id = route.query.id
   active.value = id ? id as string : 'systemConfig'
@@ -64,7 +58,7 @@ watch(active, (newTab) => {
             Administrator Settings
           </p>
           <div class="flex space-x-2">
-            <ToolButton v-if="!!authStore.token" @click="goHome">
+            <ToolButton v-if="!!authStore.token" @click="router.replace('/')">
               <SvgIcon class="text-xl" icon="ri:home-3-line" />
             </ToolButton>
             <ToolButton v-if="!!authStore.token" @click="handleLogout">

@@ -6,7 +6,7 @@ import { SvgIcon } from '@/components/common'
 
 const route = useRoute()
 const router = useRouter()
-const code = route.query.code as string || 'UNKNOWN_ERROR_CHANNEL_AE'
+const code = route.query.code as string || 'UNKNOWN_ERROR_CODE_CHANNEL_AE'
 
 const isError = Object.values(authErrorType).includes(code as any)
 const hasIcon = Object.values(authInfoType).includes(code as any)
@@ -40,12 +40,8 @@ const icons: Record<string, string> = {
   [authInfoType.PERMISSION2]: 'tabler:lock-pause',
 }
 
-const message = messages[code] || 'Unknown status.'
+const message = messages[code] || 'UNKNOWN_ERROR_MESSAGE_CHANNEL_AE'
 const icon = icons[code] || 'mdi:alert-circle-outline'
-
-function goHome() {
-  router.replace({ name: 'Login' })
-}
 </script>
 
 <template>
@@ -62,7 +58,7 @@ function goHome() {
       <p class="mb-5 text-center">
         {{ isError ? 'Error' : 'Status' }} code: {{ code }}
       </p>
-      <NButton ghost type="default" @click="goHome">
+      <NButton ghost type="default" @click="router.replace('/')">
         {{ isError ? 'Go back' : 'Back to login' }}
       </NButton>
     </div>

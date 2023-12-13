@@ -18,31 +18,11 @@ const routes: RouteRecordRaw[] = [
         name: 'Chat',
         component: () => import('@/views/chat/index.vue'),
       },
-    ],
-  },
-  {
-    path: '/cognitive-docs',
-    name: 'CognitiveDocs',
-    component: () => import('@/views/chat/layout/Layout.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-    children: [
       {
         path: '/cognitive-docs',
         name: 'CognitiveDocs',
         component: () => import('@/views/cognitive-docs/index.vue'),
       },
-    ],
-  },
-  {
-    path: '/whiteboard',
-    name: 'Whiteboard',
-    component: () => import('@/views/chat/layout/Layout.vue'),
-    meta: {
-      requiresAuth: true,
-    },
-    children: [
       {
         path: '/whiteboard',
         name: 'Whiteboard',
@@ -51,23 +31,27 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/auth/login',
-    name: 'Login',
-    component: () => import('@/views/login/index.vue'),
+    path: '/auth',
+    name: 'Auth',
+    redirect: '/login',
     meta: {
       hidden: true,
     },
+    children: [
+      {
+        path: '/login',
+        name: 'Login',
+        component: () => import('@/views/login/index.vue'),
+      },
+      {
+        path: '/service',
+        name: 'Exception',
+        component: () => import('@/views/exception/authException/index.vue'),
+      },
+    ],
   },
   {
-    path: '/auth/service',
-    name: 'Exception',
-    component: () => import('@/views/exception/authException/index.vue'),
-    meta: {
-      hidden: true,
-    },
-  },
-  {
-    path: '/admin',
+    path: '/axiomNODE',
     name: 'Admin',
     component: () => import('@/components/admin/index.vue'),
     meta: {
@@ -83,19 +67,22 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: '/404',
+    path: '/iarnf',
     name: '404',
     component: () => import('@/views/exception/404/index.vue'),
+    meta: { skipNav: true },
   },
   {
-    path: '/500',
+    path: '/anise',
     name: '500',
     component: () => import('@/views/exception/500/index.vue'),
+    meta: { skipNav: true },
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'notFound',
     component: () => import('@/views/exception/404/index.vue'),
+    meta: { skipNav: true },
   },
 ]
 

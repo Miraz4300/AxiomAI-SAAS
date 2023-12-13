@@ -24,7 +24,7 @@ const router = useRouter()
     </p>
     <br>
     <NButton ghost type="default" @click="router.replace('/')">
-      Back to Home
+      Refresh
     </NButton>
   </div>
 </template>

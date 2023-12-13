@@ -31,16 +31,16 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/auth',
     name: 'Auth',
-    redirect: '/login',
+    redirect: '/auth/login',
     meta: { hidden: true },
     children: [
       {
-        path: '/login',
+        path: '/auth/login',
         name: 'Login',
         component: () => import('@/views/login/index.vue'),
       },
       {
-        path: '/service',
+        path: '/auth/service',
         name: 'Exception',
         component: () => import('@/views/exception/authException/index.vue'),
       },
@@ -62,13 +62,11 @@ const routes: RouteRecordRaw[] = [
     path: '/error404',
     name: '404',
     component: () => import('@/views/exception/404/index.vue'),
-    meta: { skipNav: true },
   },
   {
     path: '/error500',
     name: '500',
     component: () => import('@/views/exception/500/index.vue'),
-    meta: { skipNav: true },
   },
   {
     path: '/:pathMatch(.*)*',

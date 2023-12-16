@@ -29,6 +29,7 @@ import {
   getChatRoom,
   getChatRooms,
   getChats,
+  getDashboardData,
   getUser,
   getUserById,
   getUserStatisticsByDay,
@@ -814,16 +815,26 @@ router.post('/user-chat-model', auth, async (req, res) => {
   }
 })
 
+router.get('/setting-dashboard', rootAuth, async (req, res) => {
+  try {
+    const data = await getDashboardData()
+    res.status(200).json({ status: 'Success', message: 'Get successfully', data })
+  }
+  catch (error) {
+    res.status(500).json({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
 router.get('/users', rootAuth, async (req, res) => {
   try {
     const page = +req.query.page
     const size = +req.query.size
     const searchQuery = req.query.search as string || '' // Retrieve search query from request query parameters
     const data = await getUsers(page, size, searchQuery)
-    res.send({ status: 'Success', message: 'Get successfully', data })
+    res.status(200).json({ status: 'Success', message: 'Get successfully', data })
   }
   catch (error) {
-    res.send({ status: 'Fail', message: error.message, data: null })
+    res.status(500).json({ status: 'Fail', message: error.message, data: null })
   }
 })
 

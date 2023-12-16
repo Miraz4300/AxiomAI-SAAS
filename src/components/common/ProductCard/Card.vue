@@ -24,7 +24,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="md:flex rounded-lg shadow bg-[#E8EAF1] dark:bg-[#25272D]">
+  <div class="md:flex rounded-lg shadow bg-[var(--rbc)] dark:bg-[var(--rbc)]">
     <div class="relative flex-none md:w-48">
       <img :src="props.productImg" alt="merch image" class="inset-0 object-cover w-full h-full">
     </div>

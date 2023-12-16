@@ -2,7 +2,7 @@
 import { computed, h } from 'vue'
 import { useRouter } from 'vue-router'
 import type { DropdownOption } from 'naive-ui'
-import { NDropdown, NText } from 'naive-ui'
+import { NDropdown, NLayoutFooter, NText } from 'naive-ui'
 import { MenuButton, SvgIcon, UserAvatar, UserRole } from '@/components/common'
 import { useIconRender } from '@/hooks/useIconRender'
 import { useAppStore, useAuthStore, useUserStore } from '@/store'

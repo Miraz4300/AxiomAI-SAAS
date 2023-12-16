@@ -130,6 +130,12 @@ export function fetchUpdateUserChatModel<T = any>(chatModel: string) {
   })
 }
 
+export function fetchGetDashboardData<T = any>() {
+  return get<T>({
+    url: '/setting-dashboard',
+  })
+}
+
 export function fetchGetUsers<T = any>(page: number, size: number, searchQuery?: string) {
   return get<T>({
     url: '/users',

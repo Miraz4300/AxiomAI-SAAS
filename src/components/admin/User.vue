@@ -22,9 +22,9 @@ const columns = [
     title: 'Email',
     key: 'email',
     resizable: true,
-    width: 200,
+    width: 220,
     minWidth: 100,
-    maxWidth: 230,
+    maxWidth: 220,
     render(row: any) {
       return h('div', { class: 'flex items-center gap-3' }, {
         default: () => [
@@ -125,14 +125,14 @@ const columns = [
     title: 'Remark',
     key: 'remark',
     resizable: true,
-    width: 200,
+    width: 240,
     minWidth: 100,
-    maxWidth: 220,
+    maxWidth: 240,
   },
   {
     title: 'Actions',
     key: '_id',
-    width: 140,
+    width: 150,
     render(row: any) {
       const actions: any[] = []
 

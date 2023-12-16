@@ -4,24 +4,24 @@
     "lib": [
       "esnext"
     ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
     "baseUrl": ".",
+    "resolveJsonModule": true,
+    "allowJs": true,
     "outDir": "build",
-    "noEmit": true
+    "noEmit": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "skipLibCheck": true
   },
+  "include": [
+    "**/*.ts"
+  ],
   "exclude": [
     "node_modules",
     "build"
-  ],
-  "include": [
-    "**/*.ts"
   ]
 }

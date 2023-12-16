@@ -9,7 +9,7 @@ export function setupPageGuard(router: Router) {
     const authStore = useAuthStoreWithout()
     const userStore = useUserStore()
 
-    // If the user is already authenticated and tries to access the login page, redirect them to the chat page.
+    // If the user is already authenticated and tries to access the auth page, redirect them to the chat page.
     if (to.path === '/auth/login' && authStore.token)
       return next({ name: 'Chat' })
 
@@ -21,13 +21,13 @@ export function setupPageGuard(router: Router) {
 
       if (String(data.auth) === 'false' && authStore.token) {
         await authStore.removeToken()
-        return next({ name: 'Auth', query: { redirect: to.fullPath } }) // Redirect to login page in case of invalid token
+        return next({ name: 'Auth', query: { redirect: to.fullPath } }) // Redirect to auth page in case of invalid token
       }
 
       else { await useUserStore().updateUserInfo(false, data.userInfo) }
 
       if (!!authStore.session?.auth && !authStore.token)
-        return next({ name: 'Auth', query: { redirect: to.fullPath } }) // Redirect to login page in case of unauthenticated users
+        return next({ name: 'Auth', query: { redirect: to.fullPath } }) // Redirect to auth page in case of unauthenticated users
 
       if (to.meta.requiresAdmin && !userStore.userInfo.root)
         return next({ name: '404' }) // Redirect to not found page in case of non-admin users
@@ -38,7 +38,7 @@ export function setupPageGuard(router: Router) {
       console.error('Error during route guard: ', error)
       if ((error as Error).message.includes('Cannot read properties of null')) {
         await authStore.removeToken()
-        return next({ name: 'Auth', query: { redirect: to.fullPath } }) // Redirect to login page in case of invalid token | TODO: Check if this is the correct error message
+        return next({ name: 'Auth', query: { redirect: to.fullPath } }) // Redirect to auth page in case of invalid token | TODO: Check if this is the correct error message
       }
       else {
         window.$loadingBar?.error() // Show loading bar as error

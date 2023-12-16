@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, onMounted, ref, watch, watchEffect } from 'vue'
+import { computed, defineAsyncComponent, onMounted, ref, watch, watchEffect } from 'vue'
 import { NCard, NLayout, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
@@ -9,7 +9,6 @@ import Subscription from './Subscription.vue'
 import Statistics from './Statistics.vue'
 import About from './About.vue'
 import Speech from './Speech.vue'
-import Merch from './Merch.vue'
 import Sidebar from '@/views/chat/components/Sidebar/index.vue'
 import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -39,6 +38,8 @@ watchEffect(() => {
 watch(active, (newTab) => {
   router.push({ query: { id: newTab } })
 })
+
+const Merch = defineAsyncComponent(() => import('./Merch.vue'))
 </script>
 
 <template>

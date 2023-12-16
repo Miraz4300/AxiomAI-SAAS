@@ -74,9 +74,7 @@ watch(active, (newTab) => {
                 <SvgIcon class="text-lg" icon="tabler:layout-dashboard" />
                 <span class="ml-2">Dashboard</span>
               </template>
-              <NCard>
-                <Dashboard />
-              </NCard>
+              <Dashboard />
             </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="system">
               <template #tab>

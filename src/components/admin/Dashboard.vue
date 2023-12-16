@@ -1,38 +1,55 @@
 <script setup lang="ts">
-import { h, onMounted, reactive } from 'vue'
+import { h, onMounted, ref } from 'vue'
 import { NCard, NDataTable, NStatistic, NTag } from 'naive-ui'
 import { fetchGetDashboardData } from '@/api'
-
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { UserRole } from '@/components/admin/model'
 import { SvgIcon } from '@/components/common'
+
+const dashboardData = ref<DashboardData | null>(null)
 
 interface User {
   email: string
   createTime?: Date
-  roles?: string[]
+  roles?: UserRole[]
 }
 
-const dashboardData = reactive({
-  normal: 0,
-  disabled: 0,
-  total: 0,
-  subscribed: 0,
-  premium: 0,
-  newUsers: [] as User[],
-  subscribedUsers: [] as User[],
-})
+interface DashboardData {
+  normal: number
+  disabled: number
+  total: number
+  subscribed: number
+  premium: number
+  newUsers: User[]
+  subscribedUsers: User[]
+}
+
+const roleToTagType = new Map([
+  [UserRole.Premium, 'success'],
+  [UserRole.MVP, 'warning'],
+  [UserRole.Support, 'success'],
+  [UserRole.Enterprise, 'error'],
+  [UserRole.Basic, 'info'],
+  [UserRole['Basic+'], 'info'],
+])
+
+function renderRoles(row: User) {
+  return row.roles?.map((role) => {
+    const tagType = roleToTagType.get(role) || 'default'
+    return h(
+      NTag,
+      {
+        type: tagType as any,
+        bordered: false,
+      },
+      {
+        default: () => UserRole[role],
+      },
+    )
+  })
+}
 
 onMounted(async () => {
-  const response = await fetchGetDashboardData()
-  const data = response.data
-  dashboardData.normal = data.normal
-  dashboardData.disabled = data.disabled
-  dashboardData.total = data.total
-  dashboardData.subscribed = data.subscribed
-  dashboardData.premium = data.premium
-  dashboardData.newUsers = data.newUsers
-  dashboardData.subscribedUsers = data.subscribedUsers
+  dashboardData.value = (await fetchGetDashboardData()).data
 })
 </script>
 
@@ -43,31 +60,31 @@ onMounted(async () => {
         <NStatistic label="Active Users">
           <div class="flex items-center space-x-2">
             <SvgIcon class="text-[#22c55e]" icon="mdi:account-online-outline" />
-            <p> {{ dashboardData.normal }} </p>
+            <p> {{ dashboardData?.normal }} </p>
           </div>
         </NStatistic>
         <NStatistic label="Disabled Users">
           <div class="flex items-center space-x-2">
             <SvgIcon class="text-[#ef4444]" icon="mdi:user-off-outline" />
-            <p> {{ dashboardData.disabled }} </p>
+            <p> {{ dashboardData?.disabled }} </p>
           </div>
         </NStatistic>
         <NStatistic label="Total Users">
           <div class="flex items-center space-x-2">
             <SvgIcon icon="mdi:account-group-outline" />
-            <p> {{ dashboardData.total }} </p>
+            <p> {{ dashboardData?.total }} </p>
           </div>
         </NStatistic>
         <NStatistic label="Total Subscribed">
           <div class="flex items-center space-x-2">
             <SvgIcon icon="eos-icons:subscription-management" />
-            <p> {{ dashboardData.subscribed }} </p>
+            <p> {{ dashboardData?.subscribed }} </p>
           </div>
         </NStatistic>
         <NStatistic label="Premium Users">
           <div class="flex items-center space-x-2">
             <SvgIcon class="text-[#22c55e]" icon="ri:vip-diamond-fill" />
-            <p> {{ dashboardData.premium }} </p>
+            <p> {{ dashboardData?.premium }} </p>
           </div>
         </NStatistic>
       </div>
@@ -75,7 +92,7 @@ onMounted(async () => {
     <div class="flex space-x-4">
       <NCard title="New users">
         <NDataTable
-          :data="dashboardData.newUsers"
+          :data="dashboardData?.newUsers"
           :columns="[
             { title: 'Email', key: 'email' },
             { title: 'Verification Time', key: 'createTime' },
@@ -84,41 +101,10 @@ onMounted(async () => {
       </NCard>
       <NCard title="Paid users">
         <NDataTable
-          :data="dashboardData.subscribedUsers"
+          :data="dashboardData?.subscribedUsers"
           :columns="[
             { title: 'Email', key: 'email' },
-            {
-              title: 'Roles',
-              key: 'roles',
-              render(row: any) {
-                const roles = row.roles.map((role: UserRole) => {
-                  const tagType = (() => {
-                    if (role === UserRole.Premium)
-                      return 'success'
-                    if (role === UserRole.MVP)
-                      return 'warning'
-                    if (role === UserRole.Support)
-                      return 'success'
-                    if (role === UserRole.Enterprise)
-                      return 'error'
-                    if (role === UserRole.Basic || role === UserRole['Basic+'])
-                      return 'info'
-                    return 'default'
-                  })()
-                  return h(
-                    NTag,
-                    {
-                      type: tagType,
-                      bordered: false,
-                    },
-                    {
-                      default: () => UserRole[role],
-                    },
-                  )
-                })
-                return roles
-              },
-            },
+            { title: 'Roles', key: 'roles', render: renderRoles },
           ]"
         />
       </NCard>

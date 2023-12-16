@@ -10,7 +10,7 @@ dotenv.config()
 
 const url = process.env.MONGODB_URL
 const parsedUrl = new URL(url)
-const dbName = (parsedUrl.pathname && parsedUrl.pathname !== '/') ? parsedUrl.pathname.substring(1) : 'axiomdb'
+const dbName = (parsedUrl.pathname && parsedUrl.pathname !== '/') ? parsedUrl.pathname.substring(1) : 'axiomdb-dev'
 const client = new MongoClient(url)
 const chatCol = client.db(dbName).collection('chat')
 const roomCol = client.db(dbName).collection('chat_room')
@@ -252,21 +252,22 @@ export async function getUser(email: string): Promise<UserInfo> {
 
 // For dashboard component
 export async function getDashboardData() {
-  const total = await userCol.countDocuments({})
-  const normal = await userCol.countDocuments({ status: Status.Normal })
-  const disabled = await userCol.countDocuments({ status: Status.Disabled })
-  const subscribed = await userCol.countDocuments({ roles: { $in: [UserRole.Premium, UserRole.MVP, UserRole.Support, UserRole.Basic, UserRole['Basic+']] } })
-  const premium = await userCol.countDocuments({ roles: UserRole.Premium })
+  const subscriptionRoles = [UserRole.Premium, UserRole.MVP, UserRole.Support, UserRole.Basic, UserRole['Basic+']]
 
-  // Fetch the latest 7 users
-  const newUsers = await userCol.find({}).sort({ createTime: -1 }).limit(7).toArray()
-
-  // Fetch all users with a subscription role except enterprise users
-  const subscribedUsers = await userCol.find({ roles: { $in: [UserRole.Premium, UserRole.MVP, UserRole.Support, UserRole.Basic, UserRole['Basic+']] } }).sort({ createTime: -1 }).toArray()
+  const [total, normal, disabled, subscribed, premium, newUsers, subscribedUsers] = await Promise.all([
+    userCol.estimatedDocumentCount(), // Get the number of total users
+    userCol.countDocuments({ status: Status.Normal }), // Get the number of normal users
+    userCol.countDocuments({ status: Status.Disabled }), // Get the number of disabled users
+    userCol.countDocuments({ roles: { $in: subscriptionRoles } }), // Get the number of subscribed users
+    userCol.countDocuments({ roles: UserRole.Premium }), // Get the number of premium users
+    userCol.find({}).sort({ createTime: -1 }).limit(6).project({ _id: 0, email: 1, createTime: 1 }).toArray(), // Get the 06 newest users
+    userCol.find({ roles: { $in: subscriptionRoles } }).project({ _id: 0, email: 1, roles: 1 }).toArray(), // Get the subscribed users
+  ])
 
   return { total, normal, disabled, subscribed, premium, newUsers, subscribedUsers }
 }
 
+// For user management component
 export async function getUsers(page: number, size: number, searchQuery?: string): Promise<{ users: UserInfo[]; total: number }> {
   const query = { status: { $ne: Status.Deleted } }
 

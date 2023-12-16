@@ -55,7 +55,7 @@ onMounted(async () => {
 
 <template>
   <div class="p-4 space-y-5 md:max-h-[740px] sm:min-h-[740px]">
-    <NCard title="Statistics">
+    <NCard class="pr-2 pl-2" title="Statistics">
       <div class="flex justify-between">
         <NStatistic label="Active Users">
           <div class="flex items-center space-x-2">
@@ -106,8 +106,11 @@ onMounted(async () => {
             { title: 'Email', key: 'email' },
             { title: 'Roles', key: 'roles', render: renderRoles },
           ]"
-          :max-height="350"
+          :max-height="300"
         />
+        <template #action>
+          <a class="font-semibold">Revenue:</a> 22,310/= BDT (Till 30-11-2023)
+        </template>
       </NCard>
     </div>
   </div>

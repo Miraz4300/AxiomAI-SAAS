@@ -55,7 +55,7 @@ onMounted(async () => {
 
 <template>
   <div class="p-4 space-y-5 md:max-h-[740px] sm:min-h-[740px]">
-    <NCard>
+    <NCard title="Statistics">
       <div class="flex justify-between">
         <NStatistic label="Active Users">
           <div class="flex items-center space-x-2">
@@ -89,7 +89,7 @@ onMounted(async () => {
         </NStatistic>
       </div>
     </NCard>
-    <div class="flex space-x-4">
+    <div class="h-[33rem] flex space-x-4">
       <NCard title="New users">
         <NDataTable
           :data="dashboardData?.newUsers"
@@ -106,11 +106,9 @@ onMounted(async () => {
             { title: 'Email', key: 'email' },
             { title: 'Roles', key: 'roles', render: renderRoles },
           ]"
+          :max-height="350"
         />
       </NCard>
     </div>
-    <NCard title="Activity log">
-      <p> Coming soon... </p>
-    </NCard>
   </div>
 </template>

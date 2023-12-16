@@ -29,6 +29,7 @@ import {
   getChatRoom,
   getChatRooms,
   getChats,
+  getDashboardData,
   getUser,
   getUserById,
   getUserStatisticsByDay,
@@ -808,6 +809,16 @@ router.post('/user-chat-model', auth, async (req, res) => {
       throw new Error('User does not exist.')
     await updateUserChatModel(userId, chatModel)
     res.send({ status: 'Success', message: 'Update successfully' })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.get('/setting-dashboard', rootAuth, async (req, res) => {
+  try {
+    const data = await getDashboardData()
+    res.send({ status: 'Success', message: 'Get successfully', data })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

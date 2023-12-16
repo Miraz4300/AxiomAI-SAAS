@@ -2,6 +2,7 @@
 import { onMounted, ref, watch, watchEffect } from 'vue'
 import { NCard, NLayout, NLayoutContent, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
+import Dashboard from './Dashboard.vue'
 import System from './System.vue'
 import Mail from './Mail.vue'
 import Moderation from './Moderation.vue'
@@ -35,7 +36,7 @@ function handleLogout() {
 
 onMounted(() => {
   const id = route.query.id
-  active.value = id ? id as string : 'systemConfig'
+  active.value = id ? id as string : 'dashboard'
   if (!id)
     router.replace({ query: { id: active.value } })
 })
@@ -68,7 +69,16 @@ watch(active, (newTab) => {
         </div>
         <div>
           <NTabs v-model:value="active" type="line" animated>
-            <NTabPane v-if="userStore.userInfo.root" name="systemConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="dashboard">
+              <template #tab>
+                <SvgIcon class="text-lg" icon="tabler:layout-dashboard" />
+                <span class="ml-2">Dashboard</span>
+              </template>
+              <NCard>
+                <Dashboard />
+              </NCard>
+            </NTabPane>
+            <NTabPane v-if="userStore.userInfo.root" name="system">
               <template #tab>
                 <SvgIcon class="text-lg" icon="tabler:server-cog" />
                 <span class="ml-2">System Settings</span>
@@ -77,7 +87,7 @@ watch(active, (newTab) => {
                 <System />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="siteConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="site">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:web" />
                 <span class="ml-2">Site Settings</span>
@@ -86,7 +96,7 @@ watch(active, (newTab) => {
                 <Site />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="mailConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="mail">
               <template #tab>
                 <SvgIcon class="text-lg" icon="tabler:mail-cog" />
                 <span class="ml-2">Mail Settings</span>
@@ -95,7 +105,7 @@ watch(active, (newTab) => {
                 <Mail />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="auditConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="audit">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:security" />
                 <span class="ml-2">Moderation</span>
@@ -104,7 +114,7 @@ watch(active, (newTab) => {
                 <Moderation />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="keysConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="keys">
               <template #tab>
                 <SvgIcon class="text-lg" icon="ri:key-line" />
                 <span class="ml-2">Keys Settings</span>
@@ -113,7 +123,7 @@ watch(active, (newTab) => {
                 <Key />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="userConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="users">
               <template #tab>
                 <SvgIcon class="text-lg" icon="tabler:user-cog" />
                 <span class="ml-2">User Management</span>
@@ -122,7 +132,7 @@ watch(active, (newTab) => {
                 <User />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="subscriptionConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="subscriptions">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:currency-usd" />
                 <span class="ml-2">Subscription Price</span>
@@ -131,7 +141,7 @@ watch(active, (newTab) => {
                 <Subscription />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="merchConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="merch">
               <template #tab>
                 <SvgIcon class="text-lg" icon="ri:shopping-bag-line" />
                 <span class="ml-2">Merch Settings</span>
@@ -140,7 +150,7 @@ watch(active, (newTab) => {
                 <Merch />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="announcementConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="announcement">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:announcement" />
                 <span class="ml-2">Announcement</span>
@@ -149,7 +159,7 @@ watch(active, (newTab) => {
                 <Announcement />
               </NCard>
             </NTabPane>
-            <NTabPane v-if="userStore.userInfo.root" name="featuresConfig">
+            <NTabPane v-if="userStore.userInfo.root" name="features">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:puzzle-plus-outline" />
                 <span class="ml-2">Feature Flags</span>

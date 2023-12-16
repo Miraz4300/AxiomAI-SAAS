@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
-import { NCard, NDataTable, NStatistic } from 'naive-ui'
+import { h, onMounted, reactive } from 'vue'
+import { NCard, NDataTable, NStatistic, NTag } from 'naive-ui'
 import { fetchGetDashboardData } from '@/api'
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { UserRole } from '@/components/admin/model'
 import { SvgIcon } from '@/components/common'
-
-function getRoleName(role: UserRole) {
-  return Object.keys(UserRole).find(key => UserRole[key as keyof typeof UserRole] === role)
-}
 
 interface User {
   email: string
@@ -75,7 +73,7 @@ onMounted(async () => {
       </div>
     </NCard>
     <div class="flex space-x-4">
-      <NCard title="New users (filtered last 7)">
+      <NCard title="New users">
         <NDataTable
           :data="dashboardData.newUsers"
           :columns="[
@@ -84,7 +82,7 @@ onMounted(async () => {
           ]"
         />
       </NCard>
-      <NCard title="Subscribed users (all)">
+      <NCard title="Paid users">
         <NDataTable
           :data="dashboardData.subscribedUsers"
           :columns="[
@@ -92,11 +90,41 @@ onMounted(async () => {
             {
               title: 'Roles',
               key: 'roles',
-              render: (row) => Array.isArray(row.roles) ? row.roles.map(getRoleName).join(', ') : '',
+              render(row: any) {
+                const roles = row.roles.map((role: UserRole) => {
+                  const tagType = (() => {
+                    if (role === UserRole.Premium)
+                      return 'success'
+                    if (role === UserRole.MVP)
+                      return 'warning'
+                    if (role === UserRole.Support)
+                      return 'success'
+                    if (role === UserRole.Enterprise)
+                      return 'error'
+                    if (role === UserRole.Basic || role === UserRole['Basic+'])
+                      return 'info'
+                    return 'default'
+                  })()
+                  return h(
+                    NTag,
+                    {
+                      type: tagType,
+                      bordered: false,
+                    },
+                    {
+                      default: () => UserRole[role],
+                    },
+                  )
+                })
+                return roles
+              },
             },
           ]"
         />
       </NCard>
     </div>
+    <NCard title="Activity log">
+      <p> Coming soon... </p>
+    </NCard>
   </div>
 </template>

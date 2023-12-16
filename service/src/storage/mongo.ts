@@ -250,6 +250,7 @@ export async function getUser(email: string): Promise<UserInfo> {
   return userInfo
 }
 
+// For dashboard component
 export async function getDashboardData() {
   const total = await userCol.countDocuments({})
   const normal = await userCol.countDocuments({ status: Status.Normal })
@@ -257,10 +258,10 @@ export async function getDashboardData() {
   const subscribed = await userCol.countDocuments({ roles: { $in: [UserRole.Premium, UserRole.MVP, UserRole.Support, UserRole.Basic, UserRole['Basic+']] } })
   const premium = await userCol.countDocuments({ roles: UserRole.Premium })
 
-  // Fetch the latest 10 users
-  const newUsers = await userCol.find({}).sort({ createTime: -1 }).limit(10).toArray()
+  // Fetch the latest 7 users
+  const newUsers = await userCol.find({}).sort({ createTime: -1 }).limit(7).toArray()
 
-  // Fetch all users with a subscription role
+  // Fetch all users with a subscription role except enterprise users
   const subscribedUsers = await userCol.find({ roles: { $in: [UserRole.Premium, UserRole.MVP, UserRole.Support, UserRole.Basic, UserRole['Basic+']] } }).sort({ createTime: -1 }).toArray()
 
   return { total, normal, disabled, subscribed, premium, newUsers, subscribedUsers }

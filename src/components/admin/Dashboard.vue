@@ -1,8 +1,19 @@
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue'
-import { NCard, NStatistic } from 'naive-ui'
+import { NCard, NDataTable, NStatistic } from 'naive-ui'
 import { fetchGetDashboardData } from '@/api'
+import { UserRole } from '@/components/admin/model'
 import { SvgIcon } from '@/components/common'
+
+function getRoleName(role: UserRole) {
+  return Object.keys(UserRole).find(key => UserRole[key as keyof typeof UserRole] === role)
+}
+
+interface User {
+  email: string
+  createTime?: Date
+  roles?: string[]
+}
 
 const dashboardData = reactive({
   normal: 0,
@@ -10,6 +21,8 @@ const dashboardData = reactive({
   total: 0,
   subscribed: 0,
   premium: 0,
+  newUsers: [] as User[],
+  subscribedUsers: [] as User[],
 })
 
 onMounted(async () => {
@@ -20,6 +33,8 @@ onMounted(async () => {
   dashboardData.total = data.total
   dashboardData.subscribed = data.subscribed
   dashboardData.premium = data.premium
+  dashboardData.newUsers = data.newUsers
+  dashboardData.subscribedUsers = data.subscribedUsers
 })
 </script>
 
@@ -60,11 +75,27 @@ onMounted(async () => {
       </div>
     </NCard>
     <div class="flex space-x-4">
-      <NCard title="Recent Activities">
-        <p>Recent Activities of Users</p>
+      <NCard title="New users (filtered last 7)">
+        <NDataTable
+          :data="dashboardData.newUsers"
+          :columns="[
+            { title: 'Email', key: 'email' },
+            { title: 'Verification Time', key: 'createTime' },
+          ]"
+        />
       </NCard>
-      <NCard title="Recent Activities">
-        <p>Recent Activities of Subscription</p>
+      <NCard title="Subscribed users (all)">
+        <NDataTable
+          :data="dashboardData.subscribedUsers"
+          :columns="[
+            { title: 'Email', key: 'email' },
+            {
+              title: 'Roles',
+              key: 'roles',
+              render: (row) => Array.isArray(row.roles) ? row.roles.map(getRoleName).join(', ') : '',
+            },
+          ]"
+        />
       </NCard>
     </div>
   </div>

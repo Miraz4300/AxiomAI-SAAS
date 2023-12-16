@@ -250,14 +250,20 @@ export async function getUser(email: string): Promise<UserInfo> {
   return userInfo
 }
 
-export async function getDashboardData(): Promise<{ total: number; normal: number; disabled: number; subscribed: number; premium: number }> {
+export async function getDashboardData() {
   const total = await userCol.countDocuments({})
   const normal = await userCol.countDocuments({ status: Status.Normal })
   const disabled = await userCol.countDocuments({ status: Status.Disabled })
   const subscribed = await userCol.countDocuments({ roles: { $in: [UserRole.Premium, UserRole.MVP, UserRole.Support, UserRole.Basic, UserRole['Basic+']] } })
   const premium = await userCol.countDocuments({ roles: UserRole.Premium })
 
-  return { total, normal, disabled, subscribed, premium }
+  // Fetch the latest 10 users
+  const newUsers = await userCol.find({}).sort({ createTime: -1 }).limit(10).toArray()
+
+  // Fetch all users with a subscription role
+  const subscribedUsers = await userCol.find({ roles: { $in: [UserRole.Premium, UserRole.MVP, UserRole.Support, UserRole.Basic, UserRole['Basic+']] } }).sort({ createTime: -1 }).toArray()
+
+  return { total, normal, disabled, subscribed, premium, newUsers, subscribedUsers }
 }
 
 export async function getUsers(page: number, size: number, searchQuery?: string): Promise<{ users: UserInfo[]; total: number }> {

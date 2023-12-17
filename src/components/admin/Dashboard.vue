@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { h, onMounted, ref } from 'vue'
-import { NCard, NDataTable, NSpin, NStatistic, NTag } from 'naive-ui'
+import { NCard, NDataTable, NNumberAnimation, NSpin, NStatistic, NTag } from 'naive-ui'
 import { fetchGetDashboardData } from '@/api'
 import { UserRole } from '@/components/admin/model'
 import { SvgIcon } from '@/components/common'
@@ -66,33 +66,33 @@ onMounted(async () => {
       <NCard class="pr-2 pl-2" title="Statistics">
         <div class="flex justify-between">
           <NStatistic label="Active Users">
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center gap-2">
               <SvgIcon class="text-[#22c55e]" icon="mdi:account-online-outline" />
-              <p> {{ dashboardData?.normal }} </p>
+              <NNumberAnimation :to="dashboardData?.normal" />
             </div>
           </NStatistic>
           <NStatistic label="Disabled Users">
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center gap-2">
               <SvgIcon class="text-[#ef4444]" icon="mdi:user-off-outline" />
-              <p> {{ dashboardData?.disabled }} </p>
+              <NNumberAnimation :to="dashboardData?.disabled" />
             </div>
           </NStatistic>
           <NStatistic label="Total Users">
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center gap-2">
               <SvgIcon icon="mdi:account-group-outline" />
-              <p> {{ dashboardData?.total }} </p>
+              <NNumberAnimation :to="dashboardData?.total" />
             </div>
           </NStatistic>
           <NStatistic label="Total Subscribed">
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center gap-2">
               <SvgIcon icon="eos-icons:subscription-management" />
-              <p> {{ dashboardData?.subscribed }} </p>
+              <NNumberAnimation :to="dashboardData?.subscribed" />
             </div>
           </NStatistic>
           <NStatistic label="Premium Users">
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center gap-2">
               <SvgIcon class="text-[#22c55e]" icon="ri:vip-diamond-fill" />
-              <p> {{ dashboardData?.premium }} </p>
+              <NNumberAnimation :to="dashboardData?.premium" />
             </div>
           </NStatistic>
         </div>
@@ -117,7 +117,9 @@ onMounted(async () => {
             :max-height="300"
           />
           <template #action>
-            <a class="font-semibold">Revenue:</a> 22,310/= BDT (Till 30-11-2023)
+            <a class="font-semibold">Revenue: </a>
+            <NNumberAnimation show-separator :to="22310" />
+            BDT (Till 30-11-2023)
           </template>
         </NCard>
       </div>

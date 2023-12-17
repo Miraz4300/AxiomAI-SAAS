@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { h, onMounted, ref } from 'vue'
-import { NCard, NDataTable, NStatistic, NTag } from 'naive-ui'
+import { NCard, NDataTable, NSpin, NStatistic, NTag } from 'naive-ui'
 import { fetchGetDashboardData } from '@/api'
 import { UserRole } from '@/components/admin/model'
 import { SvgIcon } from '@/components/common'
 
 const dashboardData = ref<DashboardData | null>(null)
+const loading = ref<boolean>(false)
 
 interface User {
   email: string
@@ -40,6 +41,7 @@ function renderRoles(row: User) {
       {
         type: tagType as any,
         bordered: false,
+        size: 'small',
       },
       {
         default: () => UserRole[role],
@@ -49,69 +51,76 @@ function renderRoles(row: User) {
 }
 
 onMounted(async () => {
+  loading.value = true
   dashboardData.value = (await fetchGetDashboardData()).data
+  loading.value = false
 })
 </script>
 
 <template>
-  <div class="p-4 space-y-5 md:max-h-[740px] sm:min-h-[740px]">
-    <NCard class="pr-2 pl-2" title="Statistics">
-      <div class="flex justify-between">
-        <NStatistic label="Active Users">
-          <div class="flex items-center space-x-2">
-            <SvgIcon class="text-[#22c55e]" icon="mdi:account-online-outline" />
-            <p> {{ dashboardData?.normal }} </p>
-          </div>
-        </NStatistic>
-        <NStatistic label="Disabled Users">
-          <div class="flex items-center space-x-2">
-            <SvgIcon class="text-[#ef4444]" icon="mdi:user-off-outline" />
-            <p> {{ dashboardData?.disabled }} </p>
-          </div>
-        </NStatistic>
-        <NStatistic label="Total Users">
-          <div class="flex items-center space-x-2">
-            <SvgIcon icon="mdi:account-group-outline" />
-            <p> {{ dashboardData?.total }} </p>
-          </div>
-        </NStatistic>
-        <NStatistic label="Total Subscribed">
-          <div class="flex items-center space-x-2">
-            <SvgIcon icon="eos-icons:subscription-management" />
-            <p> {{ dashboardData?.subscribed }} </p>
-          </div>
-        </NStatistic>
-        <NStatistic label="Premium Users">
-          <div class="flex items-center space-x-2">
-            <SvgIcon class="text-[#22c55e]" icon="ri:vip-diamond-fill" />
-            <p> {{ dashboardData?.premium }} </p>
-          </div>
-        </NStatistic>
+  <NSpin :show="loading" size="small">
+    <template #description>
+      Fetching data...
+    </template>
+    <div class="p-4 space-y-5 md:max-h-[740px] sm:min-h-[740px]">
+      <NCard class="pr-2 pl-2" title="Statistics">
+        <div class="flex justify-between">
+          <NStatistic label="Active Users">
+            <div class="flex items-center space-x-2">
+              <SvgIcon class="text-[#22c55e]" icon="mdi:account-online-outline" />
+              <p> {{ dashboardData?.normal }} </p>
+            </div>
+          </NStatistic>
+          <NStatistic label="Disabled Users">
+            <div class="flex items-center space-x-2">
+              <SvgIcon class="text-[#ef4444]" icon="mdi:user-off-outline" />
+              <p> {{ dashboardData?.disabled }} </p>
+            </div>
+          </NStatistic>
+          <NStatistic label="Total Users">
+            <div class="flex items-center space-x-2">
+              <SvgIcon icon="mdi:account-group-outline" />
+              <p> {{ dashboardData?.total }} </p>
+            </div>
+          </NStatistic>
+          <NStatistic label="Total Subscribed">
+            <div class="flex items-center space-x-2">
+              <SvgIcon icon="eos-icons:subscription-management" />
+              <p> {{ dashboardData?.subscribed }} </p>
+            </div>
+          </NStatistic>
+          <NStatistic label="Premium Users">
+            <div class="flex items-center space-x-2">
+              <SvgIcon class="text-[#22c55e]" icon="ri:vip-diamond-fill" />
+              <p> {{ dashboardData?.premium }} </p>
+            </div>
+          </NStatistic>
+        </div>
+      </NCard>
+      <div class="h-[33rem] flex space-x-4">
+        <NCard title="New users">
+          <NDataTable
+            :data="dashboardData?.newUsers"
+            :columns="[
+              { title: 'Email', key: 'email' },
+              { title: 'Verification Time', key: 'createTime' },
+            ]"
+          />
+        </NCard>
+        <NCard title="Paid users">
+          <NDataTable
+            :data="dashboardData?.subscribedUsers"
+            :columns="[
+              { title: 'Email', key: 'email' },
+              { title: 'Roles', key: 'roles', render: renderRoles },
+            ]"
+            :max-height="300"
+          />
+          <template #action>
+            <a class="font-semibold">Revenue:</a> 22,310/= BDT (Till 30-11-2023)
+          </template>
+        </NCard>
       </div>
-    </NCard>
-    <div class="h-[33rem] flex space-x-4">
-      <NCard title="New users">
-        <NDataTable
-          :data="dashboardData?.newUsers"
-          :columns="[
-            { title: 'Email', key: 'email' },
-            { title: 'Verification Time', key: 'createTime' },
-          ]"
-        />
-      </NCard>
-      <NCard title="Paid users">
-        <NDataTable
-          :data="dashboardData?.subscribedUsers"
-          :columns="[
-            { title: 'Email', key: 'email' },
-            { title: 'Roles', key: 'roles', render: renderRoles },
-          ]"
-          :max-height="300"
-        />
-        <template #action>
-          <a class="font-semibold">Revenue:</a> 22,310/= BDT (Till 30-11-2023)
-        </template>
-      </NCard>
     </div>
-  </div>
+  </NSpin>
 </template>

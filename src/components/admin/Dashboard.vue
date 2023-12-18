@@ -117,9 +117,12 @@ onMounted(async () => {
             :max-height="300"
           />
           <template #action>
-            <a class="font-semibold">Revenue: </a>
-            <NNumberAnimation show-separator :to="22310" />
-            BDT (Till 30-11-2023)
+            <div class="flex gap-2 items-center">
+              <div class="bg-brand-logo bg-contain w-[25px] h-[25px]" draggable="false" />
+              <a class="font-semibold">Revenue:</a>
+              <NNumberAnimation show-separator :to="22310" />
+              BDT (Till 30-11-2023)
+            </div>
           </template>
         </NCard>
       </div>

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { defineAsyncComponent } from 'vue'
 import { NButton } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import { authErrorType, authInfoType } from '../../login/components/authEnum'
@@ -42,6 +43,7 @@ const icons: Record<string, string> = {
 
 const message = messages[code] || 'UNKNOWN_ERROR_MESSAGE_CHANNEL_AE'
 const icon = icons[code] || 'mdi:alert-circle-outline'
+const TOS = defineAsyncComponent(() => import('../../login/components/TOS.vue'))
 </script>
 
 <template>
@@ -62,6 +64,6 @@ const icon = icons[code] || 'mdi:alert-circle-outline'
         {{ isError ? 'Go back' : 'Back to login' }}
       </NButton>
     </div>
-    <a class="py-3 text-xs text-black dark:text-gray-500">AxiomAI © 2023 | Deepspacelab</a>
+    <TOS :footer="true" :modal="true" />
   </div>
 </template>

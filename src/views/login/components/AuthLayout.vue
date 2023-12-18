@@ -1,3 +1,9 @@
+<script setup lang='ts'>
+import { defineAsyncComponent } from 'vue'
+
+const TOS = defineAsyncComponent(() => import('./TOS.vue'))
+</script>
+
 <template>
   <div class="flex min-h-full w-screen flex-col sm:supports-[min-height:100dvh]:min-h-[100dvh] md:grid md:grid-cols-2 lg:grid-cols-[50%_50%]">
     <div class="relative hidden flex-1 flex-col justify-center px-5 pt-8 md:flex md:px-6 md:py-[22px] lg:px-8 bg-[#E8EAF1] dark:bg-black">
@@ -18,7 +24,7 @@
         <slot />
       </div>
       <div class="mt-10 flex flex-col justify-center items-center">
-        <div class="flex gap-1 items-center select-none">
+        <div class="flex gap-1.5 items-center select-none">
           <div class="bg-brand-logo bg-contain w-[22px] h-[22px]" draggable="false" />
           <p class="flex font-logo text-black dark:text-white font-semibold antialiased text-lg text-center">
             <span class="flex py-2 items-center flex-col">
@@ -26,7 +32,7 @@
             </span>
           </p>
         </div>
-        <a class="py-2 text-xs text-black dark:text-gray-500">AxiomAI © 2023 | Deepspacelab</a>
+        <TOS :footer="true" :modal="true" />
       </div>
     </div>
   </div>

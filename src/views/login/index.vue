@@ -27,7 +27,7 @@ onMounted(async () => {
       </p>
       <div class="flex flex-col gap-4">
         <p class="text-black dark:text-white text-base text-center">
-          Discover AxiomAI: Log in for endless possibilities or create an account to unleash GPT's potential.
+          Unlock Infinite potential with a login or dive into limitless creativity by creating an account!
         </p>
         <EmailLogin v-if="currentTab === 'emailLogin'" />
         <EmailSignup v-else-if="currentTab === 'emailSignup'" />

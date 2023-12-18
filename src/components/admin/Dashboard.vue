@@ -119,9 +119,18 @@ onMounted(async () => {
           <template #action>
             <div class="flex gap-2 items-center">
               <a class="bg-brand-logo bg-contain w-[24px] h-[24px]" draggable="false" />
-              <a class="font-semibold">Revenue:</a>
-              <NNumberAnimation show-separator :to="22310" />
-              BDT (Till 30-11-2023)
+              <span class="text-gray-600">|</span>
+              <p>
+                <a class="font-semibold">Revenue: </a>
+                <NNumberAnimation show-separator :to="22310" />
+                BDT (Till 30-11-2023)
+              </p>
+              <span class="text-gray-600">|</span>
+              <p>
+                <a class="font-semibold">Net Profit: </a>
+                <NNumberAnimation show-separator :to="18520" />
+                BDT (Till 30-11-2023)
+              </p>
             </div>
           </template>
         </NCard>

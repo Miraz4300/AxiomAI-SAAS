@@ -61,9 +61,7 @@ const marks = {
   99: t('setting.memory3'),
 }
 const persona = ref(settingStore.persona ?? 'balanced')
-const precise = 'precise'
-const balanced = 'balanced'
-const creative = 'creative'
+const personas = { precise: t('setting.persona1'), balanced: t('setting.persona2'), creative: t('setting.persona3') }
 
 function updateSettings(options: Partial<SettingsState>) {
   settingStore.updateSetting(options)
@@ -77,7 +75,7 @@ async function handleSyncChatModel(chatModel: string) {
   await fetchUpdateUserChatModel(chatModel)
 }
 
-async function handleSaveChatRoomPrompt() {
+async function handleSaveData() {
   if (!currentChatHistory.value || !currentChatHistory.value)
     return
   testing.value = true
@@ -91,10 +89,6 @@ async function handleSaveChatRoomPrompt() {
   }
   testing.value = false
   show.value = false
-}
-
-function handleSaveData() {
-  handleSaveChatRoomPrompt()
 
   const memoryValue = memory.value
   const personaValue = persona.value
@@ -181,26 +175,14 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.persona') }}</span>
         <div :class="{ 'mt-3': isMobile }">
           <NRadioGroup v-model:value="persona" size="medium">
-            <NRadioButton :value="precise">
-              {{ $t('setting.persona1') }}
-            </NRadioButton>
-            <NRadioButton :value="balanced">
-              {{ $t('setting.persona2') }}
-            </NRadioButton>
-            <NRadioButton :value="creative">
-              {{ $t('setting.persona3') }}
+            <NRadioButton v-for="(value, key) in personas" :key="key" :value="key">
+              {{ value }}
             </NRadioButton>
           </NRadioGroup>
         </div>
       </div>
-      <p v-if="precise === persona" :class="[info]">
-        {{ $t('setting.persona1_info') }}
-      </p>
-      <p v-else-if="balanced === persona" :class="[info]">
-        {{ $t('setting.persona2_info') }}
-      </p>
-      <p v-else :class="[info]">
-        {{ $t('setting.persona3_info') }}
+      <p :class="[info]">
+        {{ $t(`setting.${persona}_info`) }}
       </p>
     </div>
     <div class="mt-4 flex items-center justify-end space-x-4">

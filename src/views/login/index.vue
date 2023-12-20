@@ -27,19 +27,19 @@ onMounted(async () => {
       </p>
       <div class="flex flex-col gap-4">
         <p class="text-black dark:text-white text-base text-center">
-          Discover AxiomAI: Log in for endless possibilities or create an account to unleash GPT's potential.
+          Unlock Infinite potential with a login or dive into limitless creativity by creating an account!
         </p>
         <EmailLogin v-if="currentTab === 'emailLogin'" />
         <EmailSignup v-else-if="currentTab === 'emailSignup'" />
         <ResetPassword v-else />
         <div class="w-full flex justify-between">
-          <NButton v-show="currentTab === 'emailSignup' || currentTab === 'resetPassword'" quaternary type="primary" @click="currentTab = 'emailLogin'">
+          <NButton v-show="currentTab === 'emailSignup' || currentTab === 'resetPassword'" quaternary size="small" type="primary" @click="currentTab = 'emailLogin'">
             ← Go back to login
           </NButton>
-          <NButton v-show="currentTab !== 'emailSignup' && currentTab !== 'resetPassword'" quaternary type="primary" @click="currentTab = 'emailSignup'">
+          <NButton v-show="currentTab !== 'emailSignup' && currentTab !== 'resetPassword'" quaternary size="small" type="primary" @click="currentTab = 'emailSignup'">
             Create account
           </NButton>
-          <NButton v-show="currentTab !== 'resetPassword' && currentTab !== 'emailSignup'" quaternary type="primary" @click="currentTab = 'resetPassword'">
+          <NButton v-show="currentTab !== 'resetPassword' && currentTab !== 'emailSignup'" quaternary size="small" type="primary" @click="currentTab = 'resetPassword'">
             Forgot password?
           </NButton>
         </div>

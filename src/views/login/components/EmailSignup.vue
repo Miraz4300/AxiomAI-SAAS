@@ -1,8 +1,9 @@
 <script setup lang='ts'>
-import { computed, defineAsyncComponent, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { NButton, NCheckbox, NDivider, NInput, useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import { authErrorType, authInfoType } from '../components/authEnum'
+import TOS from './TOS.vue'
 import { fetchRegister } from '@/api'
 
 const router = useRouter()
@@ -55,8 +56,6 @@ async function handleRegister() {
     loading.value = false
   }
 }
-
-const TOS = defineAsyncComponent(() => import('./TOS.vue'))
 </script>
 
 <template>

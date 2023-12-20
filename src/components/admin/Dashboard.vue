@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, onMounted, ref } from 'vue'
+import { computed, h, onMounted, ref } from 'vue'
 import { NCard, NDataTable, NNumberAnimation, NSpin, NStatistic, NTag, NTimeline, NTimelineItem } from 'naive-ui'
 import { fetchGetDashboardData } from '@/api'
 import type { UserInfo } from '@/components/admin/model'
@@ -57,13 +57,16 @@ function getType(status: Status | undefined) {
           : 'default'
 }
 
-function showStatus(status: Status | undefined) {
-  return status !== undefined ? Status[status] : 'N/A'
-}
+const showStatus = (status: Status | undefined) => status !== undefined ? Status[status] : 'N/A'
+const formatTime = (time: string | undefined) => time ? new Date(time).toLocaleString() : 'N/A'
 
-function formatTime(time: string | undefined) {
-  return time ? new Date(time).toLocaleString() : 'N/A'
-}
+const statistics = computed(() => [
+  { label: 'Active Users', icon: 'mdi:account-online-outline', color: 'text-[#22c55e]', value: dashboardData.value?.normal },
+  { label: 'Disabled Users', icon: 'mdi:user-off-outline', color: 'text-[#ef4444]', value: dashboardData.value?.disabled },
+  { label: 'Total Users', icon: 'mdi:account-group-outline', value: dashboardData.value?.total },
+  { label: 'Total Subscribed', icon: 'eos-icons:subscription-management', value: dashboardData.value?.subscribed },
+  { label: 'Premium Users', icon: 'ri:vip-diamond-fill', color: 'text-[#22c55e]', value: dashboardData.value?.premium },
+])
 
 onMounted(async () => {
   loading.value = true
@@ -80,34 +83,10 @@ onMounted(async () => {
     <div class="p-4 space-y-5 md:max-h-[740px] sm:min-h-[740px]">
       <NCard class="pr-2 pl-2" title="Statistics">
         <div class="flex justify-between">
-          <NStatistic label="Active Users">
+          <NStatistic v-for="(stat, index) in statistics" :key="index" :label="stat.label">
             <div class="flex items-center gap-2">
-              <SvgIcon class="text-[#22c55e]" icon="mdi:account-online-outline" />
-              <NNumberAnimation :to="dashboardData?.normal" />
-            </div>
-          </NStatistic>
-          <NStatistic label="Disabled Users">
-            <div class="flex items-center gap-2">
-              <SvgIcon class="text-[#ef4444]" icon="mdi:user-off-outline" />
-              <NNumberAnimation :to="dashboardData?.disabled" />
-            </div>
-          </NStatistic>
-          <NStatistic label="Total Users">
-            <div class="flex items-center gap-2">
-              <SvgIcon icon="mdi:account-group-outline" />
-              <NNumberAnimation :to="dashboardData?.total" />
-            </div>
-          </NStatistic>
-          <NStatistic label="Total Subscribed">
-            <div class="flex items-center gap-2">
-              <SvgIcon icon="eos-icons:subscription-management" />
-              <NNumberAnimation :to="dashboardData?.subscribed" />
-            </div>
-          </NStatistic>
-          <NStatistic label="Premium Users">
-            <div class="flex items-center gap-2">
-              <SvgIcon class="text-[#22c55e]" icon="ri:vip-diamond-fill" />
-              <NNumberAnimation :to="dashboardData?.premium" />
+              <SvgIcon :class="stat.color" :icon="stat.icon" />
+              <NNumberAnimation :to="stat.value" />
             </div>
           </NStatistic>
         </div>

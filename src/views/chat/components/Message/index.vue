@@ -111,6 +111,7 @@ async function handlePreviousResponse(next: number) {
           </template>
           <NButtonGroup v-if="!inversion && responseCount && responseCount > 1">
             <NButton
+              text
               style="cursor: pointer;"
               :disabled="indexRef === 1"
               @click="handlePreviousResponse(-1)"
@@ -119,6 +120,7 @@ async function handlePreviousResponse(next: number) {
             </NButton>
             <span class="text-xs text-neutral-500 dark:text-[#A6AEB9]"> {{ indexRef }} / {{ responseCount }}</span>
             <NButton
+              text
               style="cursor: pointer;"
               :disabled="indexRef === responseCount"
               @click="handlePreviousResponse(1)"

@@ -2,18 +2,12 @@
 import { h, onMounted, ref } from 'vue'
 import { NCard, NDataTable, NNumberAnimation, NSpin, NStatistic, NTag, NTimeline, NTimelineItem } from 'naive-ui'
 import { fetchGetDashboardData } from '@/api'
+import type { UserInfo } from '@/components/admin/model'
 import { Status, UserRole } from '@/components/admin/model'
 import { SvgIcon } from '@/components/common'
 
 const dashboardData = ref<DashboardData | null>(null)
 const loading = ref<boolean>(false)
-
-interface User {
-  email: string
-  createTime?: Date
-  status: Status
-  roles?: UserRole[]
-}
 
 interface DashboardData {
   normal: number
@@ -21,21 +15,8 @@ interface DashboardData {
   total: number
   subscribed: number
   premium: number
-  newUsers: User[]
-  subscribedUsers: User[]
-}
-
-function getStatusType(status: Status) {
-  if (status === Status.Normal)
-    return 'success'
-  else if (status === Status.Unverified)
-    return 'warning'
-  else if (status === Status.Disabled)
-    return 'error'
-  else if (status === Status.AdminVerify)
-    return 'info'
-  else
-    return 'default'
+  newUsers: UserInfo[]
+  subscribedUsers: UserInfo[]
 }
 
 const roleToTagType = new Map([
@@ -47,7 +28,7 @@ const roleToTagType = new Map([
   [UserRole['Basic+'], 'info'],
 ])
 
-function renderRoles(row: User) {
+function renderRoles(row: UserInfo) {
   return row.roles?.map((role) => {
     const tagType = roleToTagType.get(role) || 'default'
     return h(
@@ -62,6 +43,26 @@ function renderRoles(row: User) {
       },
     )
   })
+}
+
+function getType(status: Status | undefined) {
+  return status === Status.Normal
+    ? 'success'
+    : status === Status.Unverified
+      ? 'warning'
+      : status === Status.Disabled
+        ? 'error'
+        : status === Status.AdminVerify
+          ? 'info'
+          : 'default'
+}
+
+function showStatus(status: Status | undefined) {
+  return status !== undefined ? Status[status] : 'N/A'
+}
+
+function formatTime(time: string | undefined) {
+  return time ? new Date(time).toLocaleString() : 'N/A'
 }
 
 onMounted(async () => {
@@ -117,10 +118,10 @@ onMounted(async () => {
             <NTimelineItem
               v-for="(user, index) in dashboardData?.newUsers"
               :key="index"
-              :type="getStatusType(user.status)"
-              :title="Status[user.status]"
+              :type="getType(user.status)"
+              :title="showStatus(user.status)"
               :content="user.email"
-              :time="user.createTime ? new Date(user.createTime).toLocaleString() : 'N/A'"
+              :time="formatTime(user.createTime)"
             />
           </NTimeline>
         </NCard>

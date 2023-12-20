@@ -168,10 +168,11 @@ export class UserInfo {
   avatar?: string
   email?: string
   password?: string
+  status?: Status
+  createTime?: string
   roles: UserRole[]
   remark?: string
   message?: string
-  status?: Status
   constructor(roles: UserRole[]) {
     this.roles = roles
   }

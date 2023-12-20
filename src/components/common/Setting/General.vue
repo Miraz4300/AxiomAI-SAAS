@@ -43,21 +43,9 @@ const language = computed({
 })
 
 const themeOptions: { label: string; key: Theme; icon: string }[] = [
-  {
-    label: 'Auto',
-    key: 'auto',
-    icon: 'ri:contrast-line',
-  },
-  {
-    label: 'Light',
-    key: 'light',
-    icon: 'line-md:sunny-outline-loop',
-  },
-  {
-    label: 'Dark',
-    key: 'dark',
-    icon: 'line-md:moon-alt-loop',
-  },
+  { label: 'Auto', key: 'auto', icon: 'ri:contrast-line' },
+  { label: 'Light', key: 'light', icon: 'line-md:sunny-outline-loop' },
+  { label: 'Dark', key: 'dark', icon: 'line-md:moon-alt-loop' },
 ]
 
 const languageOptions: { label: string; key: Language; value: Language }[] = [

@@ -1,7 +1,5 @@
 <script setup lang='ts'>
-import { defineAsyncComponent } from 'vue'
-
-const TOS = defineAsyncComponent(() => import('./TOS.vue'))
+import TOS from './TOS.vue'
 </script>
 
 <template>

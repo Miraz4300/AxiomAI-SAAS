@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { defineAsyncComponent } from 'vue'
 import { NButton } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import { authErrorType, authInfoType } from '../../login/components/authEnum'
+import TOS from '../../login/components/TOS.vue'
 import { SvgIcon } from '@/components/common'
 
 const route = useRoute()
@@ -43,7 +43,6 @@ const icons: Record<string, string> = {
 
 const message = messages[code] || 'UNKNOWN_ERROR_MESSAGE_CHANNEL_AE'
 const icon = icons[code] || 'mdi:alert-circle-outline'
-const TOS = defineAsyncComponent(() => import('../../login/components/TOS.vue'))
 </script>
 
 <template>

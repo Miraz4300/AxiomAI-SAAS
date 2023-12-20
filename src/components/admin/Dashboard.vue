@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { h, onMounted, ref } from 'vue'
-import { NCard, NDataTable, NNumberAnimation, NSpin, NStatistic, NTag } from 'naive-ui'
+import { NCard, NDataTable, NNumberAnimation, NSpin, NStatistic, NTag, NTimeline, NTimelineItem } from 'naive-ui'
 import { fetchGetDashboardData } from '@/api'
-import { UserRole } from '@/components/admin/model'
+import { Status, UserRole } from '@/components/admin/model'
 import { SvgIcon } from '@/components/common'
 
 const dashboardData = ref<DashboardData | null>(null)
@@ -11,6 +11,7 @@ const loading = ref<boolean>(false)
 interface User {
   email: string
   createTime?: Date
+  status: Status
   roles?: UserRole[]
 }
 
@@ -22,6 +23,19 @@ interface DashboardData {
   premium: number
   newUsers: User[]
   subscribedUsers: User[]
+}
+
+function getStatusType(status: Status) {
+  if (status === Status.Normal)
+    return 'success'
+  else if (status === Status.Unverified)
+    return 'warning'
+  else if (status === Status.Disabled)
+    return 'error'
+  else if (status === Status.AdminVerify)
+    return 'info'
+  else
+    return 'default'
 }
 
 const roleToTagType = new Map([
@@ -99,13 +113,16 @@ onMounted(async () => {
       </NCard>
       <div class="h-[33rem] flex space-x-4">
         <NCard title="New users">
-          <NDataTable
-            :data="dashboardData?.newUsers"
-            :columns="[
-              { title: 'Email', key: 'email' },
-              { title: 'Verification Time', key: 'createTime' },
-            ]"
-          />
+          <NTimeline>
+            <NTimelineItem
+              v-for="(user, index) in dashboardData?.newUsers"
+              :key="index"
+              :type="getStatusType(user.status)"
+              :title="Status[user.status]"
+              :content="user.email"
+              :time="user.createTime ? new Date(user.createTime).toLocaleString() : 'N/A'"
+            />
+          </NTimeline>
         </NCard>
         <NCard title="Paid users">
           <NDataTable

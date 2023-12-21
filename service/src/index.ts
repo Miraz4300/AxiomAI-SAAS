@@ -845,7 +845,7 @@ router.post('/user-status', rootAuth, async (req, res) => {
     await updateUserStatus(userId, status)
     if ((user.status === Status.Unverified || user.status === Status.AdminVerify) && status === Status.Normal)
       await sendNoticeMail(user.email)
-    res.send({ status: 'Success', message: 'Update successfully' })
+    res.send({ status: 'Success', message: 'Update successfully [STATUS]' })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -863,7 +863,7 @@ router.post('/user-edit', rootAuth, async (req, res) => {
       const user = await createUser(email, newPassword, roles, remark)
       await updateUserStatus(user._id.toString(), Status.Normal)
     }
-    res.send({ status: 'Success', message: 'Update successfully' })
+    res.send({ status: 'Success', message: 'Update successfully [EDIT]' })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

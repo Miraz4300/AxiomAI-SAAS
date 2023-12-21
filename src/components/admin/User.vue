@@ -133,101 +133,62 @@ const columns = [
     title: 'Actions',
     key: '_id',
     width: 150,
-    render(row: any) {
-      const actions: any[] = []
-
-      // NBadge for Send Message icon
-      const getSendMessageIcon = () => {
-        const iconContent = h(SvgIcon, { icon: 'ri:notification-4-line' })
-        if (row.message)
-          return h(NBadge, { dot: true }, { default: () => iconContent })
-        else
-          return iconContent
+    render: (row: any) => {
+      const getIcon = (icon: string, dot: boolean = false) => {
+        const iconContent = h(SvgIcon, { icon })
+        return dot && row.message ? h(NBadge, { dot: true }, { default: () => iconContent }) : iconContent
       }
 
-      // Dropdown options of Send Message, Disable Account, Restore Account, Verify Account & Disable 2FA
       const dropdownOptions: DropdownOption[] = [
         {
           label: 'Send Message',
           key: 'sendMessage',
-          icon: getSendMessageIcon,
+          action: handleUserMessage,
+          icon: () => getIcon('ri:notification-4-line', true),
         },
         {
           label: 'Disable Account',
           key: 'disableUser',
           disabled: row.status === Status.Disabled,
-          icon: () => h(SvgIcon, { icon: 'mdi:user-off-outline' }),
+          action: () => handleUpdateUserStatus(row._id, Status.Disabled, 'disable'),
+          icon: () => getIcon('mdi:user-off-outline'),
         },
         {
           label: 'Restore Account',
           key: 'restoreUser',
+          action: () => handleUpdateUserStatus(row._id, Status.Normal, 'restore'),
           disabled: row.status !== Status.Disabled,
-          icon: () => h(SvgIcon, { icon: 'mdi:account-check' }),
+          icon: () => getIcon('mdi:account-check'),
         },
         {
           label: 'Verify Account',
           key: 'verifyUser',
+          action: () => handleUpdateUserStatus(row._id, Status.Normal, 'verify'),
           show: row.status === Status.Unverified || row.status === Status.AdminVerify,
-          icon: () => h(SvgIcon, { icon: 'ri:verified-badge-line' }),
+          icon: () => getIcon('ri:verified-badge-line'),
         },
         {
           label: 'Disable 2FA',
-          key: 'disable2FA',
+          key: 'disable2FAUser',
+          action: () => handleUpdateUserStatus(row._id, Status.Normal, 'disable2FA'),
           disabled: !row.secretKey,
-          icon: () => h(SvgIcon, { icon: 'mdi:shield-off' }),
+          icon: () => getIcon('mdi:shield-off'),
         },
       ]
 
-      actions.push(h(
-        NButton, { size: 'small', type: 'primary', onClick: () => handleEditUser(row) },
-        {
+      const actions = [
+        h(NButton, { size: 'small', type: 'primary', onClick: () => handleEditUser(row) }, {
           default: () => [
-            h(SvgIcon, { icon: 'ri:edit-2-line' }),
+            getIcon('ri:edit-2-line'),
             h('span', { class: 'ml-1' }, 'Edit User'),
           ],
-        },
-      ))
-      // Check if row.message exists and wrap the NDropdown with NBadge
-      if (row.message) {
-        actions.push(h(
-          NBadge, { dot: true, processing: true }, {
-            default: () => h(
-              NDropdown, { trigger: 'hover', options: dropdownOptions, onSelect: key => handleDropdownSelect(key, row) },
-              {
-                default: () => h(
-                  NButton, { size: 'small', strong: true, secondary: true, type: 'default' },
-                  {
-                    default: () => [
-                      h(SvgIcon, { icon: 'mdi:chevron-down' }),
-                    ],
-                  }),
-              }),
-          }),
-        )
-      }
-      else {
-        actions.push(h(
-          NDropdown, { trigger: 'hover', options: dropdownOptions, onSelect: key => handleDropdownSelect(key, row) },
-          {
-            default: () => h(
-              NButton, { size: 'small', strong: true, secondary: true, type: 'default' },
-              {
-                default: () => [
-                  h(SvgIcon, { icon: 'mdi:chevron-down' }),
-                ],
-              },
-            ),
-          },
-        ))
-      }
+        }),
+        row.message
+          ? h(NBadge, { dot: true }, { default: () => h(NDropdown, { trigger: 'hover', options: dropdownOptions, onSelect: (key: string | number) => handleDropdownSelect(key, row, dropdownOptions) }, { default: () => h(NButton, { size: 'small', strong: true, secondary: true, type: 'default' }, { default: () => [getIcon('mdi:chevron-down')] }) }) })
+          : h(NDropdown, { trigger: 'hover', options: dropdownOptions, onSelect: (key: string | number) => handleDropdownSelect(key, row, dropdownOptions) }, { default: () => h(NButton, { size: 'small', strong: true, secondary: true, type: 'default' }, { default: () => [getIcon('mdi:chevron-down')] }) }),
+      ]
 
-      // Render all actions button through NSpace
-      return h(NSpace, {
-        align: 'center',
-        size: 'small',
-      }, {
-        default: () => actions,
-      })
+      return h(NSpace, { align: 'center', size: 'small' }, { default: () => actions })
     },
   },
 ]
@@ -276,69 +237,46 @@ async function handleGetUsers(page: number) {
   loading.value = false
 }
 
-async function handleUpdateUserStatus(userId: string, status: Status, action: string) {
-  if (status === Status.Disabled) {
-    if (action === 'disable') {
-      dialog.error({
-        title: ('Disable Account'),
-        content: ('Are you sure to disable this user account?'),
-        positiveText: ('Yes'),
-        negativeText: ('No'),
-        onPositiveClick: async () => {
-          await fetchUpdateUserStatus(userId, status)
-          ms.info('Account disabled')
-          await handleGetUsers(pagination.page)
-        },
-      })
-    }
+// Simplified handleUpdateUserStatus
+function actionDialogs(status: Status, action: string) {
+  const dialogOptions = {
+    disable: { title: 'Disable Account', content: 'Are you sure to disable this user account?' },
+    restore: { title: 'Restore Account', content: 'Are you sure to restore this user account?' },
+    verify: { title: 'Verify Account', content: 'Are you sure to verify this user account?' },
+    disable2FA: { title: 'Disable 2FA', content: 'Are you sure to disable 2FA for this user?' },
   }
-  else if (status === Status.Normal) {
-    if (action === 'restore') {
-      dialog.success({
-        title: ('Restore Account'),
-        content: ('Are you sure to restore this user account?'),
-        positiveText: ('Yes'),
-        negativeText: ('No'),
-        onPositiveClick: async () => {
-          await fetchUpdateUserStatus(userId, status)
-          ms.info('Account restored')
-          await handleGetUsers(pagination.page)
-        },
-      })
-    }
-    else if (action === 'verify') {
-      dialog.info({
-        title: ('Verify Account'),
-        content: ('Are you sure to verify this user account?'),
-        positiveText: ('Yes'),
-        negativeText: ('No'),
-        onPositiveClick: async () => {
-          await fetchUpdateUserStatus(userId, status)
-          ms.info('Account verified')
-          await handleGetUsers(pagination.page)
-        },
-      })
-    }
-  }
-  else {
-    await fetchUpdateUserStatus(userId, status)
-    ms.info('OK')
-    await handleGetUsers(pagination.page)
-  }
+  return dialogOptions[action as keyof typeof dialogOptions] || null
 }
 
-async function handleDisable2FA(userId: string) {
-  dialog.warning({
-    title: ('Disable 2FA'),
-    content: ('Are you sure to disable 2FA for this user?'),
-    positiveText: ('Yes'),
-    negativeText: ('No'),
+async function handleUpdateUserStatus(userId: string, status: Status, action: string) {
+  const options = actionDialogs(status, action)
+  if (!options)
+    return
+
+  dialog[status === Status.Disabled ? 'error' : 'success']({
+    ...options,
+    positiveText: 'Yes',
+    negativeText: 'No',
     onPositiveClick: async () => {
-      const result = await fetchDisableUser2FAByAdmin(userId)
-      ms.success(result.message as string)
-      await handleGetUsers(pagination.page)
+      try {
+        const result = action === 'disable2FA' ? await fetchDisableUser2FAByAdmin(userId) : await fetchUpdateUserStatus(userId, status)
+        if (result.status === 'Fail')
+          ms.error(result.message as string)
+        else
+          ms.info(result.message as string)
+      }
+      catch (error: any) {
+        ms.error(`Failed to ${action} for user: ${error.message}`)
+      }
+      await handleGetUsers(pagination.page) // Bug: after search query and update the user returns to the first page
     },
   })
+}
+
+function handleDropdownSelect(key: string | number, user: UserInfo, dropdownOptions: DropdownOption[]) {
+  const selectedOption = dropdownOptions.find((option: DropdownOption) => option.key === key)
+  if (selectedOption && typeof selectedOption.action === 'function')
+    selectedOption.action(user)
 }
 
 function handleNewUser() {
@@ -372,39 +310,6 @@ function handleEditUser(user: UserInfo) {
   show.value = true
 }
 
-function handleDropdownSelect(key: string | number, user: UserInfo) {
-  if (key === 'sendMessage') {
-    handleUserMessage(user)
-  }
-  else if (key === 'disableUser') {
-    if (typeof user._id === 'string')
-      handleUpdateUserStatus(user._id, Status.Disabled, 'disable')
-    else
-      ms.error('Cannot disable user without a valid ID')
-  }
-
-  else if (key === 'restoreUser') {
-    if (typeof user._id === 'string')
-      handleUpdateUserStatus(user._id, Status.Normal, 'restore')
-    else
-      ms.error('Cannot restore user without a valid ID')
-  }
-
-  else if (key === 'verifyUser') {
-    if (typeof user._id === 'string')
-      handleUpdateUserStatus(user._id, Status.Normal, 'verify')
-    else
-      ms.error('Cannot verify user without a valid ID')
-  }
-
-  else if (key === 'disable2FA') {
-    if (typeof user._id === 'string')
-      handleDisable2FA(user._id)
-    else
-      ms.error('Cannot disable 2FA without a valid ID')
-  }
-}
-
 function handleUserMessage(user: UserInfo) {
   userRef.value = user
   show2.value = true
@@ -421,7 +326,12 @@ async function handleUpdateUser() {
       userRef.value.remark = `Expires on ${formattedDate}`
     }
 
-    await fetchUpdateUser(userRef.value)
+    const result = await fetchUpdateUser(userRef.value)
+    if (result.status === 'Fail')
+      ms.error(result.message as string)
+    else
+      ms.success(result.message as string)
+
     await handleGetUsers(pagination.page)
     show.value = false
     show2.value = false

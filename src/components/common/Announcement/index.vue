@@ -12,9 +12,10 @@ const userMessage = ref<string>('')
 const lastShownDate = localStorage.getItem('lastShownDate')
 const lastShownMessage = localStorage.getItem('lastShownMessage')
 const currentDate = new Date().toISOString().slice(0, 10)
+const diffInDays = Math.ceil((new Date(currentDate).getTime() - (new Date(lastShownDate || 0).getTime())) / (1000 * 60 * 60 * 24))
 
 // For announcement
-function showNotification() {
+function showAnnouncement() {
   notification.create({
     title: announcementConfig.value?.announceHeader,
     // Render the content as a div with dark background. Reason(bug): conflicting with other css styles
@@ -41,8 +42,8 @@ function showMessage() {
 }
 
 async function fetchData() {
-  // Check if either message or notification has been shown today
-  if (lastShownDate !== currentDate || lastShownMessage !== currentDate) {
+  // Check if either announcement or notification has been shown
+  if (diffInDays >= 2 || lastShownMessage !== currentDate) {
     const response = await fetchUserAnnouncement<{
       userMessage: string
       announcementConfig: AnnouncementConfig
@@ -52,10 +53,10 @@ async function fetchData() {
       announcementConfig.value = response.data.announcementConfig
       userMessage.value = response.data.userMessage
 
-      if (lastShownDate !== currentDate && announcementConfig.value?.announceEnabled) {
+      if (diffInDays >= 2 && announcementConfig.value?.announceEnabled) {
         setTimeout(() => {
           localStorage.setItem('lastShownDate', currentDate)
-          showNotification()
+          showAnnouncement()
         }, 3000)
       }
 

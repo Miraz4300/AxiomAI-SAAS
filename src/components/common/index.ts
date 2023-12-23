@@ -5,5 +5,6 @@ import UserAvatar from './UserAvatar/index.vue'
 import UserRole from './UserRole/index.vue'
 import Setting from './Setting/index.vue'
 import MenuButton from './MenuButton/index.vue'
+import MobileMenuButton from './MenuButton/MobileMenuButton.vue'
 
-export { MenuButton, NaiveProvider, SvgIcon, ToolButton, UserAvatar, UserRole, Setting }
+export { MenuButton, MobileMenuButton, NaiveProvider, SvgIcon, ToolButton, UserAvatar, UserRole, Setting }

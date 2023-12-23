@@ -16,6 +16,7 @@ export interface AppState {
   merchEnabled?: boolean
   internetAccessEnabled?: boolean
   cognitiveDocsEnabled?: boolean
+  [key: string]: boolean | Theme | Language | string | undefined // TODO: This makes the interface less strict, which could potentially lead to bugs or unexpected behavior.
 }
 
 export function defaultSetting(): AppState {

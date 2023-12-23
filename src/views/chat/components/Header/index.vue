@@ -97,15 +97,15 @@ async function handleSaveData() {
 }
 
 function renderLabel(option: { value: string }) {
-  const icon = option.value.includes('gemini-pro') ? 'ri:google-fill' : 'ri:sparkling-line'
+  const icon = option.value.includes('gemini-pro') ? 'ri:google-fill' : 'ri:sparkling-2-fill'
   return h('div', { class: 'flex items-center gap-1.5' }, [
-    h(SvgIcon, { icon, class: 'align-middle' }),
-    h('span', { class: 'align-middle transform -translate-y-0.5' }, option.value),
+    h(SvgIcon, { icon }),
+    h('span', { class: 'transform -translate-y-0.5' }, option.value),
   ])
 }
 
 const modelIcon = computed(() => {
-  return userStore.userInfo.config.chatModel?.includes('gemini-pro') ? 'ri:google-fill' : 'ri:sparkling-line'
+  return userStore.userInfo.config.chatModel?.includes('gemini-pro') ? 'ri:google-fill' : 'ri:sparkling-2-fill'
 })
 
 const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))

@@ -3,7 +3,7 @@ import { computed, h } from 'vue'
 import { useRouter } from 'vue-router'
 import type { DropdownOption } from 'naive-ui'
 import { NDropdown, NLayoutFooter, NText } from 'naive-ui'
-import { MenuButton, MobileMenuButton, UserAvatar, UserRole } from '@/components/common'
+import { MenuButton, UserAvatar, UserRole } from '@/components/common'
 import { useIconRender } from '@/hooks/useIconRender'
 import { useAuthStore, useUserStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -116,8 +116,8 @@ async function handleDropdown(optionKey: string) {
   <div v-else>
     <NLayoutFooter class="bg-[var(--sbc)] dark:bg-[var(--sbc)]">
       <div v-if="!!authStore.token" class="grid py-2 border-t dark:border-t-neutral-800 select-none grid-cols-2">
-        <MobileMenuButton :title="$t('chat.chat')" icon="ri:message-3-line" route="/chat" />
-        <MobileMenuButton :title="$t('setting.setting')" icon="ri:settings-3-line" route="/user" />
+        <MenuButton :title="$t('chat.chat')" icon="ri:message-3-line" route="/chat" />
+        <MenuButton :title="$t('setting.setting')" icon="ri:settings-3-line" route="/user" />
       </div>
     </NLayoutFooter>
   </div>

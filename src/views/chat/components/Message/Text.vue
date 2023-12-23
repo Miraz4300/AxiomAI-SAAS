@@ -43,7 +43,6 @@ const wrapClass = computed(() => {
     'text-wrap',
     'min-w-[20px]',
     'rounded-md',
-    'animate-in fade-in zoom-in-50',
     isMobile.value ? 'p-2' : 'px-5 py-2',
     props.inversion ? 'bg-[var(--chat-box)]' : 'bg-[var(--rbc)]',
     props.inversion ? 'dark:bg-[var(--chat-box)]' : 'dark:bg-[var(--rbc)]',

@@ -359,7 +359,7 @@ onMounted(async () => {
             Add User
           </NButton>
           <div class="flex space-x-2">
-            <NInput v-model:value="searchQuery" placeholder="Search by email address" clearable />
+            <NInput v-model:value="searchQuery" placeholder="Search by email address" clearable @keypress="($event) => $event.key === 'Enter' && handleSearch()" />
             <NButton @click="handleSearch">
               <template #icon>
                 <SvgIcon icon="ri:search-line" />

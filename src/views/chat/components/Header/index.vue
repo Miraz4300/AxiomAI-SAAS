@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, defineAsyncComponent, ref } from 'vue'
+import { computed, defineAsyncComponent, h, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { NButton, NInput, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
 import { useAppStore, useAuthStore, useChatStore, useSettingStore, useUserStore } from '@/store'
@@ -96,6 +96,18 @@ async function handleSaveData() {
   updateSettings({ memory: memoryValue, persona: personaValue })
 }
 
+function renderLabel(option: { value: string }) {
+  const icon = option.value.includes('gemini-pro') ? 'ri:google-fill' : 'ri:sparkling-2-fill'
+  return h('div', { class: 'flex items-center gap-1.5' }, [
+    h(SvgIcon, { icon }),
+    h('span', { class: 'transform -translate-y-0.5' }, option.value),
+  ])
+}
+
+const modelIcon = computed(() => {
+  return userStore.userInfo.config.chatModel?.includes('gemini-pro') ? 'ri:google-fill' : 'ri:sparkling-2-fill'
+})
+
 const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
 </script>
 
@@ -123,8 +135,8 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
       </div>
     </div>
     <div v-if="!!authStore.token && isChatGPTAPI" class="absolute z-20 left-1/2 top-full -translate-x-1/2 cursor-pointer select-none px-4 rounded-b-md border border-neutral-300 dark:border-neutral-700 bg-[var(--pbc)] dark:bg-[var(--pbc)]" @click="show = true">
-      <span class="flex items-center space-x-2 hover:text-[var(--primary-color-hover)]">
-        <SvgIcon icon="ri:sparkling-line" />
+      <span class="flex items-center gap-1.5 hover:text-[var(--primary-color-hover)]">
+        <SvgIcon :icon="modelIcon" />
         <span>{{ userStore.userInfo.config.chatModel }}</span>
         <SvgIcon icon="ri:arrow-down-s-line" />
       </span>
@@ -156,6 +168,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
             :value="userStore.userInfo.config.chatModel"
             :options="authStore.session?.chatModels"
             :disabled="!!authStore.session?.auth && !authStore.token"
+            :render-label="renderLabel"
             @update-value="(val) => handleSyncChatModel(val)"
           />
         </div>

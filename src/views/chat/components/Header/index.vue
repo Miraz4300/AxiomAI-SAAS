@@ -100,7 +100,7 @@ function renderLabel(option: { value: string }) {
   const icon = option.value.includes('gemini-pro') ? 'ri:google-fill' : 'ri:sparkling-fill'
   return h('div', { class: 'flex items-center gap-2' }, [
     h(SvgIcon, { icon }),
-    h('span', { class: 'transform -translate-y-0.5' }, option.value),
+    h('span', { class: 'mb-0.5' }, option.value),
   ])
 }
 

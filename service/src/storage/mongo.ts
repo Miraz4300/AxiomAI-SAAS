@@ -261,7 +261,7 @@ export async function getDashboardData() {
     userCol.countDocuments({ roles: { $in: subscriptionRoles } }), // Get the number of subscribed users
     userCol.countDocuments({ roles: UserRole.Premium }), // Get the number of premium users
     userCol.find({}).project({ _id: 0, email: 1, createTime: 1, status: 1 }).toArray(), // Get the 05 newest users with email, createTime and status
-    userCol.find({ roles: { $in: subscriptionRoles } }).project({ _id: 0, email: 1, roles: 1 }).toArray(), // Get the subscribed users
+    userCol.find({ roles: { $in: subscriptionRoles } }).project({ _id: 0, email: 1, roles: 1, remark: 1 }).toArray(), // Get the subscribed users
   ])
 
   const newUsers = users.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime()).slice(0, 5) // Get the 05 newest users

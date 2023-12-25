@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { onMounted, ref, watch, watchEffect } from 'vue'
+import { computed } from 'vue'
 import { NCard, NLayout, NLayoutContent, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import Dashboard from './Dashboard.vue'
@@ -18,9 +18,13 @@ import { useAuthStore, useUserStore } from '@/store'
 
 const authStore = useAuthStore()
 const userStore = useUserStore()
-const active = ref('Config')
 const route = useRoute()
 const router = useRouter()
+
+const active = computed({
+  get: () => String(route.query.id ?? 'dashboard'),
+  set: value => router.push({ query: { ...route.query, id: value } }),
+})
 
 function handleLogout() {
   window.$dialog?.error({
@@ -33,21 +37,6 @@ function handleLogout() {
     },
   })
 }
-
-onMounted(() => {
-  const id = route.query.id
-  active.value = id ? id as string : 'dashboard'
-  if (!id)
-    router.replace({ query: { id: active.value } })
-})
-watchEffect(() => {
-  const id = route.query.id
-  if (id)
-    active.value = id as string
-})
-watch(active, (newTab) => {
-  router.push({ query: { id: newTab } })
-})
 </script>
 
 <template>

@@ -24,7 +24,7 @@ const userInfo = computed(() => userStore.userInfo)
 const Role = userInfo.value.roles[0]
 
 function goSub() {
-  router.push('/user?id=subscription')
+  router.push('/settings?id=subscription')
 }
 
 function TagType(role: UserRole) {

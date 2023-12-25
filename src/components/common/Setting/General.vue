@@ -95,7 +95,7 @@ const divClass = 'flex items-center space-x-4'
         <div class="flex-1">
           <NInput :placeholder="email" disabled />
         </div>
-        <p class="cursor-pointer text-xs text-black/60 dark:text-white/50 hover:text-[var(--primary-color-hover)] hover:dark:text-[var(--primary-color-hover)] text-right" @click="router.replace('/user?id=password')">
+        <p class="cursor-pointer text-xs text-black/60 dark:text-white/50 hover:text-[var(--primary-color-hover)] hover:dark:text-[var(--primary-color-hover)] text-right" @click="router.replace('/settings?id=password')">
           Need to change password? click here.
         </p>
       </div>

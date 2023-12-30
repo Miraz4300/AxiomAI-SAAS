@@ -117,7 +117,7 @@ async function handleDropdown(optionKey: string) {
     <NLayoutFooter class="bg-[var(--sbc)] dark:bg-[var(--sbc)]">
       <div v-if="!!authStore.token" class="grid py-2 border-t dark:border-t-neutral-800 select-none grid-cols-2">
         <MenuButton :title="$t('chat.chat')" icon="ri:message-3-line" route="/chat" />
-        <MenuButton :title="$t('setting.setting')" icon="ri:settings-3-line" route="/user" />
+        <MenuButton :title="$t('setting.setting')" icon="ri:settings-3-line" route="/settings" />
       </div>
     </NLayoutFooter>
   </div>

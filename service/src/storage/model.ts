@@ -44,6 +44,7 @@ export class UserInfo {
   remark?: string
   secretKey?: string // 2FA secret key
   message?: string // Notification message
+  advanced?: AdvancedConfig // Advanced config for max context length
   constructor(email: string, password: string) {
     this.name = email
     this.email = email
@@ -172,6 +173,7 @@ export class Config {
     public featuresConfig?: FeaturesConfig,
     public mailConfig?: MailConfig,
     public auditConfig?: AuditConfig,
+    public advancedConfig?: AdvancedConfig,
   ) { }
 }
 
@@ -262,6 +264,13 @@ export class AuditConfig {
     public textType: TextAudioType,
     public customizeEnabled: boolean,
     public sensitiveWords: string,
+  ) { }
+}
+
+export class AdvancedConfig {
+  constructor(
+    public persona: string,
+    public memory: number,
   ) { }
 }
 

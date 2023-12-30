@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
 import type { TextAuditServiceProvider } from 'src/utils/textAudit'
 import { isNotEmptyString, isTextAuditServiceProvider } from '../utils/is'
-import { AnnouncementConfig, AuditConfig, Config, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, SubscriptionConfig, TextAudioType, UserRole } from './model'
+import { AdvancedConfig, AnnouncementConfig, AuditConfig, Config, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, SubscriptionConfig, TextAudioType, UserRole } from './model'
 import { getConfig, getKeys, upsertKey } from './mongo'
 
 dotenv.config()
@@ -87,6 +87,14 @@ export async function getOriginConfig() {
       '',
     )
   }
+
+  if (!config.advancedConfig) {
+    config.advancedConfig = new AdvancedConfig(
+      'balanced',
+      5,
+    )
+  }
+
   if (!isNotEmptyString(config.siteConfig.chatModels))
     config.siteConfig.chatModels = 'gpt-3.5-turbo,gpt-3.5-turbo-0613,gpt-3.5-turbo-1106,gpt-3.5-turbo-16k,gpt-3.5-turbo-16k-0613,gpt-4,gpt-4-0613,gpt-4-32k,gpt-4-32k-0613,gpt-4-1106-preview,gpt-4-vision-preview'
 

@@ -1,7 +1,8 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { get, post } from '@/utils/request'
 import type { AnnouncementConfig, AuditConfig, ConfigState, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, Status, SubscriptionConfig, UserInfo, UserPassword } from '@/components/admin/model'
-import { useAppStore, useAuthStore, useSettingStore } from '@/store'
+import { useAppStore, useAuthStore, useUserStore } from '@/store'
+import type { SettingsState } from '@/store/modules/user/helper'
 
 export function fetchChatConfig<T = any>() {
   return post<T>({
@@ -19,7 +20,7 @@ export function fetchChatAPIProcess<T = any>(
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
 ) {
-  const settingStore = useSettingStore()
+  const userStore = useUserStore()
   const authStore = useAuthStore()
   const appStore = useAppStore()
 
@@ -34,8 +35,8 @@ export function fetchChatAPIProcess<T = any>(
   if (authStore.isChatGPTAPI) {
     data = {
       ...data,
-      memory: settingStore.memory,
-      persona: settingStore.persona,
+      memory: userStore.userInfo.advanced.memory,
+      persona: userStore.userInfo.advanced.persona,
       language: appStore.language,
     }
   }
@@ -287,6 +288,20 @@ export function fetchTestAudit<T = any>(text: string, audit: AuditConfig) {
   })
 }
 
+export function fetchUpdateAdvanced<T = any>(sync: boolean, advanced: SettingsState) {
+  const data = { sync, ...advanced }
+  return post<T>({
+    url: '/setting-advanced',
+    data,
+  })
+}
+
+export function fetchResetAdvanced<T = any>() {
+  return post<T>({
+    url: '/setting-reset-advanced',
+  })
+}
+
 export function fetchUpdateSite<T = any>(config: SiteConfig) {
   return post<T>({
     url: '/setting-site',
@@ -340,10 +355,10 @@ export function fetchUpdateBaseSetting<T = any>(config: ConfigState) {
   })
 }
 
-export function fetchUserStatistics<T = any>(start: number, end: number) {
+export function fetchUserStatistics<T = any>(userId: string, start: number, end: number) {
   return post<T>({
     url: '/statistics/by-day',
-    data: { start, end },
+    data: { userId, start, end },
   })
 }
 

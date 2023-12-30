@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, defineAsyncComponent, onMounted, ref, watch, watchEffect } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { NCard, NLayout, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
@@ -22,21 +22,9 @@ const speechStore = useSpeechStore()
 
 const route = useRoute()
 const router = useRouter()
-const active = ref('general')
-
-onMounted(() => {
-  const id = route.query.id
-  active.value = id ? id as string : 'general'
-  if (!id)
-    router.replace({ query: { id: active.value } })
-})
-watchEffect(() => {
-  const id = route.query.id
-  if (id)
-    active.value = id as string
-})
-watch(active, (newTab) => {
-  router.push({ query: { id: newTab } })
+const active = computed({
+  get: () => String(route.query.id ?? 'general'),
+  set: value => router.push({ query: { ...route.query, id: value } }),
 })
 
 const Merch = defineAsyncComponent(() => import('./Merch.vue'))

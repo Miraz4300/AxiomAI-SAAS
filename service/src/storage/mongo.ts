@@ -3,8 +3,9 @@ import { MongoClient, ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
 import dayjs from 'dayjs'
 import { md5 } from '../utils/security'
+import type { AdvancedConfig, ChatOptions, Config, KeyConfig, UsageResponse } from './model'
 import { ChatInfo, ChatRoom, ChatUsage, Status, UserConfig, UserInfo, UserRole } from './model'
-import type { ChatOptions, Config, KeyConfig, UsageResponse } from './model'
+import { getCacheConfig } from './config'
 
 dotenv.config()
 
@@ -223,6 +224,11 @@ export async function updateUserChatModel(userId: string, chatModel: string) {
     , { $set: { 'config.chatModel': chatModel } })
 }
 
+export async function updateUserAdvancedConfig(userId: string, config: AdvancedConfig) {
+  return userCol.updateOne({ _id: new ObjectId(userId) }
+    , { $set: { advanced: config } })
+}
+
 export async function updateUser2FA(userId: string, secretKey: string) {
   return userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { secretKey, updateTime: new Date().toLocaleString() } })
@@ -246,7 +252,7 @@ export async function updateUserPasswordWithVerifyOld(userId: string, oldPasswor
 export async function getUser(email: string): Promise<UserInfo> {
   email = email.toLowerCase()
   const userInfo = await userCol.findOne({ email }) as UserInfo
-  initUserInfo(userInfo)
+  await initUserInfo(userInfo)
   return userInfo
 }
 
@@ -261,7 +267,7 @@ export async function getDashboardData() {
     userCol.countDocuments({ roles: { $in: subscriptionRoles } }), // Get the number of subscribed users
     userCol.countDocuments({ roles: UserRole.Premium }), // Get the number of premium users
     userCol.find({}).project({ _id: 0, email: 1, createTime: 1, status: 1 }).toArray(), // Get the 05 newest users with email, createTime and status
-    userCol.find({ roles: { $in: subscriptionRoles } }).project({ _id: 0, email: 1, roles: 1 }).toArray(), // Get the subscribed users
+    userCol.find({ roles: { $in: subscriptionRoles } }).project({ _id: 0, email: 1, roles: 1, remark: 1 }).toArray(), // Get the subscribed users
   ])
 
   const newUsers = users.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime()).slice(0, 5) // Get the 05 newest users
@@ -288,11 +294,11 @@ export async function getUsers(page: number, size: number, searchQuery?: string)
 
 export async function getUserById(userId: string): Promise<UserInfo> {
   const userInfo = await userCol.findOne({ _id: new ObjectId(userId) }) as UserInfo
-  initUserInfo(userInfo)
+  await initUserInfo(userInfo)
   return userInfo
 }
 
-function initUserInfo(userInfo: UserInfo) {
+async function initUserInfo(userInfo: UserInfo) {
   if (userInfo == null)
     return
   if (userInfo.config == null)
@@ -300,10 +306,13 @@ function initUserInfo(userInfo: UserInfo) {
   if (userInfo.config.chatModel == null)
     userInfo.config.chatModel = 'gpt-3.5-turbo'
   if (userInfo.roles == null || userInfo.roles.length <= 0) {
-    userInfo.roles = [UserRole.Free]
+    userInfo.roles = []
     if (process.env.ROOT_USER === userInfo.email.toLowerCase())
       userInfo.roles.push(UserRole.Admin)
+    userInfo.roles.push(UserRole.Free)
   }
+  if (!userInfo.advanced)
+    userInfo.advanced = (await getCacheConfig()).advancedConfig
 }
 
 export async function verifyUser(email: string, status: Status) {

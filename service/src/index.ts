@@ -14,7 +14,7 @@ import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords,
 import { auth, getUserId } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AnnouncementConfig, AuditConfig, ChatInfo, ChatOptions, Config, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, SubscriptionConfig, UserConfig, UserInfo } from './storage/model'
-import { Status, UsageResponse, UserRole } from './storage/model'
+import { AdvancedConfig, Status, UsageResponse, UserRole } from './storage/model'
 import { authErrorType, authInfoType } from './storage/authEnum'
 import {
   clearChat,
@@ -45,6 +45,7 @@ import {
   updateRoomUsingContext,
   updateUser,
   updateUser2FA,
+  updateUserAdvancedConfig,
   updateUserChatModel,
   updateUserInfo,
   updateUserPassword,
@@ -57,7 +58,7 @@ import { authLimiter, limiter } from './middleware/limiter'
 import { hasAnyRole, isEmail, isNotEmptyString } from './utils/is'
 import { sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
 import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
-import { rootAuth } from './middleware/rootAuth'
+import { isAdmin, rootAuth } from './middleware/rootAuth'
 
 dotenv.config()
 
@@ -402,7 +403,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
     const user = await getUserById(userId)
     if (config.auditConfig.enabled || config.auditConfig.customizeEnabled) {
       if (!user.roles.includes(UserRole.Admin) && await containsSensitiveWords(config.auditConfig, prompt)) {
-        res.send({ status: 'Fail', message: '**⚠️ Contains sensitive words.**', data: null })
+        res.send({ status: 'Fail', message: '**❌ Contains sensitive words.**', data: null })
         return
       }
     }
@@ -582,8 +583,7 @@ router.post('/oauth3', rootAuth, async (req, res) => {
   try {
     const userId = req.headers.userId.toString()
 
-    const user = await getUserById(userId)
-    if (user == null || user.status !== Status.Normal || !user.roles.includes(UserRole.Admin))
+    if (!isAdmin(userId))
       throw new Error('⚠️ No permission')
 
     const response = await chatConfig()
@@ -623,7 +623,7 @@ router.post('/session', async (req, res) => {
       }
     })
 
-    let userInfo: { email: string; name: string; description: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig }
+    let userInfo: { email: string; name: string; description: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig; advanced: AdvancedConfig }
     if (userId != null) {
       const user = await getUserById(userId)
       userInfo = {
@@ -635,6 +635,7 @@ router.post('/session', async (req, res) => {
         root: user.roles.includes(UserRole.Admin),
         roles: user.roles,
         config: user.config,
+        advanced: user.advanced,
       }
       const keys = (await getCacheApiKeys()).filter(d => hasAnyRole(d.userRoles, user.roles))
 
@@ -1233,6 +1234,49 @@ router.post('/audit-test', rootAuth, async (req, res) => {
   }
 })
 
+router.post('/setting-advanced', auth, async (req, res) => {
+  try {
+    const config = req.body as {
+      persona: string
+      maxContextCount: number
+      sync: boolean
+    }
+    if (config.sync) {
+      if (!isAdmin(req.headers.userId as string)) {
+        res.send({ status: 'Fail', message: '⚠️ No permission', data: null })
+        return
+      }
+      const thisConfig = await getOriginConfig()
+      thisConfig.advancedConfig = new AdvancedConfig(
+        config.persona,
+        config.maxContextCount,
+      )
+      await updateConfig(thisConfig)
+      clearConfigCache()
+    }
+    const userId = req.headers.userId.toString()
+    await updateUserAdvancedConfig(userId, new AdvancedConfig(
+      config.persona,
+      config.maxContextCount,
+    ))
+    res.send({ status: 'Success', message: 'Successfully saved' })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
+router.post('/setting-reset-advanced', auth, async (req, res) => {
+  try {
+    const userId = req.headers.userId.toString()
+    await updateUserAdvancedConfig(userId, null)
+    res.send({ status: 'Success', message: 'Successfully reset!' })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  }
+})
+
 router.get('/setting-keys', rootAuth, async (req, res) => {
   try {
     const result = await getApiKeys()
@@ -1271,8 +1315,11 @@ router.post('/setting-key-upsert', rootAuth, async (req, res) => {
 
 router.post('/statistics/by-day', auth, async (req, res) => {
   try {
-    const userId = req.headers.userId
-    const { start, end } = req.body as { start: number; end: number }
+    let { userId, start, end } = req.body as { userId?: string; start: number; end: number }
+    if (!userId)
+      userId = req.headers.userId as string
+    else if (!isAdmin(req.headers.userId as string))
+      throw new Error('⚠️ No permission')
 
     const data = await getUserStatisticsByDay(new ObjectId(userId as string), start, end)
     res.send({ status: 'Success', message: '', data })

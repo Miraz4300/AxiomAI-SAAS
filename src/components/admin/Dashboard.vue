@@ -110,6 +110,7 @@ onMounted(async () => {
             :columns="[
               { title: 'Email', key: 'email' },
               { title: 'Roles', key: 'roles', render: renderRoles },
+              { title: 'Remarks', key: 'remark' },
             ]"
             :max-height="300"
           />

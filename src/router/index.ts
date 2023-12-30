@@ -53,8 +53,8 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAdmin: true },
   },
   {
-    path: '/user',
-    name: 'User',
+    path: '/settings',
+    name: 'Settings',
     component: () => import('@/components/common/Setting/index.vue'),
     meta: { requiresAuth: true },
   },

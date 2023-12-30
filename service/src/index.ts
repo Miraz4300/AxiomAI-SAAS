@@ -1238,7 +1238,7 @@ router.post('/setting-advanced', auth, async (req, res) => {
   try {
     const config = req.body as {
       persona: string
-      maxContextCount: number
+      memory: number
       sync: boolean
     }
     if (config.sync) {
@@ -1249,7 +1249,7 @@ router.post('/setting-advanced', auth, async (req, res) => {
       const thisConfig = await getOriginConfig()
       thisConfig.advancedConfig = new AdvancedConfig(
         config.persona,
-        config.maxContextCount,
+        config.memory,
       )
       await updateConfig(thisConfig)
       clearConfigCache()
@@ -1257,7 +1257,7 @@ router.post('/setting-advanced', auth, async (req, res) => {
     const userId = req.headers.userId.toString()
     await updateUserAdvancedConfig(userId, new AdvancedConfig(
       config.persona,
-      config.maxContextCount,
+      config.memory,
     ))
     res.send({ status: 'Success', message: 'Successfully saved' })
   }

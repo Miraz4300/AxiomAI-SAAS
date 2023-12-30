@@ -28,19 +28,24 @@ const ErrorCodeMessage: Record<string, string> = {
 let auditService: TextAuditService
 const _lockedKeys: { key: string; lockedTime: number }[] = []
 
-export async function initApi(key: KeyConfig, chatModel: string) {
+export async function initApi(key: KeyConfig, chatModel: string, maxContextCount: number) {
   const config = await getCacheConfig()
   const model = chatModel as string
 
   if (key.keyModel === 'ChatGPTAPI') {
     const OPENAI_API_BASE_URL = config.apiBaseUrl
 
+    let contextCount = 0
     const options: ChatGPTAPIOptions = {
       apiKey: key.key,
       completionParams: { model },
       debug: !config.apiDisableDebug,
       messageStore: undefined,
-      getMessageById,
+      getMessageById: async (id) => {
+        if (contextCount++ >= maxContextCount)
+          return null
+        return await getMessageById(id)
+      },
     }
 
     // Set the token limits based on the model's type. This is because different models have different token limits.
@@ -97,11 +102,19 @@ export async function initApi(key: KeyConfig, chatModel: string) {
     return new ChatGPTUnofficialProxyAPI({ ...options })
   }
 }
+
 const processThreads: { userId: string; abort: AbortController; messageId: string }[] = []
+
 async function chatReplyProcess(options: RequestOptions) {
   const model = options.user.config.chatModel
   const key = await getRandomApiKey(options.user, options.user.config.chatModel, options.room.accountId)
   const userId = options.user._id.toString()
+
+  // Memory to context count map
+  const memory = options.user.advanced.memory ?? 5
+  const memoryToContextCountMap = { 5: 5, 50: 10, 95: 20 }
+  const maxContextCount = memoryToContextCountMap[memory] || 5
+
   const messageId = options.messageId
   if (key == null || key === undefined)
     throw new Error('No available configuration. Please try again.')
@@ -135,7 +148,7 @@ async function chatReplyProcess(options: RequestOptions) {
       else
         options = { ...lastContext }
     }
-    const api = await initApi(key, model)
+    const api = await initApi(key, model, maxContextCount)
 
     const abort = new AbortController()
     options.abortSignal = abort.signal

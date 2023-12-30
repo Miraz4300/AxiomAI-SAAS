@@ -2,8 +2,7 @@
 import { computed, defineAsyncComponent, h, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { NButton, NInput, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
-import { useAppStore, useAuthStore, useChatStore, useSettingStore, useUserStore } from '@/store'
-import type { SettingsState } from '@/store/modules/settings/helper'
+import { useAppStore, useAuthStore, useChatStore, useUserStore } from '@/store'
 import { fetchUpdateChatRoomPrompt, fetchUpdateUserChatModel } from '@/api'
 import { UserConfig } from '@/components/admin/model'
 import { SvgIcon, ToolButton } from '@/components/common'
@@ -17,7 +16,6 @@ const route = useRoute()
 const appStore = useAppStore()
 const authStore = useAuthStore()
 const chatStore = useChatStore()
-const settingStore = useSettingStore()
 const userStore = useUserStore()
 
 const { isMobile } = useBasicLayout()
@@ -54,17 +52,17 @@ function handleUpdateCollapsed() {
   appStore.setSiderCollapsed(!collapsed.value)
 }
 
-const memory = ref(settingStore.memory ?? 1)
+const memory = ref(userStore.userInfo.advanced.memory ?? 5)
 const marks = {
-  1: t('setting.memory1'),
+  5: t('setting.memory1'),
   50: t('setting.memory2'),
-  99: t('setting.memory3'),
+  95: t('setting.memory3'),
 }
-const persona = ref(settingStore.persona ?? 'balanced')
+const persona = ref(userStore.userInfo.advanced.persona ?? 'balanced')
 const personas = { precise: t('setting.persona1'), balanced: t('setting.persona2'), creative: t('setting.persona3') }
 
-function updateSettings(options: Partial<SettingsState>) {
-  settingStore.updateSetting(options)
+function updateSettings(sync: boolean) {
+  userStore.updateSetting(sync)
 }
 
 async function handleSyncChatModel(chatModel: string) {
@@ -90,10 +88,11 @@ async function handleSaveData() {
   testing.value = false
   show.value = false
 
-  const memoryValue = memory.value
-  const personaValue = persona.value
+  // Update memory and persona values
+  userStore.userInfo.advanced.memory = memory.value
+  userStore.userInfo.advanced.persona = persona.value
 
-  updateSettings({ memory: memoryValue, persona: personaValue })
+  updateSettings(false)
 }
 
 function renderLabel(option: { value: string }) {

@@ -266,7 +266,7 @@ onMounted(async () => {
         <div class="flex-1">
           <NInput
             v-model:value="keyConfig.baseUrl"
-            style="width: 100%" placeholder="if empty default base url is used from system setting"
+            style="width: 100%" placeholder="If empty, default base url will be used from system setting"
           />
         </div>
       </div>

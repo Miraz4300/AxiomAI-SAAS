@@ -712,7 +712,7 @@ router.post('/user-login', authLimiter, async (req, res) => {
           token,
         })
         if (!verified)
-          throw new Error('Two-step verification code error')
+          throw new Error('Your passcode doesn\'t match our records. Please try again.')
       }
       else {
         res.send({ status: 'Success', message: 'Two-step verification required', data: { need2FA: true } })

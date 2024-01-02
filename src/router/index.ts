@@ -40,6 +40,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/login/index.vue'),
       },
       {
+        path: '/auth/login/security',
+        name: 'MfaLogin',
+        component: () => import('@/views/login/components/MfaLogin.vue'),
+      },
+      {
         path: '/auth/service',
         name: 'Exception',
         component: () => import('@/views/exception/authException/index.vue'),

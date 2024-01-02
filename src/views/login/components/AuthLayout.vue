@@ -8,11 +8,9 @@ import TOS from './TOS.vue'
       <div class="relative flex w-full grow flex-col items-center justify-center">
         <div class="flex gap-4 items-center select-none">
           <div class="bg-brand-logo bg-contain w-[105px] h-[105px]" draggable="false" />
-          <p class="flex font-logo text-black dark:text-white font-semibold antialiased text-6xl text-center">
-            <span class="flex py-2 items-center flex-col">
-              AxiomAI
-              <span class="font-light text-sm typewriter">powered by GPT</span>
-            </span>
+          <p class="flex flex-col font-logo text-black dark:text-white font-semibold antialiased text-center">
+            <a class="text-6xl">AxiomAI</a>
+            <a class="font-light text-sm typewriter">powered by GPT</a>
           </p>
         </div>
       </div>

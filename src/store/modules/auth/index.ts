@@ -27,12 +27,14 @@ interface SessionResponse {
 export interface AuthState {
   token: string | undefined
   session: SessionResponse | null
+  tuc: { username: string; password: string } | null // temp user credentials
 }
 
 export const useAuthStore = defineStore('auth-store', {
   state: (): AuthState => ({
     token: getToken(),
     session: null,
+    tuc: null,
   }),
 
   getters: {
@@ -79,6 +81,14 @@ export const useAuthStore = defineStore('auth-store', {
       const chatStore = useChatStore()
       await chatStore.clearLocalChat()
       removeToken()
+    },
+
+    setTempCredentials(username: string, password: string) {
+      this.tuc = { username, password }
+    },
+
+    clearTempCredentials() {
+      this.tuc = null
     },
   },
 })

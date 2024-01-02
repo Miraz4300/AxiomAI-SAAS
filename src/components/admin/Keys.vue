@@ -20,15 +20,21 @@ const columns = [
     title: 'API Key',
     key: 'key',
     resizable: true,
-    width: 200,
-    minWidth: 100,
-    maxWidth: 200,
+    width: 120,
+    minWidth: 50,
+    maxWidth: 120,
     ellipsis: true,
   },
   {
     title: 'Endpoint',
     key: 'keyModel',
-    width: 190,
+    width: 150,
+  },
+  {
+    title: 'Base URL',
+    key: 'baseUrl',
+    width: 170,
+    ellipsis: true,
   },
   {
     title: 'Models',
@@ -81,7 +87,7 @@ const columns = [
   {
     title: 'Remark',
     key: 'remark',
-    width: 220,
+    width: 200,
   },
   {
     title: 'Actions',
@@ -252,6 +258,15 @@ onMounted(async () => {
           <NInput
             v-model:value="keyConfig.key" type="textarea"
             :autosize="{ minRows: 3, maxRows: 4 }" placeholder=""
+          />
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">Base URL</span>
+        <div class="flex-1">
+          <NInput
+            v-model:value="keyConfig.baseUrl"
+            style="width: 100%" placeholder="If empty, default base url will be used from system setting"
           />
         </div>
       </div>

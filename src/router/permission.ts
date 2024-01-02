@@ -13,6 +13,10 @@ export function setupPageGuard(router: Router) {
     if (to.path === '/auth/login' && authStore.token)
       return next({ name: 'Chat' })
 
+    // If the user tries to access the 2FA/MFA page without temporary credentials, redirect them to the auth page.
+    if (to.path === '/auth/login/security' && !authStore.tuc)
+      return next({ name: 'Auth' })
+
     if (!to.meta.requiresAuth && !to.meta.requiresAdmin)
       return next()
 

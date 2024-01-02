@@ -1,7 +1,6 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NDivider, NInput, NSpin, NStep, NSteps, useMessage } from 'naive-ui'
-import QrcodeVue from 'qrcode.vue'
+import { NButton, NDivider, NInput, NQrCode, NSpin, NStep, NSteps, useMessage } from 'naive-ui'
 import type { TwoFAConfig } from '@/components/admin/model'
 import { fetchDisableUser2FA, fetchGetUser2FA, fetchVerifyUser2FA } from '@/api'
 
@@ -105,8 +104,8 @@ onMounted(() => {
                 title="Configure to generate verification code"
               >
                 Open the Authenticator App and click "Scan QR Code" to scan the QR code.
-                <br><br>
-                <QrcodeVue :value="config?.otpauthUrl" :size="150" level="H" class="p-1 rounded-md border-2 border-black dark:border-gray-700" />
+                <br>
+                <NQrCode :value="config?.otpauthUrl" :size="145" error-correction-level="H" :padding="10" class="mt-2 mb-2" />
                 <br>Note: Authenticator can't scan the verification code? Manually add the following account information:<br> Account: <a class="font-bold">{{ config?.userName }}</a><br> Key: <a class="font-bold">{{ config?.secretKey }}</a>
               </NStep>
               <NStep
@@ -129,7 +128,7 @@ onMounted(() => {
                     </NButton>
                   </div>
                 </div>
-                <br>FAQ: How do I turn off two-step verification?<br>1. After logging in, go to settings > 2FA and enter the 6-digit verification code.<br>2. Contact at <a href="mailto:support@axiomaibd.com" class="text-[var(--primary-color)]">support@axiomaibd.com</a> to disable two-step verification.
+                <br>FAQ: How do I turn off two-step verification?<br>1. After logging in, go to settings > 2FA and enter the 6-digit verification code.<br>2. Contact us at <a href="mailto:support@axiomaibd.com" class="text-[var(--primary-color)]">support@axiomaibd.com</a> to disable two-step verification.
               </NStep>
             </NSteps>
           </div>

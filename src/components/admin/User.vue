@@ -2,6 +2,7 @@
 import { h, onMounted, reactive, ref } from 'vue'
 import type { DropdownOption } from 'naive-ui'
 import { NAlert, NAvatar, NBadge, NButton, NDataTable, NDropdown, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
+import { format } from 'date-fns'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
 import { fetchDisableUser2FAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
 import { SvgIcon } from '@/components/common'
@@ -44,6 +45,9 @@ const columns = [
     width: 170,
     minWidth: 90,
     maxWidth: 170,
+    render(row: any) {
+      return format(new Date(row.createTime), 'dd-MMM-yyyy, hh:mm:ss a')
+    },
   },
   {
     title: 'Verification Time',
@@ -51,6 +55,9 @@ const columns = [
     width: 170,
     minWidth: 90,
     maxWidth: 170,
+    render(row: any) {
+      return format(new Date(row.verifyTime), 'dd-MMM-yyyy, hh:mm:ss a')
+    },
   },
   {
     title: 'Roles',

@@ -9,7 +9,7 @@ npm install -g ts-node
 Then you can run migration file using ts-node:
 
 ```bash
-ts-node migrationDB.ts
+ts-node migrateDB.ts
 ```
 
 For any difficulties with migration, please refer to these changes on tsconfig.json:
@@ -35,5 +35,5 @@ pip install pymongo bson python-dateutil
 Then you can run migration file using python:
 
 ```bash
-python migrationDB.py
+python migrateDB.py
 ```

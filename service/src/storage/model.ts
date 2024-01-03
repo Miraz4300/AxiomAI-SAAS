@@ -34,11 +34,11 @@ export class UserInfo {
   email: string
   password: string
   status: Status
-  createTime: string
-  verifyTime?: string
+  createTime: Date
+  verifyTime?: Date
   avatar?: string
   description?: string
-  updateTime?: string
+  updateTime?: Date
   config?: UserConfig
   roles?: UserRole[]
   remark?: string
@@ -50,9 +50,9 @@ export class UserInfo {
     this.email = email
     this.password = password
     this.status = Status.Unverified
-    this.createTime = new Date().toLocaleString()
+    this.createTime = new Date()
     this.verifyTime = null
-    this.updateTime = new Date().toLocaleString()
+    this.updateTime = new Date()
     this.roles = [UserRole.Free]
     this.remark = null
   }

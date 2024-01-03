@@ -264,13 +264,13 @@ export async function getDashboardData() {
   const [result] = await userCol.aggregate([
     {
       $facet: {
-        total: [{ $count: 'total' }],
-        normal: [{ $match: { status: Status.Normal } }, { $count: 'normal' }],
-        disabled: [{ $match: { status: Status.Disabled } }, { $count: 'disabled' }],
-        subscribed: [{ $match: { roles: { $in: subscriptionRoles } } }, { $count: 'subscribed' }],
-        premium: [{ $match: { roles: UserRole.Premium } }, { $count: 'premium' }],
-        users: [{ $project: { _id: 0, email: 1, createTime: 1, status: 1 } }, { $sort: { createTime: -1 } }, { $limit: 5 }],
-        subscribedUsers: [{ $match: { roles: { $in: subscriptionRoles } } }, { $project: { _id: 0, email: 1, roles: 1, remark: 1 } }],
+        total: [{ $count: 'total' }], // Get the total number of users
+        normal: [{ $match: { status: Status.Normal } }, { $count: 'normal' }], // Get the number of normal users
+        disabled: [{ $match: { status: Status.Disabled } }, { $count: 'disabled' }], // Get the number of disabled users
+        subscribed: [{ $match: { roles: { $in: subscriptionRoles } } }, { $count: 'subscribed' }], // Get the number of subscribed users
+        premium: [{ $match: { roles: UserRole.Premium } }, { $count: 'premium' }], // Get the number of premium users
+        users: [{ $project: { _id: 0, email: 1, createTime: 1, status: 1 } }, { $sort: { createTime: -1 } }, { $limit: 5 }], // Get the latest 5 users with their email, createTime and status
+        subscribedUsers: [{ $match: { roles: { $in: subscriptionRoles } } }, { $project: { _id: 0, email: 1, roles: 1, remark: 1 } }], // Get all subscribed users with their email, roles and remark
       },
     },
   ]).toArray()
@@ -288,19 +288,22 @@ export async function getDashboardData() {
 
 // For user management component
 export async function getUsers(page: number, size: number, searchQuery?: string): Promise<{ users: UserInfo[]; total: number }> {
-  const query = { status: { $ne: Status.Deleted } }
+  const query: any = { status: { $ne: Status.Deleted } }
 
   // If a search query is provided, add it to the query
   if (searchQuery?.trim())
-    query['email'] = { $regex: new RegExp(searchQuery, 'i') }
+    query.email = { $regex: new RegExp(searchQuery, 'i') }
 
   const total = await userCol.countDocuments(query)
-  const users: UserInfo[] = (await userCol.find(query).toArray()) as UserInfo[]
+  const users: UserInfo[] = await userCol.find(query)
+    .sort({ createTime: -1 }) // Sort users by createTime in descending order
+    .skip((page - 1) * size) // Skip the documents that come before the page
+    .limit(size) // Limit the results to the page size
+    .toArray() as UserInfo[]
+
   users.forEach(initUserInfo)
-  users.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime()) // Sort users by createTime in descending order
-  const start = (page - 1) * size
-  const pagedUsers = users.slice(start, start + size)
-  return { users: pagedUsers, total }
+
+  return { users, total }
 }
 
 export async function getUserById(userId: string): Promise<UserInfo> {

@@ -260,19 +260,30 @@ export async function getUser(email: string): Promise<UserInfo> {
 export async function getDashboardData() {
   const subscriptionRoles = [UserRole.Premium, UserRole.MVP, UserRole.Support, UserRole.Basic, UserRole['Basic+']]
 
-  const [total, normal, disabled, subscribed, premium, users, subscribedUsers] = await Promise.all([
-    userCol.estimatedDocumentCount(), // Get the number of total users
-    userCol.countDocuments({ status: Status.Normal }), // Get the number of normal users
-    userCol.countDocuments({ status: Status.Disabled }), // Get the number of disabled users
-    userCol.countDocuments({ roles: { $in: subscriptionRoles } }), // Get the number of subscribed users
-    userCol.countDocuments({ roles: UserRole.Premium }), // Get the number of premium users
-    userCol.find({}).project({ _id: 0, email: 1, createTime: 1, status: 1 }).toArray(), // Get the 05 newest users with email, createTime and status
-    userCol.find({ roles: { $in: subscriptionRoles } }).project({ _id: 0, email: 1, roles: 1, remark: 1 }).toArray(), // Get the subscribed users
-  ])
+  // using $facet to get multiple aggregations in a single query for better performance
+  const [result] = await userCol.aggregate([
+    {
+      $facet: {
+        total: [{ $count: 'total' }],
+        normal: [{ $match: { status: Status.Normal } }, { $count: 'normal' }],
+        disabled: [{ $match: { status: Status.Disabled } }, { $count: 'disabled' }],
+        subscribed: [{ $match: { roles: { $in: subscriptionRoles } } }, { $count: 'subscribed' }],
+        premium: [{ $match: { roles: UserRole.Premium } }, { $count: 'premium' }],
+        users: [{ $project: { _id: 0, email: 1, createTime: 1, status: 1 } }, { $sort: { createTime: -1 } }, { $limit: 5 }],
+        subscribedUsers: [{ $match: { roles: { $in: subscriptionRoles } } }, { $project: { _id: 0, email: 1, roles: 1, remark: 1 } }],
+      },
+    },
+  ]).toArray()
 
-  const newUsers = users.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime()).slice(0, 5) // Get the 05 newest users
-
-  return { total, normal, disabled, subscribed, premium, newUsers, subscribedUsers }
+  return {
+    total: result.total[0]?.total || 0,
+    normal: result.normal[0]?.normal || 0,
+    disabled: result.disabled[0]?.disabled || 0,
+    subscribed: result.subscribed[0]?.subscribed || 0,
+    premium: result.premium[0]?.premium || 0,
+    newUsers: result.users,
+    subscribedUsers: result.subscribedUsers,
+  }
 }
 
 // For user management component

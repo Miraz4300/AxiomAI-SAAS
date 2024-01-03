@@ -97,7 +97,7 @@ async function handleDropdown(optionKey: string) {
 
 <template>
   <div v-if="!isMobile" class="min-w-[70px] flex flex-col items-center justify-between overflow-hidden py-6 pt-6 bg-[var(--sbc)] dark:bg-[var(--sbc)]">
-    <div v-if="!!authStore.token" class="mb-4 flex flex-col space-y-3 overflow-y-auto overflow-x-hidden px-2">
+    <div v-if="!!authStore.token" class="flex flex-col space-y-3 overflow-y-auto overflow-x-hidden">
       <MenuButton :tooltip="$t('chat.chat')" route="/chat" icon="ri:message-3-line" />
       <MenuButton :tooltip="$t('chat.cognitiveDocs')" route="/cognitive-docs" app-store-flag="cognitiveDocsEnabled" icon="ri:file-pdf-line" />
       <MenuButton :tooltip="$t('chat.draw')" route="/whiteboard" app-store-flag="whiteboardEnabled" icon="ri:artboard-line" />

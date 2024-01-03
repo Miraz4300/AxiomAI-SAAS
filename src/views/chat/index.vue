@@ -127,7 +127,7 @@ async function onConversation() {
     {
       uuid: chatUuid,
       dateTime: new Date().toLocaleString(),
-      text: 'thinking',
+      text: 'Thinking',
       loading: true,
       inversion: false,
       error: false,
@@ -273,7 +273,7 @@ async function onRegenerate(index: number) {
     index,
     {
       dateTime: new Date().toLocaleString(),
-      text: 'rethinking',
+      text: 'Regenerating',
       inversion: false,
       responseCount,
       error: false,

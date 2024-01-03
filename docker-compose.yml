@@ -7,6 +7,8 @@ services:
     restart: always
     ports:
       - 10829:10829
+    volumes:
+      - logs:/app/logs
     environment:
       TZ: Asia/Dhaka
 
@@ -82,3 +84,4 @@ services:
 
 volumes:
   nginxCONF:
+  logs:

@@ -17,12 +17,12 @@ import type { RequestOptions } from './types'
 dotenv.config()
 
 const ErrorCodeMessage: Record<string, string> = {
-  401: '[OpenAI] Incorrect API key provided',
-  403: '[OpenAI] Server refused to access, please try again later',
-  502: '[OpenAI] Bad Gateway',
-  503: '[OpenAI] Server is busy, please try again later',
-  504: '[OpenAI] Gateway Time-out',
-  500: '[OpenAI] Internal Server Error',
+  401: '**[AxiomAI] Incorrect API key provided**',
+  403: '**[AxiomAI] Server refused to access, please try again later**',
+  502: '**[AxiomAI] Bad Gateway**',
+  503: '**[AxiomAI] Server is busy, please try again later**',
+  504: '**[AxiomAI] Gateway Time-out**',
+  500: '**[AxiomAI] Internal Server Error**',
 }
 
 let auditService: TextAuditService

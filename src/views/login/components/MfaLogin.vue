@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { NButton, NInput, useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import TOS from './TOS.vue'
@@ -14,6 +14,8 @@ const authStore = useAuthStore()
 const loading = ref(false)
 const token = ref('')
 const errorMessage = ref<string | null>('')
+
+const disabled = computed(() => !token.value.trim() || loading.value)
 
 async function handle2FASubmit() {
   loading.value = true
@@ -71,7 +73,7 @@ async function handle2FASubmit() {
           <div class="w-full md:w-[615px] flex flex-col gap-2">
             <a class="text-sm"> An authentication code has been sent to your device. Enter the code to continue and be redirected.</a>
             <NInput v-model:value="token" maxlength="6" type="text" placeholder="Enter your authenticator app code" />
-            <NButton ghost type="default" :loading="loading" @click="handle2FASubmit">
+            <NButton ghost type="default" :disabled="disabled" :loading="loading" @click="handle2FASubmit">
               Submit
             </NButton>
             <p class="text-xs text-[#F59E0B]">

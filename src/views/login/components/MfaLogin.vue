@@ -55,7 +55,7 @@ async function handle2FASubmit() {
     </div>
 
     <div class="relative flex grow flex-col px-5 py-8 md:px-6 bg-[var(--pbc)] dark:bg-[var(--pbc)] text-black dark:text-white">
-      <div class="relative flex grow flex-col p-8 gap-7 md:w-3/5 sm:w-full">
+      <div class="relative flex grow flex-col p-8 gap-7">
         <div class="flex flex-col gap-10 select-none">
           <span class="flex text-lg items-center space-x-2">
             <SvgIcon icon="mdi:shield-lock-outline" />
@@ -63,12 +63,12 @@ async function handle2FASubmit() {
           </span>
           <a class="text-3xl"> Verify Your Identity </a>
         </div>
-        <div class="flex flex-col gap-4 bg-white dark:bg-white/5 p-6 rounded-2xl shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+        <div class="w-full md:w-[750px] flex flex-col gap-4 bg-white dark:bg-white/5 p-6 rounded-2xl shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
           <div class="flex flex-col gap-2">
             <a class="text-sm font-bold"> Authentication Method </a>
-            <a class="md:w-1/4 sm:w-full text-center bg-white dark:bg-white/5 p-2 rounded-md border border-neutral-300 dark:border-neutral-700"> Authenticator App </a>
+            <a class="w-full md:w-1/3 text-center bg-white dark:bg-white/5 p-2 rounded-md border border-neutral-300 dark:border-neutral-700"> Authenticator App </a>
           </div>
-          <div class="flex flex-col gap-2">
+          <div class="w-full md:w-[615px] flex flex-col gap-2">
             <a class="text-sm"> An authentication code has been sent to your device. Enter the code to continue and be redirected.</a>
             <NInput v-model:value="token" maxlength="6" type="text" placeholder="Enter your authenticator app code" />
             <NButton ghost type="default" :loading="loading" @click="handle2FASubmit">

@@ -15,7 +15,7 @@ const dbName = (parsedUrl.pathname && parsedUrl.pathname !== '/') ? parsedUrl.pa
 const client = new MongoClient(url)
 const chatCol = client.db(dbName).collection('chat')
 const roomCol = client.db(dbName).collection('chat_room')
-const userCol = client.db(dbName).collection('user')
+export const userCol = client.db(dbName).collection('user')
 const configCol = client.db(dbName).collection('config')
 const usageCol = client.db(dbName).collection('chat_usage')
 const keyCol = client.db(dbName).collection('key_config')

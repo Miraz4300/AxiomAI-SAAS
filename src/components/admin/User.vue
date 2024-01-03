@@ -319,11 +319,10 @@ async function handleUpdateUser() {
   handleSaving.value = true
   try {
     if (duration.value) {
-    // Calculate the expiration date as dd-mm-yyyy, hh:mm AM/PM format
+    // Calculate the expiration date as "MM/DD/YYYY, hh:mm AM/PM" format
       const currentDate = new Date()
       currentDate.setDate(currentDate.getDate() + duration.value)
-      const formattedDate = `${String(currentDate.getDate()).padStart(2, '0')}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${currentDate.getFullYear()}, ${currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`
-      userRef.value.remark = `Expires on ${formattedDate}`
+      userRef.value.remark = `Expires on ${currentDate.toLocaleString()}`
     }
 
     const result = await fetchUpdateUser(userRef.value)
@@ -427,7 +426,7 @@ onMounted(async () => {
           />
         </div>
       </div>
-      <div class="flex items-center space-x-4">
+      <div v-if="userRef.status === Status.Normal" class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">Duration</span>
         <div class="flex-1">
           <NSelect

@@ -1,4 +1,5 @@
 import process from 'node:process'
+import type { WithId } from 'mongodb'
 import { MongoClient, ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
 import dayjs from 'dayjs'
@@ -13,12 +14,13 @@ const url = process.env.MONGODB_URL
 const parsedUrl = new URL(url)
 const dbName = (parsedUrl.pathname && parsedUrl.pathname !== '/') ? parsedUrl.pathname.substring(1) : 'axiomdb'
 const client = new MongoClient(url)
-const chatCol = client.db(dbName).collection('chat')
-const roomCol = client.db(dbName).collection('chat_room')
-export const userCol = client.db(dbName).collection('user')
-const configCol = client.db(dbName).collection('config')
-const usageCol = client.db(dbName).collection('chat_usage')
-const keyCol = client.db(dbName).collection('key_config')
+
+const chatCol = client.db(dbName).collection<ChatInfo>('chat')
+const roomCol = client.db(dbName).collection<ChatRoom>('chat_room')
+export const userCol = client.db(dbName).collection<UserInfo>('user')
+const configCol = client.db(dbName).collection<Config>('config')
+const usageCol = client.db(dbName).collection<ChatUsage>('chat_usage')
+const keyCol = client.db(dbName).collection<KeyConfig>('key_config')
 
 /**
  * Insert Chat Message
@@ -35,11 +37,11 @@ export async function insertChat(uuid: number, text: string, roomId: number, opt
 }
 
 export async function getChat(roomId: number, uuid: number) {
-  return await chatCol.findOne({ roomId, uuid }) as ChatInfo
+  return await chatCol.findOne({ roomId, uuid })
 }
 
 export async function getChatByMessageId(messageId: string) {
-  return await chatCol.findOne({ 'options.messageId': messageId }) as ChatInfo
+  return await chatCol.findOne({ 'options.messageId': messageId })
 }
 
 export async function updateChat(chatId: string, response: string, messageId: string, conversationId: string, usage: UsageResponse, previousResponse?: []) {
@@ -57,6 +59,7 @@ export async function updateChat(chatId: string, response: string, messageId: st
   }
 
   if (previousResponse)
+  // @ts-expect-error previousResponse
     update.$set.previousResponse = previousResponse
 
   await chatCol.updateOne(query, update)
@@ -80,13 +83,14 @@ export async function renameChatRoom(userId: string, title: string, roomId: numb
       title,
     },
   }
-  return await roomCol.updateOne(query, update)
+  const result = await roomCol.updateOne(query, update)
+  return result.modifiedCount > 0
 }
 
 export async function deleteChatRoom(userId: string, roomId: number) {
   const result = await roomCol.updateOne({ roomId, userId }, { $set: { status: Status.Deleted } })
   await clearChat(roomId)
-  return result
+  return result.modifiedCount > 0
 }
 
 export async function updateRoomPrompt(userId: string, roomId: number, prompt: string) {
@@ -134,9 +138,10 @@ export async function updateRoomChatModel(userId: string, roomId: number, chatMo
 }
 
 export async function getChatRooms(userId: string) {
-  const cursor = await roomCol.find({ userId, status: { $ne: Status.Deleted } })
+  const cursor = roomCol.find({ userId, status: { $ne: Status.Deleted } })
   const rooms = []
-  await cursor.forEach(doc => rooms.push(doc))
+  for await (const doc of cursor)
+    rooms.push(doc)
   return rooms
 }
 
@@ -159,9 +164,10 @@ export async function getChats(roomId: number, lastId?: number) {
     lastId = new Date().getTime()
   const query = { roomId, uuid: { $lt: lastId }, status: { $ne: Status.Deleted } }
   const limit = 20
-  const cursor = await chatCol.find(query).sort({ dateTime: -1 }).limit(limit)
+  const cursor = chatCol.find(query).sort({ dateTime: -1 }).limit(limit)
   const chats = []
-  await cursor.forEach(doc => chats.push(doc))
+  for await (const doc of cursor)
+    chats.push(doc)
   chats.reverse()
   return chats
 }
@@ -215,43 +221,43 @@ export async function createUser(email: string, password: string, roles?: UserRo
 }
 
 export async function updateUserInfo(userId: string, user: UserInfo) {
-  return userCol.updateOne({ _id: new ObjectId(userId) }
+  await userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { name: user.name, description: user.description, avatar: user.avatar } })
 }
 
 export async function updateUserChatModel(userId: string, chatModel: string) {
-  return userCol.updateOne({ _id: new ObjectId(userId) }
+  await userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { 'config.chatModel': chatModel } })
 }
 
 export async function updateUserAdvancedConfig(userId: string, config: AdvancedConfig) {
-  return userCol.updateOne({ _id: new ObjectId(userId) }
+  await userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { advanced: config } })
 }
 
 export async function updateUser2FA(userId: string, secretKey: string) {
-  return userCol.updateOne({ _id: new ObjectId(userId) }
-    , { $set: { secretKey, updateTime: new Date().toLocaleString() } })
+  await userCol.updateOne({ _id: new ObjectId(userId) }
+    , { $set: { secretKey, updateTime: new Date() } })
 }
 
 export async function disableUser2FA(userId: string) {
-  return userCol.updateOne({ _id: new ObjectId(userId) }
-    , { $set: { secretKey: null, updateTime: new Date().toLocaleString() } })
+  await userCol.updateOne({ _id: new ObjectId(userId) }
+    , { $set: { secretKey: null, updateTime: new Date() } })
 }
 
 export async function updateUserPassword(userId: string, password: string) {
-  return userCol.updateOne({ _id: new ObjectId(userId) }
-    , { $set: { password, updateTime: new Date().toLocaleString() } })
+  await userCol.updateOne({ _id: new ObjectId(userId) }
+    , { $set: { password, updateTime: new Date() } })
 }
 
 export async function updateUserPasswordWithVerifyOld(userId: string, oldPassword: string, newPassword: string) {
   return userCol.updateOne({ _id: new ObjectId(userId), password: oldPassword }
-    , { $set: { password: newPassword, updateTime: new Date().toLocaleString() } })
+    , { $set: { password: newPassword, updateTime: new Date() } })
 }
 
 export async function getUser(email: string): Promise<UserInfo> {
   email = email.toLowerCase()
-  const userInfo = await userCol.findOne({ email }) as UserInfo
+  const userInfo = await userCol.findOne({ email })
   await initUserInfo(userInfo)
   return userInfo
 }
@@ -307,12 +313,12 @@ export async function getUsers(page: number, size: number, searchQuery?: string)
 }
 
 export async function getUserById(userId: string): Promise<UserInfo> {
-  const userInfo = await userCol.findOne({ _id: new ObjectId(userId) }) as UserInfo
+  const userInfo = await userCol.findOne({ _id: new ObjectId(userId) })
   await initUserInfo(userInfo)
   return userInfo
 }
 
-async function initUserInfo(userInfo: UserInfo) {
+async function initUserInfo(userInfo: WithId<UserInfo>) {
   if (userInfo == null)
     return
   if (userInfo.config == null)
@@ -331,11 +337,11 @@ async function initUserInfo(userInfo: UserInfo) {
 
 export async function verifyUser(email: string, status: Status) {
   email = email.toLowerCase()
-  return await userCol.updateOne({ email }, { $set: { status, verifyTime: new Date().toLocaleString() } })
+  await userCol.updateOne({ email }, { $set: { status, verifyTime: new Date() } })
 }
 
 export async function updateUserStatus(userId: string, status: Status) {
-  return await userCol.updateOne({ _id: new ObjectId(userId) }, { $set: { status, verifyTime: new Date().toLocaleString() } })
+  await userCol.updateOne({ _id: new ObjectId(userId) }, { $set: { status, verifyTime: new Date() } })
 }
 
 export async function updateUser(userId: string, roles: UserRole[], password: string, remark?: string, message?: string) {
@@ -343,10 +349,10 @@ export async function updateUser(userId: string, roles: UserRole[], password: st
   const query = { _id: new ObjectId(userId) }
   if (user.password !== password && user.password) {
     const newPassword = md5(password)
-    return await userCol.updateOne(query, { $set: { roles, verifyTime: new Date().toLocaleString(), password: newPassword, remark, message } })
+    await userCol.updateOne(query, { $set: { roles, verifyTime: new Date(), password: newPassword, remark, message } })
   }
   else {
-    return await userCol.updateOne(query, { $set: { roles, verifyTime: new Date().toLocaleString(), remark, message } })
+    await userCol.updateOne(query, { $set: { roles, verifyTime: new Date(), remark, message } })
   }
 }
 
@@ -434,10 +440,11 @@ export async function getUserStatisticsByDay(userId: ObjectId, start: number, en
 
 export async function getKeys(): Promise<{ keys: KeyConfig[]; total: number }> {
   const query = { status: { $ne: Status.Disabled } }
-  const cursor = await keyCol.find(query)
+  const cursor = keyCol.find(query)
   const total = await keyCol.countDocuments(query)
   const keys = []
-  await cursor.forEach(doc => keys.push(doc))
+  for await (const doc of cursor)
+    keys.push(doc)
   return { keys, total }
 }
 
@@ -450,5 +457,5 @@ export async function upsertKey(key: KeyConfig): Promise<KeyConfig> {
 }
 
 export async function updateApiKeyStatus(id: string, status: Status) {
-  return await keyCol.updateOne({ _id: new ObjectId(id) }, { $set: { status } })
+  await keyCol.updateOne({ _id: new ObjectId(id) }, { $set: { status } })
 }

@@ -3,9 +3,12 @@ import path from 'node:path'
 import morgan from 'morgan'
 import * as rfs from 'rotating-file-stream'
 
+const logDirectory = path.join(__dirname, '/app/logs/morgan')
+fs.mkdirSync(logDirectory, { recursive: true })
+
 const accessLogStream = rfs.createStream('morgan.log', {
   interval: '1d', // Rotate daily
-  path: path.join(__dirname, '/app/logs/morgan'),
+  path: logDirectory,
   size: '20M', // Rotate every 20 MegaBytes written
   compress: 'gzip', // Compress to gzip
   immutable: true, // Immutable

@@ -1,4 +1,5 @@
 import process from 'node:process'
+import type { WithId } from 'mongodb'
 import { MongoClient, ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
 import dayjs from 'dayjs'
@@ -13,12 +14,13 @@ const url = process.env.MONGODB_URL
 const parsedUrl = new URL(url)
 const dbName = (parsedUrl.pathname && parsedUrl.pathname !== '/') ? parsedUrl.pathname.substring(1) : 'axiomdb'
 const client = new MongoClient(url)
-const chatCol = client.db(dbName).collection('chat')
-const roomCol = client.db(dbName).collection('chat_room')
-export const userCol = client.db(dbName).collection('user')
-const configCol = client.db(dbName).collection('config')
-const usageCol = client.db(dbName).collection('chat_usage')
-const keyCol = client.db(dbName).collection('key_config')
+
+const chatCol = client.db(dbName).collection<ChatInfo>('chat')
+const roomCol = client.db(dbName).collection<ChatRoom>('chat_room')
+export const userCol = client.db(dbName).collection<UserInfo>('user')
+const configCol = client.db(dbName).collection<Config>('config')
+const usageCol = client.db(dbName).collection<ChatUsage>('chat_usage')
+const keyCol = client.db(dbName).collection<KeyConfig>('key_config')
 
 /**
  * Insert Chat Message
@@ -35,11 +37,11 @@ export async function insertChat(uuid: number, text: string, roomId: number, opt
 }
 
 export async function getChat(roomId: number, uuid: number) {
-  return await chatCol.findOne({ roomId, uuid }) as ChatInfo
+  return await chatCol.findOne({ roomId, uuid })
 }
 
 export async function getChatByMessageId(messageId: string) {
-  return await chatCol.findOne({ 'options.messageId': messageId }) as ChatInfo
+  return await chatCol.findOne({ 'options.messageId': messageId })
 }
 
 export async function updateChat(chatId: string, response: string, messageId: string, conversationId: string, usage: UsageResponse, previousResponse?: []) {
@@ -57,6 +59,7 @@ export async function updateChat(chatId: string, response: string, messageId: st
   }
 
   if (previousResponse)
+  // @ts-expect-error previousResponse
     update.$set.previousResponse = previousResponse
 
   await chatCol.updateOne(query, update)
@@ -80,13 +83,14 @@ export async function renameChatRoom(userId: string, title: string, roomId: numb
       title,
     },
   }
-  return await roomCol.updateOne(query, update)
+  const result = await roomCol.updateOne(query, update)
+  return result.modifiedCount > 0
 }
 
 export async function deleteChatRoom(userId: string, roomId: number) {
   const result = await roomCol.updateOne({ roomId, userId }, { $set: { status: Status.Deleted } })
   await clearChat(roomId)
-  return result
+  return result.modifiedCount > 0
 }
 
 export async function updateRoomPrompt(userId: string, roomId: number, prompt: string) {
@@ -134,9 +138,10 @@ export async function updateRoomChatModel(userId: string, roomId: number, chatMo
 }
 
 export async function getChatRooms(userId: string) {
-  const cursor = await roomCol.find({ userId, status: { $ne: Status.Deleted } })
+  const cursor = roomCol.find({ userId, status: { $ne: Status.Deleted } })
   const rooms = []
-  await cursor.forEach(doc => rooms.push(doc))
+  for await (const doc of cursor)
+    rooms.push(doc)
   return rooms
 }
 
@@ -159,9 +164,10 @@ export async function getChats(roomId: number, lastId?: number) {
     lastId = new Date().getTime()
   const query = { roomId, uuid: { $lt: lastId }, status: { $ne: Status.Deleted } }
   const limit = 20
-  const cursor = await chatCol.find(query).sort({ dateTime: -1 }).limit(limit)
+  const cursor = chatCol.find(query).sort({ dateTime: -1 }).limit(limit)
   const chats = []
-  await cursor.forEach(doc => chats.push(doc))
+  for await (const doc of cursor)
+    chats.push(doc)
   chats.reverse()
   return chats
 }
@@ -215,43 +221,43 @@ export async function createUser(email: string, password: string, roles?: UserRo
 }
 
 export async function updateUserInfo(userId: string, user: UserInfo) {
-  return userCol.updateOne({ _id: new ObjectId(userId) }
+  await userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { name: user.name, description: user.description, avatar: user.avatar } })
 }
 
 export async function updateUserChatModel(userId: string, chatModel: string) {
-  return userCol.updateOne({ _id: new ObjectId(userId) }
+  await userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { 'config.chatModel': chatModel } })
 }
 
 export async function updateUserAdvancedConfig(userId: string, config: AdvancedConfig) {
-  return userCol.updateOne({ _id: new ObjectId(userId) }
+  await userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { advanced: config } })
 }
 
 export async function updateUser2FA(userId: string, secretKey: string) {
-  return userCol.updateOne({ _id: new ObjectId(userId) }
-    , { $set: { secretKey, updateTime: new Date().toLocaleString() } })
+  await userCol.updateOne({ _id: new ObjectId(userId) }
+    , { $set: { secretKey, updateTime: new Date() } })
 }
 
 export async function disableUser2FA(userId: string) {
-  return userCol.updateOne({ _id: new ObjectId(userId) }
-    , { $set: { secretKey: null, updateTime: new Date().toLocaleString() } })
+  await userCol.updateOne({ _id: new ObjectId(userId) }
+    , { $set: { secretKey: null, updateTime: new Date() } })
 }
 
 export async function updateUserPassword(userId: string, password: string) {
-  return userCol.updateOne({ _id: new ObjectId(userId) }
-    , { $set: { password, updateTime: new Date().toLocaleString() } })
+  await userCol.updateOne({ _id: new ObjectId(userId) }
+    , { $set: { password, updateTime: new Date() } })
 }
 
 export async function updateUserPasswordWithVerifyOld(userId: string, oldPassword: string, newPassword: string) {
   return userCol.updateOne({ _id: new ObjectId(userId), password: oldPassword }
-    , { $set: { password: newPassword, updateTime: new Date().toLocaleString() } })
+    , { $set: { password: newPassword, updateTime: new Date() } })
 }
 
 export async function getUser(email: string): Promise<UserInfo> {
   email = email.toLowerCase()
-  const userInfo = await userCol.findOne({ email }) as UserInfo
+  const userInfo = await userCol.findOne({ email })
   await initUserInfo(userInfo)
   return userInfo
 }
@@ -260,45 +266,59 @@ export async function getUser(email: string): Promise<UserInfo> {
 export async function getDashboardData() {
   const subscriptionRoles = [UserRole.Premium, UserRole.MVP, UserRole.Support, UserRole.Basic, UserRole['Basic+']]
 
-  const [total, normal, disabled, subscribed, premium, users, subscribedUsers] = await Promise.all([
-    userCol.estimatedDocumentCount(), // Get the number of total users
-    userCol.countDocuments({ status: Status.Normal }), // Get the number of normal users
-    userCol.countDocuments({ status: Status.Disabled }), // Get the number of disabled users
-    userCol.countDocuments({ roles: { $in: subscriptionRoles } }), // Get the number of subscribed users
-    userCol.countDocuments({ roles: UserRole.Premium }), // Get the number of premium users
-    userCol.find({}).project({ _id: 0, email: 1, createTime: 1, status: 1 }).toArray(), // Get the 05 newest users with email, createTime and status
-    userCol.find({ roles: { $in: subscriptionRoles } }).project({ _id: 0, email: 1, roles: 1, remark: 1 }).toArray(), // Get the subscribed users
-  ])
+  // using $facet to get multiple aggregations in a single query for better performance
+  const [result] = await userCol.aggregate([
+    {
+      $facet: {
+        total: [{ $count: 'total' }], // Get the total number of users
+        normal: [{ $match: { status: Status.Normal } }, { $count: 'normal' }], // Get the number of normal users
+        disabled: [{ $match: { status: Status.Disabled } }, { $count: 'disabled' }], // Get the number of disabled users
+        subscribed: [{ $match: { roles: { $in: subscriptionRoles } } }, { $count: 'subscribed' }], // Get the number of subscribed users
+        premium: [{ $match: { roles: UserRole.Premium } }, { $count: 'premium' }], // Get the number of premium users
+        users: [{ $project: { _id: 0, email: 1, createTime: 1, status: 1 } }, { $sort: { createTime: -1 } }, { $limit: 5 }], // Get the latest 5 users with their email, createTime and status
+        subscribedUsers: [{ $match: { roles: { $in: subscriptionRoles } } }, { $project: { _id: 0, email: 1, roles: 1, remark: 1 } }], // Get all subscribed users with their email, roles and remark
+      },
+    },
+  ]).toArray()
 
-  const newUsers = users.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime()).slice(0, 5) // Get the 05 newest users
-
-  return { total, normal, disabled, subscribed, premium, newUsers, subscribedUsers }
+  return {
+    total: result.total[0]?.total || 0,
+    normal: result.normal[0]?.normal || 0,
+    disabled: result.disabled[0]?.disabled || 0,
+    subscribed: result.subscribed[0]?.subscribed || 0,
+    premium: result.premium[0]?.premium || 0,
+    newUsers: result.users,
+    subscribedUsers: result.subscribedUsers,
+  }
 }
 
 // For user management component
 export async function getUsers(page: number, size: number, searchQuery?: string): Promise<{ users: UserInfo[]; total: number }> {
-  const query = { status: { $ne: Status.Deleted } }
+  const query: any = { status: { $ne: Status.Deleted } }
 
   // If a search query is provided, add it to the query
   if (searchQuery?.trim())
-    query['email'] = { $regex: new RegExp(searchQuery, 'i') }
+    query.email = { $regex: new RegExp(searchQuery, 'i') }
 
   const total = await userCol.countDocuments(query)
-  const users: UserInfo[] = (await userCol.find(query).toArray()) as UserInfo[]
+  const users: UserInfo[] = await userCol.find(query)
+    .sort({ createTime: -1 }) // Sort users by createTime in descending order
+    .skip((page - 1) * size) // Skip the documents that come before the page
+    .limit(size) // Limit the results to the page size
+    .toArray() as UserInfo[]
+
   users.forEach(initUserInfo)
-  users.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime()) // Sort users by createTime in descending order
-  const start = (page - 1) * size
-  const pagedUsers = users.slice(start, start + size)
-  return { users: pagedUsers, total }
+
+  return { users, total }
 }
 
 export async function getUserById(userId: string): Promise<UserInfo> {
-  const userInfo = await userCol.findOne({ _id: new ObjectId(userId) }) as UserInfo
+  const userInfo = await userCol.findOne({ _id: new ObjectId(userId) })
   await initUserInfo(userInfo)
   return userInfo
 }
 
-async function initUserInfo(userInfo: UserInfo) {
+async function initUserInfo(userInfo: WithId<UserInfo>) {
   if (userInfo == null)
     return
   if (userInfo.config == null)
@@ -317,11 +337,11 @@ async function initUserInfo(userInfo: UserInfo) {
 
 export async function verifyUser(email: string, status: Status) {
   email = email.toLowerCase()
-  return await userCol.updateOne({ email }, { $set: { status, verifyTime: new Date().toLocaleString() } })
+  await userCol.updateOne({ email }, { $set: { status, verifyTime: new Date() } })
 }
 
 export async function updateUserStatus(userId: string, status: Status) {
-  return await userCol.updateOne({ _id: new ObjectId(userId) }, { $set: { status, verifyTime: new Date().toLocaleString() } })
+  await userCol.updateOne({ _id: new ObjectId(userId) }, { $set: { status, verifyTime: new Date() } })
 }
 
 export async function updateUser(userId: string, roles: UserRole[], password: string, remark?: string, message?: string) {
@@ -329,10 +349,10 @@ export async function updateUser(userId: string, roles: UserRole[], password: st
   const query = { _id: new ObjectId(userId) }
   if (user.password !== password && user.password) {
     const newPassword = md5(password)
-    return await userCol.updateOne(query, { $set: { roles, verifyTime: new Date().toLocaleString(), password: newPassword, remark, message } })
+    await userCol.updateOne(query, { $set: { roles, verifyTime: new Date(), password: newPassword, remark, message } })
   }
   else {
-    return await userCol.updateOne(query, { $set: { roles, verifyTime: new Date().toLocaleString(), remark, message } })
+    await userCol.updateOne(query, { $set: { roles, verifyTime: new Date(), remark, message } })
   }
 }
 
@@ -420,10 +440,11 @@ export async function getUserStatisticsByDay(userId: ObjectId, start: number, en
 
 export async function getKeys(): Promise<{ keys: KeyConfig[]; total: number }> {
   const query = { status: { $ne: Status.Disabled } }
-  const cursor = await keyCol.find(query)
+  const cursor = keyCol.find(query)
   const total = await keyCol.countDocuments(query)
   const keys = []
-  await cursor.forEach(doc => keys.push(doc))
+  for await (const doc of cursor)
+    keys.push(doc)
   return { keys, total }
 }
 
@@ -436,5 +457,5 @@ export async function upsertKey(key: KeyConfig): Promise<KeyConfig> {
 }
 
 export async function updateApiKeyStatus(id: string, status: Status) {
-  return await keyCol.updateOne({ _id: new ObjectId(id) }, { $set: { status } })
+  await keyCol.updateOne({ _id: new ObjectId(id) }, { $set: { status } })
 }

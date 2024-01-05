@@ -59,8 +59,8 @@ export async function getOriginConfig() {
       config.siteConfig.loginEnabled = isNotEmptyString(process.env.AUTH_SECRET_KEY)
     if (config.siteConfig.loginSalt === undefined)
       config.siteConfig.loginSalt = process.env.AUTH_SECRET_KEY
-    if (config.apiDisableDebug === undefined)
-      config.apiDisableDebug = process.env.DISABLE_DEBUG === 'true'
+    if (config.apiEnableDebug === undefined)
+      config.apiEnableDebug = process.env.ENABLE_DEBUG === 'true'
     if (config.siteConfig.registerReview === undefined)
       config.siteConfig.registerReview = process.env.REGISTER_REVIEW === 'true'
   }

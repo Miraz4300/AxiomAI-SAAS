@@ -6,6 +6,9 @@ import * as dotenv from 'dotenv'
 import { ObjectId } from 'mongodb'
 import { textTokens } from 'gpt-token'
 import speakeasy from 'speakeasy'
+import requestIp from 'request-ip'
+import logger from './logger/winston'
+import morganLogger from './logger/morgan'
 import { getAzureSubscriptionKey } from './middleware/speechToken'
 import type { RequestProps } from './types'
 import { TwoFAConfig } from './types'
@@ -67,11 +70,30 @@ const app = express()
 const router = express.Router()
 
 app.use(express.json())
+app.use(morganLogger) // Morgan logger for all requests
 
 app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'authorization, Content-Type')
   res.header('Access-Control-Allow-Methods', '*')
+  next()
+})
+
+// Logging middleware for all requests
+router.use((req, res, next) => {
+  res.locals.startTime = Date.now() // Start startTime calculation at the beginning of the request
+  const clientIp = requestIp.getClientIp(req)
+  logger.http(`Start: ${req.method}, Path: ${req.path}, Status: ${res.statusCode}, IP: ${clientIp}`)
+  next()
+})
+
+// Logging middleware for all responses
+router.use((req, res, next) => {
+  const clientIp = requestIp.getClientIp(req)
+  res.on('finish', () => {
+    const duration = Date.now() - res.locals.startTime // Calculate duration of the request from startTime
+    logger.http(`Finish: ${req.method}, Path: ${req.path}, Status: ${res.statusCode}, IP: ${clientIp}, Duration: ${duration} ms`)
+  })
   next()
 })
 
@@ -115,8 +137,11 @@ router.post('/room-rename', auth, async (req, res) => {
   try {
     const userId = req.headers.userId as string
     const { title, roomId } = req.body as { title: string; roomId: number }
-    const room = await renameChatRoom(userId, title, roomId)
-    res.send({ status: 'Success', message: null, data: room })
+    const success = await renameChatRoom(userId, title, roomId)
+    if (success)
+      res.send({ status: 'Success', message: null, data: null })
+    else
+      res.send({ status: 'Fail', message: 'Saved Failed', data: null })
   }
   catch (error) {
     console.error(error)
@@ -180,8 +205,11 @@ router.post('/room-delete', auth, async (req, res) => {
       res.send({ status: 'Fail', message: 'Unknown room', data: null })
       return
     }
-    await deleteChatRoom(userId, roomId)
-    res.send({ status: 'Success', message: null })
+    const success = await deleteChatRoom(userId, roomId)
+    if (success)
+      res.send({ status: 'Success', message: null, data: null })
+    else
+      res.send({ status: 'Fail', message: 'Saved Failed', data: null })
   }
   catch (error) {
     console.error(error)
@@ -196,7 +224,6 @@ router.get('/chat-history', auth, async (req, res) => {
     const lastId = req.query.lastId as string
     if (!roomId || !await existsChatRoom(userId, roomId)) {
       res.send({ status: 'Success', message: null, data: [] })
-      // res.send({ status: 'Fail', message: 'Unknown room', data: null })
       return
     }
     const chats = await getChats(roomId, !isNotEmptyString(lastId) ? null : Number.parseInt(lastId))
@@ -267,7 +294,6 @@ router.get('/chat-response-history', auth, async (req, res) => {
     const index = +req.query.index
     if (!roomId || !await existsChatRoom(userId, roomId)) {
       res.send({ status: 'Success', message: null, data: [] })
-      // res.send({ status: 'Fail', message: 'Unknown room', data: null })
       return
     }
     const chat = await getChat(roomId, uuid)

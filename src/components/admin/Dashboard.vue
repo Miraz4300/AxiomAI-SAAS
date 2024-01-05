@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, h, onMounted, ref } from 'vue'
 import { NCard, NDataTable, NNumberAnimation, NSpin, NStatistic, NTag, NTimeline, NTimelineItem } from 'naive-ui'
+import { format } from 'date-fns'
 import { fetchGetDashboardData } from '@/api'
 import type { UserInfo } from '@/components/admin/model'
 import { Status, UserRole } from '@/components/admin/model'
@@ -58,7 +59,7 @@ function getType(status: Status | undefined) {
 }
 
 const showStatus = (status: Status | undefined) => status !== undefined ? Status[status] : 'N/A'
-const formatTime = (time: string | undefined) => time ? new Date(time).toLocaleString() : 'N/A'
+const formatTime = (time: Date | undefined) => time ? format(time, 'dd-MMM-yyyy, hh:mm:ss a') : 'N/A'
 
 const statistics = computed(() => [
   { label: 'Active Users', icon: 'mdi:account-online-outline', color: 'text-[#22c55e]', value: dashboardData.value?.normal },

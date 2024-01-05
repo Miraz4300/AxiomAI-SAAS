@@ -1,6 +1,6 @@
 {
   "name": "axiomnode",
-  "version": "3.0.0-RC4",
+  "version": "3.0.0-RC5",
   "private": false,
   "description": "AxiomNode",
   "author": "Miraz4300 <miraz4300@gmail.com>",
@@ -35,11 +35,15 @@
     "isomorphic-fetch": "^3.0.0",
     "jwt-decode": "^3.1.2",
     "mongodb": "^6.3.0",
+    "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2",
     "nodemailer": "^6.9.7",
     "request-ip": "^3.3.0",
-    "speakeasy": "^2.0.0"
+    "rotating-file-stream": "^3.2.1",
+    "speakeasy": "^2.0.0",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.43.1",

@@ -170,7 +170,7 @@ export class UserInfo {
   email?: string
   password?: string
   status?: Status
-  createTime?: string
+  createTime?: Date
   roles: UserRole[]
   remark?: string
   message?: string

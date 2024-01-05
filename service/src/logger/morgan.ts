@@ -3,7 +3,7 @@ import path from 'node:path'
 import morgan from 'morgan'
 import * as rfs from 'rotating-file-stream'
 
-const logDirectory = path.join(__dirname, '/app/logs/morgan')
+const logDirectory = '/app/logs/morgan'
 fs.mkdirSync(logDirectory, { recursive: true })
 
 const accessLogStream = rfs.createStream('morgan.log', {

@@ -12,8 +12,8 @@ services:
     environment:
       TZ: Asia/Dhaka
 
-      # Debug Mode | set 'true' to disable debug mode
-      DISABLE_DEBUG:
+      # set `false` to disable OpenAI API debug log (default: true)
+      ENABLE_DEBUG:
 
       # Rate Limit | Default: 0 (unlimited)
       MAX_REQUEST_PER_HOUR:

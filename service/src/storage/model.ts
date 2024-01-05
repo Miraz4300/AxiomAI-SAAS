@@ -161,7 +161,7 @@ export class Config {
     public _id: ObjectId,
     public timeoutMs: number,
     public apiKey?: string,
-    public apiDisableDebug?: boolean,
+    public apiEnableDebug?: boolean,
     public accessToken?: string,
     public apiBaseUrl?: string,
     public apiModel?: APIMODEL,

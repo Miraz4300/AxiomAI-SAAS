@@ -39,7 +39,7 @@ export async function initApi(key: KeyConfig, chatModel: string, maxContextCount
     const options: ChatGPTAPIOptions = {
       apiKey: key.key,
       completionParams: { model },
-      debug: !config.apiDisableDebug,
+      debug: !config.apiEnableDebug,
       messageStore: undefined,
       getMessageById: async (id) => {
         if (contextCount++ >= maxContextCount)
@@ -100,7 +100,7 @@ export async function initApi(key: KeyConfig, chatModel: string, maxContextCount
           ? config.reverseProxy
           : 'https://ai.fakeopen.com/api/conversation',
       model,
-      debug: !config.apiDisableDebug,
+      debug: !config.apiEnableDebug,
     }
 
     return new ChatGPTUnofficialProxyAPI({ ...options })

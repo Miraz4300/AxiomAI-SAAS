@@ -6,6 +6,9 @@ import * as dotenv from 'dotenv'
 import { ObjectId } from 'mongodb'
 import { textTokens } from 'gpt-token'
 import speakeasy from 'speakeasy'
+import requestIp from 'request-ip'
+import logger from './logger/winston'
+import morganLogger from './logger/morgan'
 import { getAzureSubscriptionKey } from './middleware/speechToken'
 import type { RequestProps } from './types'
 import { TwoFAConfig } from './types'
@@ -67,11 +70,30 @@ const app = express()
 const router = express.Router()
 
 app.use(express.json())
+app.use(morganLogger) // Morgan logger for all requests
 
 app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'authorization, Content-Type')
   res.header('Access-Control-Allow-Methods', '*')
+  next()
+})
+
+// Logging middleware for all requests
+router.use((req, res, next) => {
+  res.locals.startTime = Date.now() // Start startTime calculation at the beginning of the request
+  const clientIp = requestIp.getClientIp(req)
+  logger.http(`Start: ${req.method}, Path: ${req.path}, Status: ${res.statusCode}, IP: ${clientIp}`)
+  next()
+})
+
+// Logging middleware for all responses
+router.use((req, res, next) => {
+  const clientIp = requestIp.getClientIp(req)
+  res.on('finish', () => {
+    const duration = Date.now() - res.locals.startTime // Calculate duration of the request from startTime
+    logger.http(`Finish: ${req.method}, Path: ${req.path}, Status: ${res.statusCode}, IP: ${clientIp}, Duration: ${duration} ms`)
+  })
   next()
 })
 

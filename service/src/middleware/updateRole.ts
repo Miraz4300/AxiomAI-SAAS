@@ -8,7 +8,11 @@ import { userCol } from '../storage/mongo'
 function createLogFile() {
   const date = new Date()
   const formattedDate = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`
-  const logPath = path.join('/app/logs/cron', `updateRole-${formattedDate}.log`) // Log file format: updateRole-YYYYMMDD.log
+  const logDirectory = path.join('/app/logs/cron')
+  fs.mkdirSync(logDirectory, { recursive: true })
+
+  const logPath = path.join(logDirectory, `updateRole-${formattedDate}.log`) // Log file format: updateRole-YYYYMMDD.log
+
   const logStream = fs.createWriteStream(logPath, { flags: 'a' })
   logStream.write(`Cron job started at ${new Date().toLocaleString()}\n`)
   return { logStream, lineCount: 1 } // 1 lines have been written and start counting from 2

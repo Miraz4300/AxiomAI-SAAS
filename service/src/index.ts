@@ -69,6 +69,7 @@ dotenv.config()
 const app = express()
 const router = express.Router()
 
+app.enable('trust proxy')
 app.use(express.json())
 app.use(morganLogger) // Morgan logger for all requests
 
@@ -79,11 +80,9 @@ app.all('*', (_, res, next) => {
   next()
 })
 
-// Logging middleware for all requests
+// Start startTime calculation at the beginning of the request
 router.use((req, res, next) => {
-  res.locals.startTime = Date.now() // Start startTime calculation at the beginning of the request
-  const clientIp = requestIp.getClientIp(req)
-  logger.http(`Start: ${req.method}, Path: ${req.path}, Status: ${res.statusCode}, IP: ${clientIp}`)
+  res.locals.startTime = Date.now()
   next()
 })
 
@@ -92,7 +91,9 @@ router.use((req, res, next) => {
   const clientIp = requestIp.getClientIp(req)
   res.on('finish', () => {
     const duration = Date.now() - res.locals.startTime // Calculate duration of the request from startTime
-    logger.http(`Finish: ${req.method}, Path: ${req.path}, Status: ${res.statusCode}, IP: ${clientIp}, Duration: ${duration} ms`)
+    const durationStr = (`${duration} ms`).padStart(8)
+    const clientIpStr = clientIp.padEnd(15)
+    logger.http(`${res.statusCode} | ${durationStr} | ${clientIpStr} | ${req.method} ${req.path}`)
   })
   next()
 })

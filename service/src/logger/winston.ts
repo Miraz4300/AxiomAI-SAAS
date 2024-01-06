@@ -1,11 +1,13 @@
-import process from 'node:process'
 import winston from 'winston'
 import 'winston-daily-rotate-file'
 
 const logger = winston.createLogger({
   level: 'verbose', // Log upto verbose level. Prioritized from 0 to 5 (highest to lowest) - error, warn, info, http, verbose, debug, silly.
-  format: winston.format.json(),
-  // defaultMeta: { service: 'user-service' }, // For metadata use like this: logger.info('User signed up', { service: 'ROUTES' })
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json(),
+  ),
+  defaultMeta: { service: 'EXPRESS-ROUTER' }, // For metadata use like this: logger.info('User signed up', { service: 'ROUTES' })
   transports: [
     new winston.transports.DailyRotateFile({
       filename: '/app/logs/winston/errorLogs-%DATE%.log',
@@ -39,6 +41,7 @@ logger.add(new winston.transports.Console({
   format: winston.format.combine(
     winston.format.colorize(),
     winston.format.simple(),
+    winston.format.timestamp(),
   ),
 }))
 

@@ -69,9 +69,7 @@ dotenv.config()
 const app = express()
 const router = express.Router()
 
-app.enable('trust proxy')
 app.use(express.json())
-app.use(morganLogger) // Morgan logger for all requests
 
 app.all('*', (_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -80,23 +78,21 @@ app.all('*', (_, res, next) => {
   next()
 })
 
-// Start startTime calculation at the beginning of the request
-router.use((req, res, next) => {
-  res.locals.startTime = Date.now()
-  next()
-})
-
 // Logging middleware for all responses
 router.use((req, res, next) => {
+  const startTime = Date.now() // Start startTime calculation at the beginning of the request
   const clientIp = requestIp.getClientIp(req)
   res.on('finish', () => {
-    const duration = Date.now() - res.locals.startTime // Calculate duration of the request from startTime
+    const duration = Date.now() - startTime // Calculate duration of the request from startTime
     const durationStr = (`${duration} ms`).padStart(8)
     const clientIpStr = clientIp.padEnd(15)
     logger.http(`${res.statusCode} | ${durationStr} | ${clientIpStr} | ${req.method} ${req.path}`)
   })
   next()
 })
+
+app.enable('trust proxy')
+app.use(morganLogger) // Morgan logger for all requests
 
 router.get('/chatrooms', auth, async (req, res) => {
   try {

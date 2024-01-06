@@ -15,30 +15,31 @@ const hasIcon = Object.values(authInfoType).includes(code as any)
 const messages: Record<string, string> = {
   // Error messages
   [authErrorType.ABNORMAL]: 'The singularity powering your account has temporarily shut down. To reignite your online presence, contact our support team for resolution at support@axiomaibd.com.',
+  [authErrorType.ABNORMAL2]: 'Your account status is flagged as abnormal, indicating an unsettled cosmic alignment and has entered an unusual dimension. Consult the galactic helpdesk for normalization at support@axiomaibd.com.',
+  [authErrorType.NOTFOUND]: 'Your presence is ghostly. Register your coordinates to become a visible star in our galactic database.',
   [authErrorType.PERMISSION]: 'Permission denied! Your account requires interstellar authorization. Please contact the admin to grant the necessary clearance for activation.',
   [authErrorType.UNVERIFIED]: 'Cosmic clearance requires! Verify your email address first to obtain the necessary permissions for account activation and navigate to the cosmic constellations.',
-  [authErrorType.NOTFOUND]: 'Your presence is ghostly. Register your coordinates to become a visible star in our galactic database.',
   [authErrorType.USDV]: 'Account has been blocked. Please contact the admin to resolve the issue.',
   // Success messages
   [authInfoType.AASV]: 'The administrative account has been activated!',
-  [authInfoType.SRPM]: 'Please check your email address for instructions to reset your password.',
-  [authInfoType.PRSC]: 'The password reset process has been completed successfully.',
-  [authInfoType.VERIFIED]: 'Your email has been successfully verified. Please login to your account.',
-  [authInfoType.UNVERIFIED]: 'A verification email has been sent to your email address. Please check your inbox!',
-  [authInfoType.UNVERIFIED2]: 'A verification email has already been sent to your email address! Please check your inbox!',
   [authInfoType.PERMISSION]: 'Verification successful, Please wait for the admin to activate your account.',
   [authInfoType.PERMISSION2]: 'Please wait for the admin to activate your account.',
+  [authInfoType.PRSC]: 'The password reset process has been completed successfully.',
+  [authInfoType.SRPM]: 'Please check your email address for instructions to reset your password.',
+  [authInfoType.UNVERIFIED]: 'A verification email has been sent to your email address. Please check your inbox!',
+  [authInfoType.UNVERIFIED2]: 'A verification email has already been sent to your email address! Please check your inbox!',
+  [authInfoType.VERIFIED]: 'Your email has been successfully verified. Please login to your account.',
 }
 
 const icons: Record<string, string> = {
   [authInfoType.AASV]: 'mdi:cog-outline',
-  [authInfoType.SRPM]: 'fluent:password-20-regular',
-  [authInfoType.PRSC]: 'iconoir:password-pass',
-  [authInfoType.VERIFIED]: 'ri:verified-badge-line',
-  [authInfoType.UNVERIFIED]: 'mdi:email-check-outline',
-  [authInfoType.UNVERIFIED2]: 'mdi:email-check-outline',
   [authInfoType.PERMISSION]: 'tabler:lock-check',
   [authInfoType.PERMISSION2]: 'tabler:lock-pause',
+  [authInfoType.PRSC]: 'iconoir:password-pass',
+  [authInfoType.SRPM]: 'fluent:password-20-regular',
+  [authInfoType.UNVERIFIED]: 'mdi:email-check-outline',
+  [authInfoType.UNVERIFIED2]: 'mdi:email-check-outline',
+  [authInfoType.VERIFIED]: 'ri:verified-badge-line',
 }
 
 const message = messages[code] || 'UNKNOWN_ERROR_MESSAGE_CHANNEL_AE'

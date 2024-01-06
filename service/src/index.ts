@@ -710,7 +710,9 @@ router.post('/user-login', authLimiter, async (req, res) => {
   try {
     const { username, password, token } = req.body as { username: string; password: string; token?: string }
 
-    if (!username || !password || !isEmail(username))
+    if (!username || !isEmail(username))
+      throw new Error('Please enter a correctly formatted email address')
+    if (!username || !password)
       throw new Error('Username or password is empty')
     const user = await getUser(username)
     if (user == null || user.password !== md5(password))
@@ -778,6 +780,10 @@ router.post('/user-send-reset-mail', authLimiter, async (req, res) => {
       res.send({ status: 'Fail', errorCode: authErrorType.ABNORMAL, data: null })
       return
     }
+    if (user.status === Status.AdminVerify) {
+      res.send({ status: 'Fail', errorCode: authErrorType.PERMISSION, data: null })
+      return
+    }
 
     await sendResetPasswordMail(username, await getUserResetPasswordUrl(username))
     res.send({ status: 'Success', message: authInfoType.SRPM, data: null })
@@ -795,8 +801,10 @@ router.post('/user-reset-password', authLimiter, async (req, res) => {
     if (!sign || !checkUserResetPassword(sign, username))
       throw new Error('The link is invalid, please resend.')
     const user = await getUser(username)
-    if (user == null || user.status !== Status.Normal)
-      throw new Error('⚠️ Account status abnormal')
+    if (user == null || user.status !== Status.Normal) {
+      res.send({ status: 'Fail', errorCode: authErrorType.ABNORMAL2, data: null })
+      return
+    }
 
     updateUserPassword(user._id.toString(), md5(password))
 
@@ -1007,17 +1015,19 @@ router.post('/verification', authLimiter, async (req, res) => {
     if (user == null)
       throw new Error('The email not exists')
     if (user.status === Status.Deleted) {
-      res.send({ status: 'Fail', errorCode: authErrorType.USDV, data: null })
+      res.send({ status: 'Success', message: authErrorType.USDV, data: null })
       return
     }
     if (user.status === Status.Normal)
       throw new Error('The email address given has already been registered within our system!')
     if (user.status === Status.AdminVerify) {
-      res.send({ status: 'Success', errorCode: authInfoType.PERMISSION2, data: null })
+      res.send({ status: 'Success', message: authInfoType.PERMISSION2, data: null })
       return
     }
-    if (user.status !== Status.Unverified)
-      throw new Error('Account abnormality')
+    if (user.status !== Status.Unverified) {
+      res.send({ status: 'Success', message: authErrorType.ABNORMAL2, data: null })
+      return
+    }
 
     const config = await getCacheConfig()
     let message = authInfoType.VERIFIED

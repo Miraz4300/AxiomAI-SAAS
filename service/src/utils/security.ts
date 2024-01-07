@@ -12,7 +12,7 @@ export function md5(input: string) {
   return md5.digest('hex')
 }
 
-// You can change aes and other methods
+// For user verify URL. You can change aes and other methods
 export async function getUserVerifyUrl(username: string) {
   const sign = getUserVerify(username)
   const config = await getCacheConfig()
@@ -22,8 +22,9 @@ export async function getUserVerifyUrl(username: string) {
 function getUserVerify(username: string) {
   return getVerify(username, '')
 }
+
 function getVerify(username: string, key: string) {
-  const expired = new Date().getTime() + (12 * 60 * 60 * 1000)
+  const expired = new Date().getTime() + (6 * 60 * 60 * 1000) // 6 hours
   const sign = `${username}${key}-${expired}`
   return `${sign}-${md5(sign)}`
 }
@@ -34,7 +35,14 @@ function checkVerify(verify: string) {
   const expired = vs[vs.length - 2]
   vs.splice(vs.length - 2, 2)
   const prefix = vs.join('-')
-  // Simple point no check expiration date
+
+  // Check if the link has expired
+  const currentDate = new Date()
+  const expiredDate = new Date(Number(expired))
+  if (currentDate > expiredDate)
+    return 'expired'
+
+  // Continue with the existing verification process
   if (sign === md5(`${prefix}-${expired}`))
     return prefix.split('|')[0]
   throw new Error('Verification failed')
@@ -44,7 +52,7 @@ export function checkUserVerify(verify: string) {
   return checkVerify(verify)
 }
 
-// You can change aes and other methods
+// For admin verify URL. You can change aes and other methods
 export async function getUserVerifyUrlAdmin(username: string) {
   const sign = getUserVerifyAdmin(username)
   const config = await getCacheConfig()
@@ -71,6 +79,8 @@ function getUserResetPassword(username: string) {
 
 export function checkUserResetPassword(verify: string, username: string) {
   const name = checkVerify(verify)
+  if (name === 'expired') // Link expired
+    return 'expired'
   if (name === username)
     return name
   throw new Error('Verification failed')

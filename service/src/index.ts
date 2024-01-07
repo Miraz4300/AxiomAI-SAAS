@@ -798,7 +798,7 @@ router.post('/user-reset-password', authLimiter, async (req, res) => {
     const { username, password, sign } = req.body as { username: string; password: string; sign: string }
     if (!username || !password || !isEmail(username))
       throw new Error('Username or password is empty')
-    if (!sign || !checkUserResetPassword(sign, username))
+    if (!sign || checkUserResetPassword(sign, username) === 'expired')
       throw new Error('The link is invalid, please resend.')
     const user = await getUser(username)
     if (user == null || user.status !== Status.Normal) {
@@ -1011,6 +1011,8 @@ router.post('/verification', authLimiter, async (req, res) => {
     if (!token)
       throw new Error('Secret key is empty')
     const username = await checkUserVerify(token)
+    if (username === 'expired')
+      throw new Error('The link is invalid, please resend.')
     const user = await getUser(username)
     if (user == null)
       throw new Error('The email not exists')

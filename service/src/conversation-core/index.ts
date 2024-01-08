@@ -11,7 +11,7 @@ import { getCacheApiKeys, getCacheConfig, getOriginConfig } from '../storage/con
 import { sendResponse } from '../utils'
 import { hasAnyRole, isNotEmptyString } from '../utils/is'
 import type { ChatContext, ChatGPTUnofficialProxyAPIOptions, JWT, ModelConfig } from '../types'
-import { getChatByMessageId, updateRoomAccountId, updateRoomChatModel } from '../storage/mongo'
+import { getChatByMessageId, updateRoomAccountId } from '../storage/mongo'
 import type { RequestOptions } from './types'
 
 dotenv.config()
@@ -110,8 +110,8 @@ export async function initApi(key: KeyConfig, chatModel: string, maxContextCount
 const processThreads: { userId: string; abort: AbortController; messageId: string }[] = []
 
 async function chatReplyProcess(options: RequestOptions) {
-  const model = options.user.config.chatModel
-  const key = await getRandomApiKey(options.user, options.user.config.chatModel, options.room.accountId)
+  const model = options.room.chatModel
+  const key = await getRandomApiKey(options.user, model, options.room.accountId)
   const userId = options.user._id.toString()
 
   // Memory to context count map
@@ -131,8 +131,6 @@ async function chatReplyProcess(options: RequestOptions) {
       || (!options.lastContext.conversationId && options.lastContext.parentMessageId)))
       throw new Error('Unable to use AccessToken and API at the same time in the same room. Please contact the administrator or open a new chat room for conversation')
   }
-
-  updateRoomChatModel(userId, options.room.roomId, model)
 
   const { message, lastContext, process, systemMessage, temperature, top_p } = options
 

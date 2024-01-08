@@ -9,6 +9,7 @@ export enum Status {
   Unverified = 4,
   AdminVerify = 5,
   Disabled = 6,
+  Banned = 7,
 }
 
 export enum UserRole {

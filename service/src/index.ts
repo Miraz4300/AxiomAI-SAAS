@@ -582,6 +582,10 @@ router.post('/user-register', authLimiter, async (req, res) => {
         res.send({ status: 'Fail', errorCode: authErrorType.PERMISSION, data: null })
         return
       }
+      if (user.status === Status.Banned) {
+        res.send({ status: 'Fail', errorCode: authErrorType.BANNED, data: null })
+        return
+      }
       res.send({ status: 'Fail', message: 'The email address given has already been registered within our system!', data: null })
       return
     }
@@ -725,8 +729,12 @@ router.post('/user-login', authLimiter, async (req, res) => {
       res.send({ status: 'Fail', errorCode: authErrorType.PERMISSION, data: null })
       return
     }
-    if (user.status !== Status.Normal) {
+    if (user.status === Status.Disabled) {
       res.send({ status: 'Fail', errorCode: authErrorType.ABNORMAL, data: null })
+      return
+    }
+    if (user.status === Status.Banned) {
+      res.send({ status: 'Fail', errorCode: authErrorType.BANNED, data: null })
       return
     }
     if (user.secretKey) {
@@ -778,6 +786,10 @@ router.post('/user-send-reset-mail', authLimiter, async (req, res) => {
     }
     if (user.status === Status.Disabled) {
       res.send({ status: 'Fail', errorCode: authErrorType.ABNORMAL, data: null })
+      return
+    }
+    if (user.status === Status.Banned) {
+      res.send({ status: 'Fail', errorCode: authErrorType.BANNED, data: null })
       return
     }
     if (user.status === Status.AdminVerify) {
@@ -1024,6 +1036,10 @@ router.post('/verification', authLimiter, async (req, res) => {
       throw new Error('The email address given has already been registered within our system!')
     if (user.status === Status.AdminVerify) {
       res.send({ status: 'Success', message: authInfoType.PERMISSION2, data: null })
+      return
+    }
+    if (user.status === Status.Banned) {
+      res.send({ status: 'Success', message: authErrorType.BANNED, data: null })
       return
     }
     if (user.status !== Status.Unverified) {

@@ -48,7 +48,8 @@ async function handleSendResetMail() {
       router.replace({ name: 'Exception', query: { code: result.message } })
   }
   catch (error: any) {
-    if (error.errorCode === authErrorType.NOTFOUND || error.errorCode === authErrorType.UNVERIFIED || error.errorCode === authErrorType.ABNORMAL || error.errorCode === authErrorType.PERMISSION)
+    if (error.errorCode === authErrorType.NOTFOUND || error.errorCode === authErrorType.UNVERIFIED || error.errorCode === authErrorType.ABNORMAL
+    || error.errorCode === authErrorType.PERMISSION || error.errorCode === authErrorType.BANNED)
       router.replace({ name: 'Exception', query: { code: error.errorCode } })
     else
       ms.error(error.message ?? 'An unexpected error occurred')

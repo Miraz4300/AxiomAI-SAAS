@@ -16,6 +16,7 @@ const messages: Record<string, string> = {
   // Error messages
   [authErrorType.ABNORMAL]: 'The singularity powering your account has temporarily shut down. To reignite your online presence, contact our support team for resolution at support@axiomaibd.com.',
   [authErrorType.ABNORMAL2]: 'Your account status is flagged as abnormal, indicating an unsettled cosmic alignment and has entered an unusual dimension. Consult the galactic helpdesk for normalization at support@axiomaibd.com.',
+  [authErrorType.BANNED]: 'Your cosmic privileges have been restricted due to a ban. Review cosmic regulations or contact the galactic arbitrators for a ban lift at support@axiomaibd.com.',
   [authErrorType.NOTFOUND]: 'Your presence is ghostly. Register your coordinates to become a visible star in our galactic database.',
   [authErrorType.PERMISSION]: 'Permission denied! Your account requires interstellar authorization. Please contact the admin to grant the necessary clearance for activation.',
   [authErrorType.UNVERIFIED]: 'Cosmic clearance requires! Verify your email address first to obtain the necessary permissions for account activation and navigate to the cosmic constellations.',

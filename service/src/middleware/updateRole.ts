@@ -35,7 +35,7 @@ cron.schedule('0 */3 * * *', async () => {
         operationStarted = true
       }
 
-      const logMessage = `User ID: ${user._id}\nUser Email: ${user.email}\nUser Remark: ${user.remark}\nRole updated to: Free\nUpdate Time: ${new Date().toLocaleString()}\n\n`
+      const logMessage = `User Email: ${user.email}\nSubscription: ${UserRole[user.roles[0]]}\nUser Remark: ${user.remark}\nRole updated to: Free\nUpdate Time: ${new Date().toLocaleString()}\n\n`
       logStream.write(logMessage)
       lineCount += logMessage.split('\n').length
       await sendSubscriptionEndedMail(user.email, user.name, UserRole[user.roles[0]], user.remark.slice(11))

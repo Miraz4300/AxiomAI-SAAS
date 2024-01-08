@@ -48,7 +48,7 @@ export async function sendSubscriptionEndedMail(toMail: string, userName: string
   mailHtml = mailHtml.replace(/\${SUBSCRIPTION_END_DATE}/g, remark)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
-  sendMail(toMail, `Your ${roleName} Subscription Has Ended`, mailHtml, config.mailConfig)
+  sendMail(toMail, ` Important Notice: Your ${roleName} Subscription Has Ended`, mailHtml, config.mailConfig)
 }
 
 // For admin approve mail. When registration review is enabled, this mail will be sent to the admin

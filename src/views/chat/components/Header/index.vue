@@ -3,8 +3,7 @@ import { computed, defineAsyncComponent, h, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { NButton, NInput, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
 import { useAppStore, useAuthStore, useChatStore, useUserStore } from '@/store'
-import { fetchUpdateChatRoomPrompt, fetchUpdateUserChatModel } from '@/api'
-import { UserConfig } from '@/components/admin/model'
+import { fetchUpdateChatRoomPrompt } from '@/api'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
@@ -31,6 +30,12 @@ const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActiv
 
 const { uuid } = route.params as { uuid: string }
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
+
+const nowSelectChatModel = ref<string | null>(null)
+const currentChatModel = computed(() => nowSelectChatModel.value ?? currentChatHistory.value?.chatModel ?? userStore.userInfo.config.chatModel)
+// Update chatModel in currentChatHistory if both nowSelectChatModel and currentChatHistory have truthy values
+if (nowSelectChatModel.value && currentChatHistory.value)
+  currentChatHistory.value.chatModel = nowSelectChatModel.value
 
 function handleClear() {
   if (loading.value)
@@ -66,11 +71,8 @@ function updateSettings(sync: boolean) {
 }
 
 async function handleSyncChatModel(chatModel: string) {
-  if (userStore.userInfo.config == null)
-    userStore.userInfo.config = new UserConfig()
-  userStore.userInfo.config.chatModel = chatModel
-  userStore.recordState()
-  await fetchUpdateUserChatModel(chatModel)
+  nowSelectChatModel.value = chatModel
+  await chatStore.setChatModel(chatModel, +uuid)
 }
 
 async function handleSaveData() {
@@ -136,7 +138,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
     <div v-if="!!authStore.token && isChatGPTAPI" class="absolute z-20 left-1/2 top-full -translate-x-1/2 cursor-pointer select-none px-4 rounded-b-md border border-neutral-300 dark:border-neutral-700 bg-[var(--pbc)] dark:bg-[var(--pbc)]" @click="show = true">
       <span class="flex items-center gap-2 hover:text-[var(--primary-color-hover)]">
         <SvgIcon :icon="modelIcon" />
-        <span>{{ userStore.userInfo.config.chatModel }}</span>
+        <span>{{ currentChatModel }}</span>
         <SvgIcon icon="ri:arrow-down-s-line" />
       </span>
     </div>
@@ -164,7 +166,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
         <div>
           <NSelect
             style="width:215px"
-            :value="userStore.userInfo.config.chatModel"
+            :value="currentChatModel"
             :options="authStore.session?.chatModels"
             :disabled="!!authStore.session?.auth && !authStore.token"
             :render-label="renderLabel"

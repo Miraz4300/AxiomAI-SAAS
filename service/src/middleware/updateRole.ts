@@ -3,6 +3,7 @@ import path from 'node:path'
 import cron from 'node-cron'
 import { UserRole } from '../storage/model'
 import { userCol } from '../storage/mongo'
+import { sendSubscriptionEndedMail } from '../utils/mail'
 
 // Function to create a new log file
 function createLogFile() {
@@ -34,9 +35,10 @@ cron.schedule('0 */3 * * *', async () => {
         operationStarted = true
       }
 
-      const logMessage = `User ID: ${user._id}\nUser Email: ${user.email}\nUser Remark: ${user.remark}\nRole updated to: Free\nUpdate Time: ${new Date().toLocaleString()}\n\n`
+      const logMessage = `User Email: ${user.email}\nSubscription: ${UserRole[user.roles[0]]}\nUser Remark: ${user.remark}\nRole updated to: Free\nUpdate Time: ${new Date().toLocaleString()}\n\n`
       logStream.write(logMessage)
       lineCount += logMessage.split('\n').length
+      await sendSubscriptionEndedMail(user.email, user.name, UserRole[user.roles[0]], user.remark.slice(11))
       await userCol.updateOne({ _id: user._id }, { $set: { roles: [UserRole.Free], remark: '' } })
 
       // Check if the log file has reached the limit

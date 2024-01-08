@@ -110,7 +110,7 @@ const columns = [
           return 'success'
         if (row.status === Status.Unverified)
           return 'warning'
-        if (row.status === Status.Disabled)
+        if (row.status === Status.Disabled || row.status === Status.Banned)
           return 'error'
         return 'default'
       })()
@@ -150,22 +150,23 @@ const columns = [
         {
           label: 'Send Message',
           key: 'sendMessage',
+          disabled: row.status !== Status.Normal,
           action: handleUserMessage,
           icon: () => getIcon('ri:notification-4-line', true),
         },
         {
           label: 'Disable Account',
           key: 'disableUser',
-          disabled: row.status === Status.Disabled,
+          disabled: row.status === Status.Disabled || row.status === Status.Banned,
           action: () => handleUpdateUserStatus(row._id, Status.Disabled, 'disable'),
-          icon: () => getIcon('mdi:user-off-outline'),
+          icon: () => getIcon('tabler:user-off'),
         },
         {
           label: 'Restore Account',
           key: 'restoreUser',
           action: () => handleUpdateUserStatus(row._id, Status.Normal, 'restore'),
-          disabled: row.status !== Status.Disabled,
-          icon: () => getIcon('mdi:account-check'),
+          show: row.status === Status.Disabled || row.status === Status.Banned,
+          icon: () => getIcon('tabler:user-check'),
         },
         {
           label: 'Verify Account',
@@ -180,6 +181,13 @@ const columns = [
           action: () => handleUpdateUserStatus(row._id, Status.Normal, 'disable2FA'),
           disabled: !row.secretKey,
           icon: () => getIcon('mdi:shield-off'),
+        },
+        {
+          label: 'Ban Account',
+          key: 'banUser',
+          action: () => handleUpdateUserStatus(row._id, Status.Banned, 'ban'),
+          show: row.status !== Status.Banned,
+          icon: () => getIcon('mdi:ban'),
         },
       ]
 
@@ -251,6 +259,7 @@ function actionDialogs(status: Status, action: string) {
     restore: { title: 'Restore Account', content: 'Are you sure to restore this user account?' },
     verify: { title: 'Verify Account', content: 'Are you sure to verify this user account?' },
     disable2FA: { title: 'Disable 2FA', content: 'Are you sure to disable 2FA for this user?' },
+    ban: { title: 'Ban Account', content: 'Are you sure to ban this user account?' },
   }
   return dialogOptions[action as keyof typeof dialogOptions] || null
 }

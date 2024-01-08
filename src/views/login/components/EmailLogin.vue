@@ -33,16 +33,14 @@ async function handleVerify(verifytoken: string) {
   try {
     loading.value = true
     const result = await fetchVerify(secretKey)
-    if (result.message === authInfoType.VERIFIED || result.message === authInfoType.PERMISSION || result.message === authInfoType.PERMISSION2)
+    if (result.message === authInfoType.VERIFIED || result.message === authInfoType.PERMISSION || result.message === authInfoType.PERMISSION2
+    || result.message === authErrorType.USDV || result.message === authErrorType.ABNORMAL2 || result.message === authErrorType.BANNED)
       router.replace({ name: 'Exception', query: { code: result.message } })
     else
       ms.success(result.message as string)
   }
   catch (error: any) {
-    if (error.errorCode === authErrorType.USDV)
-      router.replace({ name: 'Exception', query: { code: error.errorCode } })
-    else
-      ms.error(error.message ?? 'An unexpected error occurred')
+    ms.error(error.message ?? 'An unexpected error occurred')
     authStore.removeToken()
   }
   finally {
@@ -98,7 +96,8 @@ async function handleLogin() {
     router.replace(redirect ? decodeURIComponent(redirect as string) : '/')
   }
   catch (error: any) {
-    if (error.errorCode === authErrorType.UNVERIFIED || error.errorCode === authErrorType.ABNORMAL || error.errorCode === authErrorType.PERMISSION)
+    if (error.errorCode === authErrorType.UNVERIFIED || error.errorCode === authErrorType.ABNORMAL
+    || error.errorCode === authErrorType.PERMISSION || error.errorCode === authErrorType.BANNED)
       router.replace({ name: 'Exception', query: { code: error.errorCode } })
     else
       ms.error(error.message ?? 'An unexpected error occurred')

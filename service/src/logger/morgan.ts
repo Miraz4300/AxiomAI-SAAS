@@ -1,5 +1,4 @@
 import fs from 'node:fs'
-import path from 'node:path'
 import morgan from 'morgan'
 import * as rfs from 'rotating-file-stream'
 

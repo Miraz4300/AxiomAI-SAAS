@@ -16,16 +16,20 @@ export async function sendVerifyMail(toMail: string, verifyUrl: string) {
   sendMail(toMail, `Verify your email to create your ${config.siteConfig.siteTitle} account`, mailHtml, config.mailConfig)
 }
 
-// For subscription mail
-export async function sendSubscriptionMail(toMail: string, RoleName: string) {
+// For subscription mail. When subscription is ended
+export async function sendSubscriptionEndedMail(toMail: string, userName: string, roleName: string, remark: string) {
   const config = (await getCacheConfig())
 
   const templatesPath = path.join(__dirname, 'templates')
-  const mailTemplatePath = path.join(templatesPath, 'mail.subscription.template.html')
+  const mailTemplatePath = path.join(templatesPath, 'mail.subscriptionEnd.template.html')
   let mailHtml = fs.readFileSync(mailTemplatePath, 'utf8')
-  mailHtml = mailHtml.replace(/\${SUBSCRIPTION}/g, RoleName)
+  mailHtml = mailHtml.replace(/\${USER_EMAIL}/g, toMail)
+  mailHtml = mailHtml.replace(/\${USER_NAME}/g, userName)
+  mailHtml = mailHtml.replace(/\${SUBSCRIPTION_NAME}/g, roleName)
+  mailHtml = mailHtml.replace(/\${SUBSCRIPTION_END_DATE}/g, remark)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
-  sendMail(toMail, `Your ${RoleName} subscription activated`, mailHtml, config.mailConfig)
+  mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
+  sendMail(toMail, `Your ${roleName} Subscription Has Ended`, mailHtml, config.mailConfig)
 }
 
 // For admin approve mail. When registration review is enabled, this mail will be sent to the admin

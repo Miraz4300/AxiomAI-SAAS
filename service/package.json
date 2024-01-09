@@ -25,7 +25,7 @@
     "common:cleanup": "rimraf node_modules && rimraf pnpm-lock.yaml"
   },
   "dependencies": {
-    "axios": "^1.6.2",
+    "axios": "^1.6.5",
     "chatgpt": "^5.2.5",
     "connect-history-api-fallback": "^2.0.0",
     "dayjs": "^1.11.10",

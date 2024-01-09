@@ -15,7 +15,7 @@ module.exports = {
         blink: 'blink 1.2s infinite steps(1, start)',
       },
       backgroundImage: {
-        'brand-logo': 'url(\'/favicon.png\')',
+        'brand-logo': 'url(\'/axiomai-logomark.png\')',
       },
       keyframes: {
         blink: {

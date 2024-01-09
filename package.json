@@ -51,7 +51,7 @@
     "@types/node": "^20.10.4",
     "@vitejs/plugin-vue": "^4.5.2",
     "autoprefixer": "^10.4.16",
-    "axios": "^1.6.2",
+    "axios": "^1.6.5",
     "crypto-js": "^4.2.0",
     "eslint": "^8.56.0",
     "less": "^4.2.0",

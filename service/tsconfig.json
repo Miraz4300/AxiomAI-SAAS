@@ -10,7 +10,6 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "outDir": "build",
-    "noEmit": true,
     "isolatedModules": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -18,7 +17,7 @@
     "skipLibCheck": true
   },
   "include": [
-    "**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",

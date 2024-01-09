@@ -32,4 +32,4 @@ COPY --from=backend /app/src/utils/templates /app/build/templates
 RUN mkdir /app/logs
 EXPOSE 10829
 
-CMD ["sh", "-c", "pnpm run prod"]
+CMD ["sh", "-c", "node --import tsx/esm ./build/index.js"]

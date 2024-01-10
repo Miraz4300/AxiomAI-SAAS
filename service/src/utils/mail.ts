@@ -4,6 +4,7 @@ import * as url from 'node:url'
 import nodemailer from 'nodemailer'
 import type { MailConfig } from '../storage/model'
 import { getCacheConfig } from '../storage/config'
+import logger from '../logger/winston'
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
@@ -13,8 +14,32 @@ const templateFiles = fs.readdirSync(templatesPath)
 const templates = templateFiles.reduce((acc, file) => {
   const filePath = path.join(templatesPath, file)
   const fileContent = fs.readFileSync(filePath, 'utf8')
+  logger.info(`Loaded email template: ${file}`)
   return { ...acc, [file]: fileContent }
 }, {})
+
+// Create a single transporter when the application starts. Requires a restart to apply changes
+let transporter: nodemailer.Transporter | null = null
+async function getTransporter(config: MailConfig) {
+  if (!transporter) {
+    logger.info('Creating new SMTP transporter')
+    transporter = nodemailer.createTransport({
+      host: config.smtpHost,
+      port: config.smtpPort,
+      secure: config.smtpTsl,
+      auth: {
+        user: config.smtpUserName,
+        pass: config.smtpPassword,
+      },
+      pool: true,
+    })
+    logger.info(`SMTP transporter created: ${config.smtpHost}`)
+  }
+  else {
+    logger.info('Using existing SMTP transporter')
+  }
+  return transporter
+}
 
 // For verification mail
 export async function sendVerifyMail(toMail: string, verifyUrl: string) {
@@ -23,6 +48,7 @@ export async function sendVerifyMail(toMail: string, verifyUrl: string) {
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Verify your email to create your ${config.siteConfig.siteTitle} account`, mailHtml, config.mailConfig)
+  logger.info(`Verification email sent to ${toMail}`)
 }
 
 // For subscription mail. When subscription is activated
@@ -39,6 +65,7 @@ export async function sendSubscriptionMail(toMail: string, userName: string, rol
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
   sendMail(toMail, `Your ${roleName} Subscription Has Activated!`, mailHtml, config.mailConfig)
+  logger.info(`Subscription activation email sent to ${toMail}`)
 }
 
 // For subscription mail. When subscription is ended
@@ -52,6 +79,7 @@ export async function sendSubscriptionEndedMail(toMail: string, userName: string
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
   sendMail(toMail, ` Important Notice: Your ${roleName} Subscription Has Ended`, mailHtml, config.mailConfig)
+  logger.info(`Subscription expiration email sent to ${toMail}`)
 }
 
 // For admin approve mail. When registration review is enabled, this mail will be sent to the admin
@@ -62,6 +90,7 @@ export async function sendVerifyMailAdmin(toMail: string, verifyName: string, ve
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Account Application for ${config.siteConfig.siteTitle}`, mailHtml, config.mailConfig)
+  logger.info('Admin approve email sent')
 }
 
 // For reset password mail (forgot password)
@@ -71,6 +100,7 @@ export async function sendResetPasswordMail(toMail: string, verifyUrl: string) {
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Reset your ${config.siteConfig.siteTitle} account password`, mailHtml, config.mailConfig)
+  logger.info(`Reset password email sent to ${toMail}`)
 }
 
 // For notice mail. When registration review is enabled, this mail will be sent to the user
@@ -80,6 +110,7 @@ export async function sendNoticeMail(toMail: string) {
   mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Account opening verification for ${config.siteConfig.siteTitle} account`, mailHtml, config.mailConfig)
+  logger.info(`Notice email sent to ${toMail}`)
 }
 
 // For test mail (test smtp settings)
@@ -87,6 +118,7 @@ export async function sendTestMail(toMail: string, config: MailConfig) {
   return sendMail(toMail, 'Test mail', 'This is test mail', config)
 }
 
+// Send mail function
 async function sendMail(toMail: string, subject: string, html: string, config: MailConfig) {
   const mailOptions = {
     from: `AxiomAI <${config.smtpUserName}>`,
@@ -95,15 +127,13 @@ async function sendMail(toMail: string, subject: string, html: string, config: M
     html,
   }
 
-  const transporter = nodemailer.createTransport({
-    host: config.smtpHost,
-    port: config.smtpPort,
-    secure: config.smtpTsl,
-    auth: {
-      user: config.smtpUserName,
-      pass: config.smtpPassword,
-    },
-  })
-  const info = await transporter.sendMail(mailOptions)
-  return info.messageId
+  const transporter = await getTransporter(config)
+  try {
+    const info = await transporter.sendMail(mailOptions)
+    logger.info(`Email sent: ${info.messageId}`)
+    return info.messageId
+  }
+  catch (error) {
+    logger.error(`Failed to send email: ${error}`)
+  }
 }

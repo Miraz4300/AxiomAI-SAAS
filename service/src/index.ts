@@ -1,4 +1,3 @@
-import process from 'node:process'
 import express from 'express'
 import history from 'connect-history-api-fallback'
 import jwt from 'jsonwebtoken'
@@ -10,8 +9,8 @@ import requestIp from 'request-ip'
 import logger from './logger/winston'
 import morganLogger from './logger/morgan'
 import { getAzureSubscriptionKey } from './middleware/speechToken'
-import type { RequestProps } from './types'
 import { TwoFAConfig } from './types'
+import type { AuthJwtPayload, RequestProps } from './types'
 import type { ChatMessage } from './conversation-core'
 import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './conversation-core'
 import { auth, getUserId } from './middleware/auth'
@@ -758,10 +757,10 @@ router.post('/user-login', authLimiter, async (req, res) => {
       name: user.name ? user.name : user.email,
       avatar: user.avatar,
       description: user.description ? user.description : 'Innovative and strategic problem solver.',
-      userId: user._id,
+      userId: user._id.toString(),
       root: user.roles.includes(UserRole.Admin),
       config: user.config,
-    }, config.siteConfig.loginSalt.trim())
+    } as AuthJwtPayload, config.siteConfig.loginSalt.trim())
     res.send({ status: 'Success', message: 'Login successful, welcome back.', data: { token: jwtToken } })
   }
   catch (error) {

@@ -1,4 +1,3 @@
-import process from 'node:process'
 import type { WithId } from 'mongodb'
 import { MongoClient, ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'

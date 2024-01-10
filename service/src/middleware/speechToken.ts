@@ -1,4 +1,3 @@
-import process from 'node:process'
 import axios from 'axios'
 
 export interface AzureData {

@@ -48,7 +48,7 @@ export async function sendVerifyMail(toMail: string, verifyUrl: string) {
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Verify your email to create your ${config.siteConfig.siteTitle} account`, mailHtml, config.mailConfig)
-  logger.info(`Verification email sent to ${toMail}`)
+  logger.info('Verification email sent.')
 }
 
 // For subscription mail. When subscription is activated
@@ -65,7 +65,7 @@ export async function sendSubscriptionMail(toMail: string, userName: string, rol
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
   sendMail(toMail, `Your ${roleName} Subscription Has Activated!`, mailHtml, config.mailConfig)
-  logger.info(`Subscription activation email sent to ${toMail}`)
+  logger.info('Subscription activation email sent.')
 }
 
 // For subscription mail. When subscription is ended
@@ -79,7 +79,7 @@ export async function sendSubscriptionEndedMail(toMail: string, userName: string
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
   sendMail(toMail, ` Important Notice: Your ${roleName} Subscription Has Ended`, mailHtml, config.mailConfig)
-  logger.info(`Subscription expiration email sent to ${toMail}`)
+  logger.info('Subscription expiration email sent.')
 }
 
 // For admin approve mail. When registration review is enabled, this mail will be sent to the admin
@@ -100,7 +100,7 @@ export async function sendResetPasswordMail(toMail: string, verifyUrl: string) {
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Reset your ${config.siteConfig.siteTitle} account password`, mailHtml, config.mailConfig)
-  logger.info(`Reset password email sent to ${toMail}`)
+  logger.info('Reset password email sent.')
 }
 
 // For notice mail. When registration review is enabled, this mail will be sent to the user
@@ -110,7 +110,7 @@ export async function sendNoticeMail(toMail: string) {
   mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Account opening verification for ${config.siteConfig.siteTitle} account`, mailHtml, config.mailConfig)
-  logger.info(`Notice email sent to ${toMail}`)
+  logger.info('Notice email sent.')
 }
 
 // For test mail (test smtp settings)

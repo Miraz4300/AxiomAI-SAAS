@@ -7,13 +7,19 @@ import { getCacheConfig } from '../storage/config'
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
+// Load templates at startup and caches them in memory
+const templatesPath = path.join(__dirname, 'templates')
+const templateFiles = fs.readdirSync(templatesPath)
+const templates = templateFiles.reduce((acc, file) => {
+  const filePath = path.join(templatesPath, file)
+  const fileContent = fs.readFileSync(filePath, 'utf8')
+  return { ...acc, [file]: fileContent }
+}, {})
+
 // For verification mail
 export async function sendVerifyMail(toMail: string, verifyUrl: string) {
   const config = (await getCacheConfig())
-
-  const templatesPath = path.join(__dirname, 'templates')
-  const mailTemplatePath = path.join(templatesPath, 'mail.template.html')
-  let mailHtml = fs.readFileSync(mailTemplatePath, 'utf8')
+  let mailHtml = templates['mail.template.html']
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Verify your email to create your ${config.siteConfig.siteTitle} account`, mailHtml, config.mailConfig)
@@ -22,10 +28,7 @@ export async function sendVerifyMail(toMail: string, verifyUrl: string) {
 // For subscription mail. When subscription is activated
 export async function sendSubscriptionMail(toMail: string, userName: string, roleName: string, tranAmount: string, tranID: string, activeDate: string, remark: string) {
   const config = (await getCacheConfig())
-
-  const templatesPath = path.join(__dirname, 'templates')
-  const mailTemplatePath = path.join(templatesPath, 'mail.subscriptionEnd.template.html')
-  let mailHtml = fs.readFileSync(mailTemplatePath, 'utf8')
+  let mailHtml = templates['mail.subscription.template.html']
   mailHtml = mailHtml.replace(/\${USER_EMAIL}/g, toMail)
   mailHtml = mailHtml.replace(/\${USER_NAME}/g, userName)
   mailHtml = mailHtml.replace(/\${SUBSCRIPTION_NAME}/g, roleName)
@@ -41,10 +44,7 @@ export async function sendSubscriptionMail(toMail: string, userName: string, rol
 // For subscription mail. When subscription is ended
 export async function sendSubscriptionEndedMail(toMail: string, userName: string, roleName: string, remark: string) {
   const config = (await getCacheConfig())
-
-  const templatesPath = path.join(__dirname, 'templates')
-  const mailTemplatePath = path.join(templatesPath, 'mail.subscriptionEnd.template.html')
-  let mailHtml = fs.readFileSync(mailTemplatePath, 'utf8')
+  let mailHtml = templates['mail.subscriptionEnd.template.html']
   mailHtml = mailHtml.replace(/\${USER_EMAIL}/g, toMail)
   mailHtml = mailHtml.replace(/\${USER_NAME}/g, userName)
   mailHtml = mailHtml.replace(/\${SUBSCRIPTION_NAME}/g, roleName)
@@ -57,22 +57,17 @@ export async function sendSubscriptionEndedMail(toMail: string, userName: string
 // For admin approve mail. When registration review is enabled, this mail will be sent to the admin
 export async function sendVerifyMailAdmin(toMail: string, verifyName: string, verifyUrl: string) {
   const config = (await getCacheConfig())
-
-  const templatesPath = path.join(__dirname, 'templates')
-  const mailTemplatePath = path.join(templatesPath, 'mail.admin.template.html')
-  let mailHtml = fs.readFileSync(mailTemplatePath, 'utf8')
+  let mailHtml = templates['mail.admin.template.html']
   mailHtml = mailHtml.replace(/\${TO_MAIL}/g, verifyName)
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Account Application for ${config.siteConfig.siteTitle}`, mailHtml, config.mailConfig)
 }
 
-// For reset password mail
+// For reset password mail (forgot password)
 export async function sendResetPasswordMail(toMail: string, verifyUrl: string) {
   const config = (await getCacheConfig())
-  const templatesPath = path.join(__dirname, 'templates')
-  const mailTemplatePath = path.join(templatesPath, 'mail.resetpassword.template.html')
-  let mailHtml = fs.readFileSync(mailTemplatePath, 'utf8')
+  let mailHtml = templates['mail.resetpassword.template.html']
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Reset your ${config.siteConfig.siteTitle} account password`, mailHtml, config.mailConfig)
@@ -81,16 +76,13 @@ export async function sendResetPasswordMail(toMail: string, verifyUrl: string) {
 // For notice mail. When registration review is enabled, this mail will be sent to the user
 export async function sendNoticeMail(toMail: string) {
   const config = (await getCacheConfig())
-
-  const templatesPath = path.join(__dirname, 'templates')
-  const mailTemplatePath = path.join(templatesPath, 'mail.notice.template.html')
-  let mailHtml = fs.readFileSync(mailTemplatePath, 'utf8')
+  let mailHtml = templates['mail.notice.template.html']
   mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Account opening verification for ${config.siteConfig.siteTitle} account`, mailHtml, config.mailConfig)
 }
 
-// For test mail
+// For test mail (test smtp settings)
 export async function sendTestMail(toMail: string, config: MailConfig) {
   return sendMail(toMail, 'Test mail', 'This is test mail', config)
 }

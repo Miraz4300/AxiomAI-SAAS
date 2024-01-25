@@ -403,8 +403,8 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
 
   const personaLookup = {
     precise: { temperature: 0.2, top_p: 0.5 },
-    balanced: { temperature: 0.7, top_p: 1.0 },
-    creative: { temperature: 1.5, top_p: 1.0 },
+    balanced: { temperature: 0.7, top_p: 0.8 },
+    creative: { temperature: 1.0, top_p: 1.0 },
   }
   const { temperature, top_p } = personaLookup[persona] || personaLookup.balanced
 

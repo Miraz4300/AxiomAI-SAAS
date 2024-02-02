@@ -652,6 +652,23 @@ router.post('/session', async (req, res) => {
     let userInfo: { email: string; name: string; description: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig; advanced: AdvancedConfig }
     if (userId != null) {
       const user = await getUserById(userId)
+      if (user === null) {
+        globalThis.console.error(`session userId ${userId} but query user is null.`)
+        res.send({
+          status: 'Success',
+          message: '',
+          data: {
+            auth: hasAuth,
+            allowRegister,
+            model: config.apiModel,
+            title: config.siteConfig.siteTitle,
+            chatModels,
+            allChatModels: chatModelOptions,
+          },
+        })
+        return
+      }
+
       userInfo = {
         email: user.email,
         name: user.name,

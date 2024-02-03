@@ -23,7 +23,11 @@ export function isFunction<T extends (...args: any[]) => any | void | never>(val
 }
 
 export function isEmail(value: any): boolean {
-  return isNotEmptyString(value) && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
+  const localPart = value.substring(0, value.lastIndexOf('@'))
+  const domainPart = value.substring(value.lastIndexOf('@') + 1)
+  const localPartRegex = /^(?!.*([_.-]).*\1)[a-zA-Z0-9._-]+$/
+  const domainPartRegex = /^([a-zA-Z0-9-]+\.){1,2}[a-zA-Z]{2,3}$/
+  return isNotEmptyString(value) && localPartRegex.test(localPart) && domainPartRegex.test(domainPart)
 }
 
 export function isTextAuditServiceProvider(value: any): value is TextAuditServiceProvider {

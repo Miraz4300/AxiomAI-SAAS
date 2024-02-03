@@ -552,7 +552,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
       return
     }
     if (!isEmail(username)) {
-      res.send({ status: 'Fail', message: 'Please enter a valid email address', data: null })
+      res.send({ status: 'Fail', message: 'Please enter a valid email address! Note: Repeated attempts to enter multiple spam email addresses may result in a permanent ban for your geolocation.', data: null })
       return
     }
     if (isNotEmptyString(config.siteConfig.registerMails)) {

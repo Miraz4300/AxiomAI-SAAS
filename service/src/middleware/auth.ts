@@ -4,6 +4,7 @@ import { getCacheConfig } from '../storage/config'
 import { getUserById } from '../storage/mongo'
 import { Status } from '../storage/model'
 import type { AuthJwtPayload } from '../types'
+import logger from '../logger/winston'
 
 async function auth(req, res, next) {
   const config = await getCacheConfig()
@@ -38,7 +39,7 @@ async function getUserId(req: Request): Promise<string | undefined> {
     return info.userId
   }
   catch (error) {
-    globalThis.console.error(`auth middleware getUserId error from token ${token} `, error.message)
+    logger.error(`auth middleware getUserId error from token: ${token} `, error.message)
   }
   return null
 }

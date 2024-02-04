@@ -25,7 +25,7 @@ export function isFunction<T extends (...args: any[]) => any | void | never>(val
 export function isEmail(value: any): boolean {
   const localPart = value.substring(0, value.lastIndexOf('@'))
   const domainPart = value.substring(value.lastIndexOf('@') + 1)
-  const localPartRegex = /^([a-zA-Z0-9]+([-]{1}[a-zA-Z0-9]+)?([.]{1}[a-zA-Z0-9]+){0,2}|[a-zA-Z0-9]+[_]{1}[a-zA-Z0-9]+)?$/
+  const localPartRegex = /^([a-zA-Z0-9]+([-]{1}[a-zA-Z0-9]+)?|[a-zA-Z0-9]+([.]{1}[a-zA-Z0-9]+){0,2}|[a-zA-Z0-9]+[_]{1}[a-zA-Z0-9]+)?$/
   const domainPartRegex = /^([a-zA-Z0-9-]+\.){1,2}[a-zA-Z]{2,3}$/
   return isNotEmptyString(value) && localPartRegex.test(localPart) && domainPartRegex.test(domainPart)
 }

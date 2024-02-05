@@ -118,7 +118,7 @@ async function handleLogin() {
   <div class="flex flex-col gap-2">
     <NInputGroup>
       <NInput v-model:value="username" type="text" placeholder="Email" class="mb-2" />
-      <NInput v-model:value="password" type="password" placeholder="Password" class="mb-2" @keypress="handlePress" />
+      <NInput v-model:value="password" type="password" placeholder="Password" show-password-on="mousedown" class="mb-2" @keypress="handlePress" />
     </NInputGroup>
     <NButton block type="primary" :disabled="disabled" :loading="loading" @click="handleLogin">
       Login

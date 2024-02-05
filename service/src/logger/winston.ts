@@ -18,6 +18,14 @@ const logger = winston.createLogger({
       maxFiles: '180d', // Keep logs for 180 days
     }),
     new winston.transports.DailyRotateFile({
+      filename: '/app/logs/winston/warn-%DATE%.log',
+      level: 'warn', // Log only warn messages
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true, // Compress the log files
+      maxSize: '20m', // Rotate log files larger than 20 megabytes
+      maxFiles: '180d', // Keep logs for 180 days
+    }),
+    new winston.transports.DailyRotateFile({
       filename: '/app/logs/winston/combined-%DATE%.log',
       datePattern: 'YYYY-MM-DD',
       zippedArchive: true,

@@ -50,7 +50,7 @@ async function handleRegister() {
     if (error.errorCode === authErrorType.PERMISSION || error.errorCode === authErrorType.BANNED)
       router.replace({ name: 'Exception', query: { code: error.errorCode } })
     else
-      ms.error(error.message ?? 'An unexpected error occurred')
+      ms.error(error.message ?? 'An unexpected error occurred', { duration: 5000, keepAliveOnHover: true })
   }
   finally {
     loading.value = false
@@ -67,12 +67,13 @@ async function handleRegister() {
   <div class="flex flex-col gap-2">
     <NInputGroup>
       <NInput v-model:value="username" type="text" placeholder="Email" class="mb-2" />
-      <NInput v-model:value="password" type="password" placeholder="Password" class="mb-2" @input="handlePasswordInput" />
+      <NInput v-model:value="password" type="password" placeholder="Password" show-password-on="mousedown" class="mb-2" @input="handlePasswordInput" />
       <NInput
         v-if="showConfirmPassword"
         v-model:value="confirmPassword"
         type="password"
         placeholder="Confirm Password"
+        show-password-on="mousedown"
         class="mb-2"
         :status="confirmPasswordStatus"
       />

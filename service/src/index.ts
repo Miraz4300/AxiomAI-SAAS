@@ -426,6 +426,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
     if (config.auditConfig.enabled || config.auditConfig.customizeEnabled) {
       if (!user.roles.includes(UserRole.Admin) && await containsSensitiveWords(config.auditConfig, prompt)) {
         res.send({ status: 'Fail', message: '**❌ Contains sensitive words.**', data: null })
+        logger.warn(`Contains sensitive words: ${prompt}, From User: ${userId}, From IP: ${req.ip}`)
         return
       }
     }
@@ -552,7 +553,8 @@ router.post('/user-register', authLimiter, async (req, res) => {
       return
     }
     if (!isEmail(username)) {
-      res.send({ status: 'Fail', message: 'Please enter a valid email address', data: null })
+      res.send({ status: 'Fail', message: 'Please enter a valid email address! Note: Repeated attempts to enter multiple spam email addresses may result in a permanent ban for your geolocation.', data: null })
+      logger.warn(`Suspicious email address detected: ${username}, From IP: ${req.ip}`)
       return
     }
     if (isNotEmptyString(config.siteConfig.registerMails)) {
@@ -566,6 +568,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
       }
       if (!allowSuffix) {
         res.send({ status: 'Fail', message: 'This email address is not allowed', data: null })
+        logger.warn(`Invalid email domain: ${username}, From IP: ${req.ip}`)
         return
       }
     }
@@ -575,17 +578,21 @@ router.post('/user-register', authLimiter, async (req, res) => {
       if (user.status === Status.Unverified) {
         await sendVerifyMail(username, await getUserVerifyUrl(username))
         res.send({ status: 'Success', message: authInfoType.UNVERIFIED2, data: null })
+        logger.info(`Resended verification email to: ${username}, From IP: ${req.ip}`)
         return
       }
       if (user.status === Status.AdminVerify) {
         res.send({ status: 'Fail', errorCode: authErrorType.PERMISSION, data: null })
+        logger.warn(`Permission needed & user trying to register: ${username}, From IP: ${req.ip}`)
         return
       }
       if (user.status === Status.Banned) {
         res.send({ status: 'Fail', errorCode: authErrorType.BANNED, data: null })
+        logger.warn(`Banned user trying to register: ${username}, From IP: ${req.ip}`)
         return
       }
       res.send({ status: 'Fail', message: 'The email address given has already been registered within our system!', data: null })
+      logger.warn(`Duplicate email trying to register: ${username}, From IP: ${req.ip}`)
       return
     }
     const newPassword = md5(password)
@@ -594,14 +601,17 @@ router.post('/user-register', authLimiter, async (req, res) => {
 
     if (isRoot) {
       res.send({ status: 'Success', message: authInfoType.AASV, data: null })
+      logger.info(`Registered new root user: ${username}, From IP: ${req.ip}`)
     }
     else {
       await sendVerifyMail(username, await getUserVerifyUrl(username))
       res.send({ status: 'Success', message: authInfoType.UNVERIFIED, data: null })
+      logger.info(`Registered new email: ${username}, From IP: ${req.ip}`)
     }
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
+    logger.error(`Register route error: ${error.message}, From IP: ${req.ip}`)
   }
 })
 
@@ -611,6 +621,7 @@ router.post('/oauth3', rootAuth, async (req, res) => {
 
     if (!isAdmin(userId))
       throw new Error('⚠️ No permission')
+    logger.warn(`Suspicious activity detected. Unauthorized access to oauth3 (rootAuth): ${userId}, From IP: ${req.ip}`)
 
     const response = await chatConfig()
     res.send(response)
@@ -652,6 +663,23 @@ router.post('/session', async (req, res) => {
     let userInfo: { email: string; name: string; description: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig; advanced: AdvancedConfig }
     if (userId != null) {
       const user = await getUserById(userId)
+      if (user === null) {
+        globalThis.console.error(`session userId ${userId} but query user is null.`)
+        res.send({
+          status: 'Success',
+          message: '',
+          data: {
+            auth: hasAuth,
+            allowRegister,
+            model: config.apiModel,
+            title: config.siteConfig.siteTitle,
+            chatModels,
+            allChatModels: chatModelOptions,
+          },
+        })
+        return
+      }
+
       userInfo = {
         email: user.email,
         name: user.name,

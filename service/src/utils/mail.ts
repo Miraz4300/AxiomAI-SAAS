@@ -52,14 +52,15 @@ export async function sendVerifyMail(toMail: string, verifyUrl: string) {
 }
 
 // For subscription mail. When subscription is activated
-export async function sendSubscriptionMail(toMail: string, userName: string, roleName: string, tranAmount: string, tranID: string, activeDate: string, remark: string) {
+export async function sendSubscriptionMail(toMail: string, userName: string, roleName: string, trxMethod: string, trxAmount: string, trxID: string, activeDate: string, remark: string) {
   const config = (await getCacheConfig())
   let mailHtml = templates['mail.subscription.template.html']
   mailHtml = mailHtml.replace(/\${USER_EMAIL}/g, toMail)
   mailHtml = mailHtml.replace(/\${USER_NAME}/g, userName)
   mailHtml = mailHtml.replace(/\${SUBSCRIPTION_NAME}/g, roleName)
-  mailHtml = mailHtml.replace(/\${TRANSACTION_AMOUNT}/g, tranAmount)
-  mailHtml = mailHtml.replace(/\${TRANSACTION_ID}/g, tranID)
+  mailHtml = mailHtml.replace(/\${PAYMENT_METHOD}/g, trxMethod)
+  mailHtml = mailHtml.replace(/\${PAYMENT_AMOUNT}/g, trxAmount)
+  mailHtml = mailHtml.replace(/\${TRANSACTION_ID}/g, trxID)
   mailHtml = mailHtml.replace(/\${SUBSCRIPTION_ACTIVE_DATE}/g, activeDate)
   mailHtml = mailHtml.replace(/\${SUBSCRIPTION_END_DATE}/g, remark)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)

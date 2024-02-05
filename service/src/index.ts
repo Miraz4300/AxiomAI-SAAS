@@ -426,6 +426,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
     if (config.auditConfig.enabled || config.auditConfig.customizeEnabled) {
       if (!user.roles.includes(UserRole.Admin) && await containsSensitiveWords(config.auditConfig, prompt)) {
         res.send({ status: 'Fail', message: '**❌ Contains sensitive words.**', data: null })
+        logger.warn(`Contains sensitive words: ${prompt}, From User: ${userId}, From IP: ${req.ip}`)
         return
       }
     }
@@ -620,6 +621,7 @@ router.post('/oauth3', rootAuth, async (req, res) => {
 
     if (!isAdmin(userId))
       throw new Error('⚠️ No permission')
+    logger.warn(`Suspicious activity detected. Unauthorized access to oauth3 (rootAuth): ${userId}, From IP: ${req.ip}`)
 
     const response = await chatConfig()
     res.send(response)

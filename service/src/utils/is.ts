@@ -26,7 +26,7 @@ export function isEmail(value: any): boolean {
   const localPart = value.substring(0, value.lastIndexOf('@'))
   const domainPart = value.substring(value.lastIndexOf('@') + 1)
   const localPartRegex = /^([a-zA-Z0-9]+([-]{1}[a-zA-Z0-9]+)?|[a-zA-Z0-9]+([.]{1}[a-zA-Z0-9]+){0,2}|[a-zA-Z0-9]+[_]{1}[a-zA-Z0-9]+)?$/
-  const domainPartRegex = /^([a-zA-Z0-9-]+\.){1,2}[a-zA-Z]{2,3}$/
+  const domainPartRegex = /^([a-zA-Z0-9-]+\.){1,3}[a-zA-Z]{2,3}$/ // 3 levels of domain name and 2-3 characters for the top-level domain
   return isNotEmptyString(value) && localPartRegex.test(localPart) && domainPartRegex.test(domainPart)
 }
 

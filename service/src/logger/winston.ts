@@ -12,25 +12,25 @@ const logger = winston.createLogger({
     new winston.transports.DailyRotateFile({
       filename: '/app/logs/winston/error-%DATE%.log',
       level: 'error', // Log only error messages
-      datePattern: 'YYYY-MM-DD',
+      datePattern: 'YYYY-MM', // Rotate log files every month
       zippedArchive: true, // Compress the log files
       maxSize: '20m', // Rotate log files larger than 20 megabytes
-      maxFiles: '180d', // Keep logs for 180 days
+      maxFiles: '365d', // Keep logs for 365 days before deleting
     }),
     new winston.transports.DailyRotateFile({
       filename: '/app/logs/winston/warn-%DATE%.log',
       level: 'warn', // Log only warn messages
-      datePattern: 'YYYY-MM-DD',
-      zippedArchive: true, // Compress the log files
-      maxSize: '20m', // Rotate log files larger than 20 megabytes
-      maxFiles: '180d', // Keep logs for 180 days
+      datePattern: 'YYYY-MM',
+      zippedArchive: true,
+      maxSize: '20m',
+      maxFiles: '365d',
     }),
     new winston.transports.DailyRotateFile({
       filename: '/app/logs/winston/combined-%DATE%.log',
-      datePattern: 'YYYY-MM-DD',
+      datePattern: 'YYYY-MM',
       zippedArchive: true,
       maxSize: '40m',
-      maxFiles: '180d',
+      maxFiles: '365d',
     }),
   ],
 })

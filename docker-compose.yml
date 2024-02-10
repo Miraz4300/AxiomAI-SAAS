@@ -46,6 +46,12 @@ services:
 
       # DataDog APM
       DD_AGENT_HOST: datadog
+
+      # Loki Host
+      LOKI_HOST:
+
+      # Loki Auth. Format: "username:password"
+      LOKI_BASICAUTH:
       
     depends_on:
     - datadog
@@ -82,6 +88,7 @@ services:
      - /proc/:/host/proc/:ro
      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
 
+# Volumes
 volumes:
   nginxCONF:
   logs:

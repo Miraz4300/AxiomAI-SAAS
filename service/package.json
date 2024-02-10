@@ -46,7 +46,8 @@
     "speakeasy": "^2.0.0",
     "tsx": "^4.7.0",
     "winston": "^3.11.0",
-    "winston-daily-rotate-file": "^4.7.1"
+    "winston-daily-rotate-file": "^4.7.1",
+    "winston-loki": "^6.0.8"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.43.1",

@@ -1,5 +1,9 @@
 import winston from 'winston'
+import LokiTransport from 'winston-loki'
 import 'winston-daily-rotate-file'
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 
 const logger = winston.createLogger({
   level: 'verbose', // Log upto verbose level. Prioritized from 0 to 5 (highest to lowest) - error, warn, info, http, verbose, debug, silly.
@@ -31,6 +35,13 @@ const logger = winston.createLogger({
       zippedArchive: true,
       maxSize: '40m',
       maxFiles: '365d',
+    }),
+    new LokiTransport({
+      host: process.env.LOKI_HOST,
+      basicAuth: process.env.LOKI_BASICAUTH,
+      json: true,
+      replaceTimestamp: true,
+      onConnectionError: err => console.error(err),
     }),
   ],
 })

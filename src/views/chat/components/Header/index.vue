@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { computed, defineAsyncComponent, h, ref } from 'vue'
+import { computed, defineAsyncComponent, h, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { NButton, NInput, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
 import { useAppStore, useAuthStore, useChatStore, useUserStore } from '@/store'
@@ -25,14 +25,17 @@ const testing = ref(false)
 const loading = ref<boolean>(false)
 
 const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
-
 const currentChatHistory = computed(() => chatStore.getChatHistoryByCurrentActive)
-
 const { uuid } = route.params as { uuid: string }
 const dataSources = computed(() => chatStore.getChatByUuid(+uuid))
 
 const nowSelectChatModel = ref<string | null>(null)
 const currentChatModel = computed(() => nowSelectChatModel.value ?? currentChatHistory.value?.chatModel ?? userStore.userInfo.config.chatModel)
+// Update currentChatModel in localStorage
+watch(() => currentChatModel.value, (newVal) => {
+  localStorage.setItem('currentChatModel', JSON.stringify(newVal))
+})
+
 // Update chatModel in currentChatHistory if both nowSelectChatModel and currentChatHistory have truthy values
 if (nowSelectChatModel.value && currentChatHistory.value)
   currentChatHistory.value.chatModel = nowSelectChatModel.value
@@ -106,7 +109,7 @@ function renderLabel(option: { value: string }) {
 }
 
 const modelIcon = computed(() => {
-  return userStore.userInfo.config.chatModel?.includes('gemini-pro') ? 'ri:google-fill' : 'ri:sparkling-fill'
+  return currentChatModel.value?.includes('gemini-pro') ? 'ri:google-fill' : 'ri:sparkling-fill'
 })
 
 const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))

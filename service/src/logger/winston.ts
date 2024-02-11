@@ -11,7 +11,7 @@ const logger = winston.createLogger({
     winston.format.timestamp(),
     winston.format.json(),
   ),
-  defaultMeta: { service: 'EXPRESS-ROUTER' }, // For metadata use like this: logger.info('User signed up', { service: 'ROUTES' })
+  // defaultMeta: { service: 'EXPRESS-ROUTER' }, // For metadata: logger.info('User signed up', { service: 'ROUTES' })
   transports: [
     new winston.transports.DailyRotateFile({
       filename: '/app/logs/winston/error-%DATE%.log',
@@ -41,6 +41,7 @@ const logger = winston.createLogger({
       basicAuth: process.env.LOKI_BASICAUTH,
       json: true,
       replaceTimestamp: true,
+      labels: { environment: process.env.NODE_ENV },
       onConnectionError: err => console.error(err),
     }),
   ],

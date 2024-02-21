@@ -127,7 +127,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
           <SvgIcon v-if="collapsed" class="text-xl" icon="ri:align-justify" />
           <SvgIcon v-else class="text-xl" icon="ri:align-right" />
         </ToolButton>
-        <span class="flex-1 overflow-hidden select-none text-ellipsis whitespace-nowrap max-w-[340px]" :class="[isMobile ? '' : 'text-base font-bold']">
+        <span class="flex-1 overflow-hidden select-none text-ellipsis whitespace-nowrap max-w-[340px]" :class="[isMobile ? '' : 'font-semibold']">
           {{ currentChatHistory?.title ?? '' }}
         </span>
       </div>

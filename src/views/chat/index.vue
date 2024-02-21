@@ -534,7 +534,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
     <Header />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
-        <div id="image-wrapper" class="w-full max-w-screen-2xl pt-6 m-auto" :class="[isMobile ? 'p-2' : 'p-4']">
+        <div id="image-wrapper" class="w-full max-w-screen-xl pt-6 m-auto" :class="[isMobile ? 'p-2' : 'p-4']">
           <NSpin :show="firstLoading" :rotate="false">
             <template #icon>
               <SvgIcon icon="svg-spinners:180-ring-with-bg" />
@@ -613,7 +613,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
       </div>
     </main>
     <footer :class="[isMobile ? 'p-2 pr-3' : 'p-4']">
-      <div class="m-auto max-w-screen-2xl" :class="[isMobile ? 'pl-1' : 'px-4']">
+      <div class="m-auto max-w-screen-xl" :class="[isMobile ? 'pl-1' : 'px-4']">
         <div v-if="loading" class="pb-4 flex justify-center">
           <NButton ghost @click="handleStop">
             <template #icon>
@@ -632,7 +632,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
               :disabled="!!authStore.session?.auth && !authStore.token"
               type="textarea"
               :placeholder="t('chat.placeholderText')"
-              :autosize="{ minRows: isMobile ? 1 : 2, maxRows: isMobile ? 4 : 8 }"
+              :autosize="{ minRows: isMobile ? 1 : 1, maxRows: isMobile ? 4 : 8 }"
               :theme-overrides="inputThemeOverrides.Input"
               @keypress="handleEnter"
             />

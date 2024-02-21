@@ -18,7 +18,7 @@ const { isMobile } = useBasicLayout()
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
-const getContainerClass = computed(() => ['h-full', { 'pl-[260px]': !isMobile.value && !collapsed.value }])
+const getContainerClass = computed(() => ['h-full', { abc: !isMobile.value && !collapsed.value }])
 </script>
 
 <template>

@@ -1,5 +1,4 @@
 import fs from 'node:fs'
-import type { StreamOptions } from 'morgan'
 import morgan from 'morgan'
 import * as rfs from 'rotating-file-stream'
 
@@ -15,8 +14,6 @@ const accessLogStream = rfs.createStream('morgan.log', {
   maxFiles: 180, // keep upto 180 log files
 })
 
-const morganLogger: morgan.Morgan<StreamOptions> = process.env.NODE_ENV === 'production'
-  ? morgan('combined', { stream: accessLogStream })
-  : morgan('dev')
+const morganLogger = morgan('combined', { stream: accessLogStream })
 
 export default morganLogger

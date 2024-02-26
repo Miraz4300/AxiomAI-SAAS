@@ -62,6 +62,7 @@ import { sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, se
 import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
 import { isAdmin, rootAuth } from './middleware/rootAuth'
 import './middleware/updateRole'
+import { isAllowed } from './middleware/userRateLimit'
 
 dotenv.config()
 
@@ -423,6 +424,14 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
     const config = await getCacheConfig()
     const userId = req.headers.userId.toString()
     const user = await getUserById(userId)
+    // Check if the user is allowed to use the service. Applies to all users except Free users
+    const { allowed, resetTime } = await isAllowed(userId)
+    if (!user.roles.includes(UserRole.Free) && !allowed) {
+      const message = `You've reached the current usages cap for ${UserRole[user.roles[0]]} subscription, please try again after **${resetTime}**.`
+      res.send({ status: 'Fail', message, data: null })
+      return
+    }
+
     if (config.auditConfig.enabled || config.auditConfig.customizeEnabled) {
       if (!user.roles.includes(UserRole.Admin) && await containsSensitiveWords(config.auditConfig, prompt)) {
         res.send({ status: 'Fail', message: '**❌ Contains sensitive words.**', data: null })

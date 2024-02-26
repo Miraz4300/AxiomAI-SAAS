@@ -26,7 +26,7 @@ catch (e) {
 const chatCol = client.db(dbName).collection<ChatInfo>('chat')
 const roomCol = client.db(dbName).collection<ChatRoom>('chat_room')
 export const userCol = client.db(dbName).collection<UserInfo>('user')
-const configCol = client.db(dbName).collection<Config>('config')
+export const configCol = client.db(dbName).collection<Config>('config')
 const usageCol = client.db(dbName).collection<ChatUsage>('chat_usage')
 const keyCol = client.db(dbName).collection<KeyConfig>('key_config')
 
@@ -38,6 +38,7 @@ const keyCol = client.db(dbName).collection<KeyConfig>('key_config')
  * @param options
  * @returns model
  */
+
 export async function insertChat(uuid: number, text: string, roomId: number, options?: ChatOptions) {
   const chatInfo = new ChatInfo(roomId, uuid, text, options)
   await chatCol.insertOne(chatInfo)

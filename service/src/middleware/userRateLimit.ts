@@ -6,7 +6,11 @@ import logger from '../logger/winston'
 
 dotenv.config()
 
-const redis = new Redis(process.env.REDIS_URL)
+const redis = new Redis({
+  host: process.env.REDIS_HOST,
+  port: Number.parseInt(process.env.REDIS_PORT),
+  password: process.env.REDIS_PASSWORD,
+})
 
 // Log Redis connection events
 redis.on('connect', () => {

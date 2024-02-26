@@ -25,7 +25,9 @@ services:
       MONGODB_URL: ''
 
       # Redis Connection String
-      REDIS_URL: redis://redis
+      REDIS_HOST: 
+      REDIS_PORT: 
+      REDIS_PASSWORD: 
 
       # ----- Only valid after setting AUTH_SECRET_KEY begin ----
       # JWT secret key | Empty key will disable authentication system

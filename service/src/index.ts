@@ -1424,4 +1424,4 @@ app.use(express.static('public'))
 app.use('', router)
 app.use('/axiomnode', router)
 
-app.listen(10829, () => globalThis.console.log('AxiomNode is running on port 10829'))
+app.listen(10829)

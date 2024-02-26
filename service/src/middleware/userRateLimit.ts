@@ -1,8 +1,25 @@
 import crypto from 'node:crypto'
 import Redis from 'ioredis'
+import * as dotenv from 'dotenv'
 import { configCol } from '../storage/mongo'
+import logger from '../logger/winston'
 
-const redis = new Redis('redis://192.168.68.200:6379')
+dotenv.config()
+
+const redis = new Redis(process.env.REDIS_URL)
+
+// Log Redis connection events
+redis.on('connect', () => {
+  logger.info('Connected to Redis')
+})
+
+redis.on('error', (error) => {
+  logger.error(`Redis error: ${error.message}`)
+})
+
+redis.on('close', () => {
+  logger.warn('Redis connection closed')
+})
 
 // Hash the user ID to use it as a key in Redis
 function hashUserId(userId: string) {

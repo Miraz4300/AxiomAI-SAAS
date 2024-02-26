@@ -3,6 +3,7 @@ import { MongoClient, ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
 import dayjs from 'dayjs'
 import { md5 } from '../utils/security'
+import logger from '../logger/winston'
 import type { AdvancedConfig, ChatOptions, Config, KeyConfig, UsageResponse } from './model'
 import { ChatInfo, ChatRoom, ChatUsage, Status, UserConfig, UserInfo, UserRole } from './model'
 import { getCacheConfig } from './config'
@@ -17,9 +18,10 @@ try {
   client = new MongoClient(url)
   const parsedUrl = new URL(url)
   dbName = (parsedUrl.pathname && parsedUrl.pathname !== '/') ? parsedUrl.pathname.substring(1) : 'axiomdb'
+  logger.info('Connected to MongoDB')
 }
 catch (e) {
-  globalThis.console.error('MongoDB url invalid. please ensure set valid env MONGODB_URL.', e.message)
+  logger.error('MongoDB url invalid. please ensure set valid env MONGODB_URL', e.message)
   process.exit(1)
 }
 

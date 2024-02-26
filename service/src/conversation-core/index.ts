@@ -121,7 +121,7 @@ async function chatReplyProcess(options: RequestOptions) {
 
   const messageId = options.messageId
   if (key == null || key === undefined)
-    throw new Error('No available configuration. Please try again.')
+    throw new Error('No available subscription configuration. Please try again.')
 
   if (key.keyModel === 'ChatGPTUnofficialProxyAPI') {
     if (!options.room.accountId)

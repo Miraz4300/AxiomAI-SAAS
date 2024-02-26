@@ -3,6 +3,7 @@ import { MongoClient, ObjectId } from 'mongodb'
 import * as dotenv from 'dotenv'
 import dayjs from 'dayjs'
 import { md5 } from '../utils/security'
+import logger from '../logger/winston'
 import type { AdvancedConfig, ChatOptions, Config, KeyConfig, UsageResponse } from './model'
 import { ChatInfo, ChatRoom, ChatUsage, Status, UserConfig, UserInfo, UserRole } from './model'
 import { getCacheConfig } from './config'
@@ -17,16 +18,17 @@ try {
   client = new MongoClient(url)
   const parsedUrl = new URL(url)
   dbName = (parsedUrl.pathname && parsedUrl.pathname !== '/') ? parsedUrl.pathname.substring(1) : 'axiomdb'
+  logger.info('Connected to MongoDB')
 }
 catch (e) {
-  globalThis.console.error('MongoDB url invalid. please ensure set valid env MONGODB_URL.', e.message)
+  logger.error('MongoDB url invalid. please ensure set valid env MONGODB_URL', e.message)
   process.exit(1)
 }
 
 const chatCol = client.db(dbName).collection<ChatInfo>('chat')
 const roomCol = client.db(dbName).collection<ChatRoom>('chat_room')
 export const userCol = client.db(dbName).collection<UserInfo>('user')
-const configCol = client.db(dbName).collection<Config>('config')
+export const configCol = client.db(dbName).collection<Config>('config')
 const usageCol = client.db(dbName).collection<ChatUsage>('chat_usage')
 const keyCol = client.db(dbName).collection<KeyConfig>('key_config')
 
@@ -38,6 +40,7 @@ const keyCol = client.db(dbName).collection<KeyConfig>('key_config')
  * @param options
  * @returns model
  */
+
 export async function insertChat(uuid: number, text: string, roomId: number, options?: ChatOptions) {
   const chatInfo = new ChatInfo(roomId, uuid, text, options)
   await chatCol.insertOne(chatInfo)

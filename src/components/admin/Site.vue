@@ -1,6 +1,6 @@
 <script setup lang='ts'>
-import { onMounted, ref } from 'vue'
-import { NButton, NInput, NSpin, NSwitch, useMessage } from 'naive-ui'
+import { computed, onMounted, ref } from 'vue'
+import { NButton, NInput, NInputNumber, NSpin, NSwitch, useMessage } from 'naive-ui'
 import type { ConfigState } from './model'
 import { SiteConfig } from './model'
 import { fetchChatConfig, fetchUpdateSite } from '@/api'
@@ -12,6 +12,14 @@ const saving = ref(false)
 
 const config = ref<SiteConfig>()
 config.value = new SiteConfig()
+
+const rateLimit = computed({
+  get: () => config.value?.rateLimit,
+  set: (value) => {
+    if (config.value)
+      config.value.rateLimit = value
+  },
+})
 
 async function fetchConfig() {
   try {
@@ -126,6 +134,17 @@ onMounted(() => {
               :autosize="{ minRows: 1, maxRows: 4 }"
               style="width: 100%; max-width: 720px"
               @input="(val) => { if (config) config.chatModels = val }"
+            />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">Rate Limit</span>
+          <div class="flex-1">
+            <NInputNumber
+              v-model:value="rateLimit"
+              :min="0"
+              placeholder="rate limit per hour. 0 means no limit"
+              style="width: 100%; max-width: 720px"
             />
           </div>
         </div>

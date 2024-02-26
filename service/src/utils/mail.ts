@@ -14,9 +14,9 @@ const templateFiles = fs.readdirSync(templatesPath)
 const templates = templateFiles.reduce((acc, file) => {
   const filePath = path.join(templatesPath, file)
   const fileContent = fs.readFileSync(filePath, 'utf8')
-  logger.info(`Loaded email template: ${file}`)
   return { ...acc, [file]: fileContent }
 }, {})
+logger.info('Loaded all email templates into RAM')
 
 // Create a single transporter when the application starts. Requires a restart to apply changes
 let transporter: nodemailer.Transporter | null = null

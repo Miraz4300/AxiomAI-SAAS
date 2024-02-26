@@ -24,6 +24,11 @@ services:
       # MONGODB_URL=mongodb://username:password@hostname:port
       MONGODB_URL: ''
 
+      # Redis Connection String
+      REDIS_HOST: 
+      REDIS_PORT: 
+      REDIS_PASSWORD: 
+
       # ----- Only valid after setting AUTH_SECRET_KEY begin ----
       # JWT secret key | Empty key will disable authentication system
       AUTH_SECRET_KEY:
@@ -87,6 +92,12 @@ services:
      - /var/run/docker.sock:/var/run/docker.sock
      - /proc/:/host/proc/:ro
      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
+
+  # Redis Cache for rate limiting
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
 
 # Volumes
 volumes:

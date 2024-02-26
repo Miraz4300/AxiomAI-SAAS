@@ -427,7 +427,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
     // Check if the user is allowed to use the service. Applies to all users except Free users
     const { allowed, resetTime } = await isAllowed(userId)
     if (!user.roles.includes(UserRole.Free) && !allowed) {
-      const message = `You've reached the current usages cap for ${UserRole[user.roles[0]]} subscription, please try again after **${resetTime}**.`
+      const message = `You've reached the current usages cap for ${UserRole[user.roles[0]]} subscription. Please try again after **${resetTime}**.`
       res.send({ status: 'Fail', message, data: null })
       return
     }

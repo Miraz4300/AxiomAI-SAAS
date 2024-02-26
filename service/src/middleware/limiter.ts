@@ -24,7 +24,7 @@ const limiter = rateLimit({
   },
   message: async (req, res) => {
     const retryAfter = Math.ceil(res.get('Retry-After') / 60)
-    res.send({ status: 'Fail', message: `You've reached the current usages cap of your subscription. Try again after **${retryAfter} minutes** later.`, data: null })
+    res.send({ status: 'Fail', message: `Your IP address has made excessive requests. Try again after **${retryAfter} minutes** later.`, data: null })
   },
 })
 

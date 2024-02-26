@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { NButton, NInput, NInputNumber, NSpin, NSwitch, useMessage } from 'naive-ui'
 import type { ConfigState } from './model'
 import { SiteConfig } from './model'
@@ -12,6 +12,14 @@ const saving = ref(false)
 
 const config = ref<SiteConfig>()
 config.value = new SiteConfig()
+
+const rateLimit = computed({
+  get: () => config.value?.rateLimit,
+  set: (value) => {
+    if (config.value)
+      config.value.rateLimit = value
+  },
+})
 
 async function fetchConfig() {
   try {
@@ -133,7 +141,8 @@ onMounted(() => {
           <span class="flex-shrink-0 w-[100px]">Rate Limit</span>
           <div class="flex-1">
             <NInputNumber
-              v-model:value="config.rateLimit"
+              v-model:value="rateLimit"
+              :min="0"
               placeholder="rate limit per hour. 0 means no limit"
               style="width: 100%; max-width: 720px"
             />

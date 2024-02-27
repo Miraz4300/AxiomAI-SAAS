@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import cron from 'node-cron'
 import { UserRole } from '../storage/model'
-import { userCol } from '../storage/mongo'
+import { userCol } from '../storage/storage'
 import { sendSubscriptionEndedMail } from '../utils/mail'
 
 // Function to create a new log file

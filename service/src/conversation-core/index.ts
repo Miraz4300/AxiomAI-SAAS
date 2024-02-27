@@ -11,7 +11,7 @@ import { getCacheApiKeys, getCacheConfig, getOriginConfig } from '../storage/con
 import { sendResponse } from '../utils'
 import { hasAnyRole, isNotEmptyString } from '../utils/is'
 import type { ChatContext, ChatGPTUnofficialProxyAPIOptions, JWT, ModelConfig } from '../types'
-import { getChatByMessageId, updateRoomAccountId } from '../storage/mongo'
+import { getChatByMessageId, updateRoomAccountId } from '../storage/storage'
 import type { RequestOptions } from './types'
 
 dotenv.config()

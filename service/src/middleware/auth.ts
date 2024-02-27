@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import type { Request } from 'express'
 import { getCacheConfig } from '../storage/config'
-import { getUserById } from '../storage/mongo'
+import { getUserById } from '../storage/storage'
 import { Status } from '../storage/model'
 import type { AuthJwtPayload } from '../types'
 import logger from '../logger/winston'

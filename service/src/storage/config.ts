@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv'
 import type { TextAuditServiceProvider } from 'src/utils/textAudit'
 import { isNotEmptyString, isTextAuditServiceProvider } from '../utils/is'
 import { AdvancedConfig, AnnouncementConfig, AuditConfig, Config, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, SubscriptionConfig, TextAudioType, UserRole } from './model'
-import { getConfig, getKeys, upsertKey } from './mongo'
+import { getConfig, getKeys, upsertKey } from './storage'
 
 dotenv.config()
 

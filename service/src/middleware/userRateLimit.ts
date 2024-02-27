@@ -1,29 +1,5 @@
 import crypto from 'node:crypto'
-import Redis from 'ioredis'
-import * as dotenv from 'dotenv'
-import { configCol } from '../storage/mongo'
-import logger from '../logger/winston'
-
-dotenv.config()
-
-const redis = new Redis({
-  host: process.env.REDIS_HOST,
-  port: Number.parseInt(process.env.REDIS_PORT),
-  password: process.env.REDIS_PASSWORD,
-})
-
-// Log Redis connection events
-redis.on('connect', () => {
-  logger.info('Connected to Redis')
-})
-
-redis.on('error', (error) => {
-  logger.error(`Redis error: ${error.message}`)
-})
-
-redis.on('close', () => {
-  logger.warn('Redis connection closed')
-})
+import redis from '../storage/redis'
 
 // Hash the user ID to use it as a key in Redis
 function hashUserId(userId: string) {
@@ -35,19 +11,18 @@ function hashUserId(userId: string) {
 export async function isAllowed(userId: string) {
   const hashedUserId = hashUserId(userId)
   const currentTime = new Date().getTime()
-  const oneHourAgo = currentTime - 60 * 60 * 1000
+  const windowTime = currentTime - 60 * 60 * 1000 // 1 hour
 
   // Remove timestamps older than the time window
-  await redis.zremrangebyscore(hashedUserId, '-inf', oneHourAgo)
+  await redis.zremrangebyscore(hashedUserId, '-inf', windowTime)
 
   // Get the number of requests in the time window
   const numRequests = await redis.zcard(hashedUserId)
 
-  const config = await configCol.findOne({})
-  const globalRateLimit = config.siteConfig.rateLimit
+  const globalRateLimit = await redis.get('globalRateLimit')
 
   // If the number of requests is less than the maximum allowed, add the current timestamp to the list and return true
-  if (numRequests < globalRateLimit) {
+  if (numRequests < Number(globalRateLimit)) {
     await redis.zadd(hashedUserId, currentTime, currentTime)
     return { allowed: true }
   }

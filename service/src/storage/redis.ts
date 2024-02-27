@@ -27,14 +27,21 @@ redis.on('close', () => {
 redis.on('ready', async () => {
   logger.info('Redis is ready')
 
-  // When Redis is ready, fetch the config from MongoDB and store them in Redis
+  // When Redis is ready, fetch the config from MongoDB
   const config = await getConfig()
-  await redis.set('globalRateLimit', config.siteConfig.rateLimit)
-  await redis.set('subscriptionConfig', JSON.stringify(config.subscriptionConfig))
-  await redis.set('announcementConfig', JSON.stringify(config.announcementConfig))
-  await redis.set('merchConfig', JSON.stringify(config.merchConfig))
-  await redis.set('featuresConfig', JSON.stringify(config.featuresConfig))
-  logger.info('Config loaded into Redis')
+
+  // If config is not null, store them in Redis
+  if (config) {
+    await redis.set('globalRateLimit', config.siteConfig.rateLimit)
+    await redis.set('subscriptionConfig', JSON.stringify(config.subscriptionConfig))
+    await redis.set('announcementConfig', JSON.stringify(config.announcementConfig))
+    await redis.set('merchConfig', JSON.stringify(config.merchConfig))
+    await redis.set('featuresConfig', JSON.stringify(config.featuresConfig))
+    logger.info('Config loaded into Redis')
+  }
+  else {
+    logger.warn('Config not found in MongoDB')
+  }
 })
 
 export default redis

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 import { Status, UserRole } from '../storage/model'
-import { getUserById } from '../storage/mongo'
+import { getUserById } from '../storage/storage'
 import { getCacheConfig } from '../storage/config'
 import type { AuthJwtPayload } from '../types'
 

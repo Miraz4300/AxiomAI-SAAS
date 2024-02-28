@@ -55,7 +55,7 @@ import {
   updateUserStatus,
   upsertKey,
   verifyUser,
-} from './storage/mongo'
+} from './storage/storage'
 import { authLimiter, limiter } from './middleware/limiter'
 import { hasAnyRole, isEmail, isNotEmptyString } from './utils/is'
 import { sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
@@ -63,6 +63,7 @@ import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserR
 import { isAdmin, rootAuth } from './middleware/rootAuth'
 import './middleware/updateRole'
 import { isAllowed } from './middleware/userRateLimit'
+import redis from './storage/redis'
 
 dotenv.config()
 
@@ -1148,6 +1149,8 @@ router.post('/setting-site', rootAuth, async (req, res) => {
     const thisConfig = await getOriginConfig()
     thisConfig.siteConfig = config
     const result = await updateConfig(thisConfig)
+    // Update the globalRateLimit in Redis
+    await redis.set('globalRateLimit', JSON.stringify(result.siteConfig.rateLimit))
     clearConfigCache()
     res.send({ status: 'Success', message: 'Successfully', data: result.siteConfig })
   }
@@ -1163,6 +1166,8 @@ router.post('/setting-subscription', rootAuth, async (req, res) => {
     const thisConfig = await getOriginConfig()
     thisConfig.subscriptionConfig = config
     const result = await updateConfig(thisConfig)
+    // Update the subscriptionConfig in Redis
+    await redis.set('subscriptionConfig', JSON.stringify(result.subscriptionConfig))
     clearConfigCache()
     res.send({ status: 'Success', message: 'Successfully', data: result.subscriptionConfig })
   }
@@ -1173,8 +1178,8 @@ router.post('/setting-subscription', rootAuth, async (req, res) => {
 
 router.get('/user-subscription', auth, async (req, res) => {
   try {
-    const thisConfig = await getOriginConfig()
-    res.send({ status: 'Success', message: 'Successfully fetched', data: thisConfig.subscriptionConfig })
+    const subscriptionConfig = JSON.parse(await redis.get('subscriptionConfig'))
+    res.send({ status: 'Success', message: 'Successfully fetched', data: subscriptionConfig })
   }
   catch (error) {
     res.status(500).send({ status: 'Fail', message: error.message, data: null })
@@ -1188,6 +1193,8 @@ router.post('/setting-announcement', rootAuth, async (req, res) => {
     const thisConfig = await getOriginConfig()
     thisConfig.announcementConfig = config
     const result = await updateConfig(thisConfig)
+    // Update the announcementConfig in Redis
+    await redis.set('announcementConfig', JSON.stringify(result.announcementConfig))
     clearConfigCache()
     res.send({ status: 'Success', message: 'Successfully', data: result.announcementConfig })
   }
@@ -1201,9 +1208,9 @@ router.get('/user-announcement', auth, async (req, res) => {
     const userId = req.headers.userId.toString()
     const user = await getUserById(userId)
 
-    const thisConfig = await getOriginConfig()
+    const announcementConfig = JSON.parse(await redis.get('announcementConfig'))
     const userMessage = user.message
-    res.send({ status: 'Success', message: 'Successfully fetched', data: { userMessage, announcementConfig: thisConfig.announcementConfig } })
+    res.send({ status: 'Success', message: 'Successfully fetched', data: { userMessage, announcementConfig } })
   }
   catch (error) {
     res.status(500).send({ status: 'Fail', message: error.message, data: null })
@@ -1217,6 +1224,8 @@ router.post('/setting-merch', rootAuth, async (req, res) => {
     const thisConfig = await getOriginConfig()
     thisConfig.merchConfig = config
     const result = await updateConfig(thisConfig)
+    // Update the merchConfig in Redis
+    await redis.set('merchConfig', JSON.stringify(result.merchConfig))
     clearConfigCache()
     res.send({ status: 'Success', message: 'Successfully', data: result.merchConfig })
   }
@@ -1227,8 +1236,8 @@ router.post('/setting-merch', rootAuth, async (req, res) => {
 
 router.get('/user-merch', auth, async (req, res) => {
   try {
-    const thisConfig = await getOriginConfig()
-    res.send({ status: 'Success', message: 'Successfully fetched', data: thisConfig.merchConfig })
+    const merchConfig = JSON.parse(await redis.get('merchConfig'))
+    res.send({ status: 'Success', message: 'Successfully fetched', data: merchConfig })
   }
   catch (error) {
     res.status(500).send({ status: 'Fail', message: error.message, data: null })
@@ -1242,6 +1251,8 @@ router.post('/setting-features', rootAuth, async (req, res) => {
     const thisConfig = await getOriginConfig()
     thisConfig.featuresConfig = config
     const result = await updateConfig(thisConfig)
+    // Update the featuresConfig in Redis
+    await redis.set('featuresConfig', JSON.stringify(result.featuresConfig))
     clearConfigCache()
     res.send({ status: 'Success', message: 'Successfully', data: result.featuresConfig })
   }
@@ -1252,8 +1263,8 @@ router.post('/setting-features', rootAuth, async (req, res) => {
 
 router.get('/user-features', auth, async (req, res) => {
   try {
-    const thisConfig = await getOriginConfig()
-    res.send({ status: 'Success', message: 'Successfully fetched', data: thisConfig.featuresConfig })
+    const featuresConfig = JSON.parse(await redis.get('featuresConfig'))
+    res.send({ status: 'Success', message: 'Successfully fetched', data: featuresConfig })
   }
   catch (error) {
     res.status(500).send({ status: 'Fail', message: error.message, data: null })

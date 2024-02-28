@@ -142,8 +142,8 @@ onMounted(() => {
           <div class="flex-1">
             <NInputNumber
               v-model:value="rateLimit"
-              :min="0"
-              placeholder="rate limit per hour. 0 means no limit"
+              :min="1"
+              placeholder="Rate limit for each user per hour"
               style="width: 100%; max-width: 720px"
             />
           </div>

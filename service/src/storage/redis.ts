@@ -40,7 +40,7 @@ redis.on('ready', async () => {
     logger.info('Config loaded into Redis')
   }
   else {
-    logger.warn('Config not found in MongoDB')
+    logger.warn('No config found in MongoDB to load into Redis')
   }
 })
 

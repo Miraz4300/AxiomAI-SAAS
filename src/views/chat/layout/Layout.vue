@@ -26,7 +26,7 @@ const getContainerClass = computed(() => ['h-full', { abc: !isMobile.value && !c
     <Sidebar v-if="!isMobile" />
     <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
       <Sider />
-      <NLayoutContent class="h-full">
+      <NLayoutContent class="h-full animate-in fade-in duration-500 ease-in">
         <RouterView v-slot="{ Component, route }">
           <component :is="Component" :key="route.fullPath" />
         </RouterView>

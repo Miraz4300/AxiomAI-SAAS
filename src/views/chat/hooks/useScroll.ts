@@ -23,7 +23,7 @@ export function useScroll(): ScrollReturn {
   const scrollToBottom = async () => {
     await nextTick()
     if (scrollRef.value)
-      scrollRef.value.scrollTop = scrollRef.value.scrollHeight
+      scrollRef.value.scrollTo({ top: scrollRef.value.scrollHeight, behavior: 'smooth' })
   }
 
   const scrollToTop = async () => {
@@ -38,7 +38,7 @@ export function useScroll(): ScrollReturn {
       const threshold = 100 // Threshold, indicating the distance threshold from the scrollbar to the bottom
       const distanceToBottom = scrollRef.value.scrollHeight - scrollRef.value.scrollTop - scrollRef.value.clientHeight
       if (distanceToBottom <= threshold)
-        scrollRef.value.scrollTop = scrollRef.value.scrollHeight
+        scrollRef.value.scrollTo({ top: scrollRef.value.scrollHeight, behavior: 'smooth' })
     }
   }
 

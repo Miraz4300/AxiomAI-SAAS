@@ -6,6 +6,9 @@ import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStoreWithout } from '@/store/modules/auth'
 import { debounce } from '@/utils/functions/debounce'
+import { useisFree } from '@/utils/functions/isFree'
+
+const { isFree } = useisFree()
 
 const { isMobile } = useBasicLayout()
 
@@ -92,8 +95,11 @@ function isActive(uuid: number) {
         <template v-else>
           <div v-for="(item, index) of dataSources" :key="index">
             <a
-              class="animate-in slide-in-from-top-1.5 duration-500 ease-in relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-[#F0F4F9] group dark:border-neutral-800 dark:hover:bg-[#1B2129]"
-              :class="isActive(item.uuid) && ['border-[var(--primary-color)]', 'bg-[#F0F4F9]', 'text-[var(--primary-color)]', 'dark:bg-[#1B2129]', 'pr-14']"
+              class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-[#F0F4F9] group dark:border-neutral-800 dark:hover:bg-[#1B2129]"
+              :class="[
+                isActive(item.uuid) ? ['border-[var(--primary-color)]', 'bg-[#F0F4F9]', 'text-[var(--primary-color)]', 'dark:bg-[#1B2129]', 'pr-14'] : '',
+                !isFree ? 'animate-in slide-in-from-top-1.5 duration-500 ease-in' : '',
+              ]"
               @click="handleSelect(item)"
             >
               <span>

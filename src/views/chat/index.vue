@@ -616,7 +616,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
                       <SvgIcon icon="ri:send-plane-fill" />
                     </template>
                   </NButton>
-                  <NButton v-else circle @click="handleStop">
+                  <NButton v-else strong secondary circle type="error" @click="handleStop">
                     <template #icon>
                       <SvgIcon icon="ri:stop-circle-line" />
                     </template>

@@ -7,7 +7,9 @@ import Sider from './sider/index.vue'
 import Announcement from '@/components/common/Announcement/index.vue'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAppStore, useChatStore } from '@/store'
+import { useisFree } from '@/utils/functions/isFree'
 
+const { isFree } = useisFree()
 const router = useRouter()
 const appStore = useAppStore()
 const chatStore = useChatStore()
@@ -26,7 +28,7 @@ const getContainerClass = computed(() => ['h-full', { abc: !isMobile.value && !c
     <Sidebar v-if="!isMobile" />
     <NLayout class="z-40 transition" :class="getContainerClass" has-sider>
       <Sider />
-      <NLayoutContent class="h-full animate-in fade-in duration-500 ease-in">
+      <NLayoutContent class="h-full" :class="{ 'animate-in fade-in duration-500 ease-in': !isFree }">
         <RouterView v-slot="{ Component, route }">
           <component :is="Component" :key="route.fullPath" />
         </RouterView>

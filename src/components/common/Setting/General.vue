@@ -54,6 +54,11 @@ const languageOptions: { label: string; key: Language; value: Language }[] = [
 ]
 
 async function updateUserInfo(options: Partial<UserInfo>) {
+  if (!options.name) {
+    ms.error('Name cannot be empty')
+    return
+  }
+
   await userStore.updateUserInfo(true, options)
   ms.success(t('common.success'))
   show.value = false
@@ -104,6 +109,9 @@ const divClass = 'flex items-center space-x-4'
       <span :class="[spanClass]">{{ $t('setting.name') }}</span>
       <div class="flex-1">
         <NInput v-model:value="name" maxlength="15" placeholder="" />
+        <p v-if="!name" class="text-red-500">
+          Name cannot be empty
+        </p>
       </div>
     </div>
     <div :class="[divClass]">

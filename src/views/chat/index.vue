@@ -8,8 +8,9 @@ import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import Header from './components/Header/index.vue'
-import promptStore from './components/prompts.json'
-import Intro from './components/intro.vue'
+import promptStore from './components/Home/prompts.json'
+import Splash from './components/Home/index.vue'
+import OldSplash from './components/Home/oldGreeting.vue'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAppStore, useAuthStore, useChatStore, useUserStore } from '@/store'
@@ -18,6 +19,9 @@ import { t } from '@/locales'
 import { useSpeechStore } from '@/store/modules/speech'
 import { debounce } from '@/utils/functions/debounce'
 import { useTheme } from '@/hooks/useTheme'
+import { useisFree } from '@/utils/functions/isFree'
+
+const { isFree } = useisFree()
 
 let controller = new AbortController()
 let lastChatInfo: any = {}
@@ -536,37 +540,18 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
         <div id="image-wrapper" class="w-full max-w-screen-xl pt-6 m-auto" :class="[isMobile ? 'p-2' : 'p-4']">
-          <NSpin :show="firstLoading" :rotate="false">
+          <NSpin :show="firstLoading && isFree" :rotate="false">
             <template #icon>
               <SvgIcon icon="svg-spinners:180-ring-with-bg" />
             </template>
             <template v-if="!dataSources.length">
-              <div v-if="!isMobile" class="flex flex-col items-center mt-[16vh]">
-                <!-- AxiomAI is being introduced. -->
-                <div class="gap-20 antialiased w-full md:max-w-2xl lg:max-w-5xl md:h-full md:flex md:flex-col select-none">
-                  <div class="flex flex-col text-5xl font-semibold self-start animate-in fade-in duration-500 ease-in">
-                    <a class="animate-in slide-in-from-left-1.5 duration-500 ease-in bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 inline-block text-transparent bg-clip-text">
-                      I'm AxiomAI,
-                    </a>
-                    <a class="text-black dark:text-[#303A49] animate-in fade-in delay-300 duration-500 fill-mode-backwards ease-in">
-                      How can I help you today?
-                    </a>
-                  </div>
-                  <div class="flex gap-3 animate-in fade-in delay-300 duration-500 fill-mode-backwards ease-in">
-                    <Intro
-                      v-for="(item, index) in randomPrompt"
-                      :key="index"
-                      :prompt-text="item.key"
-                      :prompt-type="item.type"
-                      @click="fillTextarea(item.value)"
-                    />
-                  </div>
-                </div>
-                <!-- End of introduction. -->
+              <div class="flex items-center justify-center" :class="[isMobile ? 'mt-[8vh]' : 'mt-[16vh]']">
+                <Splash v-if="!isFree" :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />
+                <OldSplash v-else :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />
               </div>
             </template>
-            <template v-else>
-              <div>
+            <template v-if="dataSources.length">
+              <div :class="{ 'animate-in fade-in duration-500 ease-in': !isFree }">
                 <Message
                   v-for="(item, index) of dataSources"
                   :key="index"
@@ -589,14 +574,6 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
     </main>
     <footer :class="[isMobile ? 'p-2 pr-3' : 'p-4']">
       <div class="m-auto max-w-screen-xl" :class="[isMobile ? 'pl-1' : 'px-4']">
-        <div v-if="loading" class="pb-4 flex justify-center">
-          <NButton ghost @click="handleStop">
-            <template #icon>
-              <SvgIcon icon="ri:stop-circle-line" />
-            </template>
-            Stop Responding
-          </NButton>
-        </div>
         <div class="flex items-stretch space-x-2">
           <div class="relative flex-1">
             <NInput
@@ -634,9 +611,14 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
                     <NSwitch size="small" disabled />
                     <NDivider vertical />
                   </div>
-                  <NButton circle :disabled="buttonDisabled" @click="handleSubmit">
+                  <NButton v-if="!loading" circle :disabled="buttonDisabled" @click="handleSubmit">
                     <template #icon>
                       <SvgIcon icon="ri:send-plane-fill" />
+                    </template>
+                  </NButton>
+                  <NButton v-else circle @click="handleStop">
+                    <template #icon>
+                      <SvgIcon icon="ri:stop-circle-line" />
                     </template>
                   </NButton>
                 </div>

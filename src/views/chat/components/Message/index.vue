@@ -150,7 +150,8 @@ async function handlePreviousResponse(next: number) {
           class="mb-2 transition text-gray-500 hover:text-neutral-900 dark:hover:text-neutral-200"
           @click="handleRegenerate"
         >
-          <SvgIcon icon="ri:restart-line" />
+          <SvgIcon v-if="!loading" icon="ri:restart-line" />
+          <SvgIcon v-else icon="svg-spinners:8-dots-rotate" />
         </button>
         <SpeakBtn
           v-if="!isMobile && !inversion && speechStore.enable"

@@ -14,7 +14,7 @@ const avatar = computed(() => userStore.userInfo.avatar)
 const defaultAvatar = '/assets/avatar_1.jpg'
 const currentChatModel = ref(JSON.parse(localStorage.getItem('currentChatModel') as string))
 const gradientBG = computed(() => {
-  return currentChatModel.value?.includes('gemini-pro') ? 'bg-gradient-to-tr from-[#005FE3] to-[#FFC079]' : 'bg-gradient-to-br from-[#8C52FF] to-[#00BF63]'
+  return currentChatModel.value?.includes('gemini') ? 'bg-gradient-to-tr from-[#005FE3] to-[#FFC079]' : 'bg-gradient-to-br from-[#8C52FF] to-[#00BF63]'
 })
 </script>
 

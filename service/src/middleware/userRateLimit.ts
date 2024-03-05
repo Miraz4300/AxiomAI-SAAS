@@ -11,7 +11,7 @@ function hashUserId(userId: string) {
 export async function isAllowed(userId: string) {
   const hashedUserId = hashUserId(userId)
   const currentTime = new Date().getTime()
-  const windowTime = currentTime - 60 * 60 * 1000 // 1 hour
+  const windowTime = currentTime - 2 * 60 * 60 * 1000 // 2 hours
 
   // Remove timestamps older than the time window
   await redis.zremrangebyscore(hashedUserId, '-inf', windowTime)
@@ -30,7 +30,7 @@ export async function isAllowed(userId: string) {
     // Get the timestamp of the oldest request in the time window
     const oldRequest = await redis.zrange(hashedUserId, 0, 0, 'WITHSCORES')
     // Calculate the time when the rate limit will reset
-    const resetTime = (new Date(Number.parseInt(oldRequest[1]) + 60 * 60 * 1000)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    const resetTime = (new Date(Number.parseInt(oldRequest[1]) + 2 * 60 * 60 * 1000)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     return { allowed: false, resetTime }
   }
 }

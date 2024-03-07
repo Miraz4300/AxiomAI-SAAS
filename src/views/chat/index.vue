@@ -540,7 +540,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
         <div id="image-wrapper" class="w-full max-w-screen-xl pt-6 m-auto" :class="[isMobile ? 'p-2' : 'p-4']">
-          <template v-if="chatStore.isSplash">
+          <template v-if="!dataSources.length && chatStore.isSplash">
             <div class="flex items-center justify-center" :class="[isMobile ? 'mt-[8vh]' : 'mt-[16vh]']">
               <Splash v-if="!isFree" :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />
               <OldSplash v-else :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />

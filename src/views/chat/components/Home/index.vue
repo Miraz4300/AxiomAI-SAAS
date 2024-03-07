@@ -11,9 +11,9 @@ const fillTextarea = (value: any) => {
 </script>
 
 <template>
-  <div class="gap-20 w-full md:max-w-2xl lg:max-w-5xl md:h-full md:flex md:flex-col select-none">
+  <div class="max-[640px]:p-2 w-full min-[768px]:max-w-fit select-none">
     <Greeting />
-    <div class="flex gap-3 animate-in fade-in delay-300 duration-500 fill-mode-backwards ease-in">
+    <div class="mt-10 md:mt-20 flex gap-3 animate-in fade-in delay-300 duration-500 fill-mode-backwards ease-in overflow-x-auto min-[768px]:overflow-visible scrollbar-hide">
       <Prompt
         v-for="(item, index) in props.randomPrompt"
         :key="index"

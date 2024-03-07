@@ -9,8 +9,8 @@ const greetingText = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col text-5xl font-semibold antialiased">
-    <div class="w-1/2 animate-in fade-in slide-in-from-left-1.5 duration-300 ease-in">
+  <div class="flex flex-col text-4xl md:text-5xl font-semibold antialiased">
+    <div class="animate-in fade-in slide-in-from-left-1.5 duration-300 ease-in">
       <a class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-500">
         {{ greetingText }}
       </a>

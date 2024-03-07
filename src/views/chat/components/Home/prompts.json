@@ -238,5 +238,40 @@
     "key": "Write a python script to automate send email reports",
     "value": "Write a script to automate sending daily email reports in Python, and walk me through how I would set it up.",
     "type": "code"
+  },
+  {
+    "key": "Help me get organized with a list of 10 tips",
+    "value": "Give me 10 tips for room organization.",
+    "type": "knowledge"
+  },
+  {
+    "key": "Outline a way to home routine: organizing my closet",
+    "value": "Create an easy to follow outline for a home routine: organizing my closet",
+    "type": "idea"
+  },
+  {
+    "key": "Come up with a product name for a new app",
+    "value": "Come up with a product name for a new app that helps people learn how to play the violin.",
+    "type": "text"
+  },
+  {
+    "key": "Teach me the concept of game theory in simple terms",
+    "value": "Teach me the concept of game theory in simple terms. Include real-world examples to illustrate key concepts, and how they have played out in industry.",
+    "type": "idea"
+  },
+  {
+    "key": "Revise my writing and fix my grammar",
+    "value": "Rewrite the text below to fix any grammar and spelling mistakes: isnt it intrsintg how u can still rd this despit all the mistakez?",
+    "type": "text"
+  },
+  {
+    "key": "Brainstorm ways to make a dish more delicious",
+    "value": "What are some ways to make instant noodles even more delicious?",
+    "type": "food"
+  },
+  {
+    "key": "Give me tips to help care for a tricky plant",
+    "value": "I have an orchid and I'm not sure how to care for it. Can you give me some tips?",
+    "type": "knowledge"
   }
 ]

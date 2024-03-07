@@ -12,7 +12,7 @@
   {
     "key": "Compare storytelling techniques in novels and films",
     "value": "Compare storytelling techniques in novels and films in a concise table.",
-    "type": "idea"
+    "type": "compare"
   },
   {
     "key": "Help me pick an outfit that will look good on camera",
@@ -67,7 +67,7 @@
   {
     "key": "Plan a trip for refreshment in Saint Martin Island",
     "value": "Plan a trip for refreshment in Saint Martin Island.",
-    "type": "idea"
+    "type": "travel"
   },
   {
     "key": "Tell me a fun fact about the Old Dhaka",
@@ -82,7 +82,7 @@
   {
     "key": "Plan a trip to explore the ocean in Cox's Bazar",
     "value": "Can you help me make a plan to explore the ocean in Cox's Bazar on a budget? I'd like to stay there for a three days.",
-    "type": "idea"
+    "type": "travel"
   },
   {
     "key": "Show me a code snippet of a website's sticky header",
@@ -127,12 +127,12 @@
   {
     "key": "Compare business strategies for transistioning from to luxury and luxury to budget",
     "value": "Compare shifting business strategies from budget to luxury and luxury to budget, using a brief table to outline different aspects",
-    "type": "idea"
+    "type": "compare"
   },
   {
     "key": "Compare the pros and cons of different programming languages",
     "value": "Compare the pros and cons of different programming languages in a brief table.",
-    "type": "idea"
+    "type": "compare"
   },
   {
     "key": "Suggest fun activities for a family on a rainy day",
@@ -273,5 +273,10 @@
     "key": "Give me tips to help care for a tricky plant",
     "value": "I have an orchid and I'm not sure how to care for it. Can you give me some tips?",
     "type": "knowledge"
+  },
+  {
+    "key": "What's the time it takes to walk to several landmarks",
+    "value": "How long does it take to walk from Dhaka University to Bangladesh National Museum? What about from National Public Library to Curzon Hall?",
+    "type": "map"
   }
 ]

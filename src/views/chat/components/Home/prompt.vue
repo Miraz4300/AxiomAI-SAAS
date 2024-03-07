@@ -14,6 +14,9 @@ const iconMap: Record<string, string> = {
   food: 'mdi:food-italian',
   code: 'ic:round-code',
   movie: 'ri:movie-2-line',
+  travel: 'mdi:wallet-travel',
+  map: 'ic:outline-map',
+  compare: 'ic:outline-balance',
 }
 
 const icon = computed(() => iconMap[props.promptType || ''] || 'mdi:arrow-right-thin')

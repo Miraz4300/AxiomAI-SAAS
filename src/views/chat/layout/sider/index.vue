@@ -10,6 +10,7 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { fetchClearAllChat } from '@/api'
 import { SvgIcon } from '@/components/common'
 
+const loadingRoom = ref(false)
 const router = useRouter()
 const chatRouteRegex = /^\/chat(\/\w+)?$/
 const isChatActive = computed(() => chatRouteRegex.test(router.currentRoute.value.path))
@@ -102,7 +103,10 @@ watch(
           </div>
         </div>
         <div class="flex-1 min-h-0 pb-4 mt-8 overflow-hidden">
-          <List />
+          <List :loading-room="loadingRoom" @update:loading-room="loadingRoom = $event" />
+        </div>
+        <div v-if="loadingRoom" class="flex items-center justify-center h-full">
+          <SvgIcon icon="svg-spinners:bars-rotate-fade" />
         </div>
         <div class="p-4">
           <NPopconfirm placement="top" @positive-click="clearData">

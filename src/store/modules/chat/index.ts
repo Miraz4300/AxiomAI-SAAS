@@ -34,6 +34,11 @@ export const useChatStore = defineStore('chat-store', {
 
       return state.history.filter(ds => uuids.has(ds.uuid))
     },
+
+    isSplash(state: Chat.ChatState) {
+      const activeChat = state.history.find(item => item.uuid === state.active)
+      return activeChat?.title === 'New Chat'
+    },
   },
 
   actions: {

@@ -1,12 +1,14 @@
 <script setup lang='ts'>
-import { computed, nextTick, onMounted, ref } from 'vue'
-import { NInput, NPopconfirm, NScrollbar, NSpin } from 'naive-ui'
+import { computed, nextTick, onMounted } from 'vue'
+import { NInput, NPopconfirm, NScrollbar } from 'naive-ui'
 import { SvgIcon } from '@/components/common'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAuthStoreWithout } from '@/store/modules/auth'
 import { debounce } from '@/utils/functions/debounce'
 import { useisFree } from '@/utils/functions/isFree'
+
+const emit = defineEmits(['update:loadingRoom'])
 
 const { isFree } = useisFree()
 
@@ -16,8 +18,6 @@ const appStore = useAppStore()
 const chatStore = useChatStore()
 const authStore = useAuthStoreWithout()
 
-const loadingRoom = ref(false)
-
 const dataSources = computed(() => chatStore.getFilteredHistories)
 
 onMounted(async () => {
@@ -26,9 +26,9 @@ onMounted(async () => {
 })
 
 async function handleSyncChatRoom() {
-  loadingRoom.value = true
+  emit('update:loadingRoom', true)
   chatStore.syncHistory(() => {
-    loadingRoom.value = false
+    emit('update:loadingRoom', false)
     // This is not needed here, but when vue renders, the chat may give priority to rendering and other reasons, so the probability is not refreshed
     if (chatStore.active) {
       const uuid = chatStore.active
@@ -81,62 +81,57 @@ function isActive(uuid: number) {
 
 <template>
   <NScrollbar class="px-4">
-    <NSpin :show="loadingRoom" :rotate="false" size="small">
-      <template #icon>
-        <SvgIcon icon="svg-spinners:180-ring-with-bg" />
+    <div class="flex flex-col gap-2 text-sm">
+      <template v-if="!dataSources.length">
+        <div class="flex flex-col items-center mt-4 text-center text-neutral-300">
+          <SvgIcon icon="fluent:mail-inbox-dismiss-28-regular" class="mb-2 text-3xl" />
+          <span>{{ $t('common.noData') }}</span>
+        </div>
       </template>
-      <div class="flex flex-col gap-2 text-sm">
-        <template v-if="!dataSources.length">
-          <div class="flex flex-col items-center mt-4 text-center text-neutral-300">
-            <SvgIcon icon="fluent:mail-inbox-dismiss-28-regular" class="mb-2 text-3xl" />
-            <span>{{ $t('common.noData') }}</span>
-          </div>
-        </template>
-        <template v-else>
-          <div v-for="(item, index) of dataSources" :key="index">
-            <a
-              class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-[#F0F4F9] group dark:border-neutral-800 dark:hover:bg-[#1B2129]"
-              :class="[
-                isActive(item.uuid) ? ['border-[var(--primary-color)]', 'bg-[#F0F4F9]', 'text-[var(--primary-color)]', 'dark:bg-[#1B2129]', 'pr-14'] : '',
-                !isFree ? 'animate-in slide-in-from-top-1.5 duration-500 ease-in' : '',
-              ]"
-              @click="handleSelect(item)"
-            >
-              <span>
-                <SvgIcon icon="lucide:message-square" />
-              </span>
-              <div class="relative flex-1 overflow-hidden break-all text-ellipsis select-none whitespace-nowrap">
-                <NInput
-                  v-if="item.isEdit"
-                  v-model:value="item.title" size="tiny"
-                  @keypress="handleEnter(item, false, $event)"
-                />
-                <span v-else>{{ item.title }}</span>
-              </div>
-              <div v-if="isActive(item.uuid)" class="absolute z-10 flex visible right-1">
-                <template v-if="item.isEdit">
-                  <button class="p-1" @click="handleEdit(item, false, $event)">
-                    <SvgIcon icon="ri:save-line" />
-                  </button>
-                </template>
-                <template v-else>
-                  <button class="p-1">
-                    <SvgIcon icon="ri:edit-line" @click="handleEdit(item, true, $event)" />
-                  </button>
-                  <NPopconfirm placement="bottom" @positive-click="handleDeleteDebounce(index, $event)">
-                    <template #trigger>
-                      <button class="p-1">
-                        <SvgIcon icon="ri:delete-bin-line" />
-                      </button>
-                    </template>
-                    {{ $t('chat.deleteHistoryConfirm') }}
-                  </NPopconfirm>
-                </template>
-              </div>
-            </a>
-          </div>
-        </template>
-      </div>
-    </NSpin>
+      <template v-else>
+        <div v-for="(item, index) of dataSources" :key="index">
+          <a
+            class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-[#F0F4F9] group dark:border-neutral-800 dark:hover:bg-[#1B2129]"
+            :class="[
+              isActive(item.uuid) ? ['border-[var(--primary-color)]', 'bg-[#F0F4F9]', 'text-[var(--primary-color)]', 'dark:bg-[#1B2129]', 'pr-14'] : '',
+              !isFree ? 'animate-in slide-in-from-top-1.5 duration-500 ease-in' : '',
+            ]"
+            @click="handleSelect(item)"
+          >
+            <span>
+              <SvgIcon icon="lucide:message-square" />
+            </span>
+            <div class="relative flex-1 overflow-hidden break-all text-ellipsis select-none whitespace-nowrap">
+              <NInput
+                v-if="item.isEdit"
+                v-model:value="item.title" size="tiny"
+                @keypress="handleEnter(item, false, $event)"
+              />
+              <span v-else>{{ item.title }}</span>
+            </div>
+            <div v-if="isActive(item.uuid)" class="absolute z-10 flex visible right-1">
+              <template v-if="item.isEdit">
+                <button class="p-1" @click="handleEdit(item, false, $event)">
+                  <SvgIcon icon="ri:save-line" />
+                </button>
+              </template>
+              <template v-else>
+                <button class="p-1">
+                  <SvgIcon icon="ri:edit-line" @click="handleEdit(item, true, $event)" />
+                </button>
+                <NPopconfirm placement="bottom" @positive-click="handleDeleteDebounce(index, $event)">
+                  <template #trigger>
+                    <button class="p-1">
+                      <SvgIcon icon="ri:delete-bin-line" />
+                    </button>
+                  </template>
+                  {{ $t('chat.deleteHistoryConfirm') }}
+                </NPopconfirm>
+              </template>
+            </div>
+          </a>
+        </div>
+      </template>
+    </div>
   </NScrollbar>
 </template>

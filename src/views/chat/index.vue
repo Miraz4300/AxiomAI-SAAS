@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { MessageReactive } from 'naive-ui'
-import { NButton, NDivider, NInput, NSpin, NSwitch, NTooltip, useDialog, useMessage } from 'naive-ui'
+import { NButton, NDivider, NInput, NSwitch, NTooltip, useDialog, useMessage } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
@@ -540,35 +540,30 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
         <div id="image-wrapper" class="w-full max-w-screen-xl pt-6 m-auto" :class="[isMobile ? 'p-2' : 'p-4']">
-          <NSpin :show="firstLoading && isFree" :rotate="false">
-            <template #icon>
-              <SvgIcon icon="svg-spinners:180-ring-with-bg" />
-            </template>
-            <template v-if="!dataSources.length">
-              <div class="flex items-center justify-center" :class="[isMobile ? 'mt-[8vh]' : 'mt-[16vh]']">
-                <Splash v-if="!isFree" :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />
-                <OldSplash v-else :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />
-              </div>
-            </template>
-            <template v-if="dataSources.length">
-              <div :class="{ 'animate-in fade-in duration-500 ease-in': !isFree }">
-                <Message
-                  v-for="(item, index) of dataSources"
-                  :key="index"
-                  :date-time="item.dateTime"
-                  :text="item.text"
-                  :inversion="item.inversion"
-                  :response-count="item.responseCount"
-                  :usage="item && item.usage || undefined"
-                  :error="item.error"
-                  :loading="item.loading"
-                  @regenerate="onRegenerate(index)"
-                  @delete="handleDelete(index)"
-                  @response-history="(ev: number) => onResponseHistory(index, ev)"
-                />
-              </div>
-            </template>
-          </NSpin>
+          <template v-if="chatStore.isSplash">
+            <div class="flex items-center justify-center" :class="[isMobile ? 'mt-[8vh]' : 'mt-[16vh]']">
+              <Splash v-if="!isFree" :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />
+              <OldSplash v-else :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />
+            </div>
+          </template>
+          <template v-if="dataSources.length">
+            <div :class="{ 'animate-in fade-in duration-500 ease-in': !isFree }">
+              <Message
+                v-for="(item, index) of dataSources"
+                :key="index"
+                :date-time="item.dateTime"
+                :text="item.text"
+                :inversion="item.inversion"
+                :response-count="item.responseCount"
+                :usage="item && item.usage || undefined"
+                :error="item.error"
+                :loading="item.loading"
+                @regenerate="onRegenerate(index)"
+                @delete="handleDelete(index)"
+                @response-history="(ev: number) => onResponseHistory(index, ev)"
+              />
+            </div>
+          </template>
         </div>
       </div>
     </main>

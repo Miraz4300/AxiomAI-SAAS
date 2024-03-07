@@ -546,7 +546,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
               <OldSplash v-else :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />
             </div>
           </template>
-          <template v-if="dataSources.length">
+          <template v-if="!firstLoading && dataSources.length">
             <div :class="{ 'animate-in fade-in duration-500 ease-in': !isFree }">
               <Message
                 v-for="(item, index) of dataSources"

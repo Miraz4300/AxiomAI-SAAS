@@ -583,9 +583,9 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
               :theme-overrides="inputThemeOverrides.Input"
               @keypress="handleEnter"
             />
-            <div class="absolute bottom-2 left-2 right-2">
+            <div class="absolute bottom-2 left-2 right-2 cursor-text" @click="inputRef.focus()">
               <div class="flex items-center justify-between">
-                <div v-if="!!authStore.token" class="flex items-center space-x-2">
+                <div v-if="!!authStore.token" class="flex items-center space-x-2 cursor-default" @click.stop>
                   <ToolButton :tooltip="!isMobile ? $t('chat.usingContext') : ''" placement="top" @click="handleToggleUsingContext">
                     <span class="text-xl" :class="{ 'text-[#22c55e]': usingContext, 'text-amber-500': !usingContext }">
                       <SvgIcon icon="fluent:brain-circuit-24-filled" />
@@ -594,7 +594,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
                   <Speech v-if="!isMobile && speechStore.enable" />
                   <Voice v-if="!isMobile && speechStore.enable" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
                 </div>
-                <div class="flex items-center">
+                <div class="flex items-center cursor-default" @click.stop>
                   <div v-if="!!authStore.token && internetAccessEnabled" class="flex items-center text-neutral-400">
                     <NTooltip :style="{ maxWidth: '300px' }" trigger="hover">
                       <template #trigger>

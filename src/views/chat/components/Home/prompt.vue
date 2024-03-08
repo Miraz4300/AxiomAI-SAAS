@@ -24,7 +24,7 @@ const icon = computed(() => iconMap[props.promptType || ''] || 'mdi:arrow-right-
 
 <template>
   <div class="relative group">
-    <div class="absolute inset-0 min-[768px]:bg-gradient-to-bl from-blue-600 to-green-500 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt" />
+    <div class="absolute inset-0 min-[768px]:bg-gradient-to-bl from-blue-600 to-green-500 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
     <div class="relative w-[12.5rem] h-[10rem] bg-[#F0F4F9] dark:bg-[#161B22] p-3 rounded-lg duration-1000 hover:bg-[#DDE3EA] dark:hover:bg-[#303A49] cursor-pointer antialiased">
       <div class="flex flex-col justify-between h-full">
         <div class="text-sm">

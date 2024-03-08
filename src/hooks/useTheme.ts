@@ -13,8 +13,8 @@ export function useTheme() {
 
   const bodyTheme = computed(() => ({
     pbc: isDark.value ? '#0D1117' : '#FFFFFF', // primary body color for other components
-    sbc: isDark.value ? '#161B22' : '#E8EAF1', // reflects on sidebar background
-    rbc: isDark.value ? '#161B22' : '#ECEEF1', // reflects on chat response background
+    sbc: isDark.value ? '#161B22' : '#F0F4F9', // reflects on sidebar background
+    rbc: isDark.value ? '#161B22' : '#F0F4F9', // reflects on chat response background
   }))
 
   const getCommonOverrides = () => ({

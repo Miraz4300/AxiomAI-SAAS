@@ -12,15 +12,14 @@ module.exports = {
     },
     extend: {
       animation: {
-        blink: 'blink 1.2s infinite steps(1, start)',
+        gradient: 'gradient 1.5s linear',
       },
       backgroundImage: {
         'brand-logo': 'url(\'/axiomai-logomark.png\')',
       },
       keyframes: {
-        blink: {
-          '0%, 100%': { 'background-color': 'currentColor' },
-          '50%': { 'background-color': 'transparent' },
+        gradient: {
+          to: { 'background-position': '-200% center' },
         },
       },
     },

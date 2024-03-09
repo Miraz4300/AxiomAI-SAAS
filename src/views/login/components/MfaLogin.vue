@@ -57,7 +57,7 @@ async function handle2FASubmit() {
     </div>
 
     <div class="relative flex grow flex-col px-5 py-8 md:px-6 bg-[var(--pbc)] dark:bg-[var(--pbc)] text-black dark:text-white">
-      <div class="relative flex grow flex-col p-8 gap-7">
+      <div class="relative flex grow flex-col p-8 max-[640px]:p-3 gap-7">
         <div class="flex flex-col gap-10 select-none">
           <span class="flex text-lg items-center space-x-2">
             <SvgIcon icon="mdi:shield-lock-outline" />

@@ -1,5 +1,5 @@
 # Front-end: AxiomUI
-FROM node:lts-alpine AS frontend
+FROM node:20-alpine AS frontend
 RUN npm install -g pnpm@latest
 WORKDIR /app
 COPY ./package.json /app
@@ -9,7 +9,7 @@ COPY . /app
 RUN pnpm run build
 
 # Back-end: AxiomNode
-FROM node:lts-alpine as backend
+FROM node:20-alpine as backend
 RUN npm install -g pnpm@latest
 WORKDIR /app
 COPY /service/package.json /app
@@ -19,7 +19,7 @@ COPY /service /app
 RUN pnpm build
 
 # Build Final Image: AxiomAI
-FROM node:lts-alpine
+FROM node:20-alpine
 RUN npm install -g pnpm@latest
 WORKDIR /app
 COPY /service/package.json /app

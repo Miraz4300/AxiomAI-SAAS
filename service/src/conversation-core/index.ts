@@ -51,43 +51,52 @@ export async function initApi(key: KeyConfig, chatModel: string, maxContextCount
     // Set the token limits based on the model's type. This is because different models have different token limits.
     // The token limit includes the token count from both the message array sent and the model response.
 
-    if (model.toLowerCase().includes('16k')) {
-      // Currently points to gpt-3.5-turbo-0613. Will point to gpt-3.5-turbo-1106 starting Dec 11, 2023.
-      // If it's a '16k' model, set the maxModelTokens to 16384 (16k) and maxResponseTokens to 4096
-      options.maxModelTokens = 16384
-      options.maxResponseTokens = 4096
+    // max token limit if use gpt-4
+    if (model.toLowerCase().includes('gpt-4')) {
+      // if use 32k model
+      if (model.toLowerCase().includes('32k')) {
+        options.maxModelTokens = 32768
+        options.maxResponseTokens = 8192
+      }
+      // if use GPT-4 Turbo
+      else if (model.toLowerCase().includes('-preview')) {
+        options.maxModelTokens = 128000
+        options.maxResponseTokens = 4096
+      }
+      else {
+        options.maxModelTokens = 8192
+        options.maxResponseTokens = 2048
+      }
     }
-    else if (model.toLowerCase().includes('turbo-1106')) {
-      // Updated GPT 3.5 Turbo.
-      // If it's a 'gpt-3.5-turbo-1106' model, set the maxModelTokens to 16385 (16k) and maxResponseTokens to 4096
-      options.maxModelTokens = 16385
-      options.maxResponseTokens = 4096
+    // max token limit if use gpt-3.5 ( applies to 1106, 0125, 16k, 16k-0613 models)
+    else if (model.toLowerCase().includes('gpt-3.5')) {
+      if (/16k|1106|0125/.test(model.toLowerCase())) {
+        options.maxModelTokens = 16384
+        options.maxResponseTokens = 4096
+      }
+      else {
+        options.maxModelTokens = 4096
+        options.maxResponseTokens = 1024
+      }
     }
-    else if (model.toLowerCase().includes('32k')) {
-      // Currently points to gpt-4-32k-0613.
-      // If it's a '32k' model, set the maxModelTokens to 32768 (32k) and maxResponseTokens to 8192
-      options.maxModelTokens = 32768
-      options.maxResponseTokens = 8192
-    }
-    else if (model.toLowerCase().includes('gpt-4')) {
-      // If it's a 'gpt-4' model, set the maxModelTokens and maxResponseTokens to 8192 and 2048 respectively
-      options.maxModelTokens = 8192
+    // max token limit for gemini models
+    else if (model.toLowerCase().includes('gemini')) {
+      options.maxModelTokens = 30720
       options.maxResponseTokens = 2048
     }
-    else if (model.toLowerCase().includes('1106-preview')) {
-      // GPT-4 Turbo (1106 Preview)
-      // If it's a 'gpt-4-1106-preview' model, set the maxModelTokens and maxResponseTokens to 128000 (128k) and 4096 respectively
-      options.maxModelTokens = 128000
-      options.maxResponseTokens = 4096
-    }
+    // max token limit for all other models
     else {
-      // If none of the above, use the default values, set the maxModelTokens and maxResponseTokens to 4096 and 1024 respectively
       options.maxModelTokens = 4096
       options.maxResponseTokens = 1024
     }
 
-    if (isNotEmptyString(OPENAI_API_BASE_URL))
-      options.apiBaseUrl = `${OPENAI_API_BASE_URL}/v1`
+    if (isNotEmptyString(OPENAI_API_BASE_URL)) {
+      // if find /v1 in OPENAI_API_BASE_URL then use it
+      if (OPENAI_API_BASE_URL.includes('/v1'))
+        options.apiBaseUrl = `${OPENAI_API_BASE_URL}`
+      else
+        options.apiBaseUrl = `${OPENAI_API_BASE_URL}/v1`
+    }
 
     return new ChatGPTAPI({ ...options })
   }

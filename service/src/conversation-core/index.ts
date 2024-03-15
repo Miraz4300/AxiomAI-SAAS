@@ -51,40 +51,36 @@ export async function initApi(key: KeyConfig, chatModel: string, maxContextCount
     // Set the token limits based on the model's type. This is because different models have different token limits.
     // The token limit includes the token count from both the message array sent and the model response.
 
-    // max token limit if use gpt-4
-    if (model.toLowerCase().includes('gpt-4')) {
-      // if use 32k model
-      if (model.toLowerCase().includes('32k')) {
-        options.maxModelTokens = 32768
-        options.maxResponseTokens = 8192
-      }
-      // if use GPT-4 Turbo
-      else if (model.toLowerCase().includes('-preview')) {
-        options.maxModelTokens = 128000
-        options.maxResponseTokens = 4096
-      }
-      else {
-        options.maxModelTokens = 8192
-        options.maxResponseTokens = 2048
-      }
+    // For the gpt-3.5-turbo-1106 model.
+    if (model.toLowerCase().includes('turbo-1106')) {
+      options.maxModelTokens = 16385
+      options.maxResponseTokens = 4096
     }
-    // max token limit if use gpt-3.5 ( applies to 1106, 0125, 16k, 16k-0613 models)
-    else if (model.toLowerCase().includes('gpt-3.5')) {
-      if (/16k|1106|0125/.test(model.toLowerCase())) {
-        options.maxModelTokens = 16384
-        options.maxResponseTokens = 4096
-      }
-      else {
-        options.maxModelTokens = 4096
-        options.maxResponseTokens = 1024
-      }
+    // For the gpt-3.5-turbo-0125 model.
+    else if (model.toLowerCase().includes('turbo-0125')) {
+      options.maxModelTokens = 16385
+      options.maxResponseTokens = 4096
     }
-    // max token limit for gemini models
+    // For the gpt-4 and 4-0613 models.
+    else if (model.toLowerCase().includes('gpt-4')) {
+      options.maxModelTokens = 8192
+      options.maxResponseTokens = 2048
+    }
+    // For the gpt-4-1106-preview model.
+    else if (model.toLowerCase().includes('1106-preview')) {
+      options.maxModelTokens = 128000
+      options.maxResponseTokens = 4096
+    }
+    // For the gpt-4-0125-preview model.
+    else if (model.toLowerCase().includes('0125-preview')) {
+      options.maxModelTokens = 128000
+      options.maxResponseTokens = 4096
+    }
+    // For the gemini-pro, gemini-1.0-pro and gemini-1.0-pro-001 models.
     else if (model.toLowerCase().includes('gemini')) {
       options.maxModelTokens = 30720
       options.maxResponseTokens = 2048
     }
-    // max token limit for all other models
     else {
       options.maxModelTokens = 4096
       options.maxResponseTokens = 1024

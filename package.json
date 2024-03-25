@@ -27,7 +27,7 @@
     "highlight.js": "^11.9.0",
     "html2canvas": "^1.4.1",
     "jwt-decode": "^3.1.2",
-    "katex": "^0.16.9",
+    "katex": "^0.16.10",
     "markdown-it": "^14.0.0",
     "microsoft-cognitiveservices-speech-sdk": "^1.33.1",
     "naive-ui": "^2.36.0",

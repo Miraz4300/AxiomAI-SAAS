@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
+import type { DataTableColumns } from 'naive-ui'
 import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NSwitch, NTag, useDialog, useMessage } from 'naive-ui'
 import { KeyConfig, Status, UserRole, apiModelOptions, userRoleOptions } from './model'
 import { fetchGetKeys, fetchUpdateApiKeyStatus, fetchUpsertApiKey } from '@/api'
@@ -15,123 +16,126 @@ const show = ref(false)
 const handleSaving = ref(false)
 const keyConfig = ref(new KeyConfig('', 'ChatGPTAPI', [], [], ''))
 const keys = ref([])
-const columns = [
-  {
-    title: 'API Key',
-    key: 'key',
-    resizable: true,
-    width: 120,
-    minWidth: 50,
-    maxWidth: 120,
-    ellipsis: true,
-  },
-  {
-    title: 'Endpoint',
-    key: 'keyModel',
-    width: 150,
-  },
-  {
-    title: 'Base URL',
-    key: 'baseUrl',
-    width: 170,
-    ellipsis: true,
-  },
-  {
-    title: 'Models',
-    key: 'chatModels',
-    width: 350,
-    render(row: any) {
-      const tags = row.chatModels.map((chatModel: string) => {
-        return h(
-          NTag,
-          {
-            style: {
-              marginRight: '6px',
-              marginTop: '6px',
-            },
-            type: 'info',
-            bordered: false,
-          },
-          {
-            default: () => chatModel,
-          },
-        )
-      })
-      return tags
+
+const createColumns = (): DataTableColumns => {
+  return [
+    {
+      title: 'API Key',
+      key: 'key',
+      resizable: true,
+      width: 120,
+      minWidth: 50,
+      maxWidth: 120,
+      ellipsis: true,
     },
-  },
-  {
-    title: 'Roles',
-    key: 'userRoles',
-    width: 200,
-    render(row: any) {
-      const tags = row.userRoles.map((userRole: UserRole) => {
-        return h(
-          NTag,
-          {
-            style: {
-              marginRight: '6px',
-              marginTop: '6px',
-            },
-            type: 'info',
-            bordered: false,
-          },
-          {
-            default: () => UserRole[userRole],
-          },
-        )
-      })
-      return tags
+    {
+      title: 'Endpoint',
+      key: 'keyModel',
+      width: 150,
     },
-  },
-  {
-    title: 'Remark',
-    key: 'remark',
-    width: 200,
-  },
-  {
-    title: 'Actions',
-    key: '_id',
-    width: 220,
-    render(row: KeyConfig) {
-      const actions: any[] = []
-      if (row.status === Status.Normal) {
+    {
+      title: 'Base URL',
+      key: 'baseUrl',
+      width: 170,
+      ellipsis: true,
+    },
+    {
+      title: 'Models',
+      key: 'chatModels',
+      width: 350,
+      render(row: any) {
+        const tags = row.chatModels.map((chatModel: string) => {
+          return h(
+            NTag,
+            {
+              style: {
+                marginRight: '6px',
+                marginTop: '6px',
+              },
+              type: 'info',
+              bordered: false,
+            },
+            chatModel,
+          )
+        })
+        return tags
+      },
+    },
+    {
+      title: 'Roles',
+      key: 'userRoles',
+      width: 200,
+      render(row: any) {
+        const tags = row.userRoles.map((userRole: UserRole) => {
+          return h(
+            NTag,
+            {
+              style: {
+                marginRight: '6px',
+                marginTop: '6px',
+              },
+              type: 'info',
+              bordered: false,
+            },
+            UserRole[userRole],
+          )
+        })
+        return tags
+      },
+    },
+    {
+      title: 'Remark',
+      key: 'remark',
+      width: 200,
+    },
+    {
+      title: 'Actions',
+      key: '_id',
+      width: 220,
+      fixed: 'right',
+      render: (row: any) => {
+        const actions: any[] = []
+        if (row.status === Status.Normal) {
+          actions.push(h(
+            NButton,
+            {
+              size: 'small',
+              type: 'primary',
+              style: {
+                marginRight: '6px',
+              },
+              onClick: () => handleEditKey(row),
+            },
+            {
+              default: () => [
+                h(SvgIcon, { icon: 'ri:edit-2-line' }),
+                h('span', { class: 'ml-1' }, 'Edit Key'),
+              ],
+            },
+          ))
+        }
         actions.push(h(
           NButton,
           {
             size: 'small',
-            type: 'primary',
-            style: {
-              marginRight: '6px',
-            },
-            onClick: () => handleEditKey(row),
+            type: 'error',
+            onClick: () => handleUpdateApiKeyStatus(row._id as string, Status.Disabled),
           },
           {
             default: () => [
-              h(SvgIcon, { icon: 'ri:edit-2-line' }),
-              h('span', { class: 'ml-1' }, 'Edit Key'),
+              h(SvgIcon, { icon: 'ri:delete-bin-6-line' }),
+              h('span', { class: 'ml-1' }, 'Delete'),
             ],
           },
         ))
-      }
-      actions.push(h(
-        NButton,
-        {
-          size: 'small',
-          type: 'error',
-          onClick: () => handleUpdateApiKeyStatus(row._id as string, Status.Disabled),
-        },
-        {
-          default: () => [
-            h(SvgIcon, { icon: 'ri:delete-bin-6-line' }),
-            h('span', { class: 'ml-1' }, 'Delete'),
-          ],
-        },
-      ))
-      return actions
+        return actions
+      },
     },
-  },
-]
+  ]
+}
+
+const columns = createColumns()
+
 const pagination = reactive({
   page: 1,
   pageSize: 100,

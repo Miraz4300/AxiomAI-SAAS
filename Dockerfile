@@ -28,7 +28,6 @@ RUN pnpm install --production && rm -rf /root/.npm /root/.pnpm-store /usr/local/
 COPY /service /app
 COPY --from=frontend /app/dist /app/public
 COPY --from=backend /app/build /app/build
-COPY --from=backend /app/src/utils/templates /app/build/utils/templates
 RUN mkdir /app/logs
 EXPOSE 10829
 

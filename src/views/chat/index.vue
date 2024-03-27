@@ -576,7 +576,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
               v-model:value="prompt"
               clearable
               class="pb-10"
-              :disabled="!!authStore.session?.auth && !authStore.token"
+              :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled"
               type="textarea"
               :placeholder="t('chat.placeholderText')"
               :autosize="{ minRows: isMobile ? 1 : 1, maxRows: isMobile ? 4 : 8 }"

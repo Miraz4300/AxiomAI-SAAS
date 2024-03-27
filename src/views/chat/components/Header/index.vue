@@ -171,7 +171,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
             style="width:215px"
             :value="currentChatModel"
             :options="authStore.session?.chatModels"
-            :disabled="!!authStore.session?.auth && !authStore.token"
+            :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled"
             :render-label="renderLabel"
             @update-value="(val) => handleSyncChatModel(val)"
           />

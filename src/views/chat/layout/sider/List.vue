@@ -21,7 +21,7 @@ const authStore = useAuthStoreWithout()
 const dataSources = computed(() => chatStore.getFilteredHistories)
 
 onMounted(async () => {
-  if (authStore.session == null || !authStore.session.auth || authStore.token)
+  if (authStore.session == null || !authStore.session.auth || authStore.token || authStore.session?.authProxyEnabled)
     await handleSyncChatRoom()
 })
 

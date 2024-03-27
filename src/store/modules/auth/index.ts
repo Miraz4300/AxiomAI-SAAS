@@ -3,11 +3,12 @@ import jwt_decode from 'jwt-decode'
 import type { UserInfo } from '../user/helper'
 import { getToken, removeToken, setToken } from './helper'
 import { store, useChatStore, useUserStore } from '@/store'
-import { fetchSession } from '@/api'
+import { fetchLogout, fetchSession } from '@/api'
 import { UserConfig } from '@/components/admin/model'
 
 interface SessionResponse {
   auth: boolean
+  authProxyEnabled: boolean
   model: 'ChatGPTAPI' | 'ChatGPTUnofficialProxyAPI'
   allowRegister: boolean
   title: string
@@ -81,6 +82,7 @@ export const useAuthStore = defineStore('auth-store', {
       const chatStore = useChatStore()
       await chatStore.clearLocalChat()
       removeToken()
+      await fetchLogout()
     },
 
     setTempCredentials(username: string, password: string) {

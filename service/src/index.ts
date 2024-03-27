@@ -644,8 +644,9 @@ router.post('/oauth3', rootAuth, async (req, res) => {
 router.post('/session', async (req, res) => {
   try {
     const config = await getCacheConfig()
-    const hasAuth = config.siteConfig.loginEnabled
-    const allowRegister = (await getCacheConfig()).siteConfig.registerEnabled
+    const hasAuth = config.siteConfig.loginEnabled || config.siteConfig.authProxyEnabled
+    const authProxyEnabled = config.siteConfig.authProxyEnabled
+    const allowRegister = config.siteConfig.registerEnabled
     if (config.apiModel !== 'ChatGPTAPI' && config.apiModel !== 'ChatGPTUnofficialProxyAPI')
       config.apiModel = 'ChatGPTAPI'
     const userId = await getUserId(req)
@@ -680,6 +681,7 @@ router.post('/session', async (req, res) => {
           message: '',
           data: {
             auth: hasAuth,
+            authProxyEnabled,
             allowRegister,
             model: config.apiModel,
             title: config.siteConfig.siteTitle,
@@ -733,6 +735,7 @@ router.post('/session', async (req, res) => {
       message: '',
       data: {
         auth: hasAuth,
+        authProxyEnabled,
         allowRegister,
         model: config.apiModel,
         title: config.siteConfig.siteTitle,
@@ -804,6 +807,10 @@ router.post('/user-login', authLimiter, async (req, res) => {
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
   }
+})
+
+router.post('/user-logout', async (req, res) => {
+  res.send({ status: 'Success', message: 'Logout successful', data: null })
 })
 
 router.post('/user-send-reset-mail', authLimiter, async (req, res) => {
@@ -941,7 +948,7 @@ router.post('/user-edit', rootAuth, async (req, res) => {
     }
     else {
       const newPassword = md5(password)
-      const user = await createUser(email, newPassword, roles, remark)
+      const user = await createUser(email, newPassword, roles, null, remark)
       await updateUserStatus(user._id.toString(), Status.Normal)
     }
     res.send({ status: 'Success', message: 'Update successfully [EDIT]' })

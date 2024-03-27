@@ -4,6 +4,7 @@ declare namespace Chat {
     uuid?: number
     dateTime: string
     text: string
+    images?: string[]
     inversion?: boolean
     responseCount?: number
     error?: boolean

@@ -41,6 +41,10 @@ export default defineConfig((env) => {
           changeOrigin: true,
           rewrite: path => path.replace('/axiomnode/', '/'),
         },
+        '/uploads': {
+          target: viteEnv.VITE_APP_API_BASE_URL,
+          changeOrigin: true,
+        },
       },
     },
     build: {

@@ -61,6 +61,7 @@ import { hasAnyRole, isEmail, isNotEmptyString } from './utils/is'
 import { sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
 import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
 import { isAdmin, rootAuth } from './middleware/rootAuth'
+import { router as uploadRouter } from './routes/upload'
 import './middleware/updateRole'
 import { isAllowed } from './middleware/userRateLimit'
 import redis from './storage/redis'
@@ -232,6 +233,7 @@ router.get('/chat-history', auth, async (req, res) => {
           uuid: c.uuid,
           dateTime: new Date(c.dateTime).toLocaleString(),
           text: c.prompt,
+          images: c.images,
           inversion: true,
           error: false,
           conversationOptions: null,
@@ -396,7 +398,7 @@ const promptSystemMessage2 = 'You are AxiomAI. Reply in bangla language'
 router.post('/conversation', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
-  let { roomId, uuid, regenerate, prompt, options = {}, systemMessage, persona, language } = req.body as RequestProps
+  let { roomId, uuid, regenerate, prompt, uploadFileKeys, options = {}, systemMessage, persona, language } = req.body as RequestProps
 
   if (!systemMessage && language === 'en-US')
     systemMessage = mainSystemMessage
@@ -443,10 +445,11 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
 
     message = regenerate
       ? await getChat(roomId, uuid)
-      : await insertChat(uuid, prompt, roomId, options as ChatOptions)
+      : await insertChat(uuid, prompt, uploadFileKeys, roomId, options as ChatOptions)
     let firstChunk = true
     result = await chatReplyProcess({
       message: prompt,
+      uploadFileKeys,
       lastContext: options,
       process: (chat: ChatMessage) => {
         lastResponse = chat
@@ -1438,6 +1441,10 @@ router.post('/voice', [auth, limiter], getAzureSubscriptionKey)
 
 app.use(history())
 app.use(express.static('public'))
+app.use('/uploads', express.static('uploads'))
+
+app.use('', uploadRouter)
+app.use('/axiomnode', uploadRouter)
 
 app.use('', router)
 app.use('/axiomnode', router)

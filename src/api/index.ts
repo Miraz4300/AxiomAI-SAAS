@@ -16,6 +16,7 @@ export function fetchChatAPIProcess<T = any>(
     uuid: number
     regenerate?: boolean
     prompt: string
+    uploadFileKeys?: string[]
     options?: { conversationId?: string; parentMessageId?: string }
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
@@ -29,6 +30,7 @@ export function fetchChatAPIProcess<T = any>(
     uuid: params.uuid,
     regenerate: params.regenerate || false,
     prompt: params.prompt,
+    uploadFileKeys: params.uploadFileKeys,
     options: params.options,
   }
 

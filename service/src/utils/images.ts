@@ -13,10 +13,10 @@ fs.mkdir('uploads').then(() => {
 
 export async function convertImageUrl(uploadFileKey: string): Promise<string> {
   const imageData = await fs.readFile(`uploads/${uploadFileKey}`)
-  // 判断文件格式
+  // Determine the file format
   const imageType = await fileType.fileTypeFromBuffer(imageData)
   const mimeType = imageType.mime
-  // 将图片数据转换为 Base64 编码的字符串
+  // Convert image data to a Base64 encoded string
   const base64Image = imageData.toString('base64')
   return `data:${mimeType};base64,${base64Image}`
 }

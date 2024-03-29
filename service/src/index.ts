@@ -3,6 +3,7 @@ import history from 'connect-history-api-fallback'
 import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 import { ObjectId } from 'mongodb'
+import type { TiktokenModel } from 'gpt-token'
 import { textTokens } from 'gpt-token'
 import speakeasy from 'speakeasy'
 import requestIp from 'request-ip'
@@ -420,6 +421,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
     systemMessage = `${promptSystemMessage}. ${room.prompt}`
   if (room != null && isNotEmptyString(room.prompt) && language === 'bn-BD')
     systemMessage = `${promptSystemMessage2}. ${room.prompt}`
+  const model = room.chatModel
   let lastResponse
   let result
   let message: ChatInfo
@@ -484,9 +486,9 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
       if (!result.data.detail)
         result.data.detail = {}
       result.data.detail.usage = new UsageResponse()
-      // Because the token itself is not calculated, so the default count here is a pseudo-statistic of gpt 3.5
-      result.data.detail.usage.prompt_tokens = textTokens(prompt, 'gpt-3.5-turbo')
-      result.data.detail.usage.completion_tokens = textTokens(result.data.text, 'gpt-3.5-turbo')
+      // if no usage data, calculate using Tiktoken library
+      result.data.detail.usage.prompt_tokens = textTokens(prompt, model as TiktokenModel)
+      result.data.detail.usage.completion_tokens = textTokens(result.data.text, model as TiktokenModel)
       result.data.detail.usage.total_tokens = result.data.detail.usage.prompt_tokens + result.data.detail.usage.completion_tokens
       result.data.detail.usage.estimated = true
     }
@@ -531,6 +533,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
           roomId,
           message._id,
           result.data.id,
+          model,
           result.data.detail?.usage as UsageResponse)
       }
     }

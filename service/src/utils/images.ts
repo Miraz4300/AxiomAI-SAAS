@@ -1,14 +1,15 @@
 import fs from 'node:fs/promises'
 import * as fileType from 'file-type'
+import logger from '../logger/winston'
 
 fs.mkdir('uploads').then(() => {
-  globalThis.console.log('Directory uploads created')
+  logger.info('Directory uploads created')
 }).catch((e) => {
   if (e.code === 'EEXIST') {
-    globalThis.console.log('Directory uploads already exists')
+    logger.info('Directory uploads already exists')
     return
   }
-  globalThis.console.error('Error creating directory uploads, ', e)
+  logger.error('Error creating directory uploads, ', e)
 })
 
 export async function convertImageUrl(uploadFileKey: string): Promise<string> {

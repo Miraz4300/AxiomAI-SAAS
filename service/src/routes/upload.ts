@@ -22,7 +22,6 @@ router.post('/upload-image', auth, upload.single('file'), async (req, res) => {
     const data = {
       fileKey: req.file.filename,
     }
-    // File uploaded
     res.send({ status: 'Success', message: 'File uploaded successfully', data })
   }
   catch (error) {

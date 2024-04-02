@@ -6,6 +6,8 @@ import { Status, UserRole } from '../storage/model'
 import type { AuthJwtPayload } from '../types'
 import logger from '../logger/winston'
 
+export const tokenMap = new Map<string, any>()
+
 async function auth(req, res, next) {
   const config = await getCacheConfig()
 
@@ -31,11 +33,34 @@ async function auth(req, res, next) {
       const token = req.header('Authorization').replace('Bearer ', '')
       const info = jwt.verify(token, config.siteConfig.loginSalt.trim()) as AuthJwtPayload
       req.headers.userId = info.userId
-      const user = await getUserById(info.userId)
-      if (user == null || user.status !== Status.Normal)
-        throw new Error('User does not exist')
-      else
-        next()
+
+      // Custom authentication permissions
+      const userId = info.userId.toString()
+      const mytoken = tokenMap.get(userId)
+      const timestamp2 = tokenMap.get(`${userId}time`)
+      const now = Date.now()
+      tokenMap.set(`${userId}time`, Date.now())
+      const seconds = (now - timestamp2) / 1000 / 60
+      //  let logoutMin = process.env.LOGOUT_MIN;
+      let logoutMin = Number.parseInt(process.env.LOGOUT_MIN, 30)
+
+      if (logoutMin == null)
+        logoutMin = 30
+
+      if (seconds > logoutMin) {
+        logger.info('Long time no login, token has expired')
+        res.send({ status: 'Unauthorized', message: 'Long time no login, token has expired' ?? 'Please authenticate.', data: null })
+
+        return
+      }
+
+      if (mytoken == null || mytoken !== token) {
+        logger.info('Local cache did not find token')
+        res.send({ status: 'Unauthorized', message: 'Local cache did not find token' ?? 'Please authenticate.', data: null })
+
+        return
+      }
+      next()
     }
     catch (error) {
       res.send({ status: 'Unauthorized', message: error.message ?? 'Please authenticate', data: null })

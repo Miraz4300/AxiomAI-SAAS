@@ -14,7 +14,7 @@ fs.mkdir('uploads').then(() => {
 
 export async function convertImageUrl(uploadFileKey: string): Promise<string> {
   const imageData = await fs.readFile(`uploads/${uploadFileKey}`)
-  // Determine the file format
+  // Determine the file format of the image
   const imageType = await fileType.fileTypeFromBuffer(imageData)
   const mimeType = imageType.mime
   // Convert image data to a Base64 encoded string

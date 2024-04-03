@@ -808,6 +808,7 @@ router.post('/user-login', authLimiter, async (req, res) => {
       root: user.roles.includes(UserRole.Admin),
       config: user.config,
     } as AuthJwtPayload, config.siteConfig.loginSalt.trim())
+    // Store the login token in memory
     tokenMap.set(user._id.toString(), jwtToken)
     tokenMap.set(`${user._id.toString()}time`, Date.now())
     res.send({ status: 'Success', message: 'Login successful, welcome back.', data: { token: jwtToken } })

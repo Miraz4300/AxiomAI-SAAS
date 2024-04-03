@@ -42,10 +42,11 @@ async function auth(req, res, next) {
       tokenMap.set(`${userId}time`, Date.now())
       const seconds = (now - timestamp2) / 1000 / 60
       //  let logoutMin = process.env.LOGOUT_MIN;
-      let logoutMin = Number.parseInt(process.env.LOGOUT_MIN, 30)
+      // default logout time is 10080 minutes or 7 days
+      let logoutMin = Number.parseInt(process.env.LOGOUT_MIN, 10080)
 
       if (logoutMin == null)
-        logoutMin = 30
+        logoutMin = 10080
 
       if (seconds > logoutMin) {
         logger.info('Long time no login, token has expired')

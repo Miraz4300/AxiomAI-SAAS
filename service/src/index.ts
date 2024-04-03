@@ -1439,6 +1439,7 @@ router.post('/statistics/by-day', auth, async (req, res) => {
     res.send({ status: 'Success', message: '', data })
   }
   catch (error) {
+    logger.error(`Statistics by day error: ${error.message}`)
     res.send(error)
   }
 })

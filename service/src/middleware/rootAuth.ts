@@ -23,6 +23,7 @@ async function rootAuth(req, res, next) {
         next()
     }
     catch (error) {
+      logger.error(`Auth proxy configuration error: Missing proxy header ${authProxyHeaderName}.`)
       res.send({ status: 'Unauthorized', message: error.message ?? `Please config auth proxy (usually is nginx) add set proxy header ${authProxyHeaderName}.`, data: null })
     }
     return
@@ -51,16 +52,23 @@ async function rootAuth(req, res, next) {
         logoutMin = 10080
 
       if (seconds > logoutMin) {
-        logger.info('Long time no login, token has expired')
+        logger.warn(`The user with ID ${userId} has been inactive for an extended period, and their token has expired.`)
         res.send({ status: 'Unauthorized', message: 'Long time no login, token has expired' ?? 'Please authenticate', data: null })
         return
       }
 
-      if (mytoken == null || mytoken !== token) {
-        logger.info('Local cache did not find token')
+      if (mytoken == null) {
+        logger.warn(`No token found in the local cache for user ${userId}.`)
         res.send({ status: 'Unauthorized', message: 'Local cache did not find token' ?? 'Please authenticate', data: null })
         return
       }
+
+      if (mytoken !== token) {
+        logger.warn(`Activity has been detected for user ${userId} from an old session. The old token has now expired.`)
+        res.send({ status: 'Unauthorized', message: 'Old session token has expired' ?? 'Please authenticate', data: null })
+        return
+      }
+
       if (!info.root) {
         logger.warn('The current user is not a management user and cannot call the administrator interface')
         res.send({ status: 'Fail', message: '⚠️ No permission', data: null })
@@ -69,6 +77,7 @@ async function rootAuth(req, res, next) {
       next()
     }
     catch (error) {
+      logger.error(`Authentication error(rootAuth): ${error.message}`)
       res.send({ status: 'Unauthorized', message: error.message ?? 'Please authenticate', data: null })
     }
   }

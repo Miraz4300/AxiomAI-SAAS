@@ -15,6 +15,7 @@ async function auth(req, res, next) {
     try {
       const username = req.header(authProxyHeaderName)
       if (!username) {
+        logger.error(`Auth proxy configuration error: Missing proxy header ${authProxyHeaderName}.`)
         res.send({ status: 'Unauthorized', message: `Please config auth proxy (usually is nginx) add set proxy header ${authProxyHeaderName}.`, data: null })
         return
       }
@@ -49,21 +50,26 @@ async function auth(req, res, next) {
         logoutMin = 10080
 
       if (seconds > logoutMin) {
-        logger.info('Long time no login, token has expired')
+        logger.warn(`The user with ID ${userId} has been inactive for an extended period, and their token has expired.`)
         res.send({ status: 'Unauthorized', message: 'Long time no login, token has expired' ?? 'Please authenticate.', data: null })
-
         return
       }
 
-      if (mytoken == null || mytoken !== token) {
-        logger.info('Local cache did not find token')
+      if (mytoken == null) {
+        logger.warn(`No token found in the local cache for user ${userId}.`)
         res.send({ status: 'Unauthorized', message: 'Local cache did not find token' ?? 'Please authenticate.', data: null })
+        return
+      }
 
+      if (mytoken !== token) {
+        logger.warn(`Activity has been detected for user ${userId} from an old session. The old token has now expired.`)
+        res.send({ status: 'Unauthorized', message: 'Old session token has expired' ?? 'Please authenticate.', data: null })
         return
       }
       next()
     }
     catch (error) {
+      logger.error(`Authentication error: ${error.message}`)
       res.send({ status: 'Unauthorized', message: error.message ?? 'Please authenticate', data: null })
     }
   }
@@ -81,7 +87,7 @@ async function getUserId(req: Request): Promise<string | undefined> {
     if (config.siteConfig.authProxyEnabled) {
       const username = req.header(authProxyHeaderName)
       if (!username) {
-        globalThis.console.error(`Please config auth proxy (usually is nginx) add set proxy header ${authProxyHeaderName}.`)
+        logger.error(`Auth proxy configuration error: Missing proxy header ${authProxyHeaderName}.`)
         return null
       }
       let user = await getUser(username)

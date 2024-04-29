@@ -677,7 +677,7 @@ router.post('/session', async (req, res) => {
       }
     })
 
-    let userInfo: { email: string; name: string; description: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig; advanced: AdvancedConfig }
+    let userInfo: { advanced: AdvancedConfig; avatar: string; email: string; config: UserConfig; description: string; name: string; remark: string; root: boolean; roles: UserRole[]; userId: string }
     if (userId != null) {
       const user = await getUserById(userId)
       if (user === null) {
@@ -699,15 +699,16 @@ router.post('/session', async (req, res) => {
       }
 
       userInfo = {
-        email: user.email,
-        name: user.name,
-        description: user.description,
+        advanced: user.advanced,
         avatar: user.avatar,
-        userId: user._id.toString(),
+        email: user.email,
+        config: user.config,
+        description: user.description,
+        name: user.name,
+        remark: user.remark,
         root: user.roles.includes(UserRole.Admin),
         roles: user.roles,
-        config: user.config,
-        advanced: user.advanced,
+        userId: user._id.toString(),
       }
       const keys = (await getCacheApiKeys()).filter(d => hasAnyRole(d.userRoles, user.roles))
 
@@ -882,13 +883,13 @@ router.post('/user-reset-password', authLimiter, async (req, res) => {
 
 router.post('/user-info', auth, async (req, res) => {
   try {
-    const { email, name, avatar, description } = req.body as UserInfo
+    const { avatar, description, name } = req.body as UserInfo
     const userId = req.headers.userId.toString()
 
     const user = await getUserById(userId)
     if (user == null || user.status !== Status.Normal)
       throw new Error('User does not exist.')
-    await updateUserInfo(userId, { email, name, avatar, description } as UserInfo)
+    await updateUserInfo(userId, { avatar, description, name } as UserInfo)
     res.send({ status: 'Success', message: 'Update successful' })
   }
   catch (error) {

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
 import type { DataTableColumns, DropdownOption } from 'naive-ui'
-import { NAlert, NAvatar, NBadge, NButton, NDataTable, NDropdown, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
+import { NAlert, NAvatar, NBadge, NButton, NCard, NDataTable, NDropdown, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
 import { format } from 'date-fns'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
 import { fetchDisableUser2FAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
@@ -12,6 +12,7 @@ const dialog = useDialog()
 const loading = ref(false)
 const show = ref(false)
 const show2 = ref(false)
+const show3 = ref(false)
 const handleSaving = ref(false)
 const userRef = ref(new UserInfo([UserRole.Free]))
 const users = ref<UserInfo[]>([])
@@ -75,7 +76,7 @@ const createColumns = (): DataTableColumns => {
               return 'warning'
             if (role === UserRole.Support)
               return 'success'
-            if (role === UserRole.Enterprise)
+            if (role === UserRole.Enterprise || role === UserRole.Admin)
               return 'error'
             if (role === UserRole.Basic || role === UserRole['Basic+'])
               return 'info'
@@ -190,6 +191,12 @@ const createColumns = (): DataTableColumns => {
             action: () => handleUpdateUserStatus(row._id, Status.Banned, 'ban'),
             show: row.status !== Status.Banned,
             icon: () => getIcon('mdi:ban'),
+          },
+          {
+            label: 'Insights',
+            key: 'userInsight',
+            action: handleUserInsight,
+            icon: () => getIcon('ic:outline-insights', true),
           },
         ]
 
@@ -336,6 +343,11 @@ function handleUserMessage(user: UserInfo) {
   show2.value = true
 }
 
+function handleUserInsight(user: UserInfo) {
+  userRef.value = user
+  show3.value = true
+}
+
 async function handleUpdateUser() {
   handleSaving.value = true
   try {
@@ -343,7 +355,7 @@ async function handleUpdateUser() {
     // Calculate the expiration date as "MM/DD/YYYY, hh:mm AM/PM" format
       const currentDate = new Date()
       currentDate.setDate(currentDate.getDate() + duration.value)
-      userRef.value.remark = `Expires on ${currentDate.toLocaleString()}`
+      userRef.value.remark = `Expires: ${currentDate.toLocaleString()}`
     }
 
     const result = await fetchUpdateUser(userRef.value)
@@ -355,6 +367,7 @@ async function handleUpdateUser() {
     await handleGetUsers(pagination.page)
     show.value = false
     show2.value = false
+    show3.value = false
   }
   catch (error: any) {
     ms.error(error.message)
@@ -494,7 +507,7 @@ onMounted(async () => {
         <div class="flex-1">
           <NInput
             v-model:value="userRef.message" type="textarea" clearable
-            :autosize="{ minRows: 2, maxRows: 4 }" placeholder="send message to user as notification"
+            :autosize="{ minRows: 3, maxRows: 4 }" placeholder="send message to user as notification"
           />
         </div>
       </div>
@@ -504,6 +517,33 @@ onMounted(async () => {
           {{ $t('common.save') }}
         </NButton>
       </div>
+    </div>
+  </NModal>
+
+  <NModal v-model:show="show3" :mask-closable="false" preset="card" title="Insights" style="width: 70%">
+    <div class="p-4 space-y-5 min-h-[200px]">
+      <div class="flex items-center space-x-4">
+        <NAvatar
+          round
+          :size="120"
+          :src="userRef.avatar ? userRef.avatar : defaultAvatar"
+        />
+        <p>
+          {{ userRef._id }} <br>
+          {{ userRef.email }} <br>
+          {{ userRef.name }} <br>
+          2FA: {{ userRef.secretKey ? 'Enabled' : 'Disabled' }}
+        </p>
+      </div>
+      <NCard title="User Activities">
+        <p>
+          Total Logins: 0 <br>
+          Last Login: - <br>
+          Last IP: - <br>
+          Last Location: - <br>
+          Last Device: - <br>
+        </p>
+      </NCard>
     </div>
   </NModal>
 </template>

@@ -22,7 +22,7 @@ interface SessionResponse {
     key: string
     value: string
   }[]
-  userInfo: { email: string; name: string; description: string; avatar: string; userId: string; root: boolean; config: UserConfig }
+  userInfo: { avatar: string; config: UserConfig; description: string; email: string; name: string; remark: string; root: boolean; userId: string; }
 }
 
 export interface AuthState {

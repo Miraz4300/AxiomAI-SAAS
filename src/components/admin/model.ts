@@ -168,6 +168,7 @@ export const userRoleOptions = Object.values(UserRole).filter(d => Number.isNaN(
 
 export class UserInfo {
   _id?: string
+  name?: string
   avatar?: string
   email?: string
   password?: string
@@ -175,6 +176,7 @@ export class UserInfo {
   createTime?: Date
   roles: UserRole[]
   remark?: string
+  secretKey?: string
   message?: string
   constructor(roles: UserRole[]) {
     this.roles = roles

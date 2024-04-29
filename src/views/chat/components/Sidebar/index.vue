@@ -108,7 +108,7 @@ async function handleDropdown(optionKey: string) {
         <NDropdown v-if="!!authStore.token || !!authStore.session?.authProxyEnabled" trigger="hover" :options="options" :theme-overrides="dropdownThemeOverrides.Dropdown" @select="handleDropdown">
           <UserAvatar />
         </NDropdown>
-        <UserRole :icon="false" />
+        <UserRole :only-tag="true" :icon="false" />
       </div>
     </div>
   </div>

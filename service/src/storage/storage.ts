@@ -217,7 +217,7 @@ export async function createUser(email: string, password: string, roles?: UserRo
 
 export async function updateUserInfo(userId: string, user: UserInfo) {
   await userCol.updateOne({ _id: new ObjectId(userId) }
-    , { $set: { name: user.name, description: user.description, avatar: user.avatar } })
+    , { $set: { avatar: user.avatar, description: user.description, name: user.name } })
 }
 
 export async function updateUserChatModel(userId: string, chatModel: string) {

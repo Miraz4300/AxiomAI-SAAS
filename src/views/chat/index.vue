@@ -54,6 +54,9 @@ appStore.UserFeatures()
 const chatFooterEnabled = computed(() => appStore.chatFooterEnabled)
 const chatFooterText = computed(() => appStore.chatFooterText)
 const internetAccessEnabled = computed(() => appStore.internetAccessEnabled)
+const visionEnabled = computed(() => appStore.visionEnabled)
+const voiceEnabled = computed(() => appStore.voiceEnabled)
+const speechEnabled = computed(() => appStore.speechEnabled)
 
 const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
@@ -629,7 +632,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
                       <SvgIcon icon="fluent:brain-circuit-24-filled" />
                     </span>
                   </ToolButton>
-                  <ToolButton>
+                  <ToolButton v-if="visionEnabled">
                     <NUpload
                       :disabled="!isVisionModel"
                       action="/axiomnode/upload-image"
@@ -646,8 +649,8 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
                       </span>
                     </NUpload>
                   </ToolButton>
-                  <Speech v-if="!isMobile && speechStore.enable" />
-                  <Voice v-if="!isMobile && speechStore.enable" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
+                  <Speech v-if="!isMobile && speechStore.enable && speechEnabled" />
+                  <Voice v-if="!isMobile && speechStore.enable && voiceEnabled" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
                 </div>
                 <div class="flex items-center cursor-default" @click.stop>
                   <div v-if="!!authStore.token && internetAccessEnabled" class="flex items-center text-neutral-400">

@@ -46,6 +46,7 @@ export class UserInfo {
   secretKey?: string // 2FA secret key
   message?: string // Notification message
   advanced?: AdvancedConfig // Advanced config for max context length
+  activity?: ActivityData // Activity data
   constructor(email: string, password: string) {
     this.name = email
     this.email = email
@@ -250,6 +251,9 @@ export class FeaturesConfig {
     public merchEnabled?: boolean,
     public internetAccessEnabled?: boolean,
     public cognitiveDocsEnabled?: boolean,
+    public voiceEnabled?: boolean,
+    public speechEnabled?: boolean,
+    public visionEnabled?: boolean,
   ) { }
 }
 
@@ -278,6 +282,16 @@ export class AdvancedConfig {
   constructor(
     public persona: string,
     public memory: number,
+  ) { }
+}
+
+export class ActivityData {
+  constructor(
+    public lastActivity: string,
+    public device: string,
+    public ipAddress: string,
+    public ipLocation: string,
+    public usedSensitiveWords: string,
   ) { }
 }
 

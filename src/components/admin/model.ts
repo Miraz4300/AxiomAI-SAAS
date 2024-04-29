@@ -190,6 +190,9 @@ export class FeaturesConfig {
   merchEnabled?: boolean
   internetAccessEnabled?: boolean
   cognitiveDocsEnabled?: boolean
+  voiceEnabled?: boolean
+  speechEnabled?: boolean
+  visionEnabled?: boolean
 }
 
 export class UserPassword {

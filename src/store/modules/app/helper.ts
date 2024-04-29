@@ -16,11 +16,14 @@ export interface AppState {
   merchEnabled?: boolean
   internetAccessEnabled?: boolean
   cognitiveDocsEnabled?: boolean
+  voiceEnabled?: boolean
+  speechEnabled?: boolean
+  visionEnabled?: boolean
   [key: string]: boolean | Theme | Language | string | undefined // TODO: This makes the interface less strict, which could potentially lead to bugs or unexpected behavior.
 }
 
 export function defaultSetting(): AppState {
-  return { siderCollapsed: false, theme: 'auto', language: 'en-US', chatFooterEnabled: false, chatFooterText: '', whiteboardEnabled: false, merchEnabled: false, internetAccessEnabled: false, cognitiveDocsEnabled: false }
+  return { siderCollapsed: false, theme: 'auto', language: 'en-US', chatFooterEnabled: false, chatFooterText: '', whiteboardEnabled: false, merchEnabled: false, internetAccessEnabled: false, cognitiveDocsEnabled: false, voiceEnabled: false, speechEnabled: false, visionEnabled: false }
 }
 
 export function getLocalSetting(): AppState {

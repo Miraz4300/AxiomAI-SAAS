@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DropdownOption } from 'naive-ui'
 import { NDropdown, useDialog, useMessage } from 'naive-ui'
-import html2canvas from 'html2canvas'
+import { toPng } from 'html-to-image'
 import { ref } from 'vue'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
@@ -64,17 +64,13 @@ function exportPNG() {
       try {
         d.loading = true
         const ele = document.getElementById('image-wrapper')
-        const canvas = await html2canvas(ele as HTMLDivElement, {
-          useCORS: true,
-        })
-        const imgUrl = canvas.toDataURL('image/png')
+        const imgUrl = await toPng(ele as HTMLDivElement)
         const tempLink = document.createElement('a')
         tempLink.style.display = 'none'
         tempLink.href = imgUrl
         tempLink.setAttribute('download', 'axiomai-chat.png')
         if (typeof tempLink.download === 'undefined')
           tempLink.setAttribute('target', '_blank')
-
         document.body.appendChild(tempLink)
         tempLink.click()
         document.body.removeChild(tempLink)

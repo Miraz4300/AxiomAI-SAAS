@@ -11,6 +11,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  onlyTag: {
+    type: Boolean,
+    default: false,
+  },
   icon: {
     type: Boolean,
     default: true,
@@ -64,16 +68,23 @@ const Icon = computed(() => IconName(Role))
 </script>
 
 <template>
-  <div class="flex gap-1">
-    <a v-if="props.subLink">Subscription:</a>
-    <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag" @click="goSub">
-      <a class="cursor-pointer font-semibold">{{ UserRole[userInfo.roles[0]] }}</a>
-      <template v-if="Icon && props.icon" #icon>
-        <SvgIcon :icon="Icon" />
-      </template>
-    </NTag>
+  <div v-if="props.subLink" class="flex flex-col bg-[#F0F4F9] dark:bg-[#161B22] py-2 px-3 rounded-lg mt-2">
+    <a class="font-bold mb-1">Subscription details:</a>
+    <a> Role:
+      <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag" @click="goSub">
+        <a class="cursor-pointer font-semibold">{{ UserRole[userInfo.roles[0]] }}</a>
+        <template v-if="Icon && props.icon" #icon>
+          <SvgIcon :icon="Icon" />
+        </template>
+      </NTag>
+    </a>
+    <a> {{ userInfo.remark }} </a>
+    <a v-if="Role === UserRole.Free" class="cursor-pointer text-[#fb923c]" @click="goSub">Buy subscription here</a>
   </div>
-  <div v-if="props.subLink && Role === UserRole.Free">
-    <a class="cursor-pointer text-[#fb923c]" @click="goSub">Buy subscription here</a>
-  </div>
+  <NTag v-if="props.onlyTag && userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag" @click="goSub">
+    <a class="cursor-pointer font-semibold">{{ UserRole[userInfo.roles[0]] }}</a>
+    <template v-if="Icon && props.icon" #icon>
+      <SvgIcon :icon="Icon" />
+    </template>
+  </NTag>
 </template>

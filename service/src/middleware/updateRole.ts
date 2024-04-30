@@ -29,7 +29,7 @@ cron.schedule('0 */3 * * *', async () => {
 
   for await (const user of cursor) {
     const remark = user.remark
-    if (remark && remark.startsWith('Expires on ') && new Date(remark.slice(11)) < new Date()) {
+    if (remark && remark.startsWith('Expires: ') && new Date(remark.slice(9)) < new Date()) {
       if (!operationStarted) {
         logStream.write('---------------OPERATION_START---------------\n\n')
         operationStarted = true

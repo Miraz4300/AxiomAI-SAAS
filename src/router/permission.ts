@@ -30,7 +30,7 @@ export function setupPageGuard(router: Router) {
 
       else { await useUserStore().updateUserInfo(false, data.userInfo) }
 
-      if (!!authStore.session?.auth && !authStore.token)
+      if (!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled)
         return next({ name: 'Auth', query: { redirect: to.fullPath } }) // Redirect to auth page in case of unauthenticated users
 
       if (to.meta.requiresAdmin && !userStore.userInfo.root)

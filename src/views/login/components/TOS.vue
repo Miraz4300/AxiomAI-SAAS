@@ -31,13 +31,13 @@ const tosModal = ref(false)
   </span>
 
   <NModal v-if="props.modal" v-model:show="tosModal" style="width: 95%; max-width: 1280px; height: 95%; max-height: 640px">
-    <div class="p-10 bg-white rounded dark:bg-slate-800">
+    <div class="max-[640px]:p-5 min-[768px]:p-10 bg-white rounded dark:bg-slate-800">
       <div class="space-y-4">
-        <header class="space-y-2">
+        <header class="space-y-6">
           <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-neutral-200">
             Terms of Service (ToS)
           </h2>
-          <NScrollbar style="max-height: 510px">
+          <NScrollbar style="max-height: 490px">
             <div class="md:text-justify pl-4 pr-4 prose dark:prose-dark">
               <p>
                 Before using the services provided by this website (AxiomAI), please be sure to carefully read and understand these Terms of Service (hereinafter referred to as "these Terms").

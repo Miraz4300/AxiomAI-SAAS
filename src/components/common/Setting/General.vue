@@ -85,7 +85,7 @@ const divClass = 'flex items-center space-x-4'
     <div class="flex items-center space-x-4">
       <span :class="{ 'flex-shrink-0 w-[80px]': !isMobile }" />
       <div>
-        <UserAvatar :size="100" :avatar-change="true" @click="show = true" />
+        <UserAvatar :size="110" :avatar-change="true" @click="show = true" />
       </div>
       <div class="flex-1 pl-2">
         <p class="font-bold" :class="[isMobile && userInfo.name.length > 9 ? 'text-base' : 'text-2xl']">

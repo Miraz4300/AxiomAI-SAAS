@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { MessageReactive } from 'naive-ui'
-import { NButton, NDivider, NInput, NSwitch, NTooltip, useDialog, useMessage } from 'naive-ui'
+import { NButton, NDivider, NInput, NSpace, NSwitch, NTooltip, NUpload, UploadFileInfo, useDialog, useMessage } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
@@ -54,11 +54,17 @@ appStore.UserFeatures()
 const chatFooterEnabled = computed(() => appStore.chatFooterEnabled)
 const chatFooterText = computed(() => appStore.chatFooterText)
 const internetAccessEnabled = computed(() => appStore.internetAccessEnabled)
+const visionEnabled = computed(() => appStore.visionEnabled)
+const voiceEnabled = computed(() => appStore.voiceEnabled)
+const speechEnabled = computed(() => appStore.speechEnabled)
 
 const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
+
+const currentChatModel = ref(JSON.parse(localStorage.getItem('currentChatModel') as string))
+const isVisionModel = computed(() => currentChatModel.value?.includes('vision'))
 
 let loadingms: MessageReactive
 let allmsg: MessageReactive
@@ -92,6 +98,8 @@ function handleSubmit() {
   onConversation()
 }
 
+const uploadFileKeysRef = ref<string[]>([])
+
 async function onConversation() {
   let message = prompt.value
 
@@ -100,6 +108,9 @@ async function onConversation() {
 
   if (!message || message.trim() === '')
     return
+
+  const uploadFileKeys = isVisionModel.value ? uploadFileKeysRef.value : []
+  uploadFileKeysRef.value = []
 
   controller = new AbortController()
 
@@ -110,6 +121,7 @@ async function onConversation() {
       uuid: chatUuid,
       dateTime: new Date().toLocaleString(),
       text: message,
+      images: uploadFileKeys,
       inversion: true,
       error: false,
       conversationOptions: null,
@@ -149,6 +161,7 @@ async function onConversation() {
         roomId: +uuid,
         uuid: chatUuid,
         prompt: message,
+        uploadFileKeys,
         options,
         signal: controller.signal,
         onDownloadProgress: ({ event }) => {
@@ -510,6 +523,23 @@ function handleVoiceSubmit() {
     handleSubmit()
 }
 
+// https://github.com/tusen-ai/naive-ui/issues/4887
+function handleFinish(options: { file: UploadFileInfo; event?: ProgressEvent }) {
+  if (options.file.status === 'finished') {
+    const response = (options.event?.target as XMLHttpRequest).response
+    uploadFileKeysRef.value.push(`${response.data.fileKey}`)
+  }
+}
+function handleDeleteUploadFile() {
+  uploadFileKeysRef.value.pop()
+}
+const uploadHeaders = computed(() => {
+  const token = useAuthStore().token
+  return {
+    Authorization: `Bearer ${token}`,
+  }
+})
+
 onMounted(() => {
   firstLoading.value = true
   handleSyncChat()
@@ -553,6 +583,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
                 :key="index"
                 :date-time="item.dateTime"
                 :text="item.text"
+                :images="item.images"
                 :inversion="item.inversion"
                 :response-count="item.responseCount"
                 :usage="item && item.usage || undefined"
@@ -569,6 +600,16 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
     </main>
     <footer :class="[isMobile ? 'p-2 pr-3' : 'p-4']">
       <div class="m-auto max-w-screen-xl" :class="[isMobile ? 'pl-1' : 'px-4']">
+        <div v-if="isVisionModel && uploadFileKeysRef.length > 0" class="flex items-center space-x-2 h-10 pb-4">
+          <NSpace>
+            <img v-for="(v, i) of uploadFileKeysRef" :key="i" :src="`/uploads/${v}`" class="max-h-10">
+            <HoverButton @click="handleDeleteUploadFile">
+              <span class="text-xl text-[#4f555e] dark:text-white">
+                <SvgIcon icon="ri:delete-back-2-fill" />
+              </span>
+            </HoverButton>
+          </NSpace>
+        </div>
         <div class="flex items-stretch space-x-2">
           <div class="relative flex-1">
             <NInput
@@ -576,7 +617,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
               v-model:value="prompt"
               clearable
               class="pb-10"
-              :disabled="!!authStore.session?.auth && !authStore.token"
+              :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled"
               type="textarea"
               :placeholder="t('chat.placeholderText')"
               :autosize="{ minRows: isMobile ? 1 : 1, maxRows: isMobile ? 4 : 8 }"
@@ -591,8 +632,25 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
                       <SvgIcon icon="fluent:brain-circuit-24-filled" />
                     </span>
                   </ToolButton>
-                  <Speech v-if="!isMobile && speechStore.enable" />
-                  <Voice v-if="!isMobile && speechStore.enable" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
+                  <ToolButton v-if="visionEnabled">
+                    <NUpload
+                      :disabled="!isVisionModel"
+                      action="/axiomnode/upload-image"
+                      list-type="image"
+                      class="flex items-center justify-center transition hover:bg-neutral-100 dark:hover:bg-[#414755]"
+                      :headers="uploadHeaders"
+                      :show-file-list="false"
+                      response-type="json"
+                      accept="image/png, image/jpeg, image/webp, image/gif"
+                      @finish="handleFinish"
+                    >
+                      <span class="text-xl text-[#22c55e]">
+                        <SvgIcon icon="ri:image-add-line" />
+                      </span>
+                    </NUpload>
+                  </ToolButton>
+                  <Speech v-if="!isMobile && speechStore.enable && speechEnabled" />
+                  <Voice v-if="!isMobile && speechStore.enable && voiceEnabled" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
                 </div>
                 <div class="flex items-center cursor-default" @click.stop>
                   <div v-if="!!authStore.token && internetAccessEnabled" class="flex items-center text-neutral-400">

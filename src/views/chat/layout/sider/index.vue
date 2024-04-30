@@ -97,7 +97,7 @@ watch(
                 <SvgIcon icon="ri:search-line" />
               </template>
             </NInput>
-            <NButton type="primary" size="small" :disabled="!!authStore.session?.auth && !authStore.token" @click="handleAdd">
+            <NButton type="primary" size="small" :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled" @click="handleAdd">
               <SvgIcon icon="ri:add-line" />
             </NButton>
           </div>

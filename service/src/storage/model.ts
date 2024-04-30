@@ -46,6 +46,7 @@ export class UserInfo {
   secretKey?: string // 2FA secret key
   message?: string // Notification message
   advanced?: AdvancedConfig // Advanced config for max context length
+  activity?: ActivityData // Activity data
   constructor(email: string, password: string) {
     this.name = email
     this.email = email
@@ -111,14 +112,16 @@ export class ChatInfo {
   uuid: number
   dateTime: number
   prompt: string
+  images?: string[]
   response?: string
   status: Status = Status.Normal
   options: ChatOptions
   previousResponse?: previousResponse[]
-  constructor(roomId: number, uuid: number, prompt: string, options: ChatOptions) {
+  constructor(roomId: number, uuid: number, prompt: string, images: string[], options: ChatOptions) {
     this.roomId = roomId
     this.uuid = uuid
     this.prompt = prompt
+    this.images = images
     this.options = options
     this.dateTime = new Date().getTime()
   }
@@ -137,16 +140,18 @@ export class ChatUsage {
   roomId: number
   chatId: ObjectId
   messageId: string
+  model: string
   promptTokens: number
   completionTokens: number
   totalTokens: number
   estimated: boolean
   dateTime: number
-  constructor(userId: ObjectId, roomId: number, chatId: ObjectId, messageId: string, usage: UsageResponse) {
+  constructor(userId: ObjectId, roomId: number, chatId: ObjectId, messageId: string, model: string, usage?: UsageResponse) {
     this.userId = userId
     this.roomId = roomId
     this.chatId = chatId
     this.messageId = messageId
+    this.model = model
     if (usage) {
       this.promptTokens = usage.prompt_tokens
       this.completionTokens = usage.completion_tokens
@@ -182,6 +187,7 @@ export class SiteConfig {
   constructor(
     public siteTitle?: string,
     public loginEnabled?: boolean,
+    public authProxyEnabled?: boolean,
     public loginSalt?: string,
     public registerEnabled?: boolean,
     public registerReview?: boolean,
@@ -245,6 +251,9 @@ export class FeaturesConfig {
     public merchEnabled?: boolean,
     public internetAccessEnabled?: boolean,
     public cognitiveDocsEnabled?: boolean,
+    public voiceEnabled?: boolean,
+    public speechEnabled?: boolean,
+    public visionEnabled?: boolean,
   ) { }
 }
 
@@ -273,6 +282,16 @@ export class AdvancedConfig {
   constructor(
     public persona: string,
     public memory: number,
+  ) { }
+}
+
+export class ActivityData {
+  constructor(
+    public lastActivity: string,
+    public device: string,
+    public ipAddress: string,
+    public ipLocation: string,
+    public usedSensitiveWords: string,
   ) { }
 }
 

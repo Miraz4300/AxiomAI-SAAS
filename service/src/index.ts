@@ -3,6 +3,7 @@ import history from 'connect-history-api-fallback'
 import jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
 import { ObjectId } from 'mongodb'
+import type { TiktokenModel } from 'gpt-token'
 import { textTokens } from 'gpt-token'
 import speakeasy from 'speakeasy'
 import requestIp from 'request-ip'
@@ -13,7 +14,7 @@ import { TwoFAConfig } from './types'
 import type { AuthJwtPayload, RequestProps } from './types'
 import type { ChatMessage } from './conversation-core'
 import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './conversation-core'
-import { auth, getUserId } from './middleware/auth'
+import { auth, getUserId, tokenMap } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AnnouncementConfig, AuditConfig, ChatInfo, ChatOptions, Config, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, SubscriptionConfig, UserConfig, UserInfo } from './storage/model'
 import { AdvancedConfig, Status, UsageResponse, UserRole } from './storage/model'
@@ -61,6 +62,7 @@ import { hasAnyRole, isEmail, isNotEmptyString } from './utils/is'
 import { sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
 import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
 import { isAdmin, rootAuth } from './middleware/rootAuth'
+import { router as uploadRouter } from './routes/upload'
 import './middleware/updateRole'
 import { isAllowed } from './middleware/userRateLimit'
 import redis from './storage/redis'
@@ -232,6 +234,7 @@ router.get('/chat-history', auth, async (req, res) => {
           uuid: c.uuid,
           dateTime: new Date(c.dateTime).toLocaleString(),
           text: c.prompt,
+          images: c.images,
           inversion: true,
           error: false,
           conversationOptions: null,
@@ -396,7 +399,7 @@ const promptSystemMessage2 = 'You are AxiomAI. Reply in bangla language'
 router.post('/conversation', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
-  let { roomId, uuid, regenerate, prompt, options = {}, systemMessage, persona, language } = req.body as RequestProps
+  let { roomId, uuid, regenerate, prompt, uploadFileKeys, options = {}, systemMessage, persona, language } = req.body as RequestProps
 
   if (!systemMessage && language === 'en-US')
     systemMessage = mainSystemMessage
@@ -418,6 +421,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
     systemMessage = `${promptSystemMessage}. ${room.prompt}`
   if (room != null && isNotEmptyString(room.prompt) && language === 'bn-BD')
     systemMessage = `${promptSystemMessage2}. ${room.prompt}`
+  const model = room.chatModel
   let lastResponse
   let result
   let message: ChatInfo
@@ -443,10 +447,11 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
 
     message = regenerate
       ? await getChat(roomId, uuid)
-      : await insertChat(uuid, prompt, roomId, options as ChatOptions)
+      : await insertChat(uuid, prompt, uploadFileKeys, roomId, options as ChatOptions)
     let firstChunk = true
     result = await chatReplyProcess({
       message: prompt,
+      uploadFileKeys,
       lastContext: options,
       process: (chat: ChatMessage) => {
         lastResponse = chat
@@ -481,9 +486,9 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
       if (!result.data.detail)
         result.data.detail = {}
       result.data.detail.usage = new UsageResponse()
-      // Because the token itself is not calculated, so the default count here is a pseudo-statistic of gpt 3.5
-      result.data.detail.usage.prompt_tokens = textTokens(prompt, 'gpt-3.5-turbo')
-      result.data.detail.usage.completion_tokens = textTokens(result.data.text, 'gpt-3.5-turbo')
+      // if no usage data, calculate using Tiktoken library
+      result.data.detail.usage.prompt_tokens = textTokens(prompt, model as TiktokenModel)
+      result.data.detail.usage.completion_tokens = textTokens(result.data.text, model as TiktokenModel)
       result.data.detail.usage.total_tokens = result.data.detail.usage.prompt_tokens + result.data.detail.usage.completion_tokens
       result.data.detail.usage.estimated = true
     }
@@ -528,6 +533,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
           roomId,
           message._id,
           result.data.id,
+          model,
           result.data.detail?.usage as UsageResponse)
       }
     }
@@ -644,8 +650,9 @@ router.post('/oauth3', rootAuth, async (req, res) => {
 router.post('/session', async (req, res) => {
   try {
     const config = await getCacheConfig()
-    const hasAuth = config.siteConfig.loginEnabled
-    const allowRegister = (await getCacheConfig()).siteConfig.registerEnabled
+    const hasAuth = config.siteConfig.loginEnabled || config.siteConfig.authProxyEnabled
+    const authProxyEnabled = config.siteConfig.authProxyEnabled
+    const allowRegister = config.siteConfig.registerEnabled
     if (config.apiModel !== 'ChatGPTAPI' && config.apiModel !== 'ChatGPTUnofficialProxyAPI')
       config.apiModel = 'ChatGPTAPI'
     const userId = await getUserId(req)
@@ -670,7 +677,7 @@ router.post('/session', async (req, res) => {
       }
     })
 
-    let userInfo: { email: string; name: string; description: string; avatar: string; userId: string; root: boolean; roles: UserRole[]; config: UserConfig; advanced: AdvancedConfig }
+    let userInfo: { advanced: AdvancedConfig; avatar: string; email: string; config: UserConfig; description: string; name: string; remark: string; root: boolean; roles: UserRole[]; userId: string }
     if (userId != null) {
       const user = await getUserById(userId)
       if (user === null) {
@@ -680,6 +687,7 @@ router.post('/session', async (req, res) => {
           message: '',
           data: {
             auth: hasAuth,
+            authProxyEnabled,
             allowRegister,
             model: config.apiModel,
             title: config.siteConfig.siteTitle,
@@ -691,15 +699,16 @@ router.post('/session', async (req, res) => {
       }
 
       userInfo = {
-        email: user.email,
-        name: user.name,
-        description: user.description,
+        advanced: user.advanced,
         avatar: user.avatar,
-        userId: user._id.toString(),
+        email: user.email,
+        config: user.config,
+        description: user.description,
+        name: user.name,
+        remark: user.remark,
         root: user.roles.includes(UserRole.Admin),
         roles: user.roles,
-        config: user.config,
-        advanced: user.advanced,
+        userId: user._id.toString(),
       }
       const keys = (await getCacheApiKeys()).filter(d => hasAnyRole(d.userRoles, user.roles))
 
@@ -733,6 +742,7 @@ router.post('/session', async (req, res) => {
       message: '',
       data: {
         auth: hasAuth,
+        authProxyEnabled,
         allowRegister,
         model: config.apiModel,
         title: config.siteConfig.siteTitle,
@@ -799,11 +809,18 @@ router.post('/user-login', authLimiter, async (req, res) => {
       root: user.roles.includes(UserRole.Admin),
       config: user.config,
     } as AuthJwtPayload, config.siteConfig.loginSalt.trim())
+    // Store the login token in memory
+    tokenMap.set(user._id.toString(), jwtToken)
+    tokenMap.set(`${user._id.toString()}time`, Date.now())
     res.send({ status: 'Success', message: 'Login successful, welcome back.', data: { token: jwtToken } })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
   }
+})
+
+router.post('/user-logout', async (req, res) => {
+  res.send({ status: 'Success', message: 'Logout successful', data: null })
 })
 
 router.post('/user-send-reset-mail', authLimiter, async (req, res) => {
@@ -866,13 +883,13 @@ router.post('/user-reset-password', authLimiter, async (req, res) => {
 
 router.post('/user-info', auth, async (req, res) => {
   try {
-    const { email, name, avatar, description } = req.body as UserInfo
+    const { avatar, description, name } = req.body as UserInfo
     const userId = req.headers.userId.toString()
 
     const user = await getUserById(userId)
     if (user == null || user.status !== Status.Normal)
       throw new Error('User does not exist.')
-    await updateUserInfo(userId, { email, name, avatar, description } as UserInfo)
+    await updateUserInfo(userId, { avatar, description, name } as UserInfo)
     res.send({ status: 'Success', message: 'Update successful' })
   }
   catch (error) {
@@ -941,7 +958,7 @@ router.post('/user-edit', rootAuth, async (req, res) => {
     }
     else {
       const newPassword = md5(password)
-      const user = await createUser(email, newPassword, roles, remark)
+      const user = await createUser(email, newPassword, roles, null, remark)
       await updateUserStatus(user._id.toString(), Status.Normal)
     }
     res.send({ status: 'Success', message: 'Update successfully [EDIT]' })
@@ -1423,6 +1440,7 @@ router.post('/statistics/by-day', auth, async (req, res) => {
     res.send({ status: 'Success', message: '', data })
   }
   catch (error) {
+    logger.error(`Statistics by day error: ${error.message}`)
     res.send(error)
   }
 })
@@ -1431,6 +1449,10 @@ router.post('/voice', [auth, limiter], getAzureSubscriptionKey)
 
 app.use(history())
 app.use(express.static('public'))
+app.use('/uploads', express.static('uploads'))
+
+app.use('', uploadRouter)
+app.use('/axiomnode', uploadRouter)
 
 app.use('', router)
 app.use('/axiomnode', router)

@@ -16,6 +16,7 @@ export function fetchChatAPIProcess<T = any>(
     uuid: number
     regenerate?: boolean
     prompt: string
+    uploadFileKeys?: string[]
     options?: { conversationId?: string; parentMessageId?: string }
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
@@ -29,6 +30,7 @@ export function fetchChatAPIProcess<T = any>(
     uuid: params.uuid,
     regenerate: params.regenerate || false,
     prompt: params.prompt,
+    uploadFileKeys: params.uploadFileKeys,
     options: params.options,
   }
 
@@ -96,6 +98,13 @@ export function fetchLogin<T = any>(username: string, password: string, token?: 
   })
 }
 
+export function fetchLogout<T = any>() {
+  return post<T>({
+    url: '/user-logout',
+    data: { },
+  })
+}
+
 export function fetchSendResetMail<T = any>(username: string) {
   return post<T>({
     url: '/user-send-reset-mail',
@@ -117,10 +126,10 @@ export function fetchRegister<T = any>(username: string, password: string) {
   })
 }
 
-export function fetchUpdateUserInfo<T = any>(email: string, name: string, avatar: string, description: string) {
+export function fetchUpdateUserInfo<T = any>(avatar: string, description: string, name: string) {
   return post<T>({
     url: '/user-info',
-    data: { email, name, avatar, description },
+    data: { avatar, description, name },
   })
 }
 

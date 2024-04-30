@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
-import type { DropdownOption } from 'naive-ui'
-import { NAlert, NAvatar, NBadge, NButton, NDataTable, NDropdown, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
+import type { DataTableColumns, DropdownOption } from 'naive-ui'
+import { NAlert, NAvatar, NBadge, NButton, NCard, NDataTable, NDropdown, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
 import { format } from 'date-fns'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
 import { fetchDisableUser2FAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
@@ -12,72 +12,108 @@ const dialog = useDialog()
 const loading = ref(false)
 const show = ref(false)
 const show2 = ref(false)
+const show3 = ref(false)
 const handleSaving = ref(false)
 const userRef = ref(new UserInfo([UserRole.Free]))
 const users = ref<UserInfo[]>([])
 const searchQuery = ref('')
 const defaultAvatar = '/assets/avatar_1.jpg'
 
-const columns = [
-  {
-    title: 'Email',
-    key: 'email',
-    resizable: true,
-    width: 220,
-    minWidth: 100,
-    maxWidth: 220,
-    render(row: any) {
-      return h('div', { class: 'flex items-center gap-3' }, {
-        default: () => [
-          h(NAvatar, {
-            round: true,
-            size: 'medium',
-            src: row.avatar ? row.avatar : defaultAvatar,
-          }),
-          h('span', { class: 'font-medium antialiased' }, row.email),
-        ],
-      })
+const createColumns = (): DataTableColumns => {
+  return [
+    {
+      title: 'Email',
+      key: 'email',
+      resizable: true,
+      width: 220,
+      minWidth: 100,
+      maxWidth: 220,
+      render(row: any) {
+        return h('div', { class: 'flex items-center gap-3' }, {
+          default: () => [
+            h(NAvatar, {
+              round: true,
+              size: 'medium',
+              src: row.avatar ? row.avatar : defaultAvatar,
+            }),
+            h('span', { class: 'font-medium antialiased' }, row.email),
+          ],
+        })
+      },
     },
-  },
-  {
-    title: 'Registration Time',
-    key: 'createTime',
-    width: 170,
-    minWidth: 90,
-    maxWidth: 170,
-    render(row: any) {
-      return format(new Date(row.createTime), 'dd-MMM-yyyy, hh:mm:ss a')
+    {
+      title: 'Registration Time',
+      key: 'createTime',
+      width: 170,
+      minWidth: 90,
+      maxWidth: 170,
+      render(row: any) {
+        return format(new Date(row.createTime), 'dd-MMM-yyyy, hh:mm:ss a')
+      },
     },
-  },
-  {
-    title: 'Verification Time',
-    key: 'verifyTime',
-    width: 170,
-    minWidth: 90,
-    maxWidth: 170,
-    render(row: any) {
-      return format(new Date(row.verifyTime), 'dd-MMM-yyyy, hh:mm:ss a')
+    {
+      title: 'Verification Time',
+      key: 'verifyTime',
+      width: 170,
+      minWidth: 90,
+      maxWidth: 170,
+      render(row: any) {
+        return format(new Date(row.verifyTime), 'dd-MMM-yyyy, hh:mm:ss a')
+      },
     },
-  },
-  {
-    title: 'Roles',
-    key: 'status',
-    width: 120,
-    minWidth: 50,
-    maxWidth: 120,
-    render(row: any) {
-      const roles = row.roles.map((role: UserRole) => {
+    {
+      title: 'Roles',
+      key: 'status',
+      width: 120,
+      minWidth: 50,
+      maxWidth: 120,
+      render(row: any) {
+        const roles = row.roles.map((role: UserRole) => {
+          const tagType = (() => {
+            if (role === UserRole.Premium)
+              return 'success'
+            if (role === UserRole.MVP)
+              return 'warning'
+            if (role === UserRole.Support)
+              return 'success'
+            if (role === UserRole.Enterprise || role === UserRole.Admin)
+              return 'error'
+            if (role === UserRole.Basic || role === UserRole['Basic+'])
+              return 'info'
+            return 'default'
+          })()
+          return h(
+            NTag,
+            {
+              style: {
+                marginRight: '6px',
+              },
+              type: tagType,
+              bordered: false,
+            },
+            {
+              default: () => UserRole[role],
+            },
+          )
+        })
+        return roles
+      },
+    },
+    {
+      title: 'Status',
+      key: 'status',
+      width: 110,
+      minWidth: 50,
+      maxWidth: 110,
+      render(row: any) {
+        const status = Status[row.status]
         const tagType = (() => {
-          if (role === UserRole.Premium)
+          if (row.status === Status.Normal)
             return 'success'
-          if (role === UserRole.MVP)
+          if (row.status === Status.Unverified)
             return 'warning'
-          if (role === UserRole.Support)
-            return 'success'
-          if (role === UserRole.Enterprise)
+          if (row.status === Status.Disabled || row.status === Status.Banned)
             return 'error'
-          if (role === UserRole.Basic || role === UserRole['Basic+'])
-            return 'info'
           return 'default'
         })()
         return h(
@@ -87,126 +123,102 @@ const columns = [
               marginRight: '6px',
             },
             type: tagType,
-            bordered: false,
           },
           {
-            default: () => UserRole[role],
+            default: () => status,
           },
         )
-      })
-      return roles
+      },
     },
-  },
-  {
-    title: 'Status',
-    key: 'status',
-    width: 110,
-    minWidth: 50,
-    maxWidth: 110,
-    render(row: any) {
-      const status = Status[row.status]
-      const tagType = (() => {
-        if (row.status === Status.Normal)
-          return 'success'
-        if (row.status === Status.Unverified)
-          return 'warning'
-        if (row.status === Status.Disabled || row.status === Status.Banned)
-          return 'error'
-        return 'default'
-      })()
-      return h(
-        NTag,
-        {
-          style: {
-            marginRight: '6px',
+    {
+      title: 'Remark',
+      key: 'remark',
+      resizable: true,
+      width: 240,
+      minWidth: 100,
+      maxWidth: 240,
+    },
+    {
+      title: 'Actions',
+      key: '_id',
+      width: 150,
+      fixed: 'right',
+      render: (row: any) => {
+        const getIcon = (icon: string, dot: boolean = false) => {
+          const iconContent = h(SvgIcon, { icon })
+          return dot && row.message ? h(NBadge, { dot: true }, { default: () => iconContent }) : iconContent
+        }
+
+        const dropdownOptions: DropdownOption[] = [
+          {
+            label: 'Send Message',
+            key: 'sendMessage',
+            disabled: row.status !== Status.Normal,
+            action: handleUserMessage,
+            icon: () => getIcon('ri:notification-4-line', true),
           },
-          type: tagType,
-        },
-        {
-          default: () => status,
-        },
-      )
+          {
+            label: 'Disable Account',
+            key: 'disableUser',
+            disabled: row.status === Status.Disabled || row.status === Status.Banned,
+            action: () => handleUpdateUserStatus(row._id, Status.Disabled, 'disable'),
+            icon: () => getIcon('tabler:user-off'),
+          },
+          {
+            label: 'Restore Account',
+            key: 'restoreUser',
+            action: () => handleUpdateUserStatus(row._id, Status.Normal, 'restore'),
+            show: row.status === Status.Disabled || row.status === Status.Banned,
+            icon: () => getIcon('tabler:user-check'),
+          },
+          {
+            label: 'Verify Account',
+            key: 'verifyUser',
+            action: () => handleUpdateUserStatus(row._id, Status.Normal, 'verify'),
+            show: row.status === Status.Unverified || row.status === Status.AdminVerify,
+            icon: () => getIcon('ri:verified-badge-line'),
+          },
+          {
+            label: 'Disable 2FA',
+            key: 'disable2FAUser',
+            action: () => handleUpdateUserStatus(row._id, Status.Normal, 'disable2FA'),
+            disabled: !row.secretKey,
+            icon: () => getIcon('mdi:shield-off'),
+          },
+          {
+            label: 'Ban Account',
+            key: 'banUser',
+            action: () => handleUpdateUserStatus(row._id, Status.Banned, 'ban'),
+            show: row.status !== Status.Banned,
+            icon: () => getIcon('mdi:ban'),
+          },
+          {
+            label: 'Insights',
+            key: 'userInsight',
+            action: handleUserInsight,
+            icon: () => getIcon('ic:outline-insights', true),
+          },
+        ]
+
+        const actions = [
+          h(NButton, { size: 'small', type: 'primary', onClick: () => handleEditUser(row) }, {
+            default: () => [
+              getIcon('ri:edit-2-line'),
+              h('span', { class: 'ml-1' }, 'Edit User'),
+            ],
+          }),
+          row.message
+            ? h(NBadge, { dot: true }, { default: () => h(NDropdown, { trigger: 'hover', options: dropdownOptions, onSelect: (key: string | number) => handleDropdownSelect(key, row, dropdownOptions) }, { default: () => h(NButton, { size: 'small', strong: true, secondary: true, type: 'default' }, { default: () => [getIcon('mdi:chevron-down')] }) }) })
+            : h(NDropdown, { trigger: 'hover', options: dropdownOptions, onSelect: (key: string | number) => handleDropdownSelect(key, row, dropdownOptions) }, { default: () => h(NButton, { size: 'small', strong: true, secondary: true, type: 'default' }, { default: () => [getIcon('mdi:chevron-down')] }) }),
+        ]
+
+        return h(NSpace, { align: 'center', size: 'small' }, { default: () => actions })
+      },
     },
-  },
-  {
-    title: 'Remark',
-    key: 'remark',
-    resizable: true,
-    width: 240,
-    minWidth: 100,
-    maxWidth: 240,
-  },
-  {
-    title: 'Actions',
-    key: '_id',
-    width: 150,
-    render: (row: any) => {
-      const getIcon = (icon: string, dot: boolean = false) => {
-        const iconContent = h(SvgIcon, { icon })
-        return dot && row.message ? h(NBadge, { dot: true }, { default: () => iconContent }) : iconContent
-      }
+  ]
+}
 
-      const dropdownOptions: DropdownOption[] = [
-        {
-          label: 'Send Message',
-          key: 'sendMessage',
-          disabled: row.status !== Status.Normal,
-          action: handleUserMessage,
-          icon: () => getIcon('ri:notification-4-line', true),
-        },
-        {
-          label: 'Disable Account',
-          key: 'disableUser',
-          disabled: row.status === Status.Disabled || row.status === Status.Banned,
-          action: () => handleUpdateUserStatus(row._id, Status.Disabled, 'disable'),
-          icon: () => getIcon('tabler:user-off'),
-        },
-        {
-          label: 'Restore Account',
-          key: 'restoreUser',
-          action: () => handleUpdateUserStatus(row._id, Status.Normal, 'restore'),
-          show: row.status === Status.Disabled || row.status === Status.Banned,
-          icon: () => getIcon('tabler:user-check'),
-        },
-        {
-          label: 'Verify Account',
-          key: 'verifyUser',
-          action: () => handleUpdateUserStatus(row._id, Status.Normal, 'verify'),
-          show: row.status === Status.Unverified || row.status === Status.AdminVerify,
-          icon: () => getIcon('ri:verified-badge-line'),
-        },
-        {
-          label: 'Disable 2FA',
-          key: 'disable2FAUser',
-          action: () => handleUpdateUserStatus(row._id, Status.Normal, 'disable2FA'),
-          disabled: !row.secretKey,
-          icon: () => getIcon('mdi:shield-off'),
-        },
-        {
-          label: 'Ban Account',
-          key: 'banUser',
-          action: () => handleUpdateUserStatus(row._id, Status.Banned, 'ban'),
-          show: row.status !== Status.Banned,
-          icon: () => getIcon('mdi:ban'),
-        },
-      ]
-
-      const actions = [
-        h(NButton, { size: 'small', type: 'primary', onClick: () => handleEditUser(row) }, {
-          default: () => [
-            getIcon('ri:edit-2-line'),
-            h('span', { class: 'ml-1' }, 'Edit User'),
-          ],
-        }),
-        row.message
-          ? h(NBadge, { dot: true }, { default: () => h(NDropdown, { trigger: 'hover', options: dropdownOptions, onSelect: (key: string | number) => handleDropdownSelect(key, row, dropdownOptions) }, { default: () => h(NButton, { size: 'small', strong: true, secondary: true, type: 'default' }, { default: () => [getIcon('mdi:chevron-down')] }) }) })
-          : h(NDropdown, { trigger: 'hover', options: dropdownOptions, onSelect: (key: string | number) => handleDropdownSelect(key, row, dropdownOptions) }, { default: () => h(NButton, { size: 'small', strong: true, secondary: true, type: 'default' }, { default: () => [getIcon('mdi:chevron-down')] }) }),
-      ]
-
-      return h(NSpace, { align: 'center', size: 'small' }, { default: () => actions })
-    },
-  },
-]
+const columns = createColumns()
 
 const pagination = reactive ({
   page: 1,
@@ -331,6 +343,11 @@ function handleUserMessage(user: UserInfo) {
   show2.value = true
 }
 
+function handleUserInsight(user: UserInfo) {
+  userRef.value = user
+  show3.value = true
+}
+
 async function handleUpdateUser() {
   handleSaving.value = true
   try {
@@ -338,7 +355,7 @@ async function handleUpdateUser() {
     // Calculate the expiration date as "MM/DD/YYYY, hh:mm AM/PM" format
       const currentDate = new Date()
       currentDate.setDate(currentDate.getDate() + duration.value)
-      userRef.value.remark = `Expires on ${currentDate.toLocaleString()}`
+      userRef.value.remark = `Expires: ${currentDate.toLocaleString()}`
     }
 
     const result = await fetchUpdateUser(userRef.value)
@@ -350,6 +367,7 @@ async function handleUpdateUser() {
     await handleGetUsers(pagination.page)
     show.value = false
     show2.value = false
+    show3.value = false
   }
   catch (error: any) {
     ms.error(error.message)
@@ -489,7 +507,7 @@ onMounted(async () => {
         <div class="flex-1">
           <NInput
             v-model:value="userRef.message" type="textarea" clearable
-            :autosize="{ minRows: 2, maxRows: 4 }" placeholder="send message to user as notification"
+            :autosize="{ minRows: 3, maxRows: 4 }" placeholder="send message to user as notification"
           />
         </div>
       </div>
@@ -499,6 +517,33 @@ onMounted(async () => {
           {{ $t('common.save') }}
         </NButton>
       </div>
+    </div>
+  </NModal>
+
+  <NModal v-model:show="show3" :mask-closable="false" preset="card" title="Insights" style="width: 70%">
+    <div class="p-4 space-y-5 min-h-[200px]">
+      <div class="flex items-center space-x-4">
+        <NAvatar
+          round
+          :size="120"
+          :src="userRef.avatar ? userRef.avatar : defaultAvatar"
+        />
+        <p>
+          {{ userRef._id }} <br>
+          {{ userRef.email }} <br>
+          {{ userRef.name }} <br>
+          2FA: {{ userRef.secretKey ? 'Enabled' : 'Disabled' }}
+        </p>
+      </div>
+      <NCard title="User Activities">
+        <p>
+          Total Logins: 0 <br>
+          Last Login: - <br>
+          Last IP: - <br>
+          Last Location: - <br>
+          Last Device: - <br>
+        </p>
+      </NCard>
     </div>
   </NModal>
 </template>

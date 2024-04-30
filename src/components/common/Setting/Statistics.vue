@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { nextTick, onMounted, reactive, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { NCol, NDatePicker, NIcon, NNumberAnimation, NRow, NSelect, NSpin, NStatistic } from 'naive-ui'
 import type { ChartData, ChartOptions } from 'chart.js'
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js'
@@ -13,6 +13,8 @@ import { SvgIcon } from '@/components/common'
 import { useUserStore } from '@/store'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
+const statisticsChart = ref<typeof Bar | null>(null)
 
 const userStore = useUserStore()
 
@@ -37,6 +39,7 @@ const chartData: ChartData<'bar'> = reactive({
 })
 const chartOptions: ChartOptions<'bar'> = {
   responsive: true,
+  aspectRatio: window.innerWidth / window.innerHeight * 1.5,
 }
 const summary = ref({
   promptTokens: 0,
@@ -68,7 +71,7 @@ rangeShortcuts[t('setting.statisticsPeriodLast30Days')] = [
   dayjs().subtract(30, 'day').startOf('day').valueOf(),
   dayjs().endOf('day').valueOf(),
 ]
-const showChart = ref(true)
+
 async function fetchStatistics() {
   try {
     loading.value = true
@@ -84,15 +87,20 @@ async function fetchStatistics() {
       chartData.labels = data.chartData.map((item: any) => item._id)
       chartData.datasets[0].data = data.chartData.map((item: any) => item.promptTokens)
       chartData.datasets[1].data = data.chartData.map((item: any) => item.completionTokens)
-      // todo: don't know why data change won't trigger chart re-render, dirty hack
-      showChart.value = false
-      nextTick(() => {
-        showChart.value = true
-      })
+      reRenderChart()
     }
   }
   finally {
     loading.value = false
+  }
+}
+
+function reRenderChart() {
+  if (statisticsChart.value) {
+    chartOptions.aspectRatio = window.innerWidth / window.innerHeight * 1.5
+    statisticsChart.value.chart.options = chartOptions
+    statisticsChart.value.chart.data = chartData
+    statisticsChart.value.chart.update()
   }
 }
 
@@ -112,8 +120,13 @@ function filter(pattern: string, option: object): boolean {
 }
 
 onMounted(() => {
+  window.addEventListener('resize', reRenderChart)
   fetchStatistics()
   fetchUsers()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', reRenderChart)
 })
 </script>
 
@@ -180,8 +193,8 @@ onMounted(() => {
       </div>
 
       <Bar
-        v-if="showChart && chartData.labels?.length"
-        style="aspect-ratio: 3/2;"
+        v-if="chartData.labels?.length"
+        ref="statisticsChart"
         :options="chartOptions"
         :data="chartData"
       />

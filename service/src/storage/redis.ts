@@ -41,6 +41,13 @@ redis.on('ready', async () => {
   }
   else {
     logger.warn('No config found in MongoDB to load into Redis')
+    // Delete the keys from Redis if they exist
+    await redis.del('globalRateLimit')
+    await redis.del('subscriptionConfig')
+    await redis.del('announcementConfig')
+    await redis.del('merchConfig')
+    await redis.del('featuresConfig')
+    logger.info('Config cleared from Redis')
   }
 })
 

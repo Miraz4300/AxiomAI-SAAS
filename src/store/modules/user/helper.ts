@@ -6,9 +6,10 @@ const LOCAL_NAME = 'userStorage'
 
 export interface UserInfo {
   avatar: string
+  description: string
   email: string
   name: string
-  description: string
+  remark: string
   root: boolean
   config: UserConfig
   roles: UserRole[]
@@ -28,9 +29,10 @@ export function defaultSetting(): UserState {
   return {
     userInfo: {
       avatar: '',
+      description: '',
       email: '',
       name: '',
-      description: '',
+      remark: '',
       root: false,
       config: { chatModel: 'gpt-3.5-turbo' },
       roles: [],

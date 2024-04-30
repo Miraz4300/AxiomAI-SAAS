@@ -22,8 +22,8 @@ const keyCol = client.db(dbName).collection<KeyConfig>('key_config')
  * @returns model
  */
 
-export async function insertChat(uuid: number, text: string, roomId: number, options?: ChatOptions) {
-  const chatInfo = new ChatInfo(roomId, uuid, text, options)
+export async function insertChat(uuid: number, text: string, images: string[], roomId: number, options?: ChatOptions) {
+  const chatInfo = new ChatInfo(roomId, uuid, text, images, options)
   await chatCol.insertOne(chatInfo)
   return chatInfo
 }
@@ -51,14 +51,14 @@ export async function updateChat(chatId: string, response: string, messageId: st
   }
 
   if (previousResponse)
-  // @ts-expect-error previousResponse
+  // @ts-expect-error https://jira.mongodb.org/browse/NODE-5214
     update.$set.previousResponse = previousResponse
 
   await chatCol.updateOne(query, update)
 }
 
-export async function insertChatUsage(userId: ObjectId, roomId: number, chatId: ObjectId, messageId: string, usage: UsageResponse) {
-  const chatUsage = new ChatUsage(userId, roomId, chatId, messageId, usage)
+export async function insertChatUsage(userId: ObjectId, roomId: number, chatId: ObjectId, messageId: string, model: string, usage: UsageResponse) {
+  const chatUsage = new ChatUsage(userId, roomId, chatId, messageId, model, usage)
   await usageCol.insertOne(chatUsage)
   return chatUsage
 }
@@ -151,7 +151,7 @@ export async function deleteAllChatRooms(userId: string) {
   await chatCol.updateMany({ userId, status: Status.Normal }, { $set: { status: Status.Deleted } })
 }
 
-export async function getChats(roomId: number, lastId?: number) {
+export async function getChats(roomId: number, lastId?: number): Promise<ChatInfo[]> {
   if (!lastId)
     lastId = new Date().getTime()
   const query = { roomId, uuid: { $lt: lastId }, status: { $ne: Status.Deleted } }
@@ -201,11 +201,14 @@ export async function deleteChat(roomId: number, uuid: number, inversion: boolea
   await chatCol.updateOne(query, update)
 }
 
-export async function createUser(email: string, password: string, roles?: UserRole[], remark?: string): Promise<UserInfo> {
+export async function createUser(email: string, password: string, roles?: UserRole[], status?: Status, remark?: string): Promise<UserInfo> {
   email = email.toLowerCase()
   const userInfo = new UserInfo(email, password)
   if (roles && roles.includes(UserRole.Admin))
     userInfo.status = Status.Normal
+  if (status)
+    userInfo.status = status
+
   userInfo.roles = roles
   userInfo.remark = remark
   await userCol.insertOne(userInfo)
@@ -214,7 +217,7 @@ export async function createUser(email: string, password: string, roles?: UserRo
 
 export async function updateUserInfo(userId: string, user: UserInfo) {
   await userCol.updateOne({ _id: new ObjectId(userId) }
-    , { $set: { name: user.name, description: user.description, avatar: user.avatar } })
+    , { $set: { avatar: user.avatar, description: user.description, name: user.name } })
 }
 
 export async function updateUserChatModel(userId: string, chatModel: string) {

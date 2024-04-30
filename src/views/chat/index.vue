@@ -569,32 +569,34 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
     <Header />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
-        <div id="image-wrapper" class="w-full max-w-screen-xl pt-6 m-auto" :class="[isMobile ? 'p-2' : 'p-4']">
+        <div class="w-full max-w-screen-xl pt-6 m-auto" :class="[isMobile ? 'p-2' : 'p-4']">
           <template v-if="!dataSources.length && chatStore.isSplash">
             <div class="flex items-center justify-center" :class="[isMobile ? 'mt-[8vh]' : 'mt-[16vh]']">
               <Splash v-if="!isFree" :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />
               <OldSplash v-else :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />
             </div>
           </template>
-          <template v-if="!firstLoading && dataSources.length">
-            <div :class="{ 'animate-in fade-in duration-500 ease-in': !isFree }">
-              <Message
-                v-for="(item, index) of dataSources"
-                :key="index"
-                :date-time="item.dateTime"
-                :text="item.text"
-                :images="item.images"
-                :inversion="item.inversion"
-                :response-count="item.responseCount"
-                :usage="item && item.usage || undefined"
-                :error="item.error"
-                :loading="item.loading"
-                @regenerate="onRegenerate(index)"
-                @delete="handleDelete(index)"
-                @response-history="(ev: number) => onResponseHistory(index, ev)"
-              />
-            </div>
-          </template>
+          <div id="image-wrapper" class="relative bg-[var(--pbc)] dark:bg-[var(--pbc)]">
+            <template v-if="!firstLoading && dataSources.length">
+              <div :class="{ 'animate-in fade-in duration-500 ease-in': !isFree }">
+                <Message
+                  v-for="(item, index) of dataSources"
+                  :key="index"
+                  :date-time="item.dateTime"
+                  :text="item.text"
+                  :images="item.images"
+                  :inversion="item.inversion"
+                  :response-count="item.responseCount"
+                  :usage="item && item.usage || undefined"
+                  :error="item.error"
+                  :loading="item.loading"
+                  @regenerate="onRegenerate(index)"
+                  @delete="handleDelete(index)"
+                  @response-history="(ev: number) => onResponseHistory(index, ev)"
+                />
+              </div>
+            </template>
+          </div>
         </div>
       </div>
     </main>

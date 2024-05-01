@@ -38,7 +38,7 @@ function TagType(role: UserRole) {
     return 'warning'
   if (role === UserRole.Support)
     return 'success'
-  if (role === UserRole.Enterprise)
+  if (role === UserRole.Enterprise || role === UserRole.Admin)
     return 'error'
   if (role === UserRole.Basic)
     return 'info'
@@ -48,6 +48,8 @@ function TagType(role: UserRole) {
 }
 
 function IconName(role: UserRole) {
+  if (role === UserRole.Admin)
+    return 'ri:admin-line'
   if (role === UserRole.Premium)
     return 'ri:vip-diamond-fill'
   if (role === UserRole.MVP)
@@ -69,7 +71,7 @@ const Icon = computed(() => IconName(Role))
 
 <template>
   <div v-if="props.subLink" class="flex flex-col bg-[#F0F4F9] dark:bg-[#161B22] py-2 px-3 rounded-lg mt-2">
-    <a class="font-bold mb-1">Subscription details:</a>
+    <a v-if="Role !== UserRole.Admin" class="font-bold mb-1">Subscription details:</a>
     <a> Role:
       <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag" @click="goSub">
         <a class="cursor-pointer font-semibold">{{ UserRole[userInfo.roles[0]] }}</a>
@@ -80,6 +82,7 @@ const Icon = computed(() => IconName(Role))
     </a>
     <a> {{ userInfo.remark }} </a>
     <a v-if="Role === UserRole.Free" class="cursor-pointer text-[#fb923c]" @click="goSub">Buy subscription here</a>
+    <a v-if="Role === UserRole.Admin" class="cursor-pointer text-[#14b8a6] font-semibold" @click="goSub">Administrator Account</a>
   </div>
   <NTag v-if="props.onlyTag && userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag" @click="goSub">
     <a class="cursor-pointer font-semibold">{{ UserRole[userInfo.roles[0]] }}</a>

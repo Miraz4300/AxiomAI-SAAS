@@ -17,6 +17,7 @@ import { useAppStore } from '@/store'
 
 const appStore = useAppStore()
 const merchEnabled = computed(() => appStore.merchEnabled)
+const speechEnabled = computed(() => appStore.speechEnabled)
 const { isMobile } = useBasicLayout()
 const speechStore = useSpeechStore()
 
@@ -65,7 +66,7 @@ const Merch = defineAsyncComponent(() => import('./Merch.vue'))
               </template>
               <TwoFA />
             </NTabPane>
-            <NTabPane v-if="!isMobile && speechStore.enable" name="speech">
+            <NTabPane v-if="!isMobile && speechStore.enable && speechEnabled" name="speech">
               <template #tab>
                 <SvgIcon class="text-lg" icon="ri:voice-recognition-line" />
                 <span class="ml-2">{{ $t('setting.speech') }}</span>

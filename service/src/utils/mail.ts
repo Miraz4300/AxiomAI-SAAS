@@ -23,10 +23,36 @@ let transporter: nodemailer.Transporter | null = null
 async function getTransporter(config: MailConfig) {
   if (!transporter) {
     logger.info('Creating new SMTP transporter')
+
+    if (config.service) {
+      switch (config.service) {
+        case 'Office365':
+          config.smtpHost = 'smtp.office365.com'
+          config.smtpPort = 587
+          config.smtpTsl = false
+          config.tls = {
+            ciphers: 'SSLv3',
+            rejectUnauthorized: false,
+          }
+          break
+        case 'Mailgun':
+          config.smtpHost = 'smtp.mailgun.org'
+          config.smtpPort = 587
+          config.smtpTsl = true
+          break
+        case 'Mailtrap':
+          config.smtpHost = 'live.smtp.mailtrap.io'
+          config.smtpPort = 2525
+          config.smtpTsl = false
+          break
+      }
+    }
+
     transporter = nodemailer.createTransport({
       host: config.smtpHost,
       port: config.smtpPort,
       secure: config.smtpTsl,
+      tls: config.tls,
       auth: {
         user: config.smtpUserName,
         pass: config.smtpPassword,

@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NInput, NSpin, NSwitch, useMessage } from 'naive-ui'
+import { NButton, NInput, NSelect, NSpin, NSwitch, useMessage } from 'naive-ui'
 import type { ConfigState, MailConfig } from './model'
 import { fetchChatConfig, fetchTestMail, fetchUpdateMail } from '@/api'
 
@@ -11,6 +11,7 @@ const saving = ref(false)
 const testing = ref(false)
 
 const config = ref<MailConfig>()
+const services = ['Mailgun', 'Mailtrap', 'Office365', 'Custom'].map(service => ({ label: service, value: service }))
 
 async function fetchConfig() {
   try {
@@ -55,13 +56,24 @@ onMounted(() => {
 
 <template>
   <NSpin :show="loading">
-    <div class="p-4 space-y-5 min-h-[200px]">
-      <div class="space-y-6">
+    <div class="p-4 space-y-6 min-h-[200px]">
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">Service</span>
+        <div class="flex-1">
+          <NSelect
+            :options="services"
+            :value="config && config.service"
+            style="width: 100%; max-width: 720px"
+            @update:value="(val: string | undefined) => { if (config) config.service = val }"
+          />
+        </div>
+      </div>
+      <div v-if="config?.service === 'Custom'" class="space-y-6">
         <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">SMTP Host</span>
           <div class="flex-1">
             <NInput
-              :value="config && config.smtpHost" placeholder="" style="width: 100%; max-width: 720px"
+              :value="config && config.smtpHost" placeholder="SMTP hostname" style="width: 100%; max-width: 720px"
               @input="(val: string | undefined) => { if (config) config.smtpHost = val }"
             />
           </div>
@@ -71,7 +83,7 @@ onMounted(() => {
           <div class="flex-1">
             <NInput
               :value="config && config.smtpPort !== undefined ? String(config.smtpPort) : undefined"
-              placeholder="" style="width: 100%; max-width: 720px"
+              placeholder="SMTP port number" style="width: 100%; max-width: 720px"
               @input="(val: any) => { if (config) config.smtpPort = typeof val === 'string' ? Number(val) : undefined }"
             />
           </div>
@@ -86,43 +98,65 @@ onMounted(() => {
             />
           </div>
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Sender Email</span>
-          <div class="flex-1">
-            <NInput
-              :value="config && config.smtpSenderEmail" placeholder="use this for mailtrap like services" style="width: 100%; max-width: 720px"
-              @input="(val: string | undefined) => { if (config) config.smtpSenderEmail = val }"
-            />
+        <div v-if="config?.smtpTsl" class="space-y-6">
+          <div class="flex items-center space-x-4">
+            <span class="flex-shrink-0 w-[100px]">TLS Ciphers</span>
+            <div class="flex-1">
+              <NInput
+                :value="config && config.tls && config.tls.ciphers"
+                style="width: 100%; max-width: 720px"
+                @update:value="(val: string) => { if (config && config.tls) config.tls.ciphers = val }"
+              />
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="flex-shrink-0 w-[100px]">TLS Reject Unauthorized</span>
+            <div class="flex-1">
+              <NSwitch
+                :round="false"
+                :value="config && config.tls && config.tls.rejectUnauthorized"
+                @update:value="(val: boolean) => { if (config && config.tls) config.tls.rejectUnauthorized = val }"
+              />
+            </div>
           </div>
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Username</span>
-          <div class="flex-1">
-            <NInput
-              :value="config && config.smtpUserName" placeholder="" style="width: 100%; max-width: 720px"
-              @input="(val: string | undefined) => { if (config) config.smtpUserName = val }"
-            />
-          </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">Sender Email</span>
+        <div class="flex-1">
+          <NInput
+            :value="config && config.smtpSenderEmail" placeholder="optional" style="width: 100%; max-width: 720px"
+            @input="(val: string | undefined) => { if (config) config.smtpSenderEmail = val }"
+          />
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]">Password</span>
-          <div class="flex-1">
-            <NInput
-              :value="config && config.smtpPassword" placeholder="" style="width: 100%; max-width: 720px"
-              @input="(val: string | undefined) => { if (config) config.smtpPassword = val }"
-            />
-          </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">Username</span>
+        <div class="flex-1">
+          <NInput
+            :value="config && config.smtpUserName" placeholder="SMTP username" style="width: 100%; max-width: 720px"
+            @input="(val: string | undefined) => { if (config) config.smtpUserName = val }"
+          />
         </div>
-        <div class="flex items-center space-x-4">
-          <span class="flex-shrink-0 w-[100px]" />
-          <div class="flex flex-wrap items-center gap-4">
-            <NButton :loading="saving" type="primary" @click="updateMailInfo()">
-              {{ $t('common.save') }}
-            </NButton>
-            <NButton :loading="testing" type="info" @click="testMail()">
-              {{ $t('common.test') }}
-            </NButton>
-          </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]">Password</span>
+        <div class="flex-1">
+          <NInput
+            :value="config && config.smtpPassword" placeholder="SMTP password" style="width: 100%; max-width: 720px"
+            @input="(val: string | undefined) => { if (config) config.smtpPassword = val }"
+          />
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="flex-shrink-0 w-[100px]" />
+        <div class="flex flex-wrap items-center gap-4">
+          <NButton :loading="saving" type="primary" @click="updateMailInfo()">
+            {{ $t('common.save') }}
+          </NButton>
+          <NButton :loading="testing" type="info" @click="testMail()">
+            {{ $t('common.test') }}
+          </NButton>
         </div>
       </div>
     </div>

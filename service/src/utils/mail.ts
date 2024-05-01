@@ -162,5 +162,7 @@ async function sendMail(toMail: string, subject: string, html: string, config: M
   }
   catch (error) {
     logger.error(`Failed to send email: ${error}`)
+    const errorMessage = `Failed to send email: ${error.message}`
+    return { success: false, error: errorMessage }
   }
 }

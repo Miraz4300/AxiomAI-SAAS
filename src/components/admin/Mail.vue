@@ -41,10 +41,10 @@ async function testMail() {
   testing.value = true
   try {
     const { message } = await fetchTestMail(config.value as MailConfig) as { status: string; message: string }
-    ms.success(message)
+    ms.success(message, { keepAliveOnHover: true })
   }
   catch (error: any) {
-    ms.error(error.message)
+    ms.error(error.message, { keepAliveOnHover: true })
   }
   testing.value = false
 }

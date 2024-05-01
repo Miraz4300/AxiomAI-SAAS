@@ -1308,8 +1308,11 @@ router.post('/mail-test', rootAuth, async (req, res) => {
     const config = req.body as MailConfig
     const userId = req.headers.userId as string
     const user = await getUserById(userId)
-    await sendTestMail(user.email, config)
-    res.send({ status: 'Success', message: 'Successfully', data: null })
+    const result = await sendTestMail(user.email, config)
+    if (result.success)
+      res.send({ status: 'Success', message: 'Successfully', data: null })
+    else
+      res.send({ status: 'Fail', message: result.error, data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

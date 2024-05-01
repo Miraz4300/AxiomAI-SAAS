@@ -87,6 +87,15 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex items-center space-x-4">
+          <span class="flex-shrink-0 w-[100px]">Sender Email</span>
+          <div class="flex-1">
+            <NInput
+              :value="config && config.smtpSenderEmail" placeholder="use this for mailtrap like services" style="width: 100%; max-width: 720px"
+              @input="(val: string | undefined) => { if (config) config.smtpSenderEmail = val }"
+            />
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
           <span class="flex-shrink-0 w-[100px]">Username</span>
           <div class="flex-1">
             <NInput

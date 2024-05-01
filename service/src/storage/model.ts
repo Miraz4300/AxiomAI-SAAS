@@ -262,6 +262,7 @@ export class MailConfig {
     public smtpHost: string,
     public smtpPort: number,
     public smtpTsl: boolean,
+    public smtpSenderEmail: string,
     public smtpUserName: string,
     public smtpPassword: string,
   ) { }

@@ -51,6 +51,7 @@ export async function getOriginConfig() {
         process.env.SMTP_HOST,
         !Number.isNaN(+process.env.SMTP_PORT) ? +process.env.SMTP_PORT : 465,
         process.env.SMTP_TSL === 'true',
+        process.env.SMTP_SENDER_EMAIL,
         process.env.SMTP_USERNAME,
         process.env.SMTP_PASSWORD))
   }

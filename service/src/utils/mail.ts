@@ -122,7 +122,7 @@ export async function sendTestMail(toMail: string, config: MailConfig) {
 // Send mail function
 async function sendMail(toMail: string, subject: string, html: string, config: MailConfig) {
   const mailOptions = {
-    from: `AxiomAI <${config.smtpUserName}>`,
+    from: `AxiomAI <${config.smtpSenderEmail || config.smtpUserName}>`,
     to: toMail,
     subject,
     html,

@@ -75,6 +75,7 @@ export class MailConfig {
   smtpHost?: string
   smtpPort?: number
   smtpTsl?: boolean
+  smtpSenderEmail?: string
   smtpUserName?: string
   smtpPassword?: string
 }

@@ -26,6 +26,10 @@ export async function getCacheConfig(): Promise<Config> {
 export async function getOriginConfig() {
   let config = await getConfig()
   if (config == null) {
+    const tls = {
+      ciphers: process.env.SMTP_TLS_CIPHERS || '',
+      rejectUnauthorized: process.env.SMTP_TLS_RU === 'true',
+    }
     config = new Config(new ObjectId(),
       !Number.isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT_MS : 600 * 1000,
       process.env.OPENAI_API_KEY,
@@ -48,9 +52,11 @@ export async function getOriginConfig() {
       new MerchConfig(),
       new FeaturesConfig(),
       new MailConfig(
+        process.env.SMTP_SERVICE,
         process.env.SMTP_HOST,
         !Number.isNaN(+process.env.SMTP_PORT) ? +process.env.SMTP_PORT : 465,
-        process.env.SMTP_TSL === 'true',
+        process.env.SMTP_TLS === 'true',
+        tls,
         process.env.SMTP_SENDER_EMAIL,
         process.env.SMTP_USERNAME,
         process.env.SMTP_PASSWORD))

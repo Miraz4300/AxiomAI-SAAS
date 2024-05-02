@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { NButton, NButtonGroup, NPopover, NSpace, useMessage } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
@@ -9,6 +9,7 @@ import { copyToClip } from '@/utils/copy'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import SpeakBtn from '@/components/voice-output/speak-btn.vue'
 import { useSpeechStore } from '@/store/modules/speech'
+import { useAppStore } from '@/store'
 
 interface Props {
   dateTime?: string
@@ -26,12 +27,12 @@ interface Props {
   }
 }
 const props = defineProps<Props>()
-
 const emit = defineEmits<Emit>()
 
+const appStore = useAppStore()
 const { isMobile } = useBasicLayout()
-
 const speechStore = useSpeechStore()
+const speechEnabled = computed(() => appStore.speechEnabled)
 
 interface Emit {
   (ev: 'regenerate'): void
@@ -40,13 +41,9 @@ interface Emit {
 }
 
 const message = useMessage()
-
 const textRef = ref<HTMLElement>()
-
 const asRawText = ref(props.inversion)
-
 const messageRef = ref<HTMLElement>()
-
 const indexRef = ref<number>(0)
 indexRef.value = props.responseCount ?? 0
 
@@ -156,7 +153,7 @@ async function handlePreviousResponse(next: number) {
           <SvgIcon v-else icon="svg-spinners:8-dots-rotate" />
         </button>
         <SpeakBtn
-          v-if="!isMobile && !inversion && speechStore.enable"
+          v-if="!isMobile && !inversion && speechStore.enable && speechEnabled"
           :loading="loading"
           class="mb-2 transition text-gray-500 hover:text-neutral-900 dark:hover:text-neutral-200"
           :text="text"

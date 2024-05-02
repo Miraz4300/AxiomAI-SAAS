@@ -8,7 +8,7 @@ import logger from '../logger/winston'
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
-// Load templates at startup and caches them in memory
+// Load email templates at startup and caches them in memory
 const templatesPath = path.join(__dirname, 'templates')
 const templateFiles = fs.readdirSync(templatesPath)
 const templates = templateFiles.reduce((acc, file) => {
@@ -20,13 +20,40 @@ logger.info('Loaded all email templates into RAM')
 
 // Create a single transporter when the application starts. Requires a restart to apply changes
 let transporter: nodemailer.Transporter | null = null
+logger.info('SMTP transporter cache initialized')
 async function getTransporter(config: MailConfig) {
   if (!transporter) {
     logger.info('Creating new SMTP transporter')
+
+    if (config.service) {
+      switch (config.service) {
+        case 'Office365':
+          config.smtpHost = 'smtp.office365.com'
+          config.smtpPort = 587
+          config.smtpTsl = false
+          config.tls = {
+            ciphers: 'SSLv3',
+            rejectUnauthorized: false,
+          }
+          break
+        case 'Mailgun':
+          config.smtpHost = 'smtp.mailgun.org'
+          config.smtpPort = 587
+          config.smtpTsl = true
+          break
+        case 'Mailtrap':
+          config.smtpHost = 'live.smtp.mailtrap.io'
+          config.smtpPort = 2525
+          config.smtpTsl = false
+          break
+      }
+    }
+
     transporter = nodemailer.createTransport({
       host: config.smtpHost,
       port: config.smtpPort,
       secure: config.smtpTsl,
+      tls: config.tls,
       auth: {
         user: config.smtpUserName,
         pass: config.smtpPassword,
@@ -132,9 +159,11 @@ async function sendMail(toMail: string, subject: string, html: string, config: M
   try {
     const info = await transporter.sendMail(mailOptions)
     logger.info(`Email sent: ${info.messageId}`)
-    return info.messageId
+    return { success: true, messageId: info.messageId }
   }
   catch (error) {
     logger.error(`Failed to send email: ${error}`)
+    const errorMessage = `Failed to send email: ${error.message}`
+    return { success: false, error: errorMessage }
   }
 }

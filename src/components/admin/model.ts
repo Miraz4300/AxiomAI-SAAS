@@ -72,9 +72,11 @@ export class MerchConfig {
 }
 
 export class MailConfig {
+  service?: string
   smtpHost?: string
   smtpPort?: number
   smtpTsl?: boolean
+  tls?: { ciphers: string; rejectUnauthorized: boolean }
   smtpSenderEmail?: string
   smtpUserName?: string
   smtpPassword?: string

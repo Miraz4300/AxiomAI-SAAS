@@ -259,9 +259,11 @@ export class FeaturesConfig {
 
 export class MailConfig {
   constructor(
+    public service: string,
     public smtpHost: string,
     public smtpPort: number,
     public smtpTsl: boolean,
+    public tls: { ciphers: string; rejectUnauthorized: boolean },
     public smtpSenderEmail: string,
     public smtpUserName: string,
     public smtpPassword: string,

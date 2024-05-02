@@ -8,7 +8,7 @@ import logger from '../logger/winston'
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
-// Load templates at startup and caches them in memory
+// Load email templates at startup and caches them in memory
 const templatesPath = path.join(__dirname, 'templates')
 const templateFiles = fs.readdirSync(templatesPath)
 const templates = templateFiles.reduce((acc, file) => {
@@ -20,6 +20,7 @@ logger.info('Loaded all email templates into RAM')
 
 // Create a single transporter when the application starts. Requires a restart to apply changes
 let transporter: nodemailer.Transporter | null = null
+logger.info('SMTP transporter cache initialized')
 async function getTransporter(config: MailConfig) {
   if (!transporter) {
     logger.info('Creating new SMTP transporter')

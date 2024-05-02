@@ -37,7 +37,7 @@ redis.on('ready', async () => {
     await redis.set('announcementConfig', JSON.stringify(config.announcementConfig))
     await redis.set('merchConfig', JSON.stringify(config.merchConfig))
     await redis.set('featuresConfig', JSON.stringify(config.featuresConfig))
-    logger.info('Config loaded into Redis')
+    logger.info('Config from MongoDB cached in Redis')
   }
   else {
     logger.warn('No config found in MongoDB to load into Redis')

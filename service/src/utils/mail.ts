@@ -158,7 +158,7 @@ async function sendMail(toMail: string, subject: string, html: string, config: M
   try {
     const info = await transporter.sendMail(mailOptions)
     logger.info(`Email sent: ${info.messageId}`)
-    return info.messageId
+    return { success: true, messageId: info.messageId }
   }
   catch (error) {
     logger.error(`Failed to send email: ${error}`)

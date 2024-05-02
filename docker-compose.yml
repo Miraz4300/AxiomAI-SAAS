@@ -8,18 +8,21 @@ services:
     ports:
       - 10829:10829
     volumes:
-      - logs:/app/logs
+      - axiomai-LOGS:/app/logs
     environment:
       TZ: Asia/Dhaka
 
       # set `false` to disable OpenAI API debug log (default: true)
-      ENABLE_DEBUG:
+      ENABLE_DEBUG: 
 
       # Rate Limit | Default: 0 (unlimited)
-      MAX_REQUEST_PER_HOUR:
+      MAX_REQUEST_PER_HOUR: 
 
       # Auth Rate Limit
-      AUTH_MAX_REQUEST_PER_MINUTE:
+      AUTH_MAX_REQUEST_PER_MINUTE: 
+
+      # Automatic logout time in minutes due to inactivity
+      LOGOUT_MIN: 
 
       # MONGODB_URL=mongodb://username:password@hostname:port
       MONGODB_URL: ''
@@ -34,11 +37,18 @@ services:
       # Note: Changing this will invalidate all logged in users
       AUTH_SECRET_KEY:
 
+      # Enable/Disable Auth Proxy
+      AUTH_PROXY_ENABLED: false
+      AUTH_PROXY_HEADER_NAME: X-Email
+
       # Allow signup | set 'true' to enable signup and 'false' to disable signup
       REGISTER_ENABLED: 
 
+      # Enable signup application review
+      REGISTER_REVIEW: 
+
       # Root user email
-      ROOT_USER:
+      ROOT_USER: 
 
       # Password salt
       # Note: Changing this will invalidate all existing passwords and require users to reset their password
@@ -46,19 +56,19 @@ services:
 
       # For text to speech
       # Azure Subscription Key
-      AZURE_SUBSCRIPTION_KEY:
+      AZURE_SUBSCRIPTION_KEY: 
 
       # SPEECH_REGION
-      AZURE_SPEECH_REGION:
+      AZURE_SPEECH_REGION: 
 
       # DataDog APM
       DD_AGENT_HOST: datadog
 
       # Loki Host
-      LOKI_HOST:
+      LOKI_HOST: 
 
       # Loki Auth. Format: "username:password"
-      LOKI_BASICAUTH:
+      LOKI_BASICAUTH: 
       
     depends_on:
     - datadog
@@ -103,5 +113,5 @@ services:
 
 # Volumes
 volumes:
-  nginxCONF:
-  logs:
+  axiomai-LOGS:
+    external: true

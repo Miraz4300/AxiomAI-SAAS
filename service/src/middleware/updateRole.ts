@@ -72,10 +72,10 @@ async function updateUser(user, logStream) {
   }
 }
 
-// Run checkUsers immediately when the application starts
+// Run checkRemark immediately when the application starts
 checkRemark().catch(error => logger.error(`Failed to check remark: ${error}`))
 
-// Then schedule checkUsers to run every two days
+// Then schedule checkRemark to run every two days
 setInterval(() => {
   checkRemark().catch(error => logger.error(`Failed to check remark: ${error}`))
 }, 2 * 24 * 60 * 60 * 1000) // 2 days in milliseconds

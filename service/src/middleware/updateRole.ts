@@ -45,7 +45,7 @@ async function checkRemark() {
     }
   }
 
-  logger.info(`Remark check finished at ${new Date().toLocaleString()}`)
+  logger.info('Remark check finished')
   logger.info(`Scheduling ${scheduledUpdates} users for update...`)
   logStream.end()
 }

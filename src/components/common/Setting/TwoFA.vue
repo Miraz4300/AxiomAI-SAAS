@@ -57,85 +57,76 @@ onMounted(() => {
 
 <template>
   <NSpin :show="loading">
-    <div class="p-4 space-y-5 min-h-[200px]">
-      <div class="space-y-6">
-        <div class="flex items-center space-x-4">
-          <div class="flex-1">
-            Two-step verification is an additional security layer that enhances the security of your login experience. When two-step verification is enabled, you will be prompted to enter a dynamic verification code every time you want to log into your account.
-            <br> Current Status:
-            <span v-if="!config || !config.enabled" style="color: red;">Disabled</span>
-            <span v-if="config && config.enabled" style="color: rgb(22, 183, 65);">Enabled</span>
-          </div>
+    <div class="p-4 space-y-6 min-h-[200px]">
+      <div class="flex items-center space-x-4">
+        <div class="flex-1">
+          Two-step verification is an additional security layer that enhances the security of your login experience. When two-step verification is enabled, you will be prompted to enter a dynamic verification code every time you want to log into your account.
+          <br> Current Status:
+          <span v-if="!config || !config.enabled" style="color: red;">Disabled</span>
+          <span v-if="config && config.enabled" style="color: rgb(22, 183, 65);">Enabled</span>
         </div>
-        <div v-if="config && config.enabled" class="flex flex-col space-y-2">
-          <div>
-            <p class="text-xs text-black/60 dark:text-white/50 text-left">
-              Enter the 6-digit dynamic verification code to disable the two-step verification.<br>
-              Note: If you have lost your phone or cannot use the dynamic verification code, please contact at <a href="mailto:support@axiomaibd.com" class="text-[var(--primary-color)]">support@axiomaibd.com</a>
-            </p>
-          </div>
-          <div class="w-[200px]">
-            <NInput
-              :value="config && config.testCode"
-              placeholder="Enter 6-digit code"
-              @input="(val) => { if (config) config.testCode = val }"
-            />
-          </div>
+      </div>
+      <div v-if="config && config.enabled" class="flex flex-col space-y-2">
+        <div>
+          <p class="text-xs text-black/60 dark:text-white/50 text-left">
+            Enter the 6-digit dynamic verification code to disable the two-step verification.<br>
+            Note: If you have lost your phone or cannot use the dynamic verification code, please contact at <a href="mailto:support@axiomaibd.com" class="text-[var(--primary-color)]">support@axiomaibd.com</a>
+          </p>
         </div>
-        <div v-if="config && config.enabled" class="flex items-center space-x-4">
-          <div class="flex flex-wrap items-center gap-4">
-            <NButton
-              :loading="saving" type="error" :disabled="!config || !config.testCode || config.testCode.length !== 6"
-              @click="disable2FA()"
-            >
-              {{ $t('setting.disable2FA') }}
-            </NButton>
-          </div>
+        <div class="w-[200px]">
+          <NInput
+            :value="config && config.testCode"
+            placeholder="Enter 6-digit code"
+            @input="(val) => { if (config) config.testCode = val }"
+          />
         </div>
-        <NDivider v-if="!config || !config.enabled" />
-        <div v-if="!config || !config.enabled" class="flex items-center space-x-4">
-          <div class="flex-1">
-            <NSteps vertical>
-              <NStep
-                title="Installation of the Authenticator App"
-                description="Install an authenticator app: Google Authenticator, Microsoft Authenticator, Authy, etc."
-              />
-              <NStep
-                title="Configure to generate verification code"
-              >
+      </div>
+      <div v-if="config && config.enabled" class="flex items-center space-x-4">
+        <div class="flex flex-wrap items-center gap-4">
+          <NButton :loading="saving" type="error" :disabled="!config || !config.testCode || config.testCode.length !== 6" @click="disable2FA()">
+            {{ $t('setting.disable2FA') }}
+          </NButton>
+        </div>
+      </div>
+      <NDivider v-if="!config || !config.enabled" />
+      <div v-if="!config || !config.enabled" class="flex items-center space-x-4">
+        <div class="flex-1">
+          <NSteps vertical>
+            <NStep title="Installation of the Authenticator App" description="Install an authenticator app: Google Authenticator, Microsoft Authenticator, Authy, etc." />
+            <NStep title="Configure to generate verification code">
+              <p class="mb-2">
                 Open the Authenticator App and click "Scan QR Code" to scan the QR code.
-                <br>
-                <NQrCode :value="config?.otpauthUrl" :size="145" error-correction-level="H" :padding="10" class="mt-2 mb-2" />
-                <br>Note: Authenticator can't scan the verification code? Manually add the following account information:<br> Account: <a class="font-bold">{{ config?.userName }}</a><br> Key: <a class="font-bold">{{ config?.secretKey }}</a>
-              </NStep>
-              <NStep
-                title="Verify and enable"
-              >
+              </p>
+              <div class="bg-white px-2 inline-block">
+                <NQrCode :value="config?.otpauthUrl" :size="150" error-correction-level="H" type="svg" :padding="0" class="mt-2 mb-2" />
+              </div>
+              <p class="mt-2">
+                Note: Authenticator can't scan the verification code? Manually add the following account information:
+              </p>Account: <a class="font-bold">{{ config?.userName }}</a><br> Key: <a class="font-bold">{{ config?.secretKey }}</a>
+            </NStep>
+            <NStep title="Verify and enable">
+              <p class="mb-2">
                 Please enter the 6-digit dynamic verification code generated by the Authenticator App to enable the two-step verification.
-                <br>
-                <div class="flex items-center space-x-4">
-                  <div class="w-[200px]">
-                    <NInput
-                      :value="config && config.testCode"
-                      placeholder="Enter 6-digit code"
-                      @input="(val) => { if (config) config.testCode = val }"
-                    /><br><br>
-                    <NButton
-                      :loading="saving" type="primary" :disabled="!config || !config.testCode || config.testCode.length !== 6"
-                      @click="update2FAInfo()"
-                    >
-                      {{ $t('setting.enable2FA') }}
-                    </NButton>
-                  </div>
+              </p>
+              <div class="flex items-center space-x-4">
+                <div class="w-[200px]">
+                  <NInput
+                    :value="config && config.testCode"
+                    placeholder="Enter 6-digit code"
+                    @input="(val) => { if (config) config.testCode = val }"
+                  /><br><br>
+                  <NButton :loading="saving" type="primary" :disabled="!config || !config.testCode || config.testCode.length !== 6" @click="update2FAInfo()">
+                    {{ $t('setting.enable2FA') }}
+                  </NButton>
                 </div>
-                <br>FAQ: How do I turn off two-step verification?<br>1. After logging in, go to settings > 2FA and enter the 6-digit verification code.<br>2. Contact us at <a href="mailto:support@axiomaibd.com" class="text-[var(--primary-color)]">support@axiomaibd.com</a> to disable two-step verification.
-              </NStep>
-            </NSteps>
-          </div>
+              </div>
+              <br>FAQ: How do I turn off two-step verification?<br>1. After logging in, go to settings > 2FA and enter the 6-digit verification code.<br>2. Contact us at <a href="mailto:support@axiomaibd.com" class="text-[var(--primary-color)]">support@axiomaibd.com</a> to disable two-step verification.
+            </NStep>
+          </NSteps>
         </div>
-        <div v-if="!config || !config.enabled" class="flex items-center space-x-4">
-          <div class="flex flex-wrap items-center gap-4" />
-        </div>
+      </div>
+      <div v-if="!config || !config.enabled" class="flex items-center space-x-4">
+        <div class="flex flex-wrap items-center gap-4" />
       </div>
     </div>
   </NSpin>

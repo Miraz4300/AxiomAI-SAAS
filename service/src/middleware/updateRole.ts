@@ -36,7 +36,7 @@ async function checkRemark() {
       }
       else {
         // Schedule user update if expiry date is in the future
-        const delay = expiryDate.getTime() - now.getTime() // can be increased to 1 hour for testing
+        const delay = expiryDate.getTime() - now.getTime() + 10 * 1000 // 10 seconds after remark's date
         setTimeout(async () => {
           await updateUser(user, logStream)
         }, delay)

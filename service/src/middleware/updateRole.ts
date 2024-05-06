@@ -53,13 +53,13 @@ async function checkRemark() {
 async function updateUser(user, logStream) {
   try {
     const logMessage = [
-      '----------------------------------------',
+      '---------------------------------------------',
       `User Email: ${user.email}`,
       `Subscription: ${UserRole[user.roles[0]]}`,
       `User Remark: ${user.remark}`,
       'Role updated to: Free',
       `Update Time: ${new Date().toLocaleString()}`,
-      '----------------------------------------',
+      '---------------------------------------------',
       '',
     ].join('\n')
     logStream.write(logMessage)

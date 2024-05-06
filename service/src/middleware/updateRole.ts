@@ -1,62 +1,81 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import cron from 'node-cron'
 import { UserRole } from '../storage/model'
 import { userCol } from '../storage/storage'
 import { sendSubscriptionEndedMail } from '../utils/mail'
+import logger from '../logger/winston'
 
 // Function to create a new log file
 function createLogFile() {
   const date = new Date()
-  const formattedDate = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`
+  const half = Math.floor((date.getMonth() / 6)) + 1 // Determine if it's the first or second half of the year
+  const formattedDate = `${date.getFullYear()}H${half}` // Format: YYYYH1 or YYYYH2
+
   const logDirectory = path.join('/app/logs/cron')
   fs.mkdirSync(logDirectory, { recursive: true })
 
-  const logPath = path.join(logDirectory, `updateRole-${formattedDate}.log`) // Log file format: updateRole-YYYYMMDD.log
+  const logPath = path.join(logDirectory, `updateRole-${formattedDate}.log`)
 
   const logStream = fs.createWriteStream(logPath, { flags: 'a' })
-  logStream.write(`Cron job started at ${new Date().toLocaleString()}\n`)
-  return { logStream, lineCount: 1 } // 1 lines have been written and start counting from 2
+  return logStream
 }
 
-// Schedule cron job to run every 3 hours
-cron.schedule('0 */3 * * *', async () => {
-  let { logStream, lineCount } = createLogFile()
-
+async function checkRemark() {
+  const logStream = createLogFile()
   const cursor = userCol.find({ roles: { $in: [UserRole.Premium, UserRole.MVP, UserRole.Support, UserRole.Basic, UserRole['Basic+']] } })
-
-  let operationStarted = false
+  let scheduledUpdates = 0 // Counter for scheduled updates
 
   for await (const user of cursor) {
     const remark = user.remark
-    if (remark && remark.startsWith('Expires: ') && new Date(remark.slice(9)) < new Date()) {
-      if (!operationStarted) {
-        logStream.write('---------------OPERATION_START---------------\n\n')
-        operationStarted = true
+    if (remark && remark.startsWith('Expires: ')) {
+      const expiryDate = new Date(remark.slice(9))
+      const now = new Date()
+      if (expiryDate <= now) {
+        // Update user immediately if the expiry date has passed
+        await updateUser(user, logStream)
       }
-
-      const logMessage = `User Email: ${user.email}\nSubscription: ${UserRole[user.roles[0]]}\nUser Remark: ${user.remark}\nRole updated to: Free\nUpdate Time: ${new Date().toLocaleString()}\n\n`
-      logStream.write(logMessage)
-      lineCount += logMessage.split('\n').length
-      await sendSubscriptionEndedMail(user.email, user.name, UserRole[user.roles[0]], user.remark.slice(11))
-      await userCol.updateOne({ _id: user._id }, { $set: { roles: [UserRole.Free], remark: '' } })
-
-      // Check if the log file has reached the limit
-      if (lineCount >= 10000) {
-        if (operationStarted) {
-          logStream.write('----------------OPERATION_END----------------\n')
-          operationStarted = false
-        }
-
-        logStream.end()
-        ;({ logStream, lineCount } = createLogFile())
+      else {
+        // Schedule user update if expiry date is in the future
+        const delay = expiryDate.getTime() - now.getTime() // can be increased to 1 hour for testing
+        setTimeout(async () => {
+          await updateUser(user, logStream)
+        }, delay)
+        scheduledUpdates++
       }
     }
   }
 
-  if (operationStarted)
-    logStream.write('----------------OPERATION_END----------------\n')
-
-  logStream.write(`Cron job finished at ${new Date().toLocaleString()}\n\n\n`)
+  logger.info(`Remark check finished at ${new Date().toLocaleString()}`)
+  logger.info(`Scheduling ${scheduledUpdates} users for update...`)
   logStream.end()
-})
+}
+
+async function updateUser(user, logStream) {
+  try {
+    const logMessage = [
+      '----------------------------------------',
+      `User Email: ${user.email}`,
+      `Subscription: ${UserRole[user.roles[0]]}`,
+      `User Remark: ${user.remark}`,
+      'Role updated to: Free',
+      `Update Time: ${new Date().toLocaleString()}`,
+      '----------------------------------------',
+      '',
+    ].join('\n')
+    logStream.write(logMessage)
+    await sendSubscriptionEndedMail(user.email, user.name, UserRole[user.roles[0]], user.remark.slice(9))
+    await userCol.updateOne({ _id: user._id }, { $set: { roles: [UserRole.Free], remark: '' } })
+    logger.info(`User ${user.email} updated to Free role`)
+  }
+  catch (error) {
+    logger.error(`Failed to send mail or update user: ${error}`)
+  }
+}
+
+// Run checkUsers immediately when the application starts
+checkRemark().catch(error => logger.error(`Failed to check remark: ${error}`))
+
+// Then schedule checkUsers to run every two days
+setInterval(() => {
+  checkRemark().catch(error => logger.error(`Failed to check remark: ${error}`))
+}, 2 * 24 * 60 * 60 * 1000) // 2 days in milliseconds

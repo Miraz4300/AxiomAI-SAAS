@@ -46,7 +46,7 @@ async function checkRemark() {
   }
 
   logger.info('Remark check finished')
-  logger.info(`Scheduling ${scheduledUpdates} users for update...`)
+  logger.info(`Scheduled ${scheduledUpdates} users for update`)
   logStream.end()
 }
 

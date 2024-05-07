@@ -44,10 +44,10 @@ export class SubscriptionConfig {
   premium?: SubData
   mvp?: SubData
   support?: SubData
-  enterprise?: SubData
   basic?: SubData
   basicPlus?: SubData
   subURL?: string
+  enterprise?: SubData
 }
 
 export class AnnouncementConfig {

@@ -211,10 +211,10 @@ export class SubscriptionConfig {
     public premium?: SubData,
     public mvp?: SubData,
     public support?: SubData,
-    public enterprise?: SubData,
     public basic?: SubData,
     public basicPlus?: SubData,
     public subURL?: string,
+    public enterprise?: SubData,
   ) { }
 }
 

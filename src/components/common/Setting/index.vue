@@ -82,7 +82,7 @@ const Merch = defineAsyncComponent(() => import('./Merch.vue'))
                 <SvgIcon class="text-lg" icon="ri:bank-card-line" />
                 <span class="ml-2">{{ $t('setting.subscription') }}</span>
               </template>
-              <div class="mt-4 min-h-[100px]">
+              <div class="mt-4 px-4 min-h-[100px]">
                 <Subscription />
               </div>
             </NTabPane>

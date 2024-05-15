@@ -4,7 +4,7 @@ import type { DataTableColumns, DropdownOption } from 'naive-ui'
 import { NAlert, NAvatar, NBadge, NButton, NCard, NDataTable, NDropdown, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
 import { format } from 'date-fns'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
-import { fetchDisableUser2FAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
+import { fetchDisableUserMFAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
 import { SvgIcon } from '@/components/common'
 
 const ms = useMessage()
@@ -179,9 +179,9 @@ const createColumns = (): DataTableColumns => {
             icon: () => getIcon('ri:verified-badge-line'),
           },
           {
-            label: 'Disable 2FA',
-            key: 'disable2FAUser',
-            action: () => handleUpdateUserStatus(row._id, Status.Normal, 'disable2FA'),
+            label: 'Disable MFA',
+            key: 'disableMFAUser',
+            action: () => handleUpdateUserStatus(row._id, Status.Normal, 'disableMFA'),
             disabled: !row.secretKey,
             icon: () => getIcon('mdi:shield-off'),
           },
@@ -270,7 +270,7 @@ function actionDialogs(status: Status, action: string) {
     disable: { title: 'Disable Account', content: 'Are you sure to disable this user account?' },
     restore: { title: 'Restore Account', content: 'Are you sure to restore this user account?' },
     verify: { title: 'Verify Account', content: 'Are you sure to verify this user account?' },
-    disable2FA: { title: 'Disable 2FA', content: 'Are you sure to disable 2FA for this user?' },
+    disableMFA: { title: 'Disable MFA', content: 'Are you sure to disable Multi-factor authentication for this user?' },
     ban: { title: 'Ban Account', content: 'Are you sure to ban this user account?' },
   }
   return dialogOptions[action as keyof typeof dialogOptions] || null
@@ -287,7 +287,7 @@ async function handleUpdateUserStatus(userId: string, status: Status, action: st
     negativeText: 'No',
     onPositiveClick: async () => {
       try {
-        const result = action === 'disable2FA' ? await fetchDisableUser2FAByAdmin(userId) : await fetchUpdateUserStatus(userId, status)
+        const result = action === 'disableMFA' ? await fetchDisableUserMFAByAdmin(userId) : await fetchUpdateUserStatus(userId, status)
         if (result.status === 'Fail')
           ms.error(result.message as string)
         else
@@ -532,7 +532,7 @@ onMounted(async () => {
           {{ userRef._id }} <br>
           {{ userRef.email }} <br>
           {{ userRef.name }} <br>
-          2FA: {{ userRef.secretKey ? 'Enabled' : 'Disabled' }}
+          MFA: {{ userRef.secretKey ? 'Enabled' : 'Disabled' }}
         </p>
       </div>
       <NCard title="User Activities">

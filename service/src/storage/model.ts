@@ -43,7 +43,7 @@ export class UserInfo {
   config?: UserConfig
   roles?: UserRole[]
   remark?: string
-  secretKey?: string // 2FA secret key
+  secretKey?: string // MFA secret key
   message?: string // Notification message
   advanced?: AdvancedConfig // Advanced config for max context length
   activity?: ActivityData // Activity data

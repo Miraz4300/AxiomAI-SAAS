@@ -2,8 +2,8 @@
 import type { Ref } from 'vue'
 import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import type { MessageReactive } from 'naive-ui'
-import { NButton, NDivider, NInput, NSpace, NSwitch, NTooltip, NUpload, UploadFileInfo, useDialog, useMessage } from 'naive-ui'
+import type { MessageReactive, UploadFileInfo } from 'naive-ui'
+import { NButton, NDivider, NInput, NSpace, NSwitch, NTooltip, NUpload, useDialog, useMessage } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
@@ -551,7 +551,7 @@ onMounted(() => {
   }
 })
 
-watch(() => chatStore.active, (_newVal, _oldVal) => {
+watch(() => chatStore.active, () => {
   handleSyncChat()
 })
 

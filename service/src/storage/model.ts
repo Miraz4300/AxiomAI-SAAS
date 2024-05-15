@@ -38,7 +38,7 @@ export class UserInfo {
   createTime: Date
   verifyTime?: Date
   avatar?: string
-  description?: string
+  title?: string
   updateTime?: Date
   config?: UserConfig
   roles?: UserRole[]

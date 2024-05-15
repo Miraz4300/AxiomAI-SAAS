@@ -71,7 +71,7 @@ export default {
     about: 'পরিচয়',
     avatarLink: 'অবতার',
     name: 'নাম',
-    description: 'বর্ণনা',
+    title: 'শিরোনাম',
     role: 'ভূমিকা',
     chatHistory: 'ইতিহাস',
     theme: 'থিম',

@@ -677,7 +677,7 @@ router.post('/session', async (req, res) => {
       }
     })
 
-    let userInfo: { advanced: AdvancedConfig; avatar: string; email: string; config: UserConfig; description: string; name: string; remark: string; root: boolean; roles: UserRole[]; userId: string }
+    let userInfo: { advanced: AdvancedConfig; avatar: string; email: string; config: UserConfig; name: string; remark: string; roles: UserRole[]; root: boolean; title: string; userId: string }
     if (userId != null) {
       const user = await getUserById(userId)
       if (user === null) {
@@ -703,11 +703,11 @@ router.post('/session', async (req, res) => {
         avatar: user.avatar,
         email: user.email,
         config: user.config,
-        description: user.description,
         name: user.name,
         remark: user.remark,
-        root: user.roles.includes(UserRole.Admin),
         roles: user.roles,
+        root: user.roles.includes(UserRole.Admin),
+        title: user.title,
         userId: user._id.toString(),
       }
       const keys = (await getCacheApiKeys()).filter(d => hasAnyRole(d.userRoles, user.roles))
@@ -802,12 +802,12 @@ router.post('/user-login', authLimiter, async (req, res) => {
 
     const config = await getCacheConfig()
     const jwtToken = jwt.sign({
-      name: user.name ? user.name : user.email,
       avatar: user.avatar,
-      description: user.description ? user.description : 'Innovative and strategic problem solver.',
-      userId: user._id.toString(),
-      root: user.roles.includes(UserRole.Admin),
       config: user.config,
+      name: user.name ? user.name : user.email,
+      root: user.roles.includes(UserRole.Admin),
+      title: user.title ? user.title : 'Innovative and strategic problem solver.',
+      userId: user._id.toString(),
     } as AuthJwtPayload, config.siteConfig.loginSalt.trim())
     // Store the login token in memory
     tokenMap.set(user._id.toString(), jwtToken)
@@ -883,13 +883,13 @@ router.post('/user-reset-password', authLimiter, async (req, res) => {
 
 router.post('/user-info', auth, async (req, res) => {
   try {
-    const { avatar, description, name } = req.body as UserInfo
+    const { avatar, name, title } = req.body as UserInfo
     const userId = req.headers.userId.toString()
 
     const user = await getUserById(userId)
     if (user == null || user.status !== Status.Normal)
       throw new Error('User does not exist.')
-    await updateUserInfo(userId, { avatar, description, name } as UserInfo)
+    await updateUserInfo(userId, { avatar, name, title } as UserInfo)
     res.send({ status: 'Success', message: 'Update successful' })
   }
   catch (error) {

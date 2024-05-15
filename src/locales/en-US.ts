@@ -71,7 +71,7 @@ export default {
     about: 'About',
     avatarLink: 'Avatar',
     name: 'Name',
-    description: 'Description',
+    title: 'Title',
     role: 'Role',
     chatHistory: 'History',
     theme: 'Theme',

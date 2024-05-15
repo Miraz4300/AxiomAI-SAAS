@@ -4,7 +4,7 @@ import { NCard, NLayout, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
 import Password from './Password.vue'
-import TwoFA from './TwoFA.vue'
+import Security from './Security.vue'
 import Subscription from './Subscription.vue'
 import Statistics from './Statistics.vue'
 import About from './About.vue'
@@ -59,12 +59,12 @@ const Merch = defineAsyncComponent(() => import('./Merch.vue'))
                 <Password />
               </div>
             </NTabPane>
-            <NTabPane name="2FA">
+            <NTabPane name="security">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:shield-account-outline" />
-                <span class="ml-2">{{ $t('setting.twoFAConfig') }}</span>
+                <span class="ml-2">{{ $t('setting.MFAConfig') }}</span>
               </template>
-              <TwoFA />
+              <Security />
             </NTabPane>
             <NTabPane v-if="!isMobile && speechStore.enable && speechEnabled" name="speech">
               <template #tab>

@@ -65,6 +65,7 @@ import { isAdmin, rootAuth } from './middleware/rootAuth'
 import { router as uploadRouter } from './routes/upload'
 import './middleware/updateRole'
 import { isAllowed } from './middleware/userRateLimit'
+import { hashUserId } from './utils/hashID'
 import redis from './storage/redis'
 
 dotenv.config()
@@ -954,14 +955,17 @@ router.post('/user-edit', rootAuth, async (req, res) => {
   try {
     const { userId, email, password, roles, remark, message } = req.body as { userId?: string; email: string; password: string; roles: UserRole[]; remark?: string; message?: string }
     if (userId) {
-      await updateUser(userId, roles, password, remark, message)
+      await updateUser(userId, roles, password, remark)
+      const hashedUserId = hashUserId(userId)
+      const userMessage = message ? await redis.set(`message:${hashedUserId}`, message) : await redis.get(`message:${hashedUserId}`)
+      res.send({ status: 'Success', message: 'Update successfully [EDIT]', data: { userMessage } })
     }
     else {
       const newPassword = md5(password)
       const user = await createUser(email, newPassword, roles, null, remark)
       await updateUserStatus(user._id.toString(), Status.Normal)
+      res.send({ status: 'Success', message: 'Update successfully [EDIT]' })
     }
-    res.send({ status: 'Success', message: 'Update successfully [EDIT]' })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -1225,10 +1229,10 @@ router.post('/setting-announcement', rootAuth, async (req, res) => {
 router.get('/user-announcement', auth, async (req, res) => {
   try {
     const userId = req.headers.userId.toString()
-    const user = await getUserById(userId)
+    const hashedUserId = hashUserId(userId)
 
     const announcementConfig = JSON.parse(await redis.get('announcementConfig'))
-    const userMessage = user.message
+    const userMessage = await redis.get(`message:${hashedUserId}`)
     res.send({ status: 'Success', message: 'Successfully fetched', data: { userMessage, announcementConfig } })
   }
   catch (error) {

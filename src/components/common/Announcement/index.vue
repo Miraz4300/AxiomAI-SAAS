@@ -21,7 +21,7 @@ function showAnnouncement() {
     // Render the content as a div with dark background. Reason(bug): conflicting with other css styles
     content: () => h('div', { class: 'dark:bg-[#1B2129]', innerHTML: announcementConfig.value?.announceBody }),
     meta: announcementConfig.value?.announceFooter,
-    duration: 10000,
+    duration: 10000, // 10 seconds
     keepAliveOnHover: true,
   })
 }
@@ -35,7 +35,7 @@ function showMessage() {
       content: () => h('div', { class: 'dark:bg-[#1B2129]', innerHTML: userMessage.value }),
       meta: 'From admin',
       action: () => h(NButton, { text: true, type: 'primary', onClick: () => { n.destroy() } }, 'Mark as Read'),
-      duration: 30000,
+      duration: 25000, // 25 seconds
       keepAliveOnHover: true,
     })
   }

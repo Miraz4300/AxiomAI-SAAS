@@ -19,7 +19,7 @@ const users = ref<UserInfo[]>([])
 const searchQuery = ref('')
 const defaultAvatar = '/assets/avatar_1.jpg'
 
-const createColumns = (): DataTableColumns => {
+function createColumns(): DataTableColumns {
   return [
     {
       title: 'Email',
@@ -196,7 +196,7 @@ const createColumns = (): DataTableColumns => {
             label: 'Insights',
             key: 'userInsight',
             action: handleUserInsight,
-            icon: () => getIcon('ic:outline-insights', true),
+            icon: () => getIcon('ic:outline-insights'),
           },
         ]
 
@@ -343,6 +343,19 @@ function handleUserMessage(user: UserInfo) {
   show2.value = true
 }
 
+async function fetchUserMessage(user: UserInfo) {
+  userRef.value = user
+  // Fetch user message from backend
+  const result = await fetchUpdateUser(user)
+  if (result.status === 'Fail') {
+    ms.error(result.message as string)
+  }
+  else {
+    // Set user message
+    userRef.value.message = result.data.userMessage
+  }
+}
+
 function handleUserInsight(user: UserInfo) {
   userRef.value = user
   show3.value = true
@@ -377,6 +390,9 @@ async function handleUpdateUser() {
 
 onMounted(async () => {
   await handleGetUsers(pagination.page)
+  // Call handleUserMessage for each user
+  for (const user of users.value)
+    await fetchUserMessage(user)
 })
 </script>
 
@@ -528,11 +544,31 @@ onMounted(async () => {
           :size="120"
           :src="userRef.avatar ? userRef.avatar : defaultAvatar"
         />
-        <p>
-          {{ userRef._id }} <br>
-          {{ userRef.email }} <br>
-          {{ userRef.name }} <br>
+        <p class="rounded-md bg-[#F0F4F9] dark:bg-[#232B36] py-2 px-3">
+          <NTag :bordered="false" type="warning" class="mb-2">
+            {{ userRef._id }}
+          </NTag> <br>
+          Email: {{ userRef.email }} <br>
+          Name: {{ userRef.name }} <br>
           MFA: {{ userRef.secretKey ? 'Enabled' : 'Disabled' }}
+        </p>
+        <p class="rounded-md bg-[#F0F4F9] dark:bg-[#232B36] py-2 px-3 h-[120px] text-center">
+          <NTag :bordered="false" type="warning" class="w-[200px] mb-2">
+            Income
+          </NTag> <br>
+          <a class="text-5xl">00.00</a>
+        </p>
+        <p class="rounded-md bg-[#F0F4F9] dark:bg-[#232B36] py-2 px-3 h-[120px] text-center">
+          <NTag :bordered="false" type="warning" class="w-[200px] mb-2">
+            Prompts
+          </NTag> <br>
+          <a class="text-5xl">00</a>
+        </p>
+        <p class="rounded-md bg-[#F0F4F9] dark:bg-[#232B36] py-2 px-3 h-[120px] text-center">
+          <NTag :bordered="false" type="warning" class="w-[200px] mb-2">
+            Device
+          </NTag> <br>
+          <a class="text-5xl">PC</a>
         </p>
       </div>
       <NCard title="User Activities">

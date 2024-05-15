@@ -795,7 +795,7 @@ router.post('/user-login', authLimiter, async (req, res) => {
           throw new Error('Your passcode doesn\'t match our records. Please try again.')
       }
       else {
-        res.send({ status: 'Success', message: 'Two-step verification required', data: { need2FA: true } })
+        res.send({ status: 'Success', message: 'Multi-factor authentication required', data: { need2FA: true } })
         return
       }
     }
@@ -1005,7 +1005,7 @@ router.get('/user-2fa', auth, async (req, res) => {
       data.enabled = true
     }
     else {
-      const secret = speakeasy.generateSecret({ length: 20, name: `CHATGPT-WEB:${user.email}` })
+      const secret = speakeasy.generateSecret({ length: 20, name: `AxiomAI-10829:${user.email}` })
       data.otpauthUrl = secret.otpauth_url
       data.enabled = false
       data.secretKey = secret.base32
@@ -1031,7 +1031,7 @@ router.post('/user-2fa', auth, async (req, res) => {
     if (!verified)
       throw new Error('Verification failed')
     await updateUser2FA(userId, secretKey)
-    res.send({ status: 'Success', message: 'Enable 2FA successfully' })
+    res.send({ status: 'Success', message: 'Multi-factor authentication enabled' })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -1044,7 +1044,7 @@ router.post('/user-disable-2fa', auth, async (req, res) => {
     const userId = req.headers.userId.toString()
     const user = await getUserById(userId)
     if (!user || !user.secretKey)
-      throw new Error('2FA not enabled')
+      throw new Error('Multi-factor authentication not enabled')
     const verified = speakeasy.totp.verify({
       secret: user.secretKey,
       encoding: 'base32',
@@ -1053,7 +1053,7 @@ router.post('/user-disable-2fa', auth, async (req, res) => {
     if (!verified)
       throw new Error('Verification failed')
     await disableUser2FA(userId)
-    res.send({ status: 'Success', message: 'Disable 2FA successfully' })
+    res.send({ status: 'Success', message: 'Multi-factor authentication disabled' })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -1064,7 +1064,7 @@ router.post('/user-disable-2fa-admin', rootAuth, async (req, res) => {
   try {
     const { userId } = req.body as { userId: string }
     await disableUser2FA(userId)
-    res.send({ status: 'Success', message: 'Disable 2FA successfully' })
+    res.send({ status: 'Success', message: 'Multi-factor authentication disabled' })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })

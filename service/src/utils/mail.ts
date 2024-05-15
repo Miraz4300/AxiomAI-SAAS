@@ -141,6 +141,16 @@ export async function sendNoticeMail(toMail: string) {
   logger.info('Notice email sent.')
 }
 
+// For Multi-factor authentication mail (after enabling MFA)
+export async function sendMfaMail(toMail: string) {
+  const config = (await getCacheConfig())
+  let mailHtml = templates['mail.mfa.template.html']
+  mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
+  mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
+  sendMail(toMail, 'You\'ve enabled multi-factor authentication', mailHtml, config.mailConfig)
+  logger.info('MFA email sent.')
+}
+
 // For test mail (test smtp settings)
 export async function sendTestMail(toMail: string, config: MailConfig) {
   return sendMail(toMail, 'Test mail', 'This is test mail', config)

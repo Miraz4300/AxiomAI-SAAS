@@ -59,7 +59,7 @@ import {
 } from './storage/storage'
 import { authLimiter, limiter } from './middleware/limiter'
 import { hasAnyRole, isEmail, isNotEmptyString } from './utils/is'
-import { sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
+import { sendMfaMail, sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
 import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
 import { isAdmin, rootAuth } from './middleware/rootAuth'
 import { router as uploadRouter } from './routes/upload'
@@ -1022,6 +1022,7 @@ router.post('/user-mfa', auth, async (req, res) => {
   try {
     const { secretKey, token } = req.body as { secretKey: string; token: string }
     const userId = req.headers.userId.toString()
+    const userEmail = (await getUserById(userId)).email
 
     const verified = speakeasy.totp.verify({
       secret: secretKey,
@@ -1031,6 +1032,7 @@ router.post('/user-mfa', auth, async (req, res) => {
     if (!verified)
       throw new Error('Verification failed')
     await updateUserMFA(userId, secretKey)
+    await sendMfaMail(userEmail)
     res.send({ status: 'Success', message: 'Multi-factor authentication enabled' })
   }
   catch (error) {

@@ -61,7 +61,7 @@ async function handle2FASubmit() {
         <div class="flex flex-col gap-10 select-none">
           <span class="flex text-lg items-center space-x-2">
             <SvgIcon icon="mdi:shield-lock-outline" />
-            <a> Multi-Factor Authentication </a>
+            <a> Multi-factor authentication </a>
           </span>
           <a class="text-3xl"> Verify Your Identity </a>
         </div>
@@ -70,11 +70,11 @@ async function handle2FASubmit() {
             <a class="text-sm font-bold"> Authentication Method </a>
             <a class="w-full md:w-1/3 text-center bg-white dark:bg-white/5 p-2 rounded-md border border-neutral-300 dark:border-neutral-700"> Authenticator App </a>
           </div>
-          <div class="w-full md:w-[615px] flex flex-col gap-2">
-            <a class="text-sm"> An authentication code has been sent to your device. Enter the code to continue and be redirected.</a>
+          <div class="w-full md:w-[600px] flex flex-col gap-2">
+            <a class="text-sm"> Please enter the code displayed in your authenticator app. Then you'll be redirected.</a>
             <NInput v-model:value="token" maxlength="6" type="text" placeholder="Enter your authenticator app code" />
             <NButton ghost type="default" :disabled="disabled" :loading="loading" @click="handle2FASubmit">
-              Submit
+              Verify
             </NButton>
             <p class="text-xs text-[#F59E0B]">
               {{ errorMessage }}

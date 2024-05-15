@@ -1,10 +1,5 @@
-import crypto from 'node:crypto'
+import { hashUserId } from '../utils/hashID'
 import redis from '../storage/redis'
-
-// Hash the user ID to use it as a key in Redis
-function hashUserId(userId: string) {
-  return crypto.createHash('sha256').update(userId).digest('hex')
-}
 
 // Sliding window algorithm to limit the number of requests a user can make in a time window
 // Check if a request from a user is allowed under the rate limit cap

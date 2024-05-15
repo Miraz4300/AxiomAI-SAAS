@@ -20,7 +20,7 @@ const { iconRender } = useIconRender()
 const { isMobile } = useBasicLayout()
 
 function userHeader() {
-  const { email, name, description } = userInfo.value
+  const { email, name, title } = userInfo.value
   return h('div', { class: 'flex items-center p-3 min-w-[16rem]' }, [
     h(UserAvatar, { class: 'mr-3' }),
     h('div', [
@@ -31,7 +31,7 @@ function userHeader() {
         default: () => h('div', { innerText: email }),
       }),
       h(NText, { depth: 3, class: 'text-xs' }, {
-        default: () => h('div', { innerText: description }),
+        default: () => h('div', { innerText: title }),
       }),
     ]),
   ])

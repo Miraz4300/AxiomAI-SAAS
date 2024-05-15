@@ -64,7 +64,7 @@ const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
 
 const currentChatModel = ref(JSON.parse(localStorage.getItem('currentChatModel') as string))
-const isVisionModel = computed(() => currentChatModel.value?.includes('vision'))
+const isVisionModel = computed(() => currentChatModel.value && (currentChatModel.value?.includes('vision') || ['gpt-4-turbo', 'gpt-4-turbo-2024-04-09'].includes(currentChatModel.value) || currentChatModel.value?.includes('gpt-4o')))
 
 let loadingms: MessageReactive
 let allmsg: MessageReactive

@@ -111,8 +111,8 @@ export default {
     oldPassword: 'পুরানো পাসওয়ার্ড',
     newPassword: 'নতুন পাসওয়ার্ড',
     confirmNewPassword: 'পাসওয়ার্ড নিশ্চিত করুন',
-    twoFAConfig: '2এফএ',
-    disable2FA: 'Disable 2FA',
-    enable2FA: 'Enable 2FA',
+    MFAConfig: 'নিরাপত্তা',
+    disableMFA: 'Disable Multi-factor authentication',
+    enableMFA: 'Enable Multi-factor authentication',
   },
 }

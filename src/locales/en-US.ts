@@ -111,8 +111,8 @@ export default {
     oldPassword: 'Old Password',
     newPassword: 'New Password',
     confirmNewPassword: 'Confirm Password',
-    twoFAConfig: '2FA',
-    disable2FA: 'Disable 2FA',
-    enable2FA: 'Enable 2FA',
+    MFAConfig: 'Security',
+    disableMFA: 'Disable Multi-factor authentication',
+    enableMFA: 'Enable Multi-factor authentication',
   },
 }

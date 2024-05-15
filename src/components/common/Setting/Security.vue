@@ -1,18 +1,18 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
 import { NButton, NDivider, NInput, NQrCode, NSpin, NStep, NSteps, useMessage } from 'naive-ui'
-import type { TwoFAConfig } from '@/components/admin/model'
-import { fetchDisableUser2FA, fetchGetUser2FA, fetchVerifyUser2FA } from '@/api'
+import type { MFAConfig } from '@/components/admin/model'
+import { fetchDisableUserMFA, fetchGetUserMFA, fetchVerifyUserMFA } from '@/api'
 
 const ms = useMessage()
 const loading = ref(false)
 const saving = ref(false)
-const config = ref<TwoFAConfig>()
+const config = ref<MFAConfig>()
 
 async function fetchConfig() {
   try {
     loading.value = true
-    const { data } = await fetchGetUser2FA<TwoFAConfig>()
+    const { data } = await fetchGetUserMFA<MFAConfig>()
     config.value = data
   }
   finally {
@@ -20,12 +20,12 @@ async function fetchConfig() {
   }
 }
 
-async function update2FAInfo() {
+async function updateMFAInfo() {
   saving.value = true
   try {
     if (!config.value)
       throw new Error('Invalid')
-    const result = await fetchVerifyUser2FA(config.value.secretKey, config.value.testCode)
+    const result = await fetchVerifyUserMFA(config.value.secretKey, config.value.testCode)
     await fetchConfig()
     ms.success(result.message as string)
   }
@@ -35,12 +35,12 @@ async function update2FAInfo() {
   saving.value = false
 }
 
-async function disable2FA() {
+async function disableMFA() {
   saving.value = true
   try {
     if (!config.value)
       throw new Error('Invalid')
-    const result = await fetchDisableUser2FA(config.value.testCode)
+    const result = await fetchDisableUserMFA(config.value.testCode)
     await fetchConfig()
     ms.success(result.message as string)
   }
@@ -83,7 +83,7 @@ onMounted(() => {
       </div>
       <div v-if="config && config.enabled" class="flex items-center space-x-4">
         <div class="flex flex-wrap items-center gap-4">
-          <NButton :loading="saving" type="error" :disabled="!config || !config.testCode || config.testCode.length !== 6" @click="disable2FA()">
+          <NButton :loading="saving" type="error" :disabled="!config || !config.testCode || config.testCode.length !== 6" @click="disableMFA()">
             {{ $t('setting.disableMFA') }}
           </NButton>
         </div>
@@ -115,7 +115,7 @@ onMounted(() => {
                     placeholder="Enter 6-digit code"
                     @input="(val) => { if (config) config.testCode = val }"
                   /><br><br>
-                  <NButton :loading="saving" type="primary" :disabled="!config || !config.testCode || config.testCode.length !== 6" @click="update2FAInfo()">
+                  <NButton :loading="saving" type="primary" :disabled="!config || !config.testCode || config.testCode.length !== 6" @click="updateMFAInfo()">
                     {{ $t('setting.enableMFA') }}
                   </NButton>
                 </div>

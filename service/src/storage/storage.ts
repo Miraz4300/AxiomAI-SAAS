@@ -230,12 +230,12 @@ export async function updateUserAdvancedConfig(userId: string, config: AdvancedC
     , { $set: { advanced: config } })
 }
 
-export async function updateUser2FA(userId: string, secretKey: string) {
+export async function updateUserMFA(userId: string, secretKey: string) {
   await userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { secretKey, updateTime: new Date() } })
 }
 
-export async function disableUser2FA(userId: string) {
+export async function disableUserMFA(userId: string) {
   await userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { secretKey: null, updateTime: new Date() } })
 }

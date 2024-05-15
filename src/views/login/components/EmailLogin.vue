@@ -84,7 +84,7 @@ async function handleLogin() {
   try {
     loading.value = true
     const result = await fetchLogin(name, pwd)
-    if (result.data.need2FA) {
+    if (result.data.needMFA) {
       authStore.setTempCredentials(name, pwd)
       router.replace({ name: 'MfaLogin' })
       return

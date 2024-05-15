@@ -64,7 +64,7 @@ export interface AuthJwtPayload extends JwtPayload {
   config: any
 }
 
-export class TwoFAConfig {
+export class MFAConfig {
   enabled: boolean
   userName: string
   secretKey: string

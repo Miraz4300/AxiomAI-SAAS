@@ -10,7 +10,7 @@ import requestIp from 'request-ip'
 import logger from './logger/winston'
 import morganLogger from './logger/morgan'
 import { getAzureSubscriptionKey } from './middleware/speechToken'
-import { TwoFAConfig } from './types'
+import { MFAConfig } from './types'
 import type { AuthJwtPayload, RequestProps } from './types'
 import type { ChatMessage } from './conversation-core'
 import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './conversation-core'
@@ -26,7 +26,7 @@ import {
   deleteAllChatRooms,
   deleteChat,
   deleteChatRoom,
-  disableUser2FA,
+  disableUserMFA,
   existsChatRoom,
   getChat,
   getChatRoom,
@@ -47,10 +47,10 @@ import {
   updateRoomPrompt,
   updateRoomUsingContext,
   updateUser,
-  updateUser2FA,
   updateUserAdvancedConfig,
   updateUserChatModel,
   updateUserInfo,
+  updateUserMFA,
   updateUserPassword,
   updateUserPasswordWithVerifyOld,
   updateUserStatus,
@@ -795,7 +795,7 @@ router.post('/user-login', authLimiter, async (req, res) => {
           throw new Error('Your passcode doesn\'t match our records. Please try again.')
       }
       else {
-        res.send({ status: 'Success', message: 'Multi-factor authentication required', data: { need2FA: true } })
+        res.send({ status: 'Success', message: 'Multi-factor authentication required', data: { needMFA: true } })
         return
       }
     }
@@ -995,12 +995,12 @@ router.post('/user-password', auth, async (req, res) => {
   }
 })
 
-router.get('/user-2fa', auth, async (req, res) => {
+router.get('/user-mfa', auth, async (req, res) => {
   try {
     const userId = req.headers.userId.toString()
     const user = await getUserById(userId)
 
-    const data = new TwoFAConfig()
+    const data = new MFAConfig()
     if (user.secretKey) {
       data.enabled = true
     }
@@ -1018,7 +1018,7 @@ router.get('/user-2fa', auth, async (req, res) => {
   }
 })
 
-router.post('/user-2fa', auth, async (req, res) => {
+router.post('/user-mfa', auth, async (req, res) => {
   try {
     const { secretKey, token } = req.body as { secretKey: string; token: string }
     const userId = req.headers.userId.toString()
@@ -1030,7 +1030,7 @@ router.post('/user-2fa', auth, async (req, res) => {
     })
     if (!verified)
       throw new Error('Verification failed')
-    await updateUser2FA(userId, secretKey)
+    await updateUserMFA(userId, secretKey)
     res.send({ status: 'Success', message: 'Multi-factor authentication enabled' })
   }
   catch (error) {
@@ -1038,7 +1038,7 @@ router.post('/user-2fa', auth, async (req, res) => {
   }
 })
 
-router.post('/user-disable-2fa', auth, async (req, res) => {
+router.post('/user-disable-mfa', auth, async (req, res) => {
   try {
     const { token } = req.body as { token: string }
     const userId = req.headers.userId.toString()
@@ -1052,7 +1052,7 @@ router.post('/user-disable-2fa', auth, async (req, res) => {
     })
     if (!verified)
       throw new Error('Verification failed')
-    await disableUser2FA(userId)
+    await disableUserMFA(userId)
     res.send({ status: 'Success', message: 'Multi-factor authentication disabled' })
   }
   catch (error) {
@@ -1060,10 +1060,10 @@ router.post('/user-disable-2fa', auth, async (req, res) => {
   }
 })
 
-router.post('/user-disable-2fa-admin', rootAuth, async (req, res) => {
+router.post('/user-disable-mfa-admin', rootAuth, async (req, res) => {
   try {
     const { userId } = req.body as { userId: string }
-    await disableUser2FA(userId)
+    await disableUserMFA(userId)
     res.send({ status: 'Success', message: 'Multi-factor authentication disabled' })
   }
   catch (error) {

@@ -17,7 +17,7 @@ const errorMessage = ref<string | null>('')
 
 const disabled = computed(() => !token.value.trim() || loading.value)
 
-async function handle2FASubmit() {
+async function handleMFASubmit() {
   loading.value = true
   try {
     if (!authStore.tuc)
@@ -73,7 +73,7 @@ async function handle2FASubmit() {
           <div class="w-full md:w-[600px] flex flex-col gap-2">
             <a class="text-sm"> Please enter the code displayed in your authenticator app. Then you'll be redirected.</a>
             <NInput v-model:value="token" maxlength="6" type="text" placeholder="Enter your authenticator app code" />
-            <NButton ghost type="default" :disabled="disabled" :loading="loading" @click="handle2FASubmit">
+            <NButton ghost type="default" :disabled="disabled" :loading="loading" @click="handleMFASubmit">
               Verify
             </NButton>
             <p class="text-xs text-[#F59E0B]">

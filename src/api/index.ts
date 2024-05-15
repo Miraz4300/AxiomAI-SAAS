@@ -153,29 +153,29 @@ export function fetchGetUsers<T = any>(page: number, size: number, searchQuery?:
   })
 }
 
-export function fetchGetUser2FA<T = any>() {
+export function fetchGetUserMFA<T = any>() {
   return get<T>({
-    url: '/user-2fa',
+    url: '/user-mfa',
   })
 }
 
-export function fetchVerifyUser2FA<T = any>(secretKey: string, token: string) {
+export function fetchVerifyUserMFA<T = any>(secretKey: string, token: string) {
   return post<T>({
-    url: '/user-2fa',
+    url: '/user-mfa',
     data: { secretKey, token },
   })
 }
 
-export function fetchDisableUser2FA<T = any>(token: string) {
+export function fetchDisableUserMFA<T = any>(token: string) {
   return post<T>({
-    url: '/user-disable-2fa',
+    url: '/user-disable-mfa',
     data: { token },
   })
 }
 
-export function fetchDisableUser2FAByAdmin<T = any>(userId: string) {
+export function fetchDisableUserMFAByAdmin<T = any>(userId: string) {
   return post<T>({
-    url: '/user-disable-2fa-admin',
+    url: '/user-disable-mfa-admin',
     data: { userId },
   })
 }

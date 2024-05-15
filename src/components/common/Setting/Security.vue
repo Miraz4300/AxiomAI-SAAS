@@ -70,7 +70,7 @@ onMounted(() => {
         <div>
           <p class="text-xs text-black/60 dark:text-white/50 text-left">
             Enter the 6-digit dynamic verification code to disable the Multi-factor authentication.<br>
-            Note: If you have lost your phone or cannot use the dynamic verification code, please contact at <a href="mailto:support@axiomaibd.com" class="text-[var(--primary-color)]">support@axiomaibd.com</a>
+            Note: If you have lost your phone or cannot use one-time code, please contact at <a href="mailto:support@axiomaibd.com" class="text-[var(--primary-color)]">support@axiomaibd.com</a>
           </p>
         </div>
         <div class="w-[200px]">

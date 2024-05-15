@@ -1005,7 +1005,7 @@ router.get('/user-2fa', auth, async (req, res) => {
       data.enabled = true
     }
     else {
-      const secret = speakeasy.generateSecret({ length: 20, name: `AxiomAI-10829:${user.email}` })
+      const secret = speakeasy.generateSecret({ length: 20, name: `AxiomAI:${user.email}` })
       data.otpauthUrl = secret.otpauth_url
       data.enabled = false
       data.secretKey = secret.base32

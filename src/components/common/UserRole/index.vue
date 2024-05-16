@@ -74,7 +74,7 @@ const Icon = computed(() => IconName(Role))
 </script>
 
 <template>
-  <div v-if="props.subLink" class="flex flex-col bg-[#F0F4F9] dark:bg-[#161B22] py-2 px-3 rounded-lg mt-2">
+  <div v-if="props.subLink" class="flex flex-col bg-[#F0F4F9] dark:bg-[#1B2129] py-2 px-3 rounded-lg mt-2">
     <a v-if="Role !== UserRole.Admin" class="font-bold mb-1">Subscription details:</a>
     <a> Role:
       <NTag v-if="userInfo.roles.length > 0" size="small" :bordered="false" :type="Tag">

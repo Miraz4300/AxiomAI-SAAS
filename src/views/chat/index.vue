@@ -618,7 +618,8 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
               ref="inputRef"
               v-model:value="prompt"
               clearable
-              class="pb-10"
+              :size="isFree ? 'medium' : 'large'"
+              class="pb-10 px-1"
               :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled"
               type="textarea"
               :placeholder="t('chat.placeholderText')"
@@ -626,7 +627,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
               :theme-overrides="inputThemeOverrides.Input"
               @keypress="handleEnter"
             />
-            <div class="absolute bottom-2 left-2 right-2 cursor-text" @click="inputRef.focus()">
+            <div class="absolute bottom-2 left-2 right-2 cursor-text px-2" @click="inputRef.focus()">
               <div class="flex items-center justify-between">
                 <div v-if="!!authStore.token" class="flex items-center space-x-2 cursor-default" @click.stop>
                   <ToolButton :tooltip="!isMobile ? $t('chat.usingContext') : ''" placement="top" @click="handleToggleUsingContext">

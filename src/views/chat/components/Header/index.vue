@@ -6,6 +6,7 @@ import { useAppStore, useAuthStore, useChatStore, useUserStore } from '@/store'
 import { fetchUpdateChatRoomPrompt } from '@/api'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { useisFree } from '@/utils/functions/isFree'
 import { t } from '@/locales'
 
 const dialog = useDialog()
@@ -17,6 +18,7 @@ const authStore = useAuthStore()
 const chatStore = useChatStore()
 const userStore = useUserStore()
 
+const { isFree } = useisFree()
 const { isMobile } = useBasicLayout()
 const info = 'mt-2 text-xs text-neutral-500 dark:text-gray-400'
 
@@ -147,7 +149,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
     </div>
   </div>
 
-  <NModal v-model:show="show" :auto-focus="false" :mask-closable="false" preset="card" style="width: 95%; max-width: 640px" title="Advanced">
+  <NModal v-model:show="show" :auto-focus="false" :mask-closable="false" preset="card" style="width: 95%; max-width: 640px" title="Advanced" :style="{ 'border-radius': isFree ? '3px' : '8px' }">
     <div>
       <p class="mb-1 select-none">
         {{ $t('setting.prompt') }}
@@ -159,6 +161,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
         type="textarea"
         :autosize="{ minRows: 3, maxRows: 10 }"
         :placeholder="t('setting.promptTip')"
+        :style="{ 'border-radius': isFree ? '3px' : '5px' }"
         @input="(val: string | undefined) => { if (currentChatHistory) currentChatHistory.prompt = val }"
       />
       <div class="my-4 border-b dark:border-b-neutral-700" />

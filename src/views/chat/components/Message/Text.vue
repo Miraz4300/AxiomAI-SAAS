@@ -7,6 +7,7 @@ import hljs from 'highlight.js'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
 import { copyToClip } from '@/utils/copy'
+import { useisFree } from '@/utils/functions/isFree'
 
 interface Props {
   inversion?: boolean
@@ -20,7 +21,7 @@ interface Props {
 const props = defineProps<Props>()
 
 const { isMobile } = useBasicLayout()
-
+const { isFree } = useisFree()
 const textRef = ref<HTMLElement>()
 
 const mdi = new MarkdownIt({
@@ -43,7 +44,7 @@ const wrapClass = computed(() => {
   return [
     'text-wrap',
     'min-w-[20px]',
-    'rounded-md',
+    isFree.value ? 'rounded-md' : 'rounded-xl',
     isMobile.value ? 'p-2' : 'px-5 py-2',
     props.inversion ? 'bg-[var(--chat-box)]' : 'bg-[var(--rbc)]',
     props.inversion ? 'dark:bg-[var(--chat-box)]' : 'dark:bg-[var(--rbc)]',

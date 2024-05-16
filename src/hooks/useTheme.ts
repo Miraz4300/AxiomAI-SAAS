@@ -2,10 +2,12 @@ import type { GlobalThemeOverrides } from 'naive-ui'
 import { computed, ref, watch } from 'vue'
 import { darkTheme, lightTheme, useOsTheme } from 'naive-ui'
 import { useAppStore, useUserStore } from '@/store'
+import { useisFree } from '@/utils/functions/isFree'
 
 export function useTheme() {
   const appStore = useAppStore()
   const userStore = useUserStore()
+  const { isFree } = useisFree()
 
   const OsTheme = useOsTheme()
   const isDark = computed(() => appStore.theme === 'auto' ? OsTheme.value === 'dark' : appStore.theme === 'dark')
@@ -21,8 +23,8 @@ export function useTheme() {
     placeholderColor: isDark.value ? 'rgba(255, 255, 255, 0.38)' : 'rgba(0, 0, 0, 0.38)', // reflects on placeholder tip text color
     bodyColor: isDark.value ? 'rgb(13, 17, 23)' : 'rgb(255, 255, 255)', // reflects on main body
     cardColor: isDark.value ? 'rgb(13, 17, 23)' : 'rgb(255, 255, 255)', // reflects on card background
-    modalColor: isDark.value ? 'rgb(22, 27, 34)' : 'rgb(255, 255, 255)', // reflects on modal background
-    popoverColor: isDark.value ? 'rgb(27, 33, 41)' : 'rgb(255, 255, 255)', // reflects on popover background
+    modalColor: isDark.value ? 'rgb(24, 30, 37)' : 'rgb(255, 255, 255)', // reflects on modal background
+    popoverColor: isDark.value ? 'rgb(29, 36, 45)' : 'rgb(255, 255, 255)', // reflects on popover and announcement background
     dividerColor: isDark.value ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)', // reflects on divider color
   })
 
@@ -30,11 +32,29 @@ export function useTheme() {
   const inputThemeOverrides = computed(() => ({
     Input: {
       color: isDark.value ? 'rgb(22, 27, 34)' : 'rgba(255, 255, 255, 0.1)',
+      borderRadius: isFree.value ? '3px' : '12px',
+    },
+  }))
+  const basicInputThemeOverrides = computed(() => ({
+    Input: {
+      borderRadius: isFree.value ? '3px' : '5px',
+    },
+  }))
+  const buttonThemeOverrides = computed(() => ({
+    Button: {
+      borderRadiusSmall: isFree.value ? '3px' : '8px',
+      borderRadiusMedium: isFree.value ? '3px' : '20px',
+    },
+  }))
+  const modalThemeOverrides = computed(() => ({
+    Modal: {
+      borderRadius: isFree.value ? '3px' : '8px',
     },
   }))
   const dropdownThemeOverrides = computed(() => ({
     Dropdown: {
-      color: isDark.value ? 'rgb(27, 33, 41)' : 'rgb(255, 255, 255)',
+      color: isDark.value ? 'rgb(29, 36, 45)' : 'rgb(255, 255, 255)',
+      borderRadius: isFree.value ? '3px' : '8px',
     },
   }))
 
@@ -79,5 +99,5 @@ export function useTheme() {
     { immediate: true },
   )
 
-  return { theme, themeOverrides, inputThemeOverrides, dropdownThemeOverrides }
+  return { theme, themeOverrides, inputThemeOverrides, basicInputThemeOverrides, buttonThemeOverrides, modalThemeOverrides, dropdownThemeOverrides }
 }

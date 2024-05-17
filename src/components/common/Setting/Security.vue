@@ -56,14 +56,13 @@ onMounted(() => {
 
 <template>
   <NSpin :show="loading">
-    <div class="p-4 space-y-6 min-h-[200px]">
-      <div class="flex items-center space-x-4">
-        <div class="flex-1">
-          Multi-factor authentication is an additional security layer that enhances the security of your login experience. When Multi-factor authentication is enabled, you will be prompted to enter an one-time code every time you want to log into your account.
-          <br> Current Status:
-          <span v-if="!config || !config.enabled" style="color: red;">Disabled</span>
-          <span v-if="config && config.enabled" style="color: rgb(22, 183, 65);">Enabled</span>
-        </div>
+    <div class="p-4 space-y-5 min-h-[200px]">
+      <div class="flex-1 items-center space-y-1">
+        <p>
+          Multi-factor authentication
+          <a class="mx-1.5 rounded px-1 py-0.5 text-xs font-semibold" :class="config && config.enabled ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'">{{ config && config.enabled ? 'Enabled' : 'Disabled' }}</a>
+        </p>
+        <p>An additional security layer that enhances the security of your login experience.</p>
       </div>
       <div v-if="config && config.enabled" class="flex flex-col space-y-2">
         <div>

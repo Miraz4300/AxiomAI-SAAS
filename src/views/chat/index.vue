@@ -617,11 +617,11 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
               v-model:value="prompt"
               clearable
               :size="isFree ? 'medium' : 'large'"
-              class="pb-10 px-1"
+              class="pb-11 px-1"
               :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled"
               type="textarea"
               :placeholder="t('chat.placeholderText')"
-              :autosize="{ minRows: isMobile ? 1 : 1, maxRows: isMobile ? 4 : 8 }"
+              :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 7 }"
               :theme-overrides="naiveCustom.Input"
               @keypress="handleEnter"
             />

@@ -49,7 +49,7 @@ function handleButtonClick(type: string) {
     <p class="text-xl font-semibold text-neutral-600 dark:text-neutral-200">
       Subscription
     </p>
-    <p class="text-neutral-600 dark:text-neutral-300">
+    <p class="text-neutral-600 dark:text-neutral-300 text-xs">
       Purchase your subscription here to activate it for a duration of 30 days.<br>
       After purschasing, subscription will be activated within an hour.
     </p>

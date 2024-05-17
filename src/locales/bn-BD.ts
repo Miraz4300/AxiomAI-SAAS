@@ -28,7 +28,7 @@ export default {
     chat: 'চ্যাট',
     cognitiveDocs: 'কগনিটিভ ডক্স',
     draw: 'সাদা বোর্ড',
-    placeholderText: 'আমাকে যে কোন কিছু জিজ্ঞাসা করুন... (Shift + Enter = লাইন বিরতি)',
+    placeholderText: 'আমি আপনাকে কিভাবে সাহায্য করতে পারি?',
     copy: 'Copy',
     copied: 'Copied!',
     copyCode: 'Copy code',

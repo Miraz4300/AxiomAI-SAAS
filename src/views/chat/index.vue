@@ -35,7 +35,7 @@ const userStore = useUserStore()
 const chatStore = useChatStore()
 const speechStore = useSpeechStore()
 
-const { inputThemeOverrides } = useTheme()
+const { naiveCustom } = useTheme()
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom, scrollTo } = useScroll()
@@ -622,7 +622,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
               type="textarea"
               :placeholder="t('chat.placeholderText')"
               :autosize="{ minRows: isMobile ? 1 : 1, maxRows: isMobile ? 4 : 8 }"
-              :theme-overrides="inputThemeOverrides.Input"
+              :theme-overrides="naiveCustom.Input"
               @keypress="handleEnter"
             />
             <div class="absolute bottom-2 left-2 right-2 cursor-text px-2" @click="inputRef.focus()">

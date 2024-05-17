@@ -2,6 +2,7 @@
 import type { PopoverPlacement } from 'naive-ui'
 import { NTooltip } from 'naive-ui'
 import Button from './Button.vue'
+import { useTheme } from '@/hooks/useTheme'
 
 interface Props {
   tooltip?: string
@@ -18,6 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<Emit>()
+const { naiveCustom } = useTheme()
 
 function handleClick() {
   emit('click')
@@ -26,7 +28,7 @@ function handleClick() {
 
 <template>
   <div v-if="props.tooltip">
-    <NTooltip :placement="placement" trigger="hover">
+    <NTooltip :placement="placement" :theme-overrides="naiveCustom.Border" trigger="hover">
       <template #trigger>
         <Button @click="handleClick">
           <slot />

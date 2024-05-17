@@ -20,7 +20,7 @@ const authStore = useAuthStore()
 const chatStore = useChatStore()
 
 const { isMobile } = useBasicLayout()
-const { basicInputThemeOverrides, buttonThemeOverrides } = useTheme()
+const { naiveCustom } = useTheme()
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
@@ -99,14 +99,14 @@ watch(
               size="small"
               :disabled="!!authStore.session?.auth && !authStore.token" clearable
               :placeholder="$t('chat.searchPlaceholder')"
-              :theme-overrides="basicInputThemeOverrides.Input"
+              :theme-overrides="naiveCustom.BInput"
               @update:value="handleSearchChat"
             >
               <template #prefix>
                 <SvgIcon icon="ri:search-line" />
               </template>
             </NInput>
-            <NButton type="primary" size="small" :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled" :theme-overrides="buttonThemeOverrides.Button" @click="handleAdd">
+            <NButton type="primary" size="small" :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled" :theme-overrides="naiveCustom.Button" @click="handleAdd">
               <SvgIcon icon="ri:add-line" />
             </NButton>
           </div>
@@ -120,7 +120,7 @@ watch(
         <div class="p-4">
           <NPopconfirm placement="top" @positive-click="clearData">
             <template #trigger>
-              <NButton block :disabled="!!authStore.session?.auth && !authStore.token" :theme-overrides="buttonThemeOverrides.Button">
+              <NButton block :disabled="!!authStore.session?.auth && !authStore.token" :theme-overrides="naiveCustom.Button">
                 <template #icon>
                   <SvgIcon icon="ri:close-circle-line" />
                 </template>

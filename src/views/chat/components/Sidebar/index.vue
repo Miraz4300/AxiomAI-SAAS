@@ -15,7 +15,7 @@ const authStore = useAuthStore()
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
 
-const { dropdownThemeOverrides } = useTheme()
+const { naiveCustom } = useTheme()
 const { iconRender } = useIconRender()
 const { isMobile } = useBasicLayout()
 
@@ -105,7 +105,7 @@ async function handleDropdown(optionKey: string) {
 
     <div class="siderbar-action flex select-none flex-col items-center space-y-2">
       <div class="flex flex-col items-center space-y-2">
-        <NDropdown v-if="!!authStore.token || !!authStore.session?.authProxyEnabled" trigger="hover" :options="options" :theme-overrides="dropdownThemeOverrides.Dropdown" @select="handleDropdown">
+        <NDropdown v-if="!!authStore.token || !!authStore.session?.authProxyEnabled" trigger="hover" :options="options" :theme-overrides="naiveCustom.Dropdown" @select="handleDropdown">
           <UserAvatar />
         </NDropdown>
         <UserRole :only-tag="true" :icon="false" />

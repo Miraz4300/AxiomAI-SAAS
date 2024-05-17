@@ -125,11 +125,6 @@
     "type": "text"
   },
   {
-    "key": "Compare business strategies for transistioning from to luxury and luxury to budget",
-    "value": "Compare shifting business strategies from budget to luxury and luxury to budget, using a brief table to outline different aspects",
-    "type": "compare"
-  },
-  {
     "key": "Compare the pros and cons of different programming languages",
     "value": "Compare the pros and cons of different programming languages in a brief table.",
     "type": "compare"

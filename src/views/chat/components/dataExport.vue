@@ -6,10 +6,12 @@ import { ref } from 'vue'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { getCurrentDate } from '@/utils/functions'
+import { useTheme } from '@/hooks/useTheme'
 import { t } from '@/locales'
 
 const loading = ref<boolean>(false)
 const { isMobile } = useBasicLayout()
+const { naiveCustom } = useTheme()
 
 function exportJSON() {
   if (loading.value)
@@ -114,7 +116,7 @@ function handleDropdown(optionKey: string) {
 </script>
 
 <template>
-  <NDropdown trigger="click" :options="options" @select="handleDropdown">
+  <NDropdown trigger="click" :options="options" :theme-overrides="naiveCustom.Dropdown" @select="handleDropdown">
     <ToolButton :tooltip=" !isMobile ? $t('chat.exportChat') : ''">
       <SvgIcon class="text-xl" icon="ri:file-download-line" />
     </ToolButton>

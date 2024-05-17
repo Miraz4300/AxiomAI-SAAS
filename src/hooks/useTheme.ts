@@ -28,30 +28,22 @@ export function useTheme() {
     dividerColor: isDark.value ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)', // reflects on divider color
   })
 
-  const themeOverrides = ref<GlobalThemeOverrides>({ common: getCommonOverrides() })
-  const inputThemeOverrides = computed(() => ({
+  const naiveTheme = ref<GlobalThemeOverrides>({ common: getCommonOverrides() })
+  const naiveCustom = computed(() => ({
+    Border: {
+      borderRadius: isFree.value ? '3px' : '8px',
+    },
     Input: {
       color: isDark.value ? 'rgb(22, 27, 34)' : 'rgba(255, 255, 255, 0.1)',
       borderRadius: isFree.value ? '3px' : '12px',
     },
-  }))
-  const basicInputThemeOverrides = computed(() => ({
-    Input: {
+    BInput: {
       borderRadius: isFree.value ? '3px' : '5px',
     },
-  }))
-  const buttonThemeOverrides = computed(() => ({
     Button: {
       borderRadiusSmall: isFree.value ? '3px' : '8px',
       borderRadiusMedium: isFree.value ? '3px' : '20px',
     },
-  }))
-  const modalThemeOverrides = computed(() => ({
-    Modal: {
-      borderRadius: isFree.value ? '3px' : '8px',
-    },
-  }))
-  const dropdownThemeOverrides = computed(() => ({
     Dropdown: {
       color: isDark.value ? 'rgb(29, 36, 45)' : 'rgb(255, 255, 255)',
       borderRadius: isFree.value ? '3px' : '8px',
@@ -81,7 +73,7 @@ export function useTheme() {
       const commonOverrides = getCommonOverrides()
       const personaColorsSelected = personaColors[persona as 'precise' | 'balanced' | 'creative'][isDark.value ? 'dark' : 'light']
 
-      themeOverrides.value.common = {
+      naiveTheme.value.common = {
         ...commonOverrides,
         ...personaColorsSelected,
       }
@@ -99,5 +91,5 @@ export function useTheme() {
     { immediate: true },
   )
 
-  return { theme, themeOverrides, inputThemeOverrides, basicInputThemeOverrides, buttonThemeOverrides, modalThemeOverrides, dropdownThemeOverrides }
+  return { theme, naiveTheme, naiveCustom }
 }

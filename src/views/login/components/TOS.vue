@@ -30,7 +30,7 @@ const tosModal = ref(false)
     terms of service
   </span>
 
-  <NModal v-if="props.modal" v-model:show="tosModal" style="width: 95%; max-width: 1280px; height: 95%; max-height: 640px">
+  <NModal v-if="props.modal" v-model:show="tosModal" style="width: 95%; max-width: 1280px; height: 95%; max-height: 640px; border-radius: 8px;">
     <div class="max-[640px]:p-5 min-[768px]:p-10 bg-white rounded dark:bg-slate-800">
       <div class="space-y-4">
         <header class="space-y-6">

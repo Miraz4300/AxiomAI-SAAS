@@ -4,7 +4,7 @@ import { NaiveProvider } from '@/components/common'
 import { useTheme } from '@/hooks/useTheme'
 import { useLanguage } from '@/hooks/useLanguage'
 
-const { theme, themeOverrides } = useTheme()
+const { theme, naiveTheme } = useTheme()
 const { language } = useLanguage()
 </script>
 
@@ -12,7 +12,7 @@ const { language } = useLanguage()
   <NConfigProvider
     class="h-full"
     :theme="theme"
-    :theme-overrides="themeOverrides"
+    :theme-overrides="naiveTheme"
     :locale="language"
   >
     <NaiveProvider>

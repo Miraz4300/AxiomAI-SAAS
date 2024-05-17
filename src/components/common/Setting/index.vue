@@ -14,7 +14,9 @@ import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useSpeechStore } from '@/store/modules/speech'
 import { useAppStore } from '@/store'
+import { useTheme } from '@/hooks/useTheme'
 
+const { naiveCustom } = useTheme()
 const appStore = useAppStore()
 const merchEnabled = computed(() => appStore.merchEnabled)
 const speechEnabled = computed(() => appStore.speechEnabled)
@@ -72,7 +74,7 @@ const Merch = defineAsyncComponent(() => import('./Merch.vue'))
                 <span class="ml-2">{{ $t('setting.speech') }}</span>
               </template>
               <div class="mt-4 min-h-[100px] max-w-[720px]">
-                <NCard>
+                <NCard :theme-overrides="naiveCustom.Border">
                   <Speech />
                 </NCard>
               </div>
@@ -92,7 +94,7 @@ const Merch = defineAsyncComponent(() => import('./Merch.vue'))
                 <span class="ml-2">{{ $t('setting.statistics') }}</span>
               </template>
               <div class="mt-4 max-h-[780px] max-w-[1080px]">
-                <NCard>
+                <NCard :theme-overrides="naiveCustom.Border">
                   <Statistics />
                 </NCard>
               </div>
@@ -112,7 +114,7 @@ const Merch = defineAsyncComponent(() => import('./Merch.vue'))
                 <span class="ml-2">{{ $t('setting.about') }}</span>
               </template>
               <div class="mt-4 min-h-[100px] max-w-[1080px]">
-                <NCard>
+                <NCard :theme-overrides="naiveCustom.Border">
                   <About />
                 </NCard>
               </div>

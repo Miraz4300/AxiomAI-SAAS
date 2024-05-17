@@ -4,7 +4,9 @@ import { NAlert, NButton, NCard, NTag } from 'naive-ui'
 import { UserRole } from '@/components/admin/model'
 import { SvgIcon } from '@/components/common'
 import { useSubStore, useUserStore } from '@/store'
+import { useTheme } from '@/hooks/useTheme'
 
+const { naiveCustom } = useTheme()
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
 const Role = userInfo.value.roles[0]
@@ -53,7 +55,7 @@ function handleButtonClick(type: string) {
     </p>
   </div>
   <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 md:grid-cols-3 mb-4">
-    <NCard v-for="(subscription, index) in enabledSubscriptions" :key="index" :title="subscription.title.value" hoverable>
+    <NCard v-for="(subscription, index) in enabledSubscriptions" :key="index" :title="subscription.title.value" hoverable :theme-overrides="naiveCustom.Border">
       <template v-if="Role === subscription.role" #header-extra>
         <NTag round :bordered="false" type="success">
           Active
@@ -73,7 +75,7 @@ function handleButtonClick(type: string) {
       </div>
     </NCard>
   </div>
-  <NAlert type="info">
+  <NAlert type="info" :theme-overrides="naiveCustom.Border">
     We currently accept <SvgIcon class="inline-block" icon="arcticons:bkash" /> bKash and <SvgIcon class="inline-block" icon="arcticons:nagad" /> Nagad payment.
   </NAlert>
 </template>

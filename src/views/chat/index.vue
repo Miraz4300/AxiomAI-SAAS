@@ -667,7 +667,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
                   </div>
                   <NButton v-if="!loading" circle :disabled="buttonDisabled" @click="handleSubmit">
                     <template #icon>
-                      <SvgIcon icon="ri:send-plane-fill" />
+                      <SvgIcon :icon="isFree ? 'ri:send-plane-fill' : 'ri:arrow-up-line'" />
                     </template>
                   </NButton>
                   <NButton v-else strong secondary circle type="error" @click="handleStop">
@@ -680,7 +680,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
             </div>
           </div>
         </div>
-        <div v-if="chatFooterEnabled" class="text-center text-xs text-black/60 dark:text-white/50 mt-2" v-html="chatFooterText" />
+        <div v-if="chatFooterEnabled" class="text-center text-xs text-black/60 dark:text-white/50 mt-2 -m-2" v-html="chatFooterText" />
       </div>
     </footer>
   </div>

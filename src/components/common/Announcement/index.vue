@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { h, onMounted, ref } from 'vue'
-import { NButton, useNotification } from 'naive-ui'
+import { NButton } from 'naive-ui'
 import type { AnnouncementConfig } from '@/components/admin/model'
 import { fetchUserAnnouncement } from '@/api'
 
-const notification = useNotification()
 const announcementConfig = ref<AnnouncementConfig>()
 const userMessage = ref<string>('')
 
@@ -16,7 +15,7 @@ const diffInDays = Math.ceil((new Date(currentDate).getTime() - (new Date(lastSh
 
 // For announcement
 function showAnnouncement() {
-  notification.create({
+  window.$notification?.create({
     title: announcementConfig.value?.announceHeader,
     // Render the content as a div with dark background. Reason(bug): conflicting with other css styles
     content: () => h('div', { class: 'dark:bg-[#1D242D]', innerHTML: announcementConfig.value?.announceBody }),
@@ -29,7 +28,7 @@ function showAnnouncement() {
 // For user notification message
 function showMessage() {
   if (userMessage.value) {
-    const n = notification.create({
+    const n = window.$notification!.create({
       title: 'Message',
       // Render the content as a div with dark background. Reason(bug): conflicting with other css styles
       content: () => h('div', { class: 'dark:bg-[#1D242D]', innerHTML: userMessage.value }),

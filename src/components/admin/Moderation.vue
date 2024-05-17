@@ -1,10 +1,8 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NInput, NSelect, NSpin, NSwitch, useMessage } from 'naive-ui'
+import { NButton, NInput, NSelect, NSpin, NSwitch } from 'naive-ui'
 import type { AuditConfig, ConfigState, TextAuditServiceProvider } from './model'
 import { fetchChatConfig, fetchTestAudit, fetchUpdateAudit } from '@/api'
-
-const ms = useMessage()
 
 const loading = ref(false)
 const saving = ref(false)
@@ -33,10 +31,10 @@ async function updateAuditInfo() {
   try {
     const { data } = await fetchUpdateAudit(config.value as AuditConfig)
     config.value = data
-    ms.success('Saved Successfully')
+    window.$message?.success('Saved Successfully')
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   saving.value = false
 }
@@ -45,10 +43,10 @@ async function testAudit() {
   testing.value = true
   try {
     const { message } = await fetchTestAudit(testText.value as string, config.value as AuditConfig) as { status: string; message: string }
-    ms.success(message)
+    window.$message?.success(message)
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   testing.value = false
 }

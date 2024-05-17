@@ -1,14 +1,12 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
-import { NButton, NCheckbox, NDivider, NInput, useMessage } from 'naive-ui'
+import { NButton, NCheckbox, NDivider, NInput } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import { authErrorType, authInfoType } from '../components/authEnum'
 import TOS from './TOS.vue'
 import { fetchRegister } from '@/api'
 
 const router = useRouter()
-
-const ms = useMessage()
 
 const loading = ref(false)
 const username = ref('')
@@ -36,7 +34,7 @@ async function handleRegister() {
   const confirmPwd = confirmPassword.value.trim()
 
   if (!name || !pwd || !confirmPwd || pwd !== confirmPwd) {
-    ms.error('Passwords don\'t match')
+    window.$message?.error('Passwords don\'t match')
     return
   }
 
@@ -50,7 +48,7 @@ async function handleRegister() {
     if (error.errorCode === authErrorType.PERMISSION || error.errorCode === authErrorType.BANNED)
       router.replace({ name: 'Exception', query: { code: error.errorCode } })
     else
-      ms.error(error.message ?? 'An unexpected error occurred', { duration: 5000, keepAliveOnHover: true })
+      window.$message?.error(error.message ?? 'An unexpected error occurred', { duration: 5000, keepAliveOnHover: true })
   }
   finally {
     loading.value = false

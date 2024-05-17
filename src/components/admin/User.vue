@@ -1,14 +1,12 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
 import type { DataTableColumns, DropdownOption } from 'naive-ui'
-import { NAlert, NAvatar, NBadge, NButton, NCard, NDataTable, NDropdown, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
+import { NAlert, NAvatar, NBadge, NButton, NCard, NDataTable, NDropdown, NInput, NModal, NSelect, NSpace, NTag } from 'naive-ui'
 import { format } from 'date-fns'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
 import { fetchDisableUserMFAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
 import { SvgIcon } from '@/components/common'
 
-const ms = useMessage()
-const dialog = useDialog()
 const loading = ref(false)
 const show = ref(false)
 const show2 = ref(false)
@@ -281,7 +279,7 @@ async function handleUpdateUserStatus(userId: string, status: Status, action: st
   if (!options)
     return
 
-  dialog[status === Status.Disabled ? 'error' : 'success']({
+  window.$dialog![status === Status.Disabled ? 'error' : 'success']({
     ...options,
     positiveText: 'Yes',
     negativeText: 'No',
@@ -289,12 +287,12 @@ async function handleUpdateUserStatus(userId: string, status: Status, action: st
       try {
         const result = action === 'disableMFA' ? await fetchDisableUserMFAByAdmin(userId) : await fetchUpdateUserStatus(userId, status)
         if (result.status === 'Fail')
-          ms.error(result.message as string)
+          window.$message?.error(result.message as string)
         else
-          ms.info(result.message as string)
+          window.$message?.info(result.message as string)
       }
       catch (error: any) {
-        ms.error(`Failed to ${action} for user: ${error.message}`)
+        window.$message?.error(`Failed to ${action} for user: ${error.message}`)
       }
       await handleGetUsers(pagination.page) // Bug: after search query and update the user returns to the first page
     },
@@ -348,7 +346,7 @@ async function fetchUserMessage(user: UserInfo) {
   // Fetch user message from backend
   const result = await fetchUpdateUser(user)
   if (result.status === 'Fail') {
-    ms.error(result.message as string)
+    window.$message?.error(result.message as string)
   }
   else {
     // Set user message
@@ -373,9 +371,9 @@ async function handleUpdateUser() {
 
     const result = await fetchUpdateUser(userRef.value)
     if (result.status === 'Fail')
-      ms.error(result.message as string)
+      window.$message?.error(result.message as string)
     else
-      ms.success(result.message as string)
+      window.$message?.success(result.message as string)
 
     await handleGetUsers(pagination.page)
     show.value = false
@@ -383,7 +381,7 @@ async function handleUpdateUser() {
     show3.value = false
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   handleSaving.value = false
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { NAvatar, NButton, NInput, NModal, NSelect, useMessage } from 'naive-ui'
+import { NAvatar, NButton, NInput, NModal, NSelect } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon, UserAvatar, UserRole } from '@/components/common'
 import { useAppStore, useAuthStore, useUserStore } from '@/store'
@@ -15,7 +15,6 @@ const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
 
 const { isMobile } = useBasicLayout()
-const ms = useMessage()
 const show = ref(false)
 
 const theme = computed(() => appStore.theme)
@@ -55,12 +54,12 @@ const languageOptions: { label: string; key: Language; value: Language }[] = [
 
 async function updateUserInfo(options: Partial<UserInfo>) {
   if (!options.name) {
-    ms.error('Name cannot be empty')
+    window.$message?.error('Name cannot be empty')
     return
   }
 
   await userStore.updateUserInfo(true, options)
-  ms.success(t('common.success'))
+  window.$message?.success(t('common.success'))
   show.value = false
 }
 

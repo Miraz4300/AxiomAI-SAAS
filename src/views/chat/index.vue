@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { MessageReactive, UploadFileInfo } from 'naive-ui'
-import { NButton, NDivider, NInput, NSpace, NSwitch, NTooltip, NUpload, useDialog, useMessage } from 'naive-ui'
+import { NButton, NDivider, NInput, NSpace, NSwitch, NTooltip, NUpload } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
@@ -29,8 +29,6 @@ let lastChatInfo: any = {}
 const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 
 const route = useRoute()
-const dialog = useDialog()
-const ms = useMessage()
 const appStore = useAppStore()
 const authStore = useAuthStore()
 const userStore = useUserStore()
@@ -66,8 +64,8 @@ const inputRef = ref<Ref | null>(null)
 const currentChatModel = ref(JSON.parse(localStorage.getItem('currentChatModel') as string))
 const isVisionModel = computed(() => currentChatModel.value && (currentChatModel.value?.includes('vision') || ['gpt-4-turbo', 'gpt-4-turbo-2024-04-09'].includes(currentChatModel.value) || currentChatModel.value?.includes('gpt-4o')))
 
-let loadingms: MessageReactive
-let allmsg: MessageReactive
+let loadingms: MessageReactive | undefined
+let allmsg: MessageReactive | undefined
 let prevScrollTop: number
 
 // If the page is refreshed for unknown reasons, the loading status will not be reset, so it can be reset manually.
@@ -419,7 +417,7 @@ function handleDelete(index: number) {
   if (loading.value)
     return
 
-  dialog.warning({
+  window.$dialog?.warning({
     title: t('chat.deleteMessage'),
     content: t('chat.deleteMessageConfirm'),
     positiveText: t('common.yes'),
@@ -465,14 +463,14 @@ async function loadMoreMessage(event: any) {
     loadingms && loadingms.destroy()
     nextTick(() => scrollTo(event.target.scrollHeight - scrollPosition))
   }, () => {
-    loadingms = ms.loading(
+    loadingms = window.$message?.loading(
       'Loading...', {
         duration: 0,
       },
     )
   }, () => {
     allmsg && allmsg.destroy()
-    allmsg = ms.info('Synced', {
+    allmsg = window.$message?.info('Synced', {
       duration: 1000,
     })
   })
@@ -505,9 +503,9 @@ async function handleToggleUsingContext() {
   currentChatHistory.value.usingContext = !currentChatHistory.value.usingContext
   chatStore.setUsingContext(currentChatHistory.value.usingContext, +uuid)
   if (currentChatHistory.value.usingContext)
-    ms.success(t('chat.turnOnContext'))
+    window.$message?.success(t('chat.turnOnContext'))
   else
-    ms.warning(t('chat.turnOffContext'))
+    window.$message?.warning(t('chat.turnOffContext'))
 }
 
 const buttonDisabled = computed(() => {
@@ -547,7 +545,7 @@ onMounted(() => {
   if (authStore.token) {
     const chatModels = authStore.session?.chatModels
     if (chatModels != null && chatModels.filter(d => d.value === userStore.userInfo.config.chatModel).length <= 0)
-      ms.error('The selected model doesn\'t exist, please choose another.', { duration: 4000 })
+      window.$message?.error('The selected model doesn\'t exist, please choose another.', { duration: 4000 })
   }
 })
 

@@ -1,10 +1,8 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NInput, NSpin, useMessage } from 'naive-ui'
+import { NButton, NInput, NSpin } from 'naive-ui'
 import { ConfigState } from './model'
 import { fetchChatConfig, fetchUpdateBaseSetting } from '@/api'
-
-const ms = useMessage()
 
 const loading = ref(false)
 const saving = ref(false)
@@ -29,10 +27,10 @@ async function updateBaseSetting(baseConfig?: Partial<ConfigState>) {
   try {
     const { data } = await fetchUpdateBaseSetting(baseConfig)
     config.value = data
-    ms.success('Saved Successfully')
+    window.$message?.success('Saved Successfully')
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   saving.value = false
 }

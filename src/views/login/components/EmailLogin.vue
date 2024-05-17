@@ -1,12 +1,10 @@
 <script setup lang='ts'>
 import { computed, onMounted, ref } from 'vue'
-import { NButton, NDivider, NInput, useMessage } from 'naive-ui'
+import { NButton, NDivider, NInput } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import { authErrorType, authInfoType } from '../components/authEnum'
 import { fetchLogin, fetchVerify, fetchVerifyAdmin } from '@/api'
 import { useAuthStore } from '@/store'
-
-const ms = useMessage()
 
 const route = useRoute()
 const router = useRouter()
@@ -37,10 +35,10 @@ async function handleVerify(verifytoken: string) {
     || result.message === authErrorType.USDV || result.message === authErrorType.ABNORMAL2 || result.message === authErrorType.BANNED)
       router.replace({ name: 'Exception', query: { code: result.message } })
     else
-      ms.success(result.message as string)
+      window.$message?.success(result.message as string)
   }
   catch (error: any) {
-    ms.error(error.message ?? 'An unexpected error occurred')
+    window.$message?.error(error.message ?? 'An unexpected error occurred')
     authStore.removeToken()
   }
   finally {
@@ -56,11 +54,11 @@ async function handleVerifyAdmin(verifytoken: string) {
   try {
     loading.value = true
     await fetchVerifyAdmin(secretKey)
-    ms.success('Activate successfully')
+    window.$message?.success('Activate successfully')
     router.replace('/')
   }
   catch (error: any) {
-    ms.error(error.message ?? 'An unexpected error occurred')
+    window.$message?.error(error.message ?? 'An unexpected error occurred')
   }
   finally {
     loading.value = false
@@ -90,7 +88,7 @@ async function handleLogin() {
       return
     }
     await authStore.setToken(result.data.token)
-    ms.success(result.message as string)
+    window.$message?.success(result.message as string)
     // Redirect to the originally requested page or home page if no redirect query parameter exists
     const redirect = route.query.redirect
     router.replace(redirect ? decodeURIComponent(redirect as string) : '/')
@@ -100,7 +98,7 @@ async function handleLogin() {
     || error.errorCode === authErrorType.PERMISSION || error.errorCode === authErrorType.BANNED)
       router.replace({ name: 'Exception', query: { code: error.errorCode } })
     else
-      ms.error(error.message ?? 'An unexpected error occurred')
+      window.$message?.error(error.message ?? 'An unexpected error occurred')
     password.value = ''
   }
   finally {

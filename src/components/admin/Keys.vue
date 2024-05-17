@@ -1,14 +1,12 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
 import type { DataTableColumns } from 'naive-ui'
-import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NSwitch, NTag, useDialog, useMessage } from 'naive-ui'
+import { NButton, NDataTable, NInput, NModal, NSelect, NSpace, NSwitch, NTag } from 'naive-ui'
 import { KeyConfig, Status, UserRole, apiModelOptions, userRoleOptions } from './model'
 import { fetchGetKeys, fetchUpdateApiKeyStatus, fetchUpsertApiKey } from '@/api'
 import { useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
 
-const ms = useMessage()
-const dialog = useDialog()
 const authStore = useAuthStore()
 
 const loading = ref(false)
@@ -17,7 +15,7 @@ const handleSaving = ref(false)
 const keyConfig = ref(new KeyConfig('', 'ChatGPTAPI', [], [], ''))
 const keys = ref([])
 
-const createColumns = (): DataTableColumns => {
+function createColumns(): DataTableColumns {
   return [
     {
       title: 'API Key',
@@ -173,21 +171,21 @@ async function handleGetKeys(page: number) {
   loading.value = false
 }
 async function handleUpdateApiKeyStatus(id: string, status: Status) {
-  dialog.error({
+  window.$dialog?.error({
     title: ('Delete Key'),
     content: ('Are you sure to delete this key?'),
     positiveText: ('Yes'),
     negativeText: ('No'),
     onPositiveClick: async () => {
       await fetchUpdateApiKeyStatus(id, status)
-      ms.info('OK')
+      window.$message?.info('OK')
       await handleGetKeys(pagination.page)
     },
   })
 }
 async function handleUpdateKeyConfig() {
   if (!keyConfig.value.key) {
-    ms.error('API key is required')
+    window.$message?.error('API key is required')
     return
   }
   handleSaving.value = true
@@ -197,7 +195,7 @@ async function handleUpdateKeyConfig() {
     show.value = false
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   handleSaving.value = false
 }

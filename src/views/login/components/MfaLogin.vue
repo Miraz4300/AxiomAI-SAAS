@@ -1,13 +1,12 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
-import { NButton, NInput, useMessage } from 'naive-ui'
+import { NButton, NInput } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import TOS from './TOS.vue'
 import { fetchLogin } from '@/api'
 import { useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
 
-const ms = useMessage()
 const router = useRouter()
 const authStore = useAuthStore()
 
@@ -29,7 +28,7 @@ async function handleMFASubmit() {
     if (result.status === 'Success') {
       await authStore.setToken(result.data.token)
       authStore.clearTempCredentials()
-      ms.success(result.message as string)
+      window.$message?.success(result.message as string)
       router.replace('/')
     }
     else {

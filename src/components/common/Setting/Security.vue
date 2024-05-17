@@ -1,10 +1,9 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NDivider, NInput, NQrCode, NSpin, NStep, NSteps, useMessage } from 'naive-ui'
+import { NButton, NDivider, NInput, NQrCode, NSpin, NStep, NSteps } from 'naive-ui'
 import type { MFAConfig } from '@/components/admin/model'
 import { fetchDisableUserMFA, fetchGetUserMFA, fetchVerifyUserMFA } from '@/api'
 
-const ms = useMessage()
 const loading = ref(false)
 const saving = ref(false)
 const config = ref<MFAConfig>()
@@ -27,10 +26,10 @@ async function updateMFAInfo() {
       throw new Error('Invalid')
     const result = await fetchVerifyUserMFA(config.value.secretKey, config.value.testCode)
     await fetchConfig()
-    ms.success(result.message as string)
+    window.$message?.success(result.message as string)
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   saving.value = false
 }
@@ -42,10 +41,10 @@ async function disableMFA() {
       throw new Error('Invalid')
     const result = await fetchDisableUserMFA(config.value.testCode)
     await fetchConfig()
-    ms.success(result.message as string)
+    window.$message?.success(result.message as string)
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   saving.value = false
 }

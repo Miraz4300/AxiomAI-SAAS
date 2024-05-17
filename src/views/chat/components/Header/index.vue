@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { computed, defineAsyncComponent, h, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { NButton, NInput, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
+import { NButton, NInput, NModal, NRadioButton, NRadioGroup, NSelect, NSlider } from 'naive-ui'
 import { useAppStore, useAuthStore, useChatStore, useUserStore } from '@/store'
 import { fetchUpdateChatRoomPrompt } from '@/api'
 import { SvgIcon, ToolButton } from '@/components/common'
@@ -9,8 +9,6 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useisFree } from '@/utils/functions/isFree'
 import { t } from '@/locales'
 
-const dialog = useDialog()
-const ms = useMessage()
 const route = useRoute()
 
 const appStore = useAppStore()
@@ -46,7 +44,7 @@ function handleClear() {
   if (loading.value)
     return
 
-  dialog.warning({
+  window.$dialog?.warning({
     title: t('chat.clearChat'),
     content: t('chat.clearChatConfirm'),
     positiveText: t('common.yes'),
@@ -86,11 +84,11 @@ async function handleSaveData() {
   testing.value = true
   try {
     const { message } = await fetchUpdateChatRoomPrompt(currentChatHistory.value.prompt ?? '', +uuid) as { status: string; message: string }
-    ms.success(message)
+    window.$message?.success(message)
     show.value = false
   }
   catch (error: any) {
-    ms.success(t('common.success'))
+    window.$message?.success(t('common.success'))
   }
   testing.value = false
   show.value = false

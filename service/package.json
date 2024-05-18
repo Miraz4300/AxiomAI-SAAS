@@ -59,7 +59,7 @@
     "@types/isomorphic-fetch": "^0.0.39",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/multer": "^1.4.11",
-    "@types/node": "^20.12.9",
+    "@types/node": "^20.12.12",
     "@types/nodemailer": "^6.4.15",
     "@types/request-ip": "^0.0.41",
     "@types/speakeasy": "^2.0.10",

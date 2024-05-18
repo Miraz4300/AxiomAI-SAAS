@@ -18,3 +18,9 @@ export enum authInfoType {
   UNVERIFIED2 = 'UNVERIFIED_CHANNEL_SU', // If user status is unverified and trying to signup again
   VERIFIED = 'VERIFIED', // If user is verifying the account
 }
+
+export enum authMsg {
+  INVALID_EMAIL = 'Please enter a valid email address! Repeated attempts to enter multiple spam email addresses may result in a permanent ban for your geolocation.', // If user is trying to signup with spam or disposable email address
+  RESTRICTED_EMAIL = 'This email address is not allowed', // If user is trying to signup with restricted email address
+  EXISTS_EMAIL = 'The email address given has already been registered within our system!', // If user is trying to signup with already registered email address
+}

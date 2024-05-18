@@ -47,6 +47,8 @@ async function handleRegister() {
   catch (error: any) {
     if (error.errorCode === authErrorType.PERMISSION || error.errorCode === authErrorType.BANNED)
       router.replace({ name: 'Exception', query: { code: error.errorCode } })
+    else if (error.data.warn)
+      window.$message?.warning(error.message, { duration: 5000, keepAliveOnHover: true })
     else
       window.$message?.error(error.message ?? 'An unexpected error occurred', { duration: 5000, keepAliveOnHover: true })
   }

@@ -18,7 +18,7 @@ import { auth, getUserId, tokenMap } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AnnouncementConfig, AuditConfig, ChatInfo, ChatOptions, Config, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, SubscriptionConfig, UserConfig, UserInfo } from './storage/model'
 import { AdvancedConfig, Status, UsageResponse, UserRole } from './storage/model'
-import { authErrorType, authInfoType } from './storage/authEnum'
+import { authErrorType, authInfoType, authMsg } from './storage/authEnum'
 import {
   clearChat,
   createChatRoom,
@@ -570,7 +570,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
       return
     }
     if (!isEmail(username)) {
-      res.send({ status: 'Fail', message: 'Please enter a valid email address! Note: Repeated attempts to enter multiple spam email addresses may result in a permanent ban for your geolocation.', data: null })
+      res.send({ status: 'Fail', message: authMsg.INVALID_EMAIL, data: { warn: true } })
       logger.warn(`Suspicious email address detected: ${username}, From IP: ${req.ip}`)
       return
     }
@@ -584,7 +584,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
           break
       }
       if (!allowSuffix) {
-        res.send({ status: 'Fail', message: 'This email address is not allowed', data: null })
+        res.send({ status: 'Fail', message: authMsg.RESTRICTED_EMAIL, data: { warn: true } })
         logger.warn(`Invalid email domain: ${username}, From IP: ${req.ip}`)
         return
       }
@@ -608,7 +608,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
         logger.warn(`Banned user trying to register: ${username}, From IP: ${req.ip}`)
         return
       }
-      res.send({ status: 'Fail', message: 'The email address given has already been registered within our system!', data: null })
+      res.send({ status: 'Fail', message: authMsg.EXISTS_EMAIL, data: { warn: true } })
       logger.warn(`Duplicate email trying to register: ${username}, From IP: ${req.ip}`)
       return
     }

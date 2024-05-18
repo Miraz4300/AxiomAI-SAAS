@@ -2,16 +2,15 @@ name: Docker
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [master]
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
+    tags: ['v*.*.*']
   pull_request:
-    branches: [ "master" ]
+    branches: [master]
 
 env:
   REGISTRY: docker.io
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/axiomai
-
 
 jobs:
   build:
@@ -33,7 +32,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v3.4.0
         with:
-          cosign-release: 'v2.2.3'
+          cosign-release: v2.2.3
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache

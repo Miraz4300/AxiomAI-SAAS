@@ -52,16 +52,16 @@ export function useTheme() {
 
   const personaColors = {
     precise: {
-      dark: { primaryColor: '#14b8a6', primaryColorHover: '#2dd4bf', primaryColorPressed: '#5eead4', primaryColorSuppl: '#0d9488', chatBox: '#0f766e' },
-      light: { primaryColor: '#0d9488', primaryColorHover: '#0f766e', primaryColorPressed: '#115e59', primaryColorSuppl: '#0d9488', chatBox: '#0f766e' },
+      dark: { primaryColor: '#14B8A6', primaryColorHover: '#2DD4BF', primaryColorPressed: '#5EEEAD4', primaryColorSuppl: '#0D9488', chatBox: '#0F766E' },
+      light: { primaryColor: '#0D9488', primaryColorHover: '#0F766E', primaryColorPressed: '#115E59', primaryColorSuppl: '#0D9488', chatBox: '#0F766E' },
     },
     balanced: {
       dark: { primaryColor: '#00B2DB', primaryColorHover: '#00C4F0', primaryColorPressed: '#06D1FF', primaryColorSuppl: '#009BBD', chatBox: '#005366' },
       light: { primaryColor: '#0083A0', primaryColorHover: '#0083A0', primaryColorPressed: '#0083A0', primaryColorSuppl: '', chatBox: '#005366' },
     },
     creative: {
-      dark: { primaryColor: '#8b5cf6', primaryColorHover: '#a78bfa', primaryColorPressed: '#c4b5fd', primaryColorSuppl: '#7c3aed', chatBox: '#6d28d9' },
-      light: { primaryColor: '#7c3aed', primaryColorHover: '#6d28d9', primaryColorPressed: '#5b21b6', primaryColorSuppl: '#7c3aed', chatBox: '#6d28d9' },
+      dark: { primaryColor: '#8B5CF6', primaryColorHover: '#A78BFA', primaryColorPressed: '#C4B5FD', primaryColorSuppl: '#7C3AED', chatBox: '#6D28D9' },
+      light: { primaryColor: '#7C3AED', primaryColorHover: '#6D28D9', primaryColorPressed: '#5B21B6', primaryColorSuppl: '#7C3AED', chatBox: '#6D28D9' },
     },
   }
 

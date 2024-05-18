@@ -26,7 +26,7 @@ const tosModal = ref(false)
     <span class="text-gray-600">|</span>
     <a>Deepspacelab corp</a>
   </div>
-  <span v-if="props.span" class="text-[#fb923c] dark:text-[#F59E0B] font-semibold cursor-pointer" @click="tosModal = true">
+  <span v-if="props.span" class="text-[#0083A0] dark:text-[#00B2DB] font-semibold cursor-pointer" @click="tosModal = true">
     terms of service
   </span>
 

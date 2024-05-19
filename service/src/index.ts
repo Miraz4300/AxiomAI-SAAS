@@ -58,7 +58,7 @@ import {
   verifyUser,
 } from './storage/storage'
 import { authLimiter, limiter } from './middleware/limiter'
-import { hasAnyRole, isEmail, isNotEmptyString } from './utils/is'
+import { hasAnyRole, isEmail, isNotEmptyString, isValidEmail } from './utils/is'
 import { sendMfaMail, sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
 import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
 import { isAdmin, rootAuth } from './middleware/rootAuth'
@@ -569,7 +569,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
       res.send({ status: 'Fail', message: 'Registration is disabled!', data: null })
       return
     }
-    if (!isEmail(username)) {
+    if (!isValidEmail(username)) {
       res.send({ status: 'Fail', message: authMsg.INVALID_EMAIL, data: { warn: true } })
       logger.warn(`Suspicious email address detected: ${username}, From IP: ${req.ip}`)
       return

@@ -35,7 +35,7 @@ const tosModal = ref(false)
       <div class="space-y-4">
         <header class="space-y-6">
           <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-neutral-200">
-            Terms of Service (ToS)
+            Terms of Service
           </h2>
           <NScrollbar style="max-height: 490px">
             <div class="md:text-justify pl-4 pr-4 prose dark:prose-dark">
@@ -43,7 +43,7 @@ const tosModal = ref(false)
                 Before using the services provided by AxiomAI, please be sure to carefully read and understand these terms of services.
                 <br>
                 <br>
-                Please be aware that if you choose to continue to visit AxiomAI, or use the services provided by AxiomAI, or use AxiomAI in various ways (hereinafter collectively referred to as "the Service"), you will be deemed to have accepted and agreed to the entire content of these Terms.
+                Please be aware that if you choose to continue to visit AxiomAI, or use the services provided by AxiomAI, or use AxiomAI in various ways, you will be deemed to have accepted and agreed to the entire content of these terms.
               </p>
               <br>
               <ol>

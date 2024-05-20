@@ -59,7 +59,7 @@ import {
 } from './storage/storage'
 import { authLimiter, limiter } from './middleware/limiter'
 import { hasAnyRole, isEmail, isNotEmptyString, isValidEmail } from './utils/is'
-import { sendMfaMail, sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
+import { sendAuthorizeMail, sendMfaMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
 import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
 import { isAdmin, rootAuth } from './middleware/rootAuth'
 import { router as uploadRouter } from './routes/upload'
@@ -943,7 +943,7 @@ router.post('/user-status', rootAuth, async (req, res) => {
     const user = await getUserById(userId)
     await updateUserStatus(userId, status)
     if ((user.status === Status.Unverified || user.status === Status.AdminVerify) && status === Status.Normal)
-      await sendNoticeMail(user.email)
+      await sendAuthorizeMail(user.email)
     res.send({ status: 'Success', message: 'Update successfully [STATUS]' })
   }
   catch (error) {
@@ -1136,7 +1136,7 @@ router.post('/admin-verification', authLimiter, async (req, res) => {
     if (user.status !== Status.AdminVerify)
       throw new Error(`Account abnormality ${user.status}`)
     await verifyUser(username, Status.Normal)
-    await sendNoticeMail(username)
+    await sendAuthorizeMail(username)
     res.send({ status: 'Success', message: 'Account has been activated', data: null })
   }
   catch (error) {

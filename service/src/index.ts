@@ -31,6 +31,7 @@ import {
   getChat,
   getChatRoom,
   getChatRooms,
+  getChatRoomsCount,
   getChats,
   getDashboardData,
   getUser,
@@ -113,6 +114,43 @@ router.get('/chatrooms', auth, async (req, res) => {
       })
     })
     res.send({ status: 'Success', message: null, data: result })
+  }
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Load error', data: [] })
+  }
+})
+
+function formatTimestamp(timestamp: number) {
+  const date = new Date(timestamp)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
+
+router.get('/chatrooms-count', rootAuth, async (req, res) => {
+  try {
+    const userId = req.query.userId as string
+    const page = +req.query.page
+    const size = +req.query.size
+    const rooms = await getChatRoomsCount(userId, page, size)
+    const result = []
+    rooms.data.forEach((r) => {
+      result.push({
+        uuid: r.roomId,
+        title: r.title,
+        userId: r.userId,
+        name: r.username,
+        lastTime: formatTimestamp(r.dateTime),
+        chatCount: r.chatCount,
+      })
+    })
+    res.send({ status: 'Success', message: null, data: { data: result, total: rooms.total } })
   }
   catch (error) {
     console.error(error)
@@ -222,17 +260,38 @@ router.get('/chat-history', auth, async (req, res) => {
     const userId = req.headers.userId as string
     const roomId = +req.query.roomId
     const lastId = req.query.lastId as string
-    if (!roomId || !await existsChatRoom(userId, roomId)) {
+    const all = req.query.all as string
+    if ((!roomId || !await existsChatRoom(userId, roomId)) && (all === null || all === 'undefined' || all === undefined || all.trim().length === 0)) {
       res.send({ status: 'Success', message: null, data: [] })
       return
     }
-    const chats = await getChats(roomId, !isNotEmptyString(lastId) ? null : Number.parseInt(lastId))
+    if (all !== null && all !== 'undefined' && all !== undefined && all.trim().length !== 0) {
+      const config = await getCacheConfig()
+      if (config.siteConfig.loginEnabled) {
+        try {
+          const user = await getUserById(userId)
+          if (user == null || user.status !== Status.Normal || !user.roles.includes(UserRole.Admin)) {
+            res.send({ status: 'Fail', message: 'No permission.', data: null })
+            return
+          }
+        }
+        catch (error) {
+          res.send({ status: 'Unauthorized', message: error.message ?? 'Please authenticate.', data: null })
+        }
+      }
+      else {
+        res.send({ status: 'Fail', message: 'No permission.', data: null })
+      }
+    }
+
+    const chats = await getChats(roomId, !isNotEmptyString(lastId) ? null : Number.parseInt(lastId), all)
 
     const result = []
     chats.forEach((c) => {
       if (c.status !== Status.InversionDeleted) {
         result.push({
           uuid: c.uuid,
+          model: c.model,
           dateTime: new Date(c.dateTime).toLocaleString(),
           text: c.prompt,
           images: c.images,
@@ -446,9 +505,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
       }
     }
 
-    message = regenerate
-      ? await getChat(roomId, uuid)
-      : await insertChat(uuid, prompt, uploadFileKeys, roomId, options as ChatOptions)
+    message = regenerate ? await getChat(roomId, uuid) : await insertChat(uuid, prompt, uploadFileKeys, roomId, model, options as ChatOptions)
     let firstChunk = true
     result = await chatReplyProcess({
       message: prompt,
@@ -518,6 +575,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
           result.data.text,
           result.data.id,
           result.data.conversationId,
+          model,
           result.data.detail?.usage as UsageResponse,
           previousResponse as [])
       }
@@ -526,6 +584,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
           result.data.text,
           result.data.id,
           result.data.conversationId,
+          model,
           result.data.detail?.usage as UsageResponse)
       }
 
@@ -553,7 +612,7 @@ router.post('/chat-abort', [auth, limiter], async (req, res) => {
       text,
       messageId,
       conversationId,
-      null)
+      null, null)
     res.send({ status: 'Success', message: 'OK', data: null })
   }
   catch (error) {

@@ -12,7 +12,7 @@ import { getCacheApiKeys, getCacheConfig, getOriginConfig } from '../storage/con
 import { sendResponse } from '../utils'
 import { hasAnyRole, isNotEmptyString } from '../utils/is'
 import type { ChatContext, ChatGPTUnofficialProxyAPIOptions, JWT, ModelConfig } from '../types'
-import { getChatByMessageId, updateRoomAccountId } from '../storage/storage'
+import { getChatByMessageId, updateRoomAccountId, updateRoomChatModel } from '../storage/storage'
 import type { RequestOptions } from './types'
 
 dotenv.config()
@@ -62,22 +62,17 @@ export async function initApi(key: KeyConfig, chatModel: string, maxContextCount
       options.maxModelTokens = 16385
       options.maxResponseTokens = 4096
     }
-    // For the gpt-4 and 4-0613 models.
-    else if (model.toLowerCase().includes('gpt-4')) {
-      options.maxModelTokens = 8192
-      options.maxResponseTokens = 2048
-    }
-    // For the gpt-4-1106-preview model.
-    else if (model.toLowerCase().includes('1106-preview')) {
+    // For the gpt-4-turbo and gpt-4-preview models.
+    else if (model.toLowerCase().includes('gpt-4-turbo')) {
       options.maxModelTokens = 128000
       options.maxResponseTokens = 4096
     }
-    // For the gpt-4-0125-preview model.
-    else if (model.toLowerCase().includes('0125-preview')) {
+    // For the gpt-4o model.
+    else if (model.toLowerCase().includes('gpt-4o')) {
       options.maxModelTokens = 128000
       options.maxResponseTokens = 4096
     }
-    // For the gemini-pro, gemini-1.0-pro and gemini-1.0-pro-001 models.
+    // For the gemini-pro, gemini-1.0-pro, gemini-1.5-flash-latest and gemini-1.5-pro-latest models.
     else if (model.toLowerCase().includes('gemini')) {
       options.maxModelTokens = 30720
       options.maxResponseTokens = 2048
@@ -133,13 +128,14 @@ async function chatReplyProcess(options: RequestOptions) {
     if (!options.room.accountId)
       updateRoomAccountId(userId, options.room.roomId, getAccountId(key.key))
 
-    if (options.lastContext && ((options.lastContext.conversationId && !options.lastContext.parentMessageId)
-      || (!options.lastContext.conversationId && options.lastContext.parentMessageId)))
+    if (options.lastContext && ((options.lastContext.conversationId && !options.lastContext.parentMessageId) || (!options.lastContext.conversationId && options.lastContext.parentMessageId)))
       throw new Error('Unable to use AccessToken and API at the same time in the same room. Please contact the administrator or open a new chat room for conversation')
   }
 
-  const { message, uploadFileKeys, lastContext, process, systemMessage, temperature, top_p } = options
+  // Add Chat Record
+  updateRoomChatModel(userId, options.room.roomId, model)
 
+  const { message, uploadFileKeys, lastContext, process, systemMessage, temperature, top_p } = options
   let content: string | {
     type: string
     text?: string

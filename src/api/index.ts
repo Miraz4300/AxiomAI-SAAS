@@ -207,6 +207,13 @@ export function fetchGetChatRooms<T = any>() {
   })
 }
 
+export function fetchGetChatRoomsCount<T = any>(page: number, size: number, userId: string) {
+  return get<T>({
+    url: '/chatrooms-count',
+    data: { page, size, userId },
+  })
+}
+
 export function fetchCreateChatRoom<T = any>(title: string, roomId: number, chatModel?: string) {
   return post<T>({
     url: '/room-create',
@@ -249,9 +256,9 @@ export function fetchDeleteChatRoom<T = any>(roomId: number) {
   })
 }
 
-export function fetchGetChatHistory<T = any>(roomId: number, lastId?: number) {
+export function fetchGetChatHistory<T = any>(roomId: number, lastId?: number, all?: string) {
   return get<T>({
-    url: `/chat-history?roomId=${roomId}&lastId=${lastId}`,
+    url: `/chat-history?roomId=${roomId}&lastId=${lastId}&all=${all}`,
   })
 }
 

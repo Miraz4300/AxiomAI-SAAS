@@ -109,6 +109,7 @@ export class previousResponse {
 export class ChatInfo {
   _id: ObjectId
   roomId: number
+  model: string
   uuid: number
   dateTime: number
   prompt: string
@@ -117,8 +118,9 @@ export class ChatInfo {
   status: Status = Status.Normal
   options: ChatOptions
   previousResponse?: previousResponse[]
-  constructor(roomId: number, uuid: number, prompt: string, images: string[], options: ChatOptions) {
+  constructor(roomId: number, uuid: number, prompt: string, images: string[], model: string, options: ChatOptions) {
     this.roomId = roomId
+    this.model = model
     this.uuid = uuid
     this.prompt = prompt
     this.images = images

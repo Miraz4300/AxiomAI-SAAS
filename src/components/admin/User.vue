@@ -1,16 +1,18 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
 import type { DataTableColumns, DropdownOption } from 'naive-ui'
-import { NAlert, NAvatar, NBadge, NButton, NCard, NDataTable, NDropdown, NInput, NModal, NSelect, NSpace, NTag } from 'naive-ui'
+import { NAlert, NAvatar, NBadge, NButton, NCard, NDataTable, NDropdown, NInput, NModal, NScrollbar, NSelect, NSpace, NSpin, NTag } from 'naive-ui'
 import { format } from 'date-fns'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
-import { fetchDisableUserMFAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
+import { fetchDisableUserMFAByAdmin, fetchGetChatHistory, fetchGetChatRoomsCount, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
 import { SvgIcon } from '@/components/common'
+import Message from '@/views/chat/components/Message/index.vue'
 
 const loading = ref(false)
 const show = ref(false)
 const show2 = ref(false)
 const show3 = ref(false)
+const show4 = ref(false)
 const handleSaving = ref(false)
 const userRef = ref(new UserInfo([UserRole.Free]))
 const users = ref<UserInfo[]>([])
@@ -218,6 +220,72 @@ function createColumns(): DataTableColumns {
 
 const columns = createColumns()
 
+interface HistoryChat {
+  uuid?: number
+  model?: string
+  dateTime: string
+  text: string
+  inversion?: boolean
+  responseCount?: number
+  error?: boolean
+  loading?: boolean
+  usage?: {
+    completion_tokens: number
+    prompt_tokens: number
+    total_tokens: number
+    estimated: boolean
+  }
+}
+
+const dataSources = ref<HistoryChat[]>([])
+const chatLoading = ref(false)
+const chatRooms = ref([])
+const totalRooms = ref(0) // Track total number of rooms
+const selectedUserId = ref('')
+const historyColumns = [{
+  title: 'Last Time',
+  key: 'lastTime',
+  width: 35,
+},
+{
+  title: 'Title',
+  key: 'title',
+  width: 100,
+  ellipsis: {
+    tooltip: true,
+  },
+},
+{
+  title: 'Message Count',
+  key: 'chatCount',
+  width: 20,
+},
+{
+  title: 'Action',
+  key: 'uuid',
+  width: 20,
+  render(row: any) {
+    return h(
+      NButton,
+      {
+        size: 'small',
+        type: 'primary',
+        style: { marginRight: '6px' },
+        onClick: () => {
+          show4.value = true
+          dataSources.value.length = 0
+          chatLoading.value = true
+          fetchGetChatHistory(row.uuid, undefined, 'all').then((res: any) => {
+            dataSources.value = res.data as HistoryChat[]
+            chatLoading.value = false
+          })
+        },
+      },
+      { default: () => 'view' },
+    )
+  },
+}]
+
 const pagination = reactive ({
   page: 1,
   pageSize: 50,
@@ -238,6 +306,46 @@ const pagination = reactive ({
     handleGetUsers(pagination.page)
   },
 })
+
+const pagination2 = reactive ({
+  page: 1,
+  pageSize: 25,
+  pageCount: 1,
+  itemCount: 1,
+  prefix({ itemCount }: { itemCount: number | undefined }) {
+    return `Total room: ${itemCount}`
+  },
+  showSizePicker: true,
+  pageSizes: [25, 50, 100],
+  onChange: (page: number) => {
+    pagination2.page = page
+    handleGetChatRoomsCount(selectedUserId.value, pagination2.page)
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    pagination2.pageSize = pageSize
+    pagination2.page = 1
+    handleGetChatRoomsCount(selectedUserId.value, pagination2.page)
+  },
+})
+
+async function handleGetChatRoomsCount(userId: string, page: number) {
+  try {
+    loading.value = true
+    const size = pagination2.pageSize
+    const response = await fetchGetChatRoomsCount(page, size, userId)
+    const data = response.data.data
+    chatRooms.value = data
+    totalRooms.value = response.data.total // Update total rooms count
+    pagination2.page = page
+    pagination2.pageCount = Math.ceil(response.data.total / size)
+    pagination2.itemCount = response.data.total
+    loading.value = false
+  }
+  catch (error) {
+    console.error('Error fetching chat rooms count:', error)
+    loading.value = false
+  }
+}
 
 const duration = ref()
 const durationOption = ref([
@@ -356,6 +464,8 @@ async function fetchUserMessage(user: UserInfo) {
 
 function handleUserInsight(user: UserInfo) {
   userRef.value = user
+  selectedUserId.value = userRef.value._id ?? ''
+  handleGetChatRoomsCount(userRef.value._id ?? '', 1)
   show3.value = true
 }
 
@@ -558,9 +668,9 @@ onMounted(async () => {
         </p>
         <p class="rounded-md bg-[#F0F4F9] dark:bg-[#232B36] py-2 px-3 h-[120px] text-center">
           <NTag :bordered="false" type="warning" class="w-[200px] mb-2">
-            Prompts
+            Rooms
           </NTag> <br>
-          <a class="text-5xl">00</a>
+          <a class="text-5xl">{{ totalRooms }}</a>
         </p>
         <p class="rounded-md bg-[#F0F4F9] dark:bg-[#232B36] py-2 px-3 h-[120px] text-center">
           <NTag :bordered="false" type="warning" class="w-[200px] mb-2">
@@ -569,15 +679,53 @@ onMounted(async () => {
           <a class="text-5xl">PC</a>
         </p>
       </div>
-      <NCard title="User Activities">
-        <p>
-          Total Logins: 0 <br>
-          Last Login: - <br>
-          Last IP: - <br>
-          Last Location: - <br>
-          Last Device: - <br>
-        </p>
+      <NCard title="Chat Histoy">
+        <NDataTable
+          remote
+          :loading="loading"
+          :row-key="(rowData) => rowData._id"
+          :columns="historyColumns"
+          :data="chatRooms"
+          :pagination="pagination2"
+          :max-height="444"
+          striped
+          @update:page="handleGetChatRoomsCount(selectedUserId, pagination2.page)"
+        />
       </NCard>
+    </div>
+  </NModal>
+
+  <NModal v-model:show="show4" preset="card" style="width: 70%">
+    <div class="p-4 space-y-5 min-h-[200px]">
+      <NSpin :show="chatLoading">
+        <template v-if="!dataSources.length">
+          <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
+            <SvgIcon icon="carbon:unknown-filled" class="mr-2 text-3xl" />
+            <span>Unknown</span>
+          </div>
+        </template>
+        <template v-else>
+          <div>
+            <NScrollbar style="max-height: 80vh;padding: 0 15px;">
+              <Message
+                v-for="(item, index) of dataSources"
+                :key="index"
+                :index="index"
+                :current-nav-index="-1"
+                :date-time="item.dateTime"
+                :text="item.text"
+                :model="item.model"
+                is-record
+                :inversion="item.inversion"
+                :response-count="item.responseCount"
+                :usage="item && item.usage || undefined"
+                :error="item.error"
+                :loading="item.loading"
+              />
+            </NScrollbar>
+          </div>
+        </template>
+      </NSpin>
     </div>
   </NModal>
 </template>

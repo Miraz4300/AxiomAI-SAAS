@@ -1,11 +1,10 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NInput, NSpin, useMessage } from 'naive-ui'
+import { NButton, NInput, NSpin } from 'naive-ui'
 import { UserPassword } from '@/components/admin/model'
 import { fetchUpdateUserPassword } from '@/api'
 import { t } from '@/locales'
 
-const ms = useMessage()
 const loading = ref(false)
 const saving = ref(false)
 const config = ref<UserPassword>()
@@ -19,10 +18,10 @@ async function updatePassword() {
     if (config.value.oldPassword === config.value.newPassword)
       throw new Error(t('setting.passwodSame'))
     await fetchUpdateUserPassword(config.value as UserPassword)
-    ms.success(t('common.success'))
+    window.$message?.success(t('common.success'))
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   saving.value = false
 }

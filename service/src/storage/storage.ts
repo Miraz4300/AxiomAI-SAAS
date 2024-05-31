@@ -22,8 +22,8 @@ const keyCol = client.db(dbName).collection<KeyConfig>('key_config')
  * @returns model
  */
 
-export async function insertChat(uuid: number, text: string, images: string[], roomId: number, options?: ChatOptions) {
-  const chatInfo = new ChatInfo(roomId, uuid, text, images, options)
+export async function insertChat(uuid: number, text: string, images: string[], roomId: number, model: string, options?: ChatOptions) {
+  const chatInfo = new ChatInfo(roomId, uuid, text, images, model, options)
   await chatCol.insertOne(chatInfo)
   return chatInfo
 }
@@ -36,11 +36,12 @@ export async function getChatByMessageId(messageId: string) {
   return await chatCol.findOne({ 'options.messageId': messageId })
 }
 
-export async function updateChat(chatId: string, response: string, messageId: string, conversationId: string, usage: UsageResponse, previousResponse?: []) {
+export async function updateChat(chatId: string, response: string, messageId: string, conversationId: string, model: string, usage: UsageResponse, previousResponse?: []) {
   const query = { _id: new ObjectId(chatId) }
   const update = {
     $set: {
       'response': response,
+      'model': model || '',
       'options.messageId': messageId,
       'options.conversationId': conversationId,
       'options.prompt_tokens': usage?.prompt_tokens,
@@ -129,6 +130,94 @@ export async function updateRoomChatModel(userId: string, roomId: number, chatMo
   return result.modifiedCount > 0
 }
 
+export async function getChatRoomsCount(userId: string, page: number, size: number) {
+  let total = 0
+  const skip = (page - 1) * size
+  const limit = size
+  const agg = []
+  if (userId !== null && userId !== 'undefined' && userId !== undefined && userId.trim().length !== 0) {
+    agg.push({
+      $match: {
+        userId,
+      },
+    })
+    total = await roomCol.countDocuments({ userId })
+  }
+  else {
+    total = await roomCol.countDocuments()
+  }
+  const agg2 = [
+    {
+      $lookup: {
+        from: 'chat',
+        localField: 'roomId',
+        foreignField: 'roomId',
+        as: 'chat',
+      },
+    }, {
+      $addFields: {
+        title: '$chat.prompt',
+        user_ObjectId: {
+          $toObjectId: '$userId',
+        },
+      },
+    }, {
+      $lookup: {
+        from: 'user',
+        localField: 'user_ObjectId',
+        foreignField: '_id',
+        as: 'user',
+      },
+    }, {
+      $unwind: {
+        path: '$user',
+        preserveNullAndEmptyArrays: false,
+      },
+    }, {
+      $sort: {
+        'chat.dateTime': -1,
+      },
+    }, {
+      $addFields: {
+        chatCount: {
+          $size: '$chat',
+        },
+        chat: {
+          $arrayElemAt: [
+            {
+              $slice: [
+                '$chat', -1,
+              ],
+            }, 0,
+          ],
+        },
+      },
+    }, {
+      $project: {
+        userId: 1,
+        title: '$chat.prompt',
+        username: '$user.name',
+        roomId: 1,
+        chatCount: 1,
+        dateTime: '$chat.dateTime',
+      },
+    }, {
+      $sort: {
+        dateTime: -1,
+      },
+    }, {
+      $skip: skip,
+    }, {
+      $limit: limit,
+    },
+  ]
+  Array.prototype.push.apply(agg, agg2)
+
+  const cursor = roomCol.aggregate(agg)
+  const data = await cursor.toArray()
+  return { total, data }
+}
+
 export async function getChatRooms(userId: string) {
   const cursor = roomCol.find({ userId, status: { $ne: Status.Deleted } })
   const rooms = []
@@ -151,10 +240,15 @@ export async function deleteAllChatRooms(userId: string) {
   await chatCol.updateMany({ userId, status: Status.Normal }, { $set: { status: Status.Deleted } })
 }
 
-export async function getChats(roomId: number, lastId?: number): Promise<ChatInfo[]> {
+export async function getChats(roomId: number, lastId?: number, all?: string): Promise<ChatInfo[]> {
   if (!lastId)
     lastId = new Date().getTime()
-  const query = { roomId, uuid: { $lt: lastId }, status: { $ne: Status.Deleted } }
+  let query = {}
+  if (all === null || all === 'undefined' || all === undefined || all.trim().length === 0)
+    query = { roomId, uuid: { $lt: lastId }, status: { $ne: Status.Deleted } }
+  else
+    query = { roomId, uuid: { $lt: lastId } }
+
   const limit = 20
   const cursor = chatCol.find(query).sort({ dateTime: -1 }).limit(limit)
   const chats = []
@@ -217,7 +311,7 @@ export async function createUser(email: string, password: string, roles?: UserRo
 
 export async function updateUserInfo(userId: string, user: UserInfo) {
   await userCol.updateOne({ _id: new ObjectId(userId) }
-    , { $set: { avatar: user.avatar, description: user.description, name: user.name } })
+    , { $set: { avatar: user.avatar, name: user.name, title: user.title } })
 }
 
 export async function updateUserChatModel(userId: string, chatModel: string) {
@@ -230,12 +324,12 @@ export async function updateUserAdvancedConfig(userId: string, config: AdvancedC
     , { $set: { advanced: config } })
 }
 
-export async function updateUser2FA(userId: string, secretKey: string) {
+export async function updateUserMFA(userId: string, secretKey: string) {
   await userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { secretKey, updateTime: new Date() } })
 }
 
-export async function disableUser2FA(userId: string) {
+export async function disableUserMFA(userId: string) {
   await userCol.updateOne({ _id: new ObjectId(userId) }
     , { $set: { secretKey: null, updateTime: new Date() } })
 }
@@ -421,8 +515,7 @@ export async function getUserStatisticsByDay(userId: ObjectId, start: number, en
     // Convert the timestamp to a Date object
     const date = dayjs(i, 'x').format('YYYY-MM-DD')
 
-    const dateData = aggStatics.find(x => x._id === date)
-      || { _id: date, promptTokens: 0, completionTokens: 0, totalTokens: 0 }
+    const dateData = aggStatics.find(x => x._id === date) || { _id: date, promptTokens: 0, completionTokens: 0, totalTokens: 0 }
 
     result.promptTokens += dateData.promptTokens
     result.completionTokens += dateData.completionTokens

@@ -38,12 +38,12 @@ export class UserInfo {
   createTime: Date
   verifyTime?: Date
   avatar?: string
-  description?: string
+  title?: string
   updateTime?: Date
   config?: UserConfig
   roles?: UserRole[]
   remark?: string
-  secretKey?: string // 2FA secret key
+  secretKey?: string // MFA secret key
   message?: string // Notification message
   advanced?: AdvancedConfig // Advanced config for max context length
   activity?: ActivityData // Activity data
@@ -109,6 +109,7 @@ export class previousResponse {
 export class ChatInfo {
   _id: ObjectId
   roomId: number
+  model: string
   uuid: number
   dateTime: number
   prompt: string
@@ -117,8 +118,9 @@ export class ChatInfo {
   status: Status = Status.Normal
   options: ChatOptions
   previousResponse?: previousResponse[]
-  constructor(roomId: number, uuid: number, prompt: string, images: string[], options: ChatOptions) {
+  constructor(roomId: number, uuid: number, prompt: string, images: string[], model: string, options: ChatOptions) {
     this.roomId = roomId
+    this.model = model
     this.uuid = uuid
     this.prompt = prompt
     this.images = images

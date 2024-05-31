@@ -1,6 +1,6 @@
 {
   "name": "axiomai",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "private": false,
   "description": "AxiomAI",
   "author": "Miraz4300 <miraz4300@gmail.com>",
@@ -18,8 +18,8 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@datadog/browser-rum": "^5.16.0",
-    "@traptitech/markdown-it-katex": "^3.6.0",
+    "@datadog/browser-rum": "^5.17.1",
+    "@vscode/markdown-it-katex": "^1.0.3",
     "@vueuse/core": "^10.9.0",
     "chart.js": "^4.4.2",
     "date-fns": "^3.6.0",
@@ -33,7 +33,7 @@
     "naive-ui": "^2.38.2",
     "pinia": "^2.1.7",
     "tailwindcss-animate": "^1.0.7",
-    "vue": "^3.4.26",
+    "vue": "^3.4.27",
     "vue-chartjs": "^5.3.1",
     "vue-i18n": "^9.13.1",
     "vue-router": "^4.3.2",
@@ -48,7 +48,7 @@
     "@types/katex": "^0.16.7",
     "@types/markdown-it": "^14.1.1",
     "@types/markdown-it-link-attributes": "^3.0.5",
-    "@types/node": "^20.12.9",
+    "@types/node": "^20.12.12",
     "@vitejs/plugin-vue": "^5.0.4",
     "autoprefixer": "^10.4.19",
     "axios": "^1.6.8",
@@ -63,7 +63,7 @@
     "typescript": "~5.4.5",
     "vite": "^5.2.11",
     "vite-plugin-pwa": "^0.20.0",
-    "vue-tsc": "^2.0.16"
+    "vue-tsc": "^2.0.18"
   },
   "lint-staged": {
     "*.{ts,tsx,vue}": [

@@ -1,12 +1,10 @@
 import { onUnmounted, ref } from 'vue'
-import { useMessage } from 'naive-ui'
 import { useSpeechStore } from '@/store/modules/speech'
 import { useSpeechObject } from '@/components/voice-input/speech-object'
 import { logger } from '@/components/voice-input/utils'
 
 let synth: SpeechSynthesis | undefined
 export function useSpeak() {
-  const message = useMessage()
   const { getSpeechObject, awaitReady } = useSpeechObject()
   let voiceSynthesis: SpeechSynthesisUtterance | null = null
   const ttsStore = useSpeechStore()
@@ -67,7 +65,7 @@ export function useSpeak() {
 
     const utterance = await getVoice(text)
     if (!utterance || !synth) {
-      message.warning('The current browser does not support speech synthesis!')
+      window.$message?.warning('The current browser does not support speech synthesis!')
       return
     }
     synth?.speak(utterance)

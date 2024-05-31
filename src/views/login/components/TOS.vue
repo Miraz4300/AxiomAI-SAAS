@@ -26,29 +26,29 @@ const tosModal = ref(false)
     <span class="text-gray-600">|</span>
     <a>Deepspacelab corp</a>
   </div>
-  <span v-if="props.span" class="text-[#fb923c] dark:text-[#F59E0B] font-semibold cursor-pointer" @click="tosModal = true">
+  <span v-if="props.span" class="text-[#0083A0] dark:text-[#00B2DB] font-semibold cursor-pointer" @click="tosModal = true">
     terms of service
   </span>
 
-  <NModal v-if="props.modal" v-model:show="tosModal" style="width: 95%; max-width: 1280px; height: 95%; max-height: 640px">
+  <NModal v-if="props.modal" v-model:show="tosModal" style="width: 95%; max-width: 1280px; height: 95%; max-height: 640px; border-radius: 8px;">
     <div class="max-[640px]:p-5 min-[768px]:p-10 bg-white rounded dark:bg-slate-800">
       <div class="space-y-4">
         <header class="space-y-6">
           <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-neutral-200">
-            Terms of Service (ToS)
+            Terms of Service
           </h2>
           <NScrollbar style="max-height: 490px">
             <div class="md:text-justify pl-4 pr-4 prose dark:prose-dark">
               <p>
-                Before using the services provided by this website (AxiomAI), please be sure to carefully read and understand these Terms of Service (hereinafter referred to as "these Terms").
+                Before using the services provided by AxiomAI, please be sure to carefully read and understand these terms of services.
                 <br>
                 <br>
-                Please be aware that if you choose to continue to visit this website (AxiomAI), or use the services provided by this website (AxiomAI), or use this website (AxiomAI) in various ways (hereinafter collectively referred to as "the Service"), you will be deemed to have accepted and agreed to the entire content of these Terms.
+                Please be aware that if you choose to continue to visit AxiomAI, or use the services provided by AxiomAI, or use AxiomAI in various ways, you will be deemed to have accepted and agreed to the entire content of these terms.
               </p>
               <br>
               <ol>
                 <li>
-                  1. This website (AxiomAI) is designed to help you work and study more efficiently and solve the problems you encounter in your work and study. In order to maintain the security and healthy development of the Internet, as well as protect your personal rights and interests, we solemnly remind you: when using this service, you must act in good faith and with caution; you must not use this service to intentionally or negligently endanger national security and activities prohibited by laws and administrative regulations such as social public interests, disrupting economic order and social order, infringing on the legitimate rights and interests of others, etc. Please do not input, generate, publish, export, or disseminate content that involves the following content prohibited by national laws and regulations:
+                  1. AxiomAI is designed to help you work and study more efficiently and solve the problems you encounter in your work and study. In order to maintain the security and healthy development of the Internet, as well as protect your personal rights and interests, we solemnly remind you: when using this service, you must act in good faith and with caution; you must not use this service to intentionally or negligently endanger national security and activities prohibited by laws and administrative regulations such as social public interests, disrupting economic order and social order, infringing on the legitimate rights and interests of others, etc. Please do not input, generate, publish, export, or disseminate content that involves the following content prohibited by national laws and regulations:
                   <br>
                   <br>
                   <ul class="list-disc ml-8">
@@ -76,7 +76,7 @@ const tosModal = ref(false)
                 <br>
                 <li>6. This service comes from the accumulation of information permitted by laws and regulations, including but not limited to the public Internet. Due to the open nature of the Internet, it is not ruled out that some of the information may be defective, unreasonable, or cause discomfort. If you encounter this situation, you are welcome and thank you for reporting it through the contact information at any time.</li>
                 <br>
-                <li>7. Under no circumstances will this website (AxiomAI) be liable for any damages due to network connection failure, power failure, strike, labor dispute, riot, uprising, riot, fire, flood, storm, explosion, force majeure, war, government action, international or domestic The service cannot be accessed, service interruption, information and data delays, stagnation or errors caused by court orders, hacker attacks, Internet viruses, network operator technical adjustments, temporary government controls or any other reasons beyond reasonable control, and cannot be provided. or liability for delays in providing services.</li>
+                <li>7. Under no circumstances will AxiomAI be liable for any damages due to network connection failure, power failure, strike, labor dispute, riot, uprising, riot, fire, flood, storm, explosion, force majeure, war, government action, international or domestic The service cannot be accessed, service interruption, information and data delays, stagnation or errors caused by court orders, hacker attacks, Internet viruses, network operator technical adjustments, temporary government controls or any other reasons beyond reasonable control, and cannot be provided. or liability for delays in providing services.</li>
               </ol>
               <br>
               <p>

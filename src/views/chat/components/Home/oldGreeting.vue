@@ -2,7 +2,7 @@
 const props = defineProps(['randomPrompt'])
 const emit = defineEmits(['fillTextarea'])
 
-const fillTextarea = (value: any) => {
+function fillTextarea(value: any) {
   emit('fillTextarea', value)
 }
 </script>

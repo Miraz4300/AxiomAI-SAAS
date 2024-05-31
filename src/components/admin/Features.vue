@@ -1,10 +1,8 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NInput, NSpin, NSwitch, useMessage } from 'naive-ui'
+import { NButton, NInput, NSpin, NSwitch } from 'naive-ui'
 import type { ConfigState, FeaturesConfig } from './model'
 import { fetchChatConfig, fetchUpdateFeatures } from '@/api'
-
-const ms = useMessage()
 
 const loading = ref(false)
 const saving = ref(false)
@@ -27,10 +25,10 @@ async function updateAnnouncement() {
   try {
     const { data } = await fetchUpdateFeatures(config.value as FeaturesConfig)
     config.value = data
-    ms.success('Saved Successfully')
+    window.$message?.success('Saved Successfully')
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   saving.value = false
 }

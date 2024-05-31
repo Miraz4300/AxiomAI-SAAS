@@ -1,15 +1,14 @@
 <script setup lang='ts'>
 import { computed, defineAsyncComponent, h, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { NButton, NInput, NModal, NRadioButton, NRadioGroup, NSelect, NSlider, useDialog, useMessage } from 'naive-ui'
+import { NButton, NInput, NModal, NRadioButton, NRadioGroup, NSelect, NSlider } from 'naive-ui'
 import { useAppStore, useAuthStore, useChatStore, useUserStore } from '@/store'
 import { fetchUpdateChatRoomPrompt } from '@/api'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
+import { useisFree } from '@/utils/functions/isFree'
 import { t } from '@/locales'
 
-const dialog = useDialog()
-const ms = useMessage()
 const route = useRoute()
 
 const appStore = useAppStore()
@@ -17,6 +16,7 @@ const authStore = useAuthStore()
 const chatStore = useChatStore()
 const userStore = useUserStore()
 
+const { isFree } = useisFree()
 const { isMobile } = useBasicLayout()
 const info = 'mt-2 text-xs text-neutral-500 dark:text-gray-400'
 
@@ -44,7 +44,7 @@ function handleClear() {
   if (loading.value)
     return
 
-  dialog.warning({
+  window.$dialog?.warning({
     title: t('chat.clearChat'),
     content: t('chat.clearChatConfirm'),
     positiveText: t('common.yes'),
@@ -84,11 +84,11 @@ async function handleSaveData() {
   testing.value = true
   try {
     const { message } = await fetchUpdateChatRoomPrompt(currentChatHistory.value.prompt ?? '', +uuid) as { status: string; message: string }
-    ms.success(message)
+    window.$message?.success(message)
     show.value = false
   }
   catch (error: any) {
-    ms.success(t('common.success'))
+    window.$message?.success(t('common.success'))
   }
   testing.value = false
   show.value = false
@@ -127,7 +127,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
           <SvgIcon v-if="collapsed" class="text-xl" icon="ri:align-justify" />
           <SvgIcon v-else class="text-xl" icon="ri:align-right" />
         </ToolButton>
-        <span class="flex-1 overflow-hidden select-none text-ellipsis whitespace-nowrap max-w-[340px]" :class="[isMobile ? '' : 'font-semibold']">
+        <span class="flex-1 overflow-hidden select-none text-ellipsis whitespace-nowrap max-w-[340px]" :class="{ 'font-semibold': !isMobile }">
           {{ currentChatHistory?.title ?? '' }}
         </span>
       </div>
@@ -147,7 +147,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
     </div>
   </div>
 
-  <NModal v-model:show="show" :auto-focus="false" :mask-closable="false" preset="card" style="width: 95%; max-width: 640px" title="Advanced">
+  <NModal v-model:show="show" :auto-focus="false" :mask-closable="false" preset="card" style="width: 95%; max-width: 640px" title="Advanced" :style="{ 'border-radius': isFree ? '3px' : '8px' }">
     <div>
       <p class="mb-1 select-none">
         {{ $t('setting.prompt') }}
@@ -159,6 +159,7 @@ const ExportButton = defineAsyncComponent(() => import('../dataExport.vue'))
         type="textarea"
         :autosize="{ minRows: 3, maxRows: 10 }"
         :placeholder="t('setting.promptTip')"
+        :style="{ 'border-radius': isFree ? '3px' : '5px' }"
         @input="(val: string | undefined) => { if (currentChatHistory) currentChatHistory.prompt = val }"
       />
       <div class="my-4 border-b dark:border-b-neutral-700" />

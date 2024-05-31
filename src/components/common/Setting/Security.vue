@@ -1,18 +1,17 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NDivider, NInput, NQrCode, NSpin, NStep, NSteps, useMessage } from 'naive-ui'
-import type { TwoFAConfig } from '@/components/admin/model'
-import { fetchDisableUser2FA, fetchGetUser2FA, fetchVerifyUser2FA } from '@/api'
+import { NButton, NDivider, NInput, NQrCode, NSpin, NStep, NSteps } from 'naive-ui'
+import type { MFAConfig } from '@/components/admin/model'
+import { fetchDisableUserMFA, fetchGetUserMFA, fetchVerifyUserMFA } from '@/api'
 
-const ms = useMessage()
 const loading = ref(false)
 const saving = ref(false)
-const config = ref<TwoFAConfig>()
+const config = ref<MFAConfig>()
 
 async function fetchConfig() {
   try {
     loading.value = true
-    const { data } = await fetchGetUser2FA<TwoFAConfig>()
+    const { data } = await fetchGetUserMFA<MFAConfig>()
     config.value = data
   }
   finally {
@@ -20,32 +19,32 @@ async function fetchConfig() {
   }
 }
 
-async function update2FAInfo() {
+async function updateMFAInfo() {
   saving.value = true
   try {
     if (!config.value)
       throw new Error('Invalid')
-    const result = await fetchVerifyUser2FA(config.value.secretKey, config.value.testCode)
+    const result = await fetchVerifyUserMFA(config.value.secretKey, config.value.testCode)
     await fetchConfig()
-    ms.success(result.message as string)
+    window.$message?.success(result.message as string)
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   saving.value = false
 }
 
-async function disable2FA() {
+async function disableMFA() {
   saving.value = true
   try {
     if (!config.value)
       throw new Error('Invalid')
-    const result = await fetchDisableUser2FA(config.value.testCode)
+    const result = await fetchDisableUserMFA(config.value.testCode)
     await fetchConfig()
-    ms.success(result.message as string)
+    window.$message?.success(result.message as string)
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   saving.value = false
 }
@@ -57,20 +56,21 @@ onMounted(() => {
 
 <template>
   <NSpin :show="loading">
-    <div class="p-4 space-y-6 min-h-[200px]">
-      <div class="flex items-center space-x-4">
-        <div class="flex-1">
-          Two-step verification is an additional security layer that enhances the security of your login experience. When two-step verification is enabled, you will be prompted to enter a dynamic verification code every time you want to log into your account.
-          <br> Current Status:
-          <span v-if="!config || !config.enabled" style="color: red;">Disabled</span>
-          <span v-if="config && config.enabled" style="color: rgb(22, 183, 65);">Enabled</span>
-        </div>
+    <div class="p-4 space-y-5 min-h-[200px]">
+      <div class="flex-1 items-center space-y-1">
+        <p>
+          Multi-factor authentication
+          <a class="mx-1.5 rounded px-1 py-0.5 text-xs" :class="config && config.enabled ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'">{{ config && config.enabled ? 'Enabled' : 'Disabled' }}</a>
+        </p>
+        <p class="text-xs">
+          An additional security layer that enhances the security of your login experience.
+        </p>
       </div>
       <div v-if="config && config.enabled" class="flex flex-col space-y-2">
         <div>
           <p class="text-xs text-black/60 dark:text-white/50 text-left">
-            Enter the 6-digit dynamic verification code to disable the two-step verification.<br>
-            Note: If you have lost your phone or cannot use the dynamic verification code, please contact at <a href="mailto:support@axiomaibd.com" class="text-[var(--primary-color)]">support@axiomaibd.com</a>
+            Enter the 6-digit dynamic verification code to disable the Multi-factor authentication.<br>
+            Note: If you have lost your phone or cannot use one-time code, please contact at <a href="mailto:support@axiomaibd.com" class="text-[var(--primary-color)]">support@axiomaibd.com</a>
           </p>
         </div>
         <div class="w-[200px]">
@@ -83,8 +83,8 @@ onMounted(() => {
       </div>
       <div v-if="config && config.enabled" class="flex items-center space-x-4">
         <div class="flex flex-wrap items-center gap-4">
-          <NButton :loading="saving" type="error" :disabled="!config || !config.testCode || config.testCode.length !== 6" @click="disable2FA()">
-            {{ $t('setting.disable2FA') }}
+          <NButton :loading="saving" type="error" :disabled="!config || !config.testCode || config.testCode.length !== 6" @click="disableMFA()">
+            {{ $t('setting.disableMFA') }}
           </NButton>
         </div>
       </div>
@@ -93,9 +93,9 @@ onMounted(() => {
         <div class="flex-1">
           <NSteps vertical>
             <NStep title="Installation of the Authenticator App" description="Install an authenticator app: Google Authenticator, Microsoft Authenticator, Authy, etc." />
-            <NStep title="Configure to generate verification code">
+            <NStep title="Configure to generate one-time code">
               <p class="mb-2">
-                Open the Authenticator App and click "Scan QR Code" to scan the QR code.
+                Scan the QR Code below using your preferred authenticator app and then enter the provided one-time code below.
               </p>
               <div class="bg-white px-2 inline-block">
                 <NQrCode :value="config?.otpauthUrl" :size="150" error-correction-level="H" type="svg" :padding="0" class="mt-2 mb-2" />
@@ -106,21 +106,23 @@ onMounted(() => {
             </NStep>
             <NStep title="Verify and enable">
               <p class="mb-2">
-                Please enter the 6-digit dynamic verification code generated by the Authenticator App to enable the two-step verification.
+                Please enter the 6-digit one-time code generated by the authenticator app to enable the Multi-factor authentication.
               </p>
               <div class="flex items-center space-x-4">
-                <div class="w-[200px]">
+                <div class="w-[240px] space-y-2">
                   <NInput
                     :value="config && config.testCode"
-                    placeholder="Enter 6-digit code"
+                    placeholder="Enter one-time code"
                     @input="(val) => { if (config) config.testCode = val }"
-                  /><br><br>
-                  <NButton :loading="saving" type="primary" :disabled="!config || !config.testCode || config.testCode.length !== 6" @click="update2FAInfo()">
-                    {{ $t('setting.enable2FA') }}
+                  />
+                  <NButton :loading="saving" type="primary" :disabled="!config || !config.testCode || config.testCode.length !== 6" @click="updateMFAInfo()">
+                    {{ $t('setting.enableMFA') }}
                   </NButton>
                 </div>
               </div>
-              <br>FAQ: How do I turn off two-step verification?<br>1. After logging in, go to settings > 2FA and enter the 6-digit verification code.<br>2. Contact us at <a href="mailto:support@axiomaibd.com" class="text-[var(--primary-color)]">support@axiomaibd.com</a> to disable two-step verification.
+              <p class="text-xs mt-4">
+                FAQ: How do I turn off Multi-factor authentication?<br>1. After logging in, go to settings > Security and enter the 6-digit one-time code or<br>2. If you lost app code contact us at <a href="mailto:support@axiomaibd.com" class="text-[var(--primary-color)]">support@axiomaibd.com</a> to disable Multi-factor authentication.
+              </p>
             </NStep>
           </NSteps>
         </div>

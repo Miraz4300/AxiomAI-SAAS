@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
-import { NButton, NButtonGroup, NPopover, NSpace, useMessage } from 'naive-ui'
+import { NButton, NButtonGroup, NPopover, NSpace } from 'naive-ui'
 import AvatarComponent from './Avatar.vue'
 import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
@@ -40,7 +40,6 @@ interface Emit {
   (ev: 'responseHistory', historyIndex: number): void
 }
 
-const message = useMessage()
 const textRef = ref<HTMLElement>()
 const asRawText = ref(props.inversion)
 const messageRef = ref<HTMLElement>()
@@ -55,10 +54,10 @@ function handleRegenerate() {
 async function handleCopy() {
   try {
     await copyToClip(props.text || '')
-    message.success(t('chat.copied'))
+    window.$message?.success(t('chat.copied'))
   }
   catch {
-    message.error(t('chat.copyfail'))
+    window.$message?.error(t('chat.copyfail'))
   }
 }
 

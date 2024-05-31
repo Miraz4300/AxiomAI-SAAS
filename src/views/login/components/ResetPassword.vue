@@ -1,14 +1,13 @@
 <script setup lang='ts'>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { NButton, NDivider, NInput, useMessage } from 'naive-ui'
+import { NButton, NDivider, NInput } from 'naive-ui'
 import { authErrorType, authInfoType } from '../components/authEnum'
 import { fetchResetPassword, fetchSendResetMail } from '@/api'
 
 const route = useRoute()
 const router = useRouter()
 
-const ms = useMessage()
 const loading = ref(false)
 const username = ref('')
 const password = ref('')
@@ -52,7 +51,7 @@ async function handleSendResetMail() {
     || error.errorCode === authErrorType.PERMISSION || error.errorCode === authErrorType.BANNED)
       router.replace({ name: 'Exception', query: { code: error.errorCode } })
     else
-      ms.error(error.message ?? 'An unexpected error occurred')
+      window.$message?.error(error.message ?? 'An unexpected error occurred')
   }
   finally {
     loading.value = false
@@ -65,7 +64,7 @@ async function handleResetPassword() {
   const confirmPwd = confirmPassword.value.trim()
 
   if (!name || !pwd || !confirmPwd || pwd !== confirmPwd) {
-    ms.error('Passwords don\'t match')
+    window.$message?.error('Passwords don\'t match')
     return
   }
 
@@ -79,7 +78,7 @@ async function handleResetPassword() {
     if (error.errorCode === authErrorType.ABNORMAL2)
       router.replace({ name: 'Exception', query: { code: error.errorCode } })
     else
-      ms.error(error.message ?? 'An unexpected error occurred')
+      window.$message?.error(error.message ?? 'An unexpected error occurred')
   }
   finally {
     loading.value = false

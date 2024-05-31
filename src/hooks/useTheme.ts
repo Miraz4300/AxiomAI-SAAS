@@ -2,10 +2,12 @@ import type { GlobalThemeOverrides } from 'naive-ui'
 import { computed, ref, watch } from 'vue'
 import { darkTheme, lightTheme, useOsTheme } from 'naive-ui'
 import { useAppStore, useUserStore } from '@/store'
+import { useisFree } from '@/utils/functions/isFree'
 
 export function useTheme() {
   const appStore = useAppStore()
   const userStore = useUserStore()
+  const { isFree } = useisFree()
 
   const OsTheme = useOsTheme()
   const isDark = computed(() => appStore.theme === 'auto' ? OsTheme.value === 'dark' : appStore.theme === 'dark')
@@ -21,35 +23,45 @@ export function useTheme() {
     placeholderColor: isDark.value ? 'rgba(255, 255, 255, 0.38)' : 'rgba(0, 0, 0, 0.38)', // reflects on placeholder tip text color
     bodyColor: isDark.value ? 'rgb(13, 17, 23)' : 'rgb(255, 255, 255)', // reflects on main body
     cardColor: isDark.value ? 'rgb(13, 17, 23)' : 'rgb(255, 255, 255)', // reflects on card background
-    modalColor: isDark.value ? 'rgb(22, 27, 34)' : 'rgb(255, 255, 255)', // reflects on modal background
-    popoverColor: isDark.value ? 'rgb(27, 33, 41)' : 'rgb(255, 255, 255)', // reflects on popover background
+    modalColor: isDark.value ? 'rgb(24, 30, 37)' : 'rgb(255, 255, 255)', // reflects on modal background
+    popoverColor: isDark.value ? 'rgb(29, 36, 45)' : 'rgb(255, 255, 255)', // reflects on popover and announcement background
     dividerColor: isDark.value ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)', // reflects on divider color
   })
 
-  const themeOverrides = ref<GlobalThemeOverrides>({ common: getCommonOverrides() })
-  const inputThemeOverrides = computed(() => ({
+  const naiveTheme = ref<GlobalThemeOverrides>({ common: getCommonOverrides() })
+  const naiveCustom = computed(() => ({
+    Border: {
+      borderRadius: isFree.value ? '3px' : '8px',
+    },
     Input: {
       color: isDark.value ? 'rgb(22, 27, 34)' : 'rgba(255, 255, 255, 0.1)',
+      borderRadius: isFree.value ? '3px' : '12px',
     },
-  }))
-  const dropdownThemeOverrides = computed(() => ({
+    BInput: {
+      borderRadius: isFree.value ? '3px' : '5px',
+    },
+    Button: {
+      borderRadiusSmall: isFree.value ? '3px' : '8px',
+      borderRadiusMedium: isFree.value ? '3px' : '20px',
+    },
     Dropdown: {
-      color: isDark.value ? 'rgb(27, 33, 41)' : 'rgb(255, 255, 255)',
+      color: isDark.value ? 'rgb(29, 36, 45)' : 'rgb(255, 255, 255)',
+      borderRadius: isFree.value ? '3px' : '8px',
     },
   }))
 
   const personaColors = {
     precise: {
-      dark: { primaryColor: '#14b8a6', primaryColorHover: '#2dd4bf', primaryColorPressed: '#5eead4', primaryColorSuppl: '#0d9488', chatBox: '#0f766e' },
-      light: { primaryColor: '#0d9488', primaryColorHover: '#0f766e', primaryColorPressed: '#115e59', primaryColorSuppl: '#0d9488', chatBox: '#0f766e' },
+      dark: { primaryColor: '#14B8A6', primaryColorHover: '#2DD4BF', primaryColorPressed: '#5EEEAD4', primaryColorSuppl: '#0D9488', chatBox: '#0F766E' },
+      light: { primaryColor: '#0D9488', primaryColorHover: '#0F766E', primaryColorPressed: '#115E59', primaryColorSuppl: '#0D9488', chatBox: '#0F766E' },
     },
     balanced: {
       dark: { primaryColor: '#00B2DB', primaryColorHover: '#00C4F0', primaryColorPressed: '#06D1FF', primaryColorSuppl: '#009BBD', chatBox: '#005366' },
       light: { primaryColor: '#0083A0', primaryColorHover: '#0083A0', primaryColorPressed: '#0083A0', primaryColorSuppl: '', chatBox: '#005366' },
     },
     creative: {
-      dark: { primaryColor: '#8b5cf6', primaryColorHover: '#a78bfa', primaryColorPressed: '#c4b5fd', primaryColorSuppl: '#7c3aed', chatBox: '#6d28d9' },
-      light: { primaryColor: '#7c3aed', primaryColorHover: '#6d28d9', primaryColorPressed: '#5b21b6', primaryColorSuppl: '#7c3aed', chatBox: '#6d28d9' },
+      dark: { primaryColor: '#8B5CF6', primaryColorHover: '#A78BFA', primaryColorPressed: '#C4B5FD', primaryColorSuppl: '#7C3AED', chatBox: '#6D28D9' },
+      light: { primaryColor: '#7C3AED', primaryColorHover: '#6D28D9', primaryColorPressed: '#5B21B6', primaryColorSuppl: '#7C3AED', chatBox: '#6D28D9' },
     },
   }
 
@@ -61,7 +73,7 @@ export function useTheme() {
       const commonOverrides = getCommonOverrides()
       const personaColorsSelected = personaColors[persona as 'precise' | 'balanced' | 'creative'][isDark.value ? 'dark' : 'light']
 
-      themeOverrides.value.common = {
+      naiveTheme.value.common = {
         ...commonOverrides,
         ...personaColorsSelected,
       }
@@ -79,5 +91,5 @@ export function useTheme() {
     { immediate: true },
   )
 
-  return { theme, themeOverrides, inputThemeOverrides, dropdownThemeOverrides }
+  return { theme, naiveTheme, naiveCustom }
 }

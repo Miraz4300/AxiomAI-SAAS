@@ -4,7 +4,7 @@ import { NCard, NLayout, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
 import Password from './Password.vue'
-import TwoFA from './TwoFA.vue'
+import Security from './Security.vue'
 import Subscription from './Subscription.vue'
 import Statistics from './Statistics.vue'
 import About from './About.vue'
@@ -14,7 +14,9 @@ import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useSpeechStore } from '@/store/modules/speech'
 import { useAppStore } from '@/store'
+import { useTheme } from '@/hooks/useTheme'
 
+const { naiveCustom } = useTheme()
 const appStore = useAppStore()
 const merchEnabled = computed(() => appStore.merchEnabled)
 const speechEnabled = computed(() => appStore.speechEnabled)
@@ -59,12 +61,12 @@ const Merch = defineAsyncComponent(() => import('./Merch.vue'))
                 <Password />
               </div>
             </NTabPane>
-            <NTabPane name="2FA">
+            <NTabPane name="security">
               <template #tab>
                 <SvgIcon class="text-lg" icon="mdi:shield-account-outline" />
-                <span class="ml-2">{{ $t('setting.twoFAConfig') }}</span>
+                <span class="ml-2">{{ $t('setting.MFAConfig') }}</span>
               </template>
-              <TwoFA />
+              <Security />
             </NTabPane>
             <NTabPane v-if="!isMobile && speechStore.enable && speechEnabled" name="speech">
               <template #tab>
@@ -72,7 +74,7 @@ const Merch = defineAsyncComponent(() => import('./Merch.vue'))
                 <span class="ml-2">{{ $t('setting.speech') }}</span>
               </template>
               <div class="mt-4 min-h-[100px] max-w-[720px]">
-                <NCard>
+                <NCard :theme-overrides="naiveCustom.Border">
                   <Speech />
                 </NCard>
               </div>
@@ -92,7 +94,7 @@ const Merch = defineAsyncComponent(() => import('./Merch.vue'))
                 <span class="ml-2">{{ $t('setting.statistics') }}</span>
               </template>
               <div class="mt-4 max-h-[780px] max-w-[1080px]">
-                <NCard>
+                <NCard :theme-overrides="naiveCustom.Border">
                   <Statistics />
                 </NCard>
               </div>
@@ -112,7 +114,7 @@ const Merch = defineAsyncComponent(() => import('./Merch.vue'))
                 <span class="ml-2">{{ $t('setting.about') }}</span>
               </template>
               <div class="mt-4 min-h-[100px] max-w-[1080px]">
-                <NCard>
+                <NCard :theme-overrides="naiveCustom.Border">
                   <About />
                 </NCard>
               </div>

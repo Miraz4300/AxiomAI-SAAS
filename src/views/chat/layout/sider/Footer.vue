@@ -21,7 +21,7 @@ const userInfo = computed(() => userStore.userInfo)
         <UserRole :only-tag="true" />
       </div>
       <p class="overflow-hidden text-xs text-neutral-500 text-ellipsis whitespace-nowrap">
-        <span v-if="isString(userInfo.description) && userInfo.description !== ''" v-html="userInfo.description" />
+        <span v-if="isString(userInfo.title) && userInfo.title !== ''" v-html="userInfo.title" />
       </p>
     </div>
   </footer>

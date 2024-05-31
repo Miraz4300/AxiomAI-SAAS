@@ -1,23 +1,23 @@
 <script setup lang="ts">
 import type { DropdownOption } from 'naive-ui'
-import { NDropdown, useDialog, useMessage } from 'naive-ui'
+import { NDropdown } from 'naive-ui'
 import { toPng } from 'html-to-image'
 import { ref } from 'vue'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { getCurrentDate } from '@/utils/functions'
+import { useTheme } from '@/hooks/useTheme'
 import { t } from '@/locales'
 
 const loading = ref<boolean>(false)
 const { isMobile } = useBasicLayout()
-const ms = useMessage()
-const dialog = useDialog()
+const { naiveCustom } = useTheme()
 
 function exportJSON() {
   if (loading.value)
     return
 
-  const d = dialog.info({
+  const d = window.$dialog!.info({
     title: t('chat.exportJSON'),
     content: t('chat.exportJSONConfirm'),
     positiveText: t('common.yes'),
@@ -38,11 +38,11 @@ function exportJSON() {
         document.body.removeChild(link)
         window.URL.revokeObjectURL(url)
         d.loading = false
-        ms.success(t('chat.exportSuccess'))
+        window.$message?.success(t('chat.exportSuccess'))
         Promise.resolve()
       }
       catch (error: any) {
-        ms.error(t('chat.exportFailed'))
+        window.$message?.error(t('chat.exportFailed'))
       }
       finally {
         d.loading = false
@@ -55,7 +55,7 @@ function exportPNG() {
   if (loading.value)
     return
 
-  const d = dialog.info({
+  const d = window.$dialog!.info({
     title: t('chat.exportPNG'),
     content: t('chat.exportPNGConfirm'),
     positiveText: t('common.yes'),
@@ -76,11 +76,11 @@ function exportPNG() {
         document.body.removeChild(tempLink)
         window.URL.revokeObjectURL(imgUrl)
         d.loading = false
-        ms.success(t('chat.exportSuccess'))
+        window.$message?.success(t('chat.exportSuccess'))
         Promise.resolve()
       }
       catch (error: any) {
-        ms.error(t('chat.exportFailed'))
+        window.$message?.error(t('chat.exportFailed'))
       }
       finally {
         d.loading = false
@@ -116,7 +116,7 @@ function handleDropdown(optionKey: string) {
 </script>
 
 <template>
-  <NDropdown trigger="click" :options="options" @select="handleDropdown">
+  <NDropdown trigger="click" :options="options" :theme-overrides="naiveCustom.Dropdown" @select="handleDropdown">
     <ToolButton :tooltip=" !isMobile ? $t('chat.exportChat') : ''">
       <SvgIcon class="text-xl" icon="ri:file-download-line" />
     </ToolButton>

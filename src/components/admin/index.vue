@@ -13,6 +13,7 @@ import Subscription from './Subscription.vue'
 import Announcement from './Announcement.vue'
 import Merch from './Merch.vue'
 import Features from './Features.vue'
+import ChatHistory from './ChatHistory.vue'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useAuthStore, useUserStore } from '@/store'
 
@@ -117,6 +118,15 @@ function handleLogout() {
               </template>
               <NCard>
                 <User />
+              </NCard>
+            </NTabPane>
+            <NTabPane v-if="userStore.userInfo.root" name="history">
+              <template #tab>
+                <SvgIcon class="text-lg" icon="tabler:history" />
+                <span class="ml-2">Chat History</span>
+              </template>
+              <NCard>
+                <ChatHistory />
               </NCard>
             </NTabPane>
             <NTabPane v-if="userStore.userInfo.root" name="subscriptions">

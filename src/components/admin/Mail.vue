@@ -1,10 +1,8 @@
 <script setup lang='ts'>
 import { onMounted, ref } from 'vue'
-import { NButton, NInput, NSelect, NSpin, NSwitch, useMessage } from 'naive-ui'
+import { NButton, NInput, NSelect, NSpin, NSwitch } from 'naive-ui'
 import type { ConfigState, MailConfig } from './model'
 import { fetchChatConfig, fetchTestMail, fetchUpdateMail } from '@/api'
-
-const ms = useMessage()
 
 const loading = ref(false)
 const saving = ref(false)
@@ -29,10 +27,10 @@ async function updateMailInfo() {
   try {
     const { data } = await fetchUpdateMail(config.value as MailConfig)
     config.value = data
-    ms.success('Saved Successfully')
+    window.$message?.success('Saved Successfully')
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   saving.value = false
 }
@@ -41,10 +39,10 @@ async function testMail() {
   testing.value = true
   try {
     const { message } = await fetchTestMail(config.value as MailConfig) as { status: string; message: string }
-    ms.success(message, { keepAliveOnHover: true })
+    window.$message?.success(message, { keepAliveOnHover: true })
   }
   catch (error: any) {
-    ms.error(error.message, { keepAliveOnHover: true })
+    window.$message?.error(error.message, { keepAliveOnHover: true })
   }
   testing.value = false
 }

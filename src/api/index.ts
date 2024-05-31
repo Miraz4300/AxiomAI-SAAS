@@ -126,10 +126,10 @@ export function fetchRegister<T = any>(username: string, password: string) {
   })
 }
 
-export function fetchUpdateUserInfo<T = any>(avatar: string, description: string, name: string) {
+export function fetchUpdateUserInfo<T = any>(avatar: string, name: string, title: string) {
   return post<T>({
     url: '/user-info',
-    data: { avatar, description, name },
+    data: { avatar, name, title },
   })
 }
 
@@ -153,29 +153,29 @@ export function fetchGetUsers<T = any>(page: number, size: number, searchQuery?:
   })
 }
 
-export function fetchGetUser2FA<T = any>() {
+export function fetchGetUserMFA<T = any>() {
   return get<T>({
-    url: '/user-2fa',
+    url: '/user-mfa',
   })
 }
 
-export function fetchVerifyUser2FA<T = any>(secretKey: string, token: string) {
+export function fetchVerifyUserMFA<T = any>(secretKey: string, token: string) {
   return post<T>({
-    url: '/user-2fa',
+    url: '/user-mfa',
     data: { secretKey, token },
   })
 }
 
-export function fetchDisableUser2FA<T = any>(token: string) {
+export function fetchDisableUserMFA<T = any>(token: string) {
   return post<T>({
-    url: '/user-disable-2fa',
+    url: '/user-disable-mfa',
     data: { token },
   })
 }
 
-export function fetchDisableUser2FAByAdmin<T = any>(userId: string) {
+export function fetchDisableUserMFAByAdmin<T = any>(userId: string) {
   return post<T>({
-    url: '/user-disable-2fa-admin',
+    url: '/user-disable-mfa-admin',
     data: { userId },
   })
 }
@@ -204,6 +204,13 @@ export function fetchUpdateUser<T = any>(userInfo: UserInfo) {
 export function fetchGetChatRooms<T = any>() {
   return get<T>({
     url: '/chatrooms',
+  })
+}
+
+export function fetchGetChatRoomsCount<T = any>(page: number, size: number, userId: string) {
+  return get<T>({
+    url: '/chatrooms-count',
+    data: { page, size, userId },
   })
 }
 
@@ -249,9 +256,9 @@ export function fetchDeleteChatRoom<T = any>(roomId: number) {
   })
 }
 
-export function fetchGetChatHistory<T = any>(roomId: number, lastId?: number) {
+export function fetchGetChatHistory<T = any>(roomId: number, lastId?: number, all?: string) {
   return get<T>({
-    url: `/chat-history?roomId=${roomId}&lastId=${lastId}`,
+    url: `/chat-history?roomId=${roomId}&lastId=${lastId}&all=${all}`,
   })
 }
 

@@ -9,6 +9,7 @@ import { useAppStore, useAuthStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { fetchClearAllChat } from '@/api'
 import { SvgIcon } from '@/components/common'
+import { useTheme } from '@/hooks/useTheme'
 
 const loadingRoom = ref(false)
 const router = useRouter()
@@ -19,6 +20,7 @@ const authStore = useAuthStore()
 const chatStore = useChatStore()
 
 const { isMobile } = useBasicLayout()
+const { naiveCustom } = useTheme()
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
@@ -92,12 +94,19 @@ watch(
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
           <div class="flex space-x-2">
-            <NInput v-model:value="keyword" size="small" :disabled="!!authStore.session?.auth && !authStore.token" clearable :placeholder="$t('chat.searchPlaceholder')" @update:value="handleSearchChat">
+            <NInput
+              v-model:value="keyword"
+              size="small"
+              :disabled="!!authStore.session?.auth && !authStore.token" clearable
+              :placeholder="$t('chat.searchPlaceholder')"
+              :theme-overrides="naiveCustom.BInput"
+              @update:value="handleSearchChat"
+            >
               <template #prefix>
                 <SvgIcon icon="ri:search-line" />
               </template>
             </NInput>
-            <NButton type="primary" size="small" :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled" @click="handleAdd">
+            <NButton type="primary" size="small" :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled" :theme-overrides="naiveCustom.Button" @click="handleAdd">
               <SvgIcon icon="ri:add-line" />
             </NButton>
           </div>
@@ -111,7 +120,7 @@ watch(
         <div class="p-4">
           <NPopconfirm placement="top" @positive-click="clearData">
             <template #trigger>
-              <NButton block :disabled="!!authStore.session?.auth && !authStore.token">
+              <NButton block :disabled="!!authStore.session?.auth && !authStore.token" :theme-overrides="naiveCustom.Button">
                 <template #icon>
                   <SvgIcon icon="ri:close-circle-line" />
                 </template>

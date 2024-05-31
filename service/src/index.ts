@@ -10,7 +10,7 @@ import requestIp from 'request-ip'
 import logger from './logger/winston'
 import morganLogger from './logger/morgan'
 import { getAzureSubscriptionKey } from './middleware/speechToken'
-import { TwoFAConfig } from './types'
+import { MFAConfig } from './types'
 import type { AuthJwtPayload, RequestProps } from './types'
 import type { ChatMessage } from './conversation-core'
 import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './conversation-core'
@@ -18,7 +18,7 @@ import { auth, getUserId, tokenMap } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AnnouncementConfig, AuditConfig, ChatInfo, ChatOptions, Config, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, SubscriptionConfig, UserConfig, UserInfo } from './storage/model'
 import { AdvancedConfig, Status, UsageResponse, UserRole } from './storage/model'
-import { authErrorType, authInfoType } from './storage/authEnum'
+import { authErrorType, authInfoType, authMsg } from './storage/authEnum'
 import {
   clearChat,
   createChatRoom,
@@ -26,11 +26,12 @@ import {
   deleteAllChatRooms,
   deleteChat,
   deleteChatRoom,
-  disableUser2FA,
+  disableUserMFA,
   existsChatRoom,
   getChat,
   getChatRoom,
   getChatRooms,
+  getChatRoomsCount,
   getChats,
   getDashboardData,
   getUser,
@@ -47,10 +48,10 @@ import {
   updateRoomPrompt,
   updateRoomUsingContext,
   updateUser,
-  updateUser2FA,
   updateUserAdvancedConfig,
   updateUserChatModel,
   updateUserInfo,
+  updateUserMFA,
   updateUserPassword,
   updateUserPasswordWithVerifyOld,
   updateUserStatus,
@@ -58,13 +59,14 @@ import {
   verifyUser,
 } from './storage/storage'
 import { authLimiter, limiter } from './middleware/limiter'
-import { hasAnyRole, isEmail, isNotEmptyString } from './utils/is'
-import { sendNoticeMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
+import { hasAnyRole, isEmail, isNotEmptyString, isValidEmail } from './utils/is'
+import { sendAuthorizeMail, sendMfaMail, sendResetPasswordMail, sendTestMail, sendVerifyMail, sendVerifyMailAdmin } from './utils/mail'
 import { checkUserResetPassword, checkUserVerify, checkUserVerifyAdmin, getUserResetPasswordUrl, getUserVerifyUrl, getUserVerifyUrlAdmin, md5 } from './utils/security'
 import { isAdmin, rootAuth } from './middleware/rootAuth'
 import { router as uploadRouter } from './routes/upload'
 import './middleware/updateRole'
 import { isAllowed } from './middleware/userRateLimit'
+import { hashUserId } from './utils/hashID'
 import redis from './storage/redis'
 
 dotenv.config()
@@ -112,6 +114,43 @@ router.get('/chatrooms', auth, async (req, res) => {
       })
     })
     res.send({ status: 'Success', message: null, data: result })
+  }
+  catch (error) {
+    console.error(error)
+    res.send({ status: 'Fail', message: 'Load error', data: [] })
+  }
+})
+
+function formatTimestamp(timestamp: number) {
+  const date = new Date(timestamp)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
+
+router.get('/chatrooms-count', rootAuth, async (req, res) => {
+  try {
+    const userId = req.query.userId as string
+    const page = +req.query.page
+    const size = +req.query.size
+    const rooms = await getChatRoomsCount(userId, page, size)
+    const result = []
+    rooms.data.forEach((r) => {
+      result.push({
+        uuid: r.roomId,
+        title: r.title,
+        userId: r.userId,
+        name: r.username,
+        lastTime: formatTimestamp(r.dateTime),
+        chatCount: r.chatCount,
+      })
+    })
+    res.send({ status: 'Success', message: null, data: { data: result, total: rooms.total } })
   }
   catch (error) {
     console.error(error)
@@ -221,17 +260,38 @@ router.get('/chat-history', auth, async (req, res) => {
     const userId = req.headers.userId as string
     const roomId = +req.query.roomId
     const lastId = req.query.lastId as string
-    if (!roomId || !await existsChatRoom(userId, roomId)) {
+    const all = req.query.all as string
+    if ((!roomId || !await existsChatRoom(userId, roomId)) && (all === null || all === 'undefined' || all === undefined || all.trim().length === 0)) {
       res.send({ status: 'Success', message: null, data: [] })
       return
     }
-    const chats = await getChats(roomId, !isNotEmptyString(lastId) ? null : Number.parseInt(lastId))
+    if (all !== null && all !== 'undefined' && all !== undefined && all.trim().length !== 0) {
+      const config = await getCacheConfig()
+      if (config.siteConfig.loginEnabled) {
+        try {
+          const user = await getUserById(userId)
+          if (user == null || user.status !== Status.Normal || !user.roles.includes(UserRole.Admin)) {
+            res.send({ status: 'Fail', message: 'No permission.', data: null })
+            return
+          }
+        }
+        catch (error) {
+          res.send({ status: 'Unauthorized', message: error.message ?? 'Please authenticate.', data: null })
+        }
+      }
+      else {
+        res.send({ status: 'Fail', message: 'No permission.', data: null })
+      }
+    }
+
+    const chats = await getChats(roomId, !isNotEmptyString(lastId) ? null : Number.parseInt(lastId), all)
 
     const result = []
     chats.forEach((c) => {
       if (c.status !== Status.InversionDeleted) {
         result.push({
           uuid: c.uuid,
+          model: c.model,
           dateTime: new Date(c.dateTime).toLocaleString(),
           text: c.prompt,
           images: c.images,
@@ -432,7 +492,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
     // Check if the user is allowed to use the service. Applies to all users except Free users
     const { allowed, resetTime } = await isAllowed(userId)
     if (!user.roles.includes(UserRole.Free) && !allowed) {
-      const message = `You've reached the current usages cap for ${UserRole[user.roles[0]]} subscription. Please try again after **${resetTime}**.`
+      const message = `You've reached your ${UserRole[user.roles[0]]} subscription limit. Your limit resets after **${resetTime}**.`
       res.send({ status: 'Fail', message, data: null })
       return
     }
@@ -445,9 +505,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
       }
     }
 
-    message = regenerate
-      ? await getChat(roomId, uuid)
-      : await insertChat(uuid, prompt, uploadFileKeys, roomId, options as ChatOptions)
+    message = regenerate ? await getChat(roomId, uuid) : await insertChat(uuid, prompt, uploadFileKeys, roomId, model, options as ChatOptions)
     let firstChunk = true
     result = await chatReplyProcess({
       message: prompt,
@@ -517,6 +575,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
           result.data.text,
           result.data.id,
           result.data.conversationId,
+          model,
           result.data.detail?.usage as UsageResponse,
           previousResponse as [])
       }
@@ -525,6 +584,7 @@ router.post('/conversation', [auth, limiter], async (req, res) => {
           result.data.text,
           result.data.id,
           result.data.conversationId,
+          model,
           result.data.detail?.usage as UsageResponse)
       }
 
@@ -552,7 +612,7 @@ router.post('/chat-abort', [auth, limiter], async (req, res) => {
       text,
       messageId,
       conversationId,
-      null)
+      null, null)
     res.send({ status: 'Success', message: 'OK', data: null })
   }
   catch (error) {
@@ -568,8 +628,8 @@ router.post('/user-register', authLimiter, async (req, res) => {
       res.send({ status: 'Fail', message: 'Registration is disabled!', data: null })
       return
     }
-    if (!isEmail(username)) {
-      res.send({ status: 'Fail', message: 'Please enter a valid email address! Note: Repeated attempts to enter multiple spam email addresses may result in a permanent ban for your geolocation.', data: null })
+    if (!isValidEmail(username)) {
+      res.send({ status: 'Fail', message: authMsg.INVALID_EMAIL, data: { warn: true } })
       logger.warn(`Suspicious email address detected: ${username}, From IP: ${req.ip}`)
       return
     }
@@ -583,7 +643,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
           break
       }
       if (!allowSuffix) {
-        res.send({ status: 'Fail', message: 'This email address is not allowed', data: null })
+        res.send({ status: 'Fail', message: authMsg.RESTRICTED_EMAIL, data: { warn: true } })
         logger.warn(`Invalid email domain: ${username}, From IP: ${req.ip}`)
         return
       }
@@ -607,7 +667,7 @@ router.post('/user-register', authLimiter, async (req, res) => {
         logger.warn(`Banned user trying to register: ${username}, From IP: ${req.ip}`)
         return
       }
-      res.send({ status: 'Fail', message: 'The email address given has already been registered within our system!', data: null })
+      res.send({ status: 'Fail', message: authMsg.EXISTS_EMAIL, data: { warn: true } })
       logger.warn(`Duplicate email trying to register: ${username}, From IP: ${req.ip}`)
       return
     }
@@ -677,7 +737,7 @@ router.post('/session', async (req, res) => {
       }
     })
 
-    let userInfo: { advanced: AdvancedConfig; avatar: string; email: string; config: UserConfig; description: string; name: string; remark: string; root: boolean; roles: UserRole[]; userId: string }
+    let userInfo: { advanced: AdvancedConfig; avatar: string; email: string; config: UserConfig; name: string; remark: string; roles: UserRole[]; root: boolean; title: string; userId: string }
     if (userId != null) {
       const user = await getUserById(userId)
       if (user === null) {
@@ -703,11 +763,11 @@ router.post('/session', async (req, res) => {
         avatar: user.avatar,
         email: user.email,
         config: user.config,
-        description: user.description,
         name: user.name,
         remark: user.remark,
-        root: user.roles.includes(UserRole.Admin),
         roles: user.roles,
+        root: user.roles.includes(UserRole.Admin),
+        title: user.title,
         userId: user._id.toString(),
       }
       const keys = (await getCacheApiKeys()).filter(d => hasAnyRole(d.userRoles, user.roles))
@@ -795,19 +855,19 @@ router.post('/user-login', authLimiter, async (req, res) => {
           throw new Error('Your passcode doesn\'t match our records. Please try again.')
       }
       else {
-        res.send({ status: 'Success', message: 'Two-step verification required', data: { need2FA: true } })
+        res.send({ status: 'Success', message: 'Multi-factor authentication required', data: { needMFA: true } })
         return
       }
     }
 
     const config = await getCacheConfig()
     const jwtToken = jwt.sign({
-      name: user.name ? user.name : user.email,
       avatar: user.avatar,
-      description: user.description ? user.description : 'Innovative and strategic problem solver.',
-      userId: user._id.toString(),
-      root: user.roles.includes(UserRole.Admin),
       config: user.config,
+      name: user.name ? user.name : user.email,
+      root: user.roles.includes(UserRole.Admin),
+      title: user.title ? user.title : 'Innovative and strategic problem solver.',
+      userId: user._id.toString(),
     } as AuthJwtPayload, config.siteConfig.loginSalt.trim())
     // Store the login token in memory
     tokenMap.set(user._id.toString(), jwtToken)
@@ -883,13 +943,13 @@ router.post('/user-reset-password', authLimiter, async (req, res) => {
 
 router.post('/user-info', auth, async (req, res) => {
   try {
-    const { avatar, description, name } = req.body as UserInfo
+    const { avatar, name, title } = req.body as UserInfo
     const userId = req.headers.userId.toString()
 
     const user = await getUserById(userId)
     if (user == null || user.status !== Status.Normal)
       throw new Error('User does not exist.')
-    await updateUserInfo(userId, { avatar, description, name } as UserInfo)
+    await updateUserInfo(userId, { avatar, name, title } as UserInfo)
     res.send({ status: 'Success', message: 'Update successful' })
   }
   catch (error) {
@@ -942,7 +1002,7 @@ router.post('/user-status', rootAuth, async (req, res) => {
     const user = await getUserById(userId)
     await updateUserStatus(userId, status)
     if ((user.status === Status.Unverified || user.status === Status.AdminVerify) && status === Status.Normal)
-      await sendNoticeMail(user.email)
+      await sendAuthorizeMail(user.email)
     res.send({ status: 'Success', message: 'Update successfully [STATUS]' })
   }
   catch (error) {
@@ -954,14 +1014,17 @@ router.post('/user-edit', rootAuth, async (req, res) => {
   try {
     const { userId, email, password, roles, remark, message } = req.body as { userId?: string; email: string; password: string; roles: UserRole[]; remark?: string; message?: string }
     if (userId) {
-      await updateUser(userId, roles, password, remark, message)
+      await updateUser(userId, roles, password, remark)
+      const hashedUserId = hashUserId(userId)
+      const userMessage = message ? await redis.set(`message:${hashedUserId}`, message) : await redis.get(`message:${hashedUserId}`)
+      res.send({ status: 'Success', message: 'Update successfully [EDIT]', data: { userMessage } })
     }
     else {
       const newPassword = md5(password)
       const user = await createUser(email, newPassword, roles, null, remark)
       await updateUserStatus(user._id.toString(), Status.Normal)
+      res.send({ status: 'Success', message: 'Update successfully [EDIT]' })
     }
-    res.send({ status: 'Success', message: 'Update successfully [EDIT]' })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -995,17 +1058,17 @@ router.post('/user-password', auth, async (req, res) => {
   }
 })
 
-router.get('/user-2fa', auth, async (req, res) => {
+router.get('/user-mfa', auth, async (req, res) => {
   try {
     const userId = req.headers.userId.toString()
     const user = await getUserById(userId)
 
-    const data = new TwoFAConfig()
+    const data = new MFAConfig()
     if (user.secretKey) {
       data.enabled = true
     }
     else {
-      const secret = speakeasy.generateSecret({ length: 20, name: `CHATGPT-WEB:${user.email}` })
+      const secret = speakeasy.generateSecret({ length: 20, name: `AxiomAI:${user.email}` })
       data.otpauthUrl = secret.otpauth_url
       data.enabled = false
       data.secretKey = secret.base32
@@ -1018,10 +1081,11 @@ router.get('/user-2fa', auth, async (req, res) => {
   }
 })
 
-router.post('/user-2fa', auth, async (req, res) => {
+router.post('/user-mfa', auth, async (req, res) => {
   try {
     const { secretKey, token } = req.body as { secretKey: string; token: string }
     const userId = req.headers.userId.toString()
+    const userEmail = (await getUserById(userId)).email
 
     const verified = speakeasy.totp.verify({
       secret: secretKey,
@@ -1030,21 +1094,22 @@ router.post('/user-2fa', auth, async (req, res) => {
     })
     if (!verified)
       throw new Error('Verification failed')
-    await updateUser2FA(userId, secretKey)
-    res.send({ status: 'Success', message: 'Enable 2FA successfully' })
+    await updateUserMFA(userId, secretKey)
+    await sendMfaMail(userEmail)
+    res.send({ status: 'Success', message: 'Multi-factor authentication enabled' })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
   }
 })
 
-router.post('/user-disable-2fa', auth, async (req, res) => {
+router.post('/user-disable-mfa', auth, async (req, res) => {
   try {
     const { token } = req.body as { token: string }
     const userId = req.headers.userId.toString()
     const user = await getUserById(userId)
     if (!user || !user.secretKey)
-      throw new Error('2FA not enabled')
+      throw new Error('Multi-factor authentication not enabled')
     const verified = speakeasy.totp.verify({
       secret: user.secretKey,
       encoding: 'base32',
@@ -1052,19 +1117,19 @@ router.post('/user-disable-2fa', auth, async (req, res) => {
     })
     if (!verified)
       throw new Error('Verification failed')
-    await disableUser2FA(userId)
-    res.send({ status: 'Success', message: 'Disable 2FA successfully' })
+    await disableUserMFA(userId)
+    res.send({ status: 'Success', message: 'Multi-factor authentication disabled' })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
   }
 })
 
-router.post('/user-disable-2fa-admin', rootAuth, async (req, res) => {
+router.post('/user-disable-mfa-admin', rootAuth, async (req, res) => {
   try {
     const { userId } = req.body as { userId: string }
-    await disableUser2FA(userId)
-    res.send({ status: 'Success', message: 'Disable 2FA successfully' })
+    await disableUserMFA(userId)
+    res.send({ status: 'Success', message: 'Multi-factor authentication disabled' })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
@@ -1130,7 +1195,7 @@ router.post('/admin-verification', authLimiter, async (req, res) => {
     if (user.status !== Status.AdminVerify)
       throw new Error(`Account abnormality ${user.status}`)
     await verifyUser(username, Status.Normal)
-    await sendNoticeMail(username)
+    await sendAuthorizeMail(username)
     res.send({ status: 'Success', message: 'Account has been activated', data: null })
   }
   catch (error) {
@@ -1223,10 +1288,10 @@ router.post('/setting-announcement', rootAuth, async (req, res) => {
 router.get('/user-announcement', auth, async (req, res) => {
   try {
     const userId = req.headers.userId.toString()
-    const user = await getUserById(userId)
+    const hashedUserId = hashUserId(userId)
 
     const announcementConfig = JSON.parse(await redis.get('announcementConfig'))
-    const userMessage = user.message
+    const userMessage = await redis.get(`message:${hashedUserId}`)
     res.send({ status: 'Success', message: 'Successfully fetched', data: { userMessage, announcementConfig } })
   }
   catch (error) {

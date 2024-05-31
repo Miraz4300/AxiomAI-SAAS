@@ -1,25 +1,25 @@
 <script lang="ts" setup>
 import { h, onMounted, reactive, ref } from 'vue'
 import type { DataTableColumns, DropdownOption } from 'naive-ui'
-import { NAlert, NAvatar, NBadge, NButton, NCard, NDataTable, NDropdown, NInput, NModal, NSelect, NSpace, NTag, useDialog, useMessage } from 'naive-ui'
+import { NAlert, NAvatar, NBadge, NButton, NCard, NDataTable, NDropdown, NInput, NModal, NScrollbar, NSelect, NSpace, NSpin, NTag } from 'naive-ui'
 import { format } from 'date-fns'
 import { Status, UserInfo, UserRole, userRoleOptions } from './model'
-import { fetchDisableUser2FAByAdmin, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
+import { fetchDisableUserMFAByAdmin, fetchGetChatHistory, fetchGetChatRoomsCount, fetchGetUsers, fetchUpdateUser, fetchUpdateUserStatus } from '@/api'
 import { SvgIcon } from '@/components/common'
+import Message from '@/views/chat/components/Message/index.vue'
 
-const ms = useMessage()
-const dialog = useDialog()
 const loading = ref(false)
 const show = ref(false)
 const show2 = ref(false)
 const show3 = ref(false)
+const show4 = ref(false)
 const handleSaving = ref(false)
 const userRef = ref(new UserInfo([UserRole.Free]))
 const users = ref<UserInfo[]>([])
 const searchQuery = ref('')
 const defaultAvatar = '/assets/avatar_1.jpg'
 
-const createColumns = (): DataTableColumns => {
+function createColumns(): DataTableColumns {
   return [
     {
       title: 'Email',
@@ -179,9 +179,9 @@ const createColumns = (): DataTableColumns => {
             icon: () => getIcon('ri:verified-badge-line'),
           },
           {
-            label: 'Disable 2FA',
-            key: 'disable2FAUser',
-            action: () => handleUpdateUserStatus(row._id, Status.Normal, 'disable2FA'),
+            label: 'Disable MFA',
+            key: 'disableMFAUser',
+            action: () => handleUpdateUserStatus(row._id, Status.Normal, 'disableMFA'),
             disabled: !row.secretKey,
             icon: () => getIcon('mdi:shield-off'),
           },
@@ -196,7 +196,7 @@ const createColumns = (): DataTableColumns => {
             label: 'Insights',
             key: 'userInsight',
             action: handleUserInsight,
-            icon: () => getIcon('ic:outline-insights', true),
+            icon: () => getIcon('ic:outline-insights'),
           },
         ]
 
@@ -220,6 +220,72 @@ const createColumns = (): DataTableColumns => {
 
 const columns = createColumns()
 
+interface HistoryChat {
+  uuid?: number
+  model?: string
+  dateTime: string
+  text: string
+  inversion?: boolean
+  responseCount?: number
+  error?: boolean
+  loading?: boolean
+  usage?: {
+    completion_tokens: number
+    prompt_tokens: number
+    total_tokens: number
+    estimated: boolean
+  }
+}
+
+const dataSources = ref<HistoryChat[]>([])
+const chatLoading = ref(false)
+const chatRooms = ref([])
+const totalRooms = ref(0) // Track total number of rooms
+const selectedUserId = ref('')
+const historyColumns = [{
+  title: 'Last Time',
+  key: 'lastTime',
+  width: 35,
+},
+{
+  title: 'Title',
+  key: 'title',
+  width: 100,
+  ellipsis: {
+    tooltip: true,
+  },
+},
+{
+  title: 'Message Count',
+  key: 'chatCount',
+  width: 20,
+},
+{
+  title: 'Action',
+  key: 'uuid',
+  width: 20,
+  render(row: any) {
+    return h(
+      NButton,
+      {
+        size: 'small',
+        type: 'primary',
+        style: { marginRight: '6px' },
+        onClick: () => {
+          show4.value = true
+          dataSources.value.length = 0
+          chatLoading.value = true
+          fetchGetChatHistory(row.uuid, undefined, 'all').then((res: any) => {
+            dataSources.value = res.data as HistoryChat[]
+            chatLoading.value = false
+          })
+        },
+      },
+      { default: () => 'view' },
+    )
+  },
+}]
+
 const pagination = reactive ({
   page: 1,
   pageSize: 50,
@@ -240,6 +306,46 @@ const pagination = reactive ({
     handleGetUsers(pagination.page)
   },
 })
+
+const pagination2 = reactive ({
+  page: 1,
+  pageSize: 25,
+  pageCount: 1,
+  itemCount: 1,
+  prefix({ itemCount }: { itemCount: number | undefined }) {
+    return `Total room: ${itemCount}`
+  },
+  showSizePicker: true,
+  pageSizes: [25, 50, 100],
+  onChange: (page: number) => {
+    pagination2.page = page
+    handleGetChatRoomsCount(selectedUserId.value, pagination2.page)
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    pagination2.pageSize = pageSize
+    pagination2.page = 1
+    handleGetChatRoomsCount(selectedUserId.value, pagination2.page)
+  },
+})
+
+async function handleGetChatRoomsCount(userId: string, page: number) {
+  try {
+    loading.value = true
+    const size = pagination2.pageSize
+    const response = await fetchGetChatRoomsCount(page, size, userId)
+    const data = response.data.data
+    chatRooms.value = data
+    totalRooms.value = response.data.total // Update total rooms count
+    pagination2.page = page
+    pagination2.pageCount = Math.ceil(response.data.total / size)
+    pagination2.itemCount = response.data.total
+    loading.value = false
+  }
+  catch (error) {
+    console.error('Error fetching chat rooms count:', error)
+    loading.value = false
+  }
+}
 
 const duration = ref()
 const durationOption = ref([
@@ -270,7 +376,7 @@ function actionDialogs(status: Status, action: string) {
     disable: { title: 'Disable Account', content: 'Are you sure to disable this user account?' },
     restore: { title: 'Restore Account', content: 'Are you sure to restore this user account?' },
     verify: { title: 'Verify Account', content: 'Are you sure to verify this user account?' },
-    disable2FA: { title: 'Disable 2FA', content: 'Are you sure to disable 2FA for this user?' },
+    disableMFA: { title: 'Disable MFA', content: 'Are you sure to disable Multi-factor authentication for this user?' },
     ban: { title: 'Ban Account', content: 'Are you sure to ban this user account?' },
   }
   return dialogOptions[action as keyof typeof dialogOptions] || null
@@ -281,20 +387,20 @@ async function handleUpdateUserStatus(userId: string, status: Status, action: st
   if (!options)
     return
 
-  dialog[status === Status.Disabled ? 'error' : 'success']({
+  window.$dialog![status === Status.Disabled ? 'error' : 'success']({
     ...options,
     positiveText: 'Yes',
     negativeText: 'No',
     onPositiveClick: async () => {
       try {
-        const result = action === 'disable2FA' ? await fetchDisableUser2FAByAdmin(userId) : await fetchUpdateUserStatus(userId, status)
+        const result = action === 'disableMFA' ? await fetchDisableUserMFAByAdmin(userId) : await fetchUpdateUserStatus(userId, status)
         if (result.status === 'Fail')
-          ms.error(result.message as string)
+          window.$message?.error(result.message as string)
         else
-          ms.info(result.message as string)
+          window.$message?.info(result.message as string)
       }
       catch (error: any) {
-        ms.error(`Failed to ${action} for user: ${error.message}`)
+        window.$message?.error(`Failed to ${action} for user: ${error.message}`)
       }
       await handleGetUsers(pagination.page) // Bug: after search query and update the user returns to the first page
     },
@@ -343,8 +449,23 @@ function handleUserMessage(user: UserInfo) {
   show2.value = true
 }
 
+async function fetchUserMessage(user: UserInfo) {
+  userRef.value = user
+  // Fetch user message from backend
+  const result = await fetchUpdateUser(user)
+  if (result.status === 'Fail') {
+    window.$message?.error(result.message as string)
+  }
+  else {
+    // Set user message
+    userRef.value.message = result.data.userMessage
+  }
+}
+
 function handleUserInsight(user: UserInfo) {
   userRef.value = user
+  selectedUserId.value = userRef.value._id ?? ''
+  handleGetChatRoomsCount(userRef.value._id ?? '', 1)
   show3.value = true
 }
 
@@ -360,9 +481,9 @@ async function handleUpdateUser() {
 
     const result = await fetchUpdateUser(userRef.value)
     if (result.status === 'Fail')
-      ms.error(result.message as string)
+      window.$message?.error(result.message as string)
     else
-      ms.success(result.message as string)
+      window.$message?.success(result.message as string)
 
     await handleGetUsers(pagination.page)
     show.value = false
@@ -370,13 +491,16 @@ async function handleUpdateUser() {
     show3.value = false
   }
   catch (error: any) {
-    ms.error(error.message)
+    window.$message?.error(error.message)
   }
   handleSaving.value = false
 }
 
 onMounted(async () => {
   await handleGetUsers(pagination.page)
+  // Call handleUserMessage for each user
+  for (const user of users.value)
+    await fetchUserMessage(user)
 })
 </script>
 
@@ -528,22 +652,80 @@ onMounted(async () => {
           :size="120"
           :src="userRef.avatar ? userRef.avatar : defaultAvatar"
         />
-        <p>
-          {{ userRef._id }} <br>
-          {{ userRef.email }} <br>
-          {{ userRef.name }} <br>
-          2FA: {{ userRef.secretKey ? 'Enabled' : 'Disabled' }}
+        <p class="rounded-md bg-[#F0F4F9] dark:bg-[#232B36] py-2 px-3">
+          <NTag :bordered="false" type="warning" class="mb-2">
+            {{ userRef._id }}
+          </NTag> <br>
+          Email: {{ userRef.email }} <br>
+          Name: {{ userRef.name }} <br>
+          MFA: {{ userRef.secretKey ? 'Enabled' : 'Disabled' }}
+        </p>
+        <p class="rounded-md bg-[#F0F4F9] dark:bg-[#232B36] py-2 px-3 h-[120px] text-center">
+          <NTag :bordered="false" type="warning" class="w-[200px] mb-2">
+            Income
+          </NTag> <br>
+          <a class="text-5xl">00.00</a>
+        </p>
+        <p class="rounded-md bg-[#F0F4F9] dark:bg-[#232B36] py-2 px-3 h-[120px] text-center">
+          <NTag :bordered="false" type="warning" class="w-[200px] mb-2">
+            Rooms
+          </NTag> <br>
+          <a class="text-5xl">{{ totalRooms }}</a>
+        </p>
+        <p class="rounded-md bg-[#F0F4F9] dark:bg-[#232B36] py-2 px-3 h-[120px] text-center">
+          <NTag :bordered="false" type="warning" class="w-[200px] mb-2">
+            Device
+          </NTag> <br>
+          <a class="text-5xl">PC</a>
         </p>
       </div>
-      <NCard title="User Activities">
-        <p>
-          Total Logins: 0 <br>
-          Last Login: - <br>
-          Last IP: - <br>
-          Last Location: - <br>
-          Last Device: - <br>
-        </p>
+      <NCard title="Chat Histoy">
+        <NDataTable
+          remote
+          :loading="loading"
+          :row-key="(rowData) => rowData._id"
+          :columns="historyColumns"
+          :data="chatRooms"
+          :pagination="pagination2"
+          :max-height="444"
+          striped
+          @update:page="handleGetChatRoomsCount(selectedUserId, pagination2.page)"
+        />
       </NCard>
+    </div>
+  </NModal>
+
+  <NModal v-model:show="show4" preset="card" style="width: 70%">
+    <div class="p-4 space-y-5 min-h-[200px]">
+      <NSpin :show="chatLoading">
+        <template v-if="!dataSources.length">
+          <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
+            <SvgIcon icon="carbon:unknown-filled" class="mr-2 text-3xl" />
+            <span>Unknown</span>
+          </div>
+        </template>
+        <template v-else>
+          <div>
+            <NScrollbar style="max-height: 80vh;padding: 0 15px;">
+              <Message
+                v-for="(item, index) of dataSources"
+                :key="index"
+                :index="index"
+                :current-nav-index="-1"
+                :date-time="item.dateTime"
+                :text="item.text"
+                :model="item.model"
+                is-record
+                :inversion="item.inversion"
+                :response-count="item.responseCount"
+                :usage="item && item.usage || undefined"
+                :error="item.error"
+                :loading="item.loading"
+              />
+            </NScrollbar>
+          </div>
+        </template>
+      </NSpin>
     </div>
   </NModal>
 </template>

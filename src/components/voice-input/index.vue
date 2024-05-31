@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { computed, onUnmounted, ref } from 'vue'
-import { NAlert, NDescriptions, NDescriptionsItem, NModal, useMessage } from 'naive-ui'
+import { NAlert, NDescriptions, NDescriptionsItem, NModal } from 'naive-ui'
 import { commandType, deleteLast, emptySentences, getCmdKey, getLanguage, logger, replaceSymbol, tips } from './utils'
 import { useSpeechObject } from './speech-object'
 import { SvgIcon, ToolButton } from '@/components/common'
@@ -30,7 +30,6 @@ const showTip = ref(false)
 const { getSpeechObject } = useSpeechObject()
 
 let recognition: any = null
-const message = useMessage()
 
 function changeEnableVoice() {
   enableVoice.value = !enableVoice.value
@@ -48,7 +47,7 @@ function changeEnableVoice() {
 async function initRecognition() {
   const { SpeechRecognition } = await getSpeechObject()
   if (!SpeechRecognition) {
-    message.warning('The current browser does not support voice function!')
+    window.$message?.warning('The current browser does not support voice function!')
     return
   }
 
@@ -75,7 +74,7 @@ async function startRecording() {
     sentences.value = [] // clear existing sentences
     recognition.lang = language.value
     recognition.start()
-    message.success('Voice on!')
+    window.$message?.success('Voice on!')
   }
 }
 // end recording
@@ -91,7 +90,7 @@ function stopRecording() {
   recognition.onresult = null
   recognition = null
   logger('stop voice')
-  message.warning('Voice off!')
+  window.$message?.warning('Voice off!')
 }
 // Monitor speech recognition results
 function handleRecognitionResult() {

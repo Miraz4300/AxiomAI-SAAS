@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import { useMessage } from 'naive-ui'
 import { SvgIcon, ToolButton } from '@/components/common'
 import { useSpeechStore } from '@/store/modules/speech'
 import { useSpeak } from '@/components/voice-output/use-speak'
 
 const ttsStore = useSpeechStore()
 const { cancelSpeak } = useSpeak()
-const message = useMessage()
 
 function handleUpdate() {
   ttsStore.updateStore({ autoSpeak: !ttsStore.autoSpeak })
   if (ttsStore.autoSpeak) {
-    message.success('Speech Synthesis: on')
+    window.$message?.success('Speech Synthesis: on')
   }
   else {
-    message.warning('Speech Synthesis: off')
+    window.$message?.warning('Speech Synthesis: off')
     cancelSpeak()
   }
 }

@@ -5,15 +5,15 @@ import { ss } from '@/utils/storage'
 const LOCAL_NAME = 'userStorage'
 
 export interface UserInfo {
+  advanced: SettingsState
   avatar: string
-  description: string
+  config: UserConfig
   email: string
   name: string
   remark: string
-  root: boolean
-  config: UserConfig
   roles: UserRole[]
-  advanced: SettingsState
+  root: boolean
+  title: string
 }
 
 export interface UserState {
@@ -28,18 +28,15 @@ export interface SettingsState {
 export function defaultSetting(): UserState {
   return {
     userInfo: {
+      advanced: { persona: 'balanced', memory: 5 },
       avatar: '',
-      description: '',
+      config: { chatModel: 'gpt-3.5-turbo' },
       email: '',
       name: '',
       remark: '',
-      root: false,
-      config: { chatModel: 'gpt-3.5-turbo' },
       roles: [],
-      advanced: {
-        persona: 'balanced',
-        memory: 5,
-      },
+      root: false,
+      title: '',
     },
   }
 }

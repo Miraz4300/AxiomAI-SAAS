@@ -105,7 +105,7 @@ export async function getOriginConfig() {
   }
 
   if (!isNotEmptyString(config.siteConfig.chatModels))
-    config.siteConfig.chatModels = 'gpt-3.5-turbo,gpt-3.5-turbo-0613,gpt-3.5-turbo-1106,gpt-3.5-turbo-0125,gpt-4,gpt-4-0613,gpt-4-turbo-preview,gpt-4-1106-preview,gpt-4-0125-preview,gpt-4-vision-preview,gemini-pro,gemini-1.0-pro,gemini-1.0-pro-001'
+    config.siteConfig.chatModels = 'gpt-3.5-turbo,gpt-3.5-turbo-1106,gpt-3.5-turbo-0125,gpt-4-turbo,gpt-4-turbo-preview,gpt-4o,gpt-4-vision-preview,gemini-1.0-pro,gemini-1.5-flash-latest,gemini-1.5-pro-latest'
 
   return config
 }

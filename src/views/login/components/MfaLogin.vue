@@ -1,13 +1,12 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
-import { NButton, NInput, useMessage } from 'naive-ui'
+import { NButton, NInput } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import TOS from './TOS.vue'
 import { fetchLogin } from '@/api'
 import { useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
 
-const ms = useMessage()
 const router = useRouter()
 const authStore = useAuthStore()
 
@@ -17,7 +16,7 @@ const errorMessage = ref<string | null>('')
 
 const disabled = computed(() => !token.value.trim() || loading.value)
 
-async function handle2FASubmit() {
+async function handleMFASubmit() {
   loading.value = true
   try {
     if (!authStore.tuc)
@@ -29,7 +28,7 @@ async function handle2FASubmit() {
     if (result.status === 'Success') {
       await authStore.setToken(result.data.token)
       authStore.clearTempCredentials()
-      ms.success(result.message as string)
+      window.$message?.success(result.message as string)
       router.replace('/')
     }
     else {
@@ -50,8 +49,8 @@ async function handle2FASubmit() {
     <div class="relative hidden justify-center md:flex bg-black">
       <div class="flex flex-col gap-2 items-center justify-center select-none">
         <div class="bg-brand-logo bg-contain w-[50px] h-[50px]" draggable="false" />
-        <p class="font-logo text-white font-semibold antialiased text-2xl text-center">
-          AxiomAI
+        <p class="font-logo text-white font-semibold antialiased text-xl text-center">
+          Security
         </p>
       </div>
     </div>
@@ -61,20 +60,20 @@ async function handle2FASubmit() {
         <div class="flex flex-col gap-10 select-none">
           <span class="flex text-lg items-center space-x-2">
             <SvgIcon icon="mdi:shield-lock-outline" />
-            <a> Multi-Factor Authentication </a>
+            <a> Multi-factor authentication </a>
           </span>
           <a class="text-3xl"> Verify Your Identity </a>
         </div>
-        <div class="w-full md:w-[750px] flex flex-col gap-4 bg-white dark:bg-white/5 p-6 rounded-2xl shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
+        <div class="w-full md:w-[750px] flex flex-col gap-4 bg-white dark:bg-white/5 p-6 rounded-xl shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
           <div class="flex flex-col gap-2">
             <a class="text-sm font-bold"> Authentication Method </a>
             <a class="w-full md:w-1/3 text-center bg-white dark:bg-white/5 p-2 rounded-md border border-neutral-300 dark:border-neutral-700"> Authenticator App </a>
           </div>
-          <div class="w-full md:w-[615px] flex flex-col gap-2">
-            <a class="text-sm"> An authentication code has been sent to your device. Enter the code to continue and be redirected.</a>
+          <div class="w-full md:w-[535px] flex flex-col gap-2">
+            <a class="text-sm"> Please enter the code displayed in your authenticator app. You will then be redirected. </a>
             <NInput v-model:value="token" maxlength="6" type="text" placeholder="Enter your authenticator app code" />
-            <NButton ghost type="default" :disabled="disabled" :loading="loading" @click="handle2FASubmit">
-              Submit
+            <NButton ghost type="default" :disabled="disabled" :loading="loading" @click="handleMFASubmit">
+              Verify
             </NButton>
             <p class="text-xs text-[#F59E0B]">
               {{ errorMessage }}

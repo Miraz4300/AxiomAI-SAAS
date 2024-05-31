@@ -2,8 +2,8 @@
 import type { Ref } from 'vue'
 import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import type { MessageReactive } from 'naive-ui'
-import { NButton, NDivider, NInput, NSpace, NSwitch, NTooltip, NUpload, UploadFileInfo, useDialog, useMessage } from 'naive-ui'
+import type { MessageReactive, UploadFileInfo } from 'naive-ui'
+import { NButton, NDivider, NInput, NSpace, NSwitch, NTooltip, NUpload } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
@@ -29,15 +29,13 @@ let lastChatInfo: any = {}
 const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 
 const route = useRoute()
-const dialog = useDialog()
-const ms = useMessage()
 const appStore = useAppStore()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const chatStore = useChatStore()
 const speechStore = useSpeechStore()
 
-const { inputThemeOverrides } = useTheme()
+const { naiveCustom } = useTheme()
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom, scrollTo } = useScroll()
@@ -64,10 +62,10 @@ const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
 
 const currentChatModel = ref(JSON.parse(localStorage.getItem('currentChatModel') as string))
-const isVisionModel = computed(() => currentChatModel.value?.includes('vision'))
+const isVisionModel = computed(() => currentChatModel.value && (currentChatModel.value?.includes('vision') || ['gpt-4-turbo', 'gpt-4-turbo-2024-04-09'].includes(currentChatModel.value) || currentChatModel.value?.includes('gpt-4o')))
 
-let loadingms: MessageReactive
-let allmsg: MessageReactive
+let loadingms: MessageReactive | undefined
+let allmsg: MessageReactive | undefined
 let prevScrollTop: number
 
 // If the page is refreshed for unknown reasons, the loading status will not be reset, so it can be reset manually.
@@ -419,7 +417,7 @@ function handleDelete(index: number) {
   if (loading.value)
     return
 
-  dialog.warning({
+  window.$dialog?.warning({
     title: t('chat.deleteMessage'),
     content: t('chat.deleteMessageConfirm'),
     positiveText: t('common.yes'),
@@ -465,14 +463,14 @@ async function loadMoreMessage(event: any) {
     loadingms && loadingms.destroy()
     nextTick(() => scrollTo(event.target.scrollHeight - scrollPosition))
   }, () => {
-    loadingms = ms.loading(
+    loadingms = window.$message?.loading(
       'Loading...', {
         duration: 0,
       },
     )
   }, () => {
     allmsg && allmsg.destroy()
-    allmsg = ms.info('Synced', {
+    allmsg = window.$message?.info('Synced', {
       duration: 1000,
     })
   })
@@ -505,9 +503,9 @@ async function handleToggleUsingContext() {
   currentChatHistory.value.usingContext = !currentChatHistory.value.usingContext
   chatStore.setUsingContext(currentChatHistory.value.usingContext, +uuid)
   if (currentChatHistory.value.usingContext)
-    ms.success(t('chat.turnOnContext'))
+    window.$message?.success(t('chat.turnOnContext'))
   else
-    ms.warning(t('chat.turnOffContext'))
+    window.$message?.warning(t('chat.turnOffContext'))
 }
 
 const buttonDisabled = computed(() => {
@@ -547,11 +545,11 @@ onMounted(() => {
   if (authStore.token) {
     const chatModels = authStore.session?.chatModels
     if (chatModels != null && chatModels.filter(d => d.value === userStore.userInfo.config.chatModel).length <= 0)
-      ms.error('The selected model doesn\'t exist, please choose another.', { duration: 4000 })
+      window.$message?.error('The selected model doesn\'t exist, please choose another.', { duration: 4000 })
   }
 })
 
-watch(() => chatStore.active, (_newVal, _oldVal) => {
+watch(() => chatStore.active, () => {
   handleSyncChat()
 })
 
@@ -618,15 +616,16 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
               ref="inputRef"
               v-model:value="prompt"
               clearable
-              class="pb-10"
+              :size="isFree ? 'medium' : 'large'"
+              class="pb-11 px-1"
               :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled"
               type="textarea"
               :placeholder="t('chat.placeholderText')"
-              :autosize="{ minRows: isMobile ? 1 : 1, maxRows: isMobile ? 4 : 8 }"
-              :theme-overrides="inputThemeOverrides.Input"
+              :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 7 }"
+              :theme-overrides="naiveCustom.Input"
               @keypress="handleEnter"
             />
-            <div class="absolute bottom-2 left-2 right-2 cursor-text" @click="inputRef.focus()">
+            <div class="absolute bottom-2 left-2 right-2 cursor-text px-2" @click="inputRef.focus()">
               <div class="flex items-center justify-between">
                 <div v-if="!!authStore.token" class="flex items-center space-x-2 cursor-default" @click.stop>
                   <ToolButton :tooltip="!isMobile ? $t('chat.usingContext') : ''" placement="top" @click="handleToggleUsingContext">
@@ -668,7 +667,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
                   </div>
                   <NButton v-if="!loading" circle :disabled="buttonDisabled" @click="handleSubmit">
                     <template #icon>
-                      <SvgIcon icon="ri:send-plane-fill" />
+                      <SvgIcon :icon="isFree ? 'ri:send-plane-fill' : 'ri:arrow-up-line'" />
                     </template>
                   </NButton>
                   <NButton v-else strong secondary circle type="error" @click="handleStop">
@@ -681,7 +680,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
             </div>
           </div>
         </div>
-        <div v-if="chatFooterEnabled" class="text-center text-xs text-black/60 dark:text-white/50 mt-2" v-html="chatFooterText" />
+        <div v-if="chatFooterEnabled" class="text-center text-xs text-black/60 dark:text-white/50 mt-2 -m-2" v-html="chatFooterText" />
       </div>
     </footer>
   </div>

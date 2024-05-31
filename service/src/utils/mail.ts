@@ -71,7 +71,7 @@ async function getTransporter(config: MailConfig) {
 // For verification mail
 export async function sendVerifyMail(toMail: string, verifyUrl: string) {
   const config = (await getCacheConfig())
-  let mailHtml = templates['mail.template.html']
+  let mailHtml = templates['mail.verify.template.html']
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Verify your email to create your ${config.siteConfig.siteTitle} account`, mailHtml, config.mailConfig)
@@ -110,7 +110,7 @@ export async function sendSubscriptionEndedMail(toMail: string, userName: string
   logger.info('Subscription expiration email sent.')
 }
 
-// For admin approve mail. When registration review is enabled, this mail will be sent to the admin
+// For admin approve mail. When registration review is enabled, this mail will be sent to the admin for approval of the user
 export async function sendVerifyMailAdmin(toMail: string, verifyName: string, verifyUrl: string) {
   const config = (await getCacheConfig())
   let mailHtml = templates['mail.admin.template.html']
@@ -118,7 +118,7 @@ export async function sendVerifyMailAdmin(toMail: string, verifyName: string, ve
   mailHtml = mailHtml.replace(/\${VERIFY_URL}/g, verifyUrl)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
   sendMail(toMail, `Account Application for ${config.siteConfig.siteTitle}`, mailHtml, config.mailConfig)
-  logger.info('Admin approve email sent')
+  logger.info('Account approval email sent to admin.')
 }
 
 // For reset password mail (forgot password)
@@ -131,14 +131,24 @@ export async function sendResetPasswordMail(toMail: string, verifyUrl: string) {
   logger.info('Reset password email sent.')
 }
 
-// For notice mail. When registration review is enabled, this mail will be sent to the user
-export async function sendNoticeMail(toMail: string) {
+// For authorize mail. When registration review is enabled, this mail will be sent to the user for account approval by the admin
+export async function sendAuthorizeMail(toMail: string) {
   const config = (await getCacheConfig())
-  let mailHtml = templates['mail.notice.template.html']
+  let mailHtml = templates['mail.authorize.template.html']
   mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
   mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
-  sendMail(toMail, `Account opening verification for ${config.siteConfig.siteTitle} account`, mailHtml, config.mailConfig)
-  logger.info('Notice email sent.')
+  sendMail(toMail, 'Your account has been approved', mailHtml, config.mailConfig)
+  logger.info('Account approval email sent.')
+}
+
+// For Multi-factor authentication mail (after enabling MFA)
+export async function sendMfaMail(toMail: string) {
+  const config = (await getCacheConfig())
+  let mailHtml = templates['mail.mfa.template.html']
+  mailHtml = mailHtml.replace(/\${SITE_TITLE}/g, config.siteConfig.siteTitle)
+  mailHtml = mailHtml.replace(/\${SITE_DOMAIN}/g, config.siteConfig.siteDomain)
+  sendMail(toMail, 'You\'ve enabled multi-factor authentication', mailHtml, config.mailConfig)
+  logger.info('MFA email sent.')
 }
 
 // For test mail (test smtp settings)

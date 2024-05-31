@@ -10,7 +10,7 @@ export const useUserStore = defineStore('user-store', {
       this.userInfo = { ...this.userInfo, ...userInfo }
       this.recordState()
       if (update)
-        await fetchUpdateUserInfo(userInfo.avatar ?? '', userInfo.description ?? '', userInfo.name ?? '')
+        await fetchUpdateUserInfo(userInfo.avatar ?? '', userInfo.name ?? '', userInfo.title ?? '')
     },
     async updateSetting(sync: boolean) {
       await fetchUpdateAdvanced(sync, this.userInfo.advanced)

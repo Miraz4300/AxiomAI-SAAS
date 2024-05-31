@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { NAvatar, NButton, NInput, NModal, NSelect, useMessage } from 'naive-ui'
+import { NAvatar, NButton, NInput, NModal, NSelect } from 'naive-ui'
 import type { Language, Theme } from '@/store/modules/app/helper'
 import { SvgIcon, UserAvatar, UserRole } from '@/components/common'
 import { useAppStore, useAuthStore, useUserStore } from '@/store'
@@ -15,14 +15,13 @@ const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
 
 const { isMobile } = useBasicLayout()
-const ms = useMessage()
 const show = ref(false)
 
 const theme = computed(() => appStore.theme)
 const avatar = ref(userInfo.value.avatar ?? '')
 const email = ref(userInfo.value.email ?? '')
 const name = ref(userInfo.value.name ?? '')
-const description = ref(userInfo.value.description ?? '')
+const title = ref(userInfo.value.title ?? '')
 
 const images = ref(Array.from({ length: 16 }, (_, i) => `/assets/avatar_${i + 1}.jpg`))
 const hoverAvatar = ref('')
@@ -55,12 +54,12 @@ const languageOptions: { label: string; key: Language; value: Language }[] = [
 
 async function updateUserInfo(options: Partial<UserInfo>) {
   if (!options.name) {
-    ms.error('Name cannot be empty')
+    window.$message?.error('Name cannot be empty')
     return
   }
 
   await userStore.updateUserInfo(true, options)
-  ms.success(t('common.success'))
+  window.$message?.success(t('common.success'))
   show.value = false
 }
 
@@ -115,9 +114,9 @@ const divClass = 'flex items-center space-x-4'
       </div>
     </div>
     <div :class="[divClass]">
-      <span :class="[spanClass]">{{ $t('setting.description') }}</span>
+      <span :class="[spanClass]">{{ $t('setting.title') }}</span>
       <div class="flex-1">
-        <NInput v-model:value="description" maxlength="40" placeholder="Innovative and strategic problem solver." />
+        <NInput v-model:value="title" maxlength="40" placeholder="Innovative and strategic problem solver." />
       </div>
     </div>
     <div :class="[divClass]">
@@ -155,7 +154,7 @@ const divClass = 'flex items-center space-x-4'
     </div>
     <div :class="[divClass]">
       <span :class="[spanClass]" />
-      <NButton type="primary" @click="updateUserInfo({ avatar, name, description })">
+      <NButton type="primary" @click="updateUserInfo({ avatar, name, title })">
         {{ $t('common.save') }}
       </NButton>
       <NButton v-if="!!authStore.token" type="error" @click="handleLogout">
@@ -187,7 +186,7 @@ const divClass = 'flex items-center space-x-4'
       <NButton @click="show = false">
         cancel
       </NButton>
-      <NButton :disabled="selectedAvatar === ''" type="primary" @click="updateUserInfo({ avatar, name, description })">
+      <NButton :disabled="selectedAvatar === ''" type="primary" @click="updateUserInfo({ avatar, name, title })">
         save
       </NButton>
     </div>

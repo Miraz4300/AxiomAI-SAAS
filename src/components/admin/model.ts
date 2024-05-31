@@ -204,7 +204,7 @@ export class UserPassword {
   confirmPassword?: string
 }
 
-export class TwoFAConfig {
+export class MFAConfig {
   enabled: boolean
   userName: string
   secretKey: string

@@ -22,7 +22,7 @@ interface SessionResponse {
     key: string
     value: string
   }[]
-  userInfo: { avatar: string; config: UserConfig; description: string; email: string; name: string; remark: string; root: boolean; userId: string; }
+  userInfo: { avatar: string; config: UserConfig; email: string; name: string; remark: string; root: boolean; title: string; userId: string }
 }
 
 export interface AuthState {
@@ -67,10 +67,10 @@ export const useAuthStore = defineStore('auth-store', {
 
       await userStore.updateUserInfo(false, {
         avatar: decoded.avatar,
-        name: decoded.name,
-        description: decoded.description,
-        root: decoded.root,
         config: decoded.config,
+        name: decoded.name,
+        root: decoded.root,
+        title: decoded.title,
       })
       setToken(token)
     },

@@ -14,7 +14,7 @@ import { MFAConfig } from './types'
 import type { AuthJwtPayload, RequestProps } from './types'
 import type { ChatMessage } from './conversation-core'
 import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './conversation-core'
-import { auth, getUserId, tokenMap } from './middleware/auth'
+import { auth, getUserId } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AnnouncementConfig, AuditConfig, ChatInfo, ChatOptions, Config, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, SubscriptionConfig, UserConfig, UserInfo } from './storage/model'
 import { AdvancedConfig, Status, UsageResponse, UserRole } from './storage/model'
@@ -869,9 +869,10 @@ router.post('/user-login', authLimiter, async (req, res) => {
       title: user.title ? user.title : 'Innovative and strategic problem solver.',
       userId: user._id.toString(),
     } as AuthJwtPayload, config.siteConfig.loginSalt.trim())
-    // Store the login token in memory
-    tokenMap.set(user._id.toString(), jwtToken)
-    tokenMap.set(`${user._id.toString()}time`, Date.now())
+    // Store the login token in redis
+    const hashedUserId = hashUserId(user._id.toString())
+    await redis.set(hashedUserId, jwtToken)
+    await redis.set(`${hashedUserId}time`, Date.now())
     res.send({ status: 'Success', message: 'Login successful, welcome back.', data: { token: jwtToken } })
   }
   catch (error) {

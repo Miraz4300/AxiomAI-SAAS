@@ -4,7 +4,7 @@ import { authProxyHeaderName, getCacheConfig } from '../storage/config'
 import { createUser, getUser } from '../storage/storage'
 import { Status, UserRole } from '../storage/model'
 import type { AuthJwtPayload } from '../types'
-import { hashUserId } from '../utils/hashID'
+import { hashId } from '../utils/hashSecret'
 import redis from '../storage/redis'
 import logger from '../logger/winston'
 
@@ -37,7 +37,7 @@ async function auth(req, res, next) {
 
       // Custom authentication permissions
       const userId = info.userId.toString()
-      const hashedUserId = hashUserId(userId)
+      const hashedUserId = hashId(userId)
 
       // Get token and timestamp from Redis
       const mytoken = await redis.get(hashedUserId)

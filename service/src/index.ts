@@ -66,7 +66,7 @@ import { isAdmin, rootAuth } from './middleware/rootAuth'
 import { router as uploadRouter } from './routes/upload'
 import './middleware/updateRole'
 import { isAllowed } from './middleware/userRateLimit'
-import { hashUserId } from './utils/hashID'
+import { hashId } from './utils/hashSecret'
 import redis from './storage/redis'
 
 dotenv.config()
@@ -870,7 +870,7 @@ router.post('/user-login', authLimiter, async (req, res) => {
       userId: user._id.toString(),
     } as AuthJwtPayload, config.siteConfig.loginSalt.trim())
     // Store the login token in redis
-    const hashedUserId = hashUserId(user._id.toString())
+    const hashedUserId = hashId(user._id.toString())
     await redis.set(hashedUserId, jwtToken)
     await redis.set(`${hashedUserId}time`, Date.now())
     res.send({ status: 'Success', message: 'Login successful, welcome back.', data: { token: jwtToken } })
@@ -1016,7 +1016,7 @@ router.post('/user-edit', rootAuth, async (req, res) => {
     const { userId, email, password, roles, remark, message } = req.body as { userId?: string; email: string; password: string; roles: UserRole[]; remark?: string; message?: string }
     if (userId) {
       await updateUser(userId, roles, password, remark)
-      const hashedUserId = hashUserId(userId)
+      const hashedUserId = hashId(userId)
       const userMessage = message ? await redis.set(`message:${hashedUserId}`, message) : await redis.get(`message:${hashedUserId}`)
       res.send({ status: 'Success', message: 'Update successfully [EDIT]', data: { userMessage } })
     }
@@ -1289,7 +1289,7 @@ router.post('/setting-announcement', rootAuth, async (req, res) => {
 router.get('/user-announcement', auth, async (req, res) => {
   try {
     const userId = req.headers.userId.toString()
-    const hashedUserId = hashUserId(userId)
+    const hashedUserId = hashId(userId)
 
     const announcementConfig = JSON.parse(await redis.get('announcementConfig'))
     const userMessage = await redis.get(`message:${hashedUserId}`)

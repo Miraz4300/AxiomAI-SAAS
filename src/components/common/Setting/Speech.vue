@@ -50,7 +50,7 @@ export default {
 </script>
 
 <template>
-  <NForm label-placement="left" size="medium" :model="formData" label-width="100">
+  <NForm label-placement="left" size="small" :model="formData" label-width="100">
     <NFormItem :label="$t('setting.speakLang')" path="lang">
       <NSelect v-model:value="formData.lang" :options="langOptions" />
     </NFormItem>

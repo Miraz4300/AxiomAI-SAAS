@@ -3,7 +3,7 @@ const { VITE_GLOB_APP_ENVIRONMENT, VITE_GLOB_APP_VERSION } = import.meta.env
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="space-y-4 text-sm">
     <h2 class="text-2xl text-[#000000] dark:text-[#FFFFFF] font-bold">
       <center> AxiomAI </center>
     </h2>

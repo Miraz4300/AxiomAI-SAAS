@@ -42,7 +42,7 @@ async function rootAuth(req, res, next) {
       }
       // Custom authentication permissions
       const userId = info.userId.toString()
-      const hashedUserId = hashId(userId)
+      const hashedUserId = `session:${hashId(userId)}`
 
       const mytoken = await redis.get(hashedUserId)
       const timestamp2 = await redis.get(`${hashedUserId}time`)

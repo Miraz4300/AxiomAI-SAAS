@@ -870,7 +870,7 @@ router.post('/user-login', authLimiter, async (req, res) => {
       userId: user._id.toString(),
     } as AuthJwtPayload, config.siteConfig.loginSalt.trim())
     // Store the login token in redis
-    const hashedUserId = hashId(user._id.toString())
+    const hashedUserId = `session:${hashId(user._id.toString())}`
     await redis.set(hashedUserId, jwtToken)
     await redis.set(`${hashedUserId}time`, Date.now())
     res.send({ status: 'Success', message: 'Login successful, welcome back.', data: { token: jwtToken } })

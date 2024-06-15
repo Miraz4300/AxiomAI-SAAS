@@ -37,7 +37,7 @@ async function auth(req, res, next) {
 
       // Custom authentication permissions
       const userId = info.userId.toString()
-      const hashedUserId = hashId(userId)
+      const hashedUserId = `session:${hashId(userId)}`
 
       // Get token and timestamp from Redis
       const mytoken = await redis.get(hashedUserId)

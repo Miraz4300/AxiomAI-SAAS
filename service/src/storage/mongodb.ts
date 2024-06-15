@@ -7,7 +7,7 @@ dotenv.config()
 
 const url = process.env.MONGODB_URL
 if (!url) {
-  logger.error('MONGODB_URL is not set')
+  logger.error('MONGODB_URL is not set or empty')
   process.exit(1)
 }
 

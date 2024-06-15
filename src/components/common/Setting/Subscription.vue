@@ -64,12 +64,12 @@ function handleButtonClick(type: string) {
           </template>
         </NTag>
       </template>
-      <div class="flex flex-col space-y-4">
+      <div class="flex flex-col space-y-4 text-sm">
         <span v-html="subscription.details.value" />
         <NButton v-if="Role === subscription.role" strong secondary type="primary">
           {{ subscription.message.value }}
         </NButton>
-        <NButton v-else strong secondary type="primary" @click="handleButtonClick(subscription.type)">
+        <NButton v-else strong secondary round type="primary" @click="handleButtonClick(subscription.type)">
           {{ subscription.price.value }}
         </NButton>
       </div>

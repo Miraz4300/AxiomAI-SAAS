@@ -14,7 +14,7 @@ import { MFAConfig } from './types'
 import type { AuthJwtPayload, RequestProps } from './types'
 import type { ChatMessage } from './conversation-core'
 import { abortChatProcess, chatConfig, chatReplyProcess, containsSensitiveWords, initAuditService } from './conversation-core'
-import { auth, getUserId, tokenMap } from './middleware/auth'
+import { auth, getUserId } from './middleware/auth'
 import { clearApiKeyCache, clearConfigCache, getApiKeys, getCacheApiKeys, getCacheConfig, getOriginConfig } from './storage/config'
 import type { AnnouncementConfig, AuditConfig, ChatInfo, ChatOptions, Config, FeaturesConfig, KeyConfig, MailConfig, MerchConfig, SiteConfig, SubscriptionConfig, UserConfig, UserInfo } from './storage/model'
 import { AdvancedConfig, Status, UsageResponse, UserRole } from './storage/model'
@@ -66,7 +66,7 @@ import { isAdmin, rootAuth } from './middleware/rootAuth'
 import { router as uploadRouter } from './routes/upload'
 import './middleware/updateRole'
 import { isAllowed } from './middleware/userRateLimit'
-import { hashUserId } from './utils/hashID'
+import { hashId } from './utils/hashSecret'
 import redis from './storage/redis'
 
 dotenv.config()
@@ -869,9 +869,10 @@ router.post('/user-login', authLimiter, async (req, res) => {
       title: user.title ? user.title : 'Innovative and strategic problem solver.',
       userId: user._id.toString(),
     } as AuthJwtPayload, config.siteConfig.loginSalt.trim())
-    // Store the login token in memory
-    tokenMap.set(user._id.toString(), jwtToken)
-    tokenMap.set(`${user._id.toString()}time`, Date.now())
+    // Store the login token in redis
+    const hashedUserId = `session:${hashId(user._id.toString())}`
+    await redis.set(hashedUserId, jwtToken)
+    await redis.set(`${hashedUserId}time`, Date.now())
     res.send({ status: 'Success', message: 'Login successful, welcome back.', data: { token: jwtToken } })
   }
   catch (error) {
@@ -1015,7 +1016,7 @@ router.post('/user-edit', rootAuth, async (req, res) => {
     const { userId, email, password, roles, remark, message } = req.body as { userId?: string; email: string; password: string; roles: UserRole[]; remark?: string; message?: string }
     if (userId) {
       await updateUser(userId, roles, password, remark)
-      const hashedUserId = hashUserId(userId)
+      const hashedUserId = hashId(userId)
       const userMessage = message ? await redis.set(`message:${hashedUserId}`, message) : await redis.get(`message:${hashedUserId}`)
       res.send({ status: 'Success', message: 'Update successfully [EDIT]', data: { userMessage } })
     }
@@ -1288,7 +1289,7 @@ router.post('/setting-announcement', rootAuth, async (req, res) => {
 router.get('/user-announcement', auth, async (req, res) => {
   try {
     const userId = req.headers.userId.toString()
-    const hashedUserId = hashUserId(userId)
+    const hashedUserId = hashId(userId)
 
     const announcementConfig = JSON.parse(await redis.get('announcementConfig'))
     const userMessage = await redis.get(`message:${hashedUserId}`)

@@ -56,7 +56,7 @@ onMounted(() => {
 
 <template>
   <NSpin :show="loading">
-    <div class="p-4 space-y-5 min-h-[200px]">
+    <div class="p-4 space-y-5 min-h-[200px] text-sm">
       <div class="flex-1 items-center space-y-1">
         <p>
           Multi-factor authentication

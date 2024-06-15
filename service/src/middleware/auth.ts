@@ -4,9 +4,9 @@ import { authProxyHeaderName, getCacheConfig } from '../storage/config'
 import { createUser, getUser } from '../storage/storage'
 import { Status, UserRole } from '../storage/model'
 import type { AuthJwtPayload } from '../types'
+import { hashId } from '../utils/hashSecret'
+import redis from '../storage/redis'
 import logger from '../logger/winston'
-
-export const tokenMap = new Map<string, any>()
 
 async function auth(req, res, next) {
   const config = await getCacheConfig()
@@ -37,11 +37,15 @@ async function auth(req, res, next) {
 
       // Custom authentication permissions
       const userId = info.userId.toString()
-      const mytoken = tokenMap.get(userId)
-      const timestamp2 = tokenMap.get(`${userId}time`)
+      const hashedUserId = `session:${hashId(userId)}`
+
+      // Get token and timestamp from Redis
+      const mytoken = await redis.get(hashedUserId)
+      const timestamp2 = await redis.get(`${hashedUserId}time`)
       const now = Date.now()
-      tokenMap.set(`${userId}time`, Date.now())
-      const seconds = (now - timestamp2) / 1000 / 60
+      await redis.set(`${hashedUserId}time`, Date.now())
+
+      const seconds = (now - Number.parseInt(timestamp2)) / 1000 / 60
       //  let logoutMin = process.env.LOGOUT_MIN;
       // default logout time is 10080 minutes or 7 days
       let logoutMin = Number.parseInt(process.env.LOGOUT_MIN, 10080)

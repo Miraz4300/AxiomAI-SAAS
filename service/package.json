@@ -1,7 +1,7 @@
 {
   "name": "axiomnode",
   "type": "module",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "private": false,
   "description": "AxiomNode",
   "author": "Miraz4300 <miraz4300@gmail.com>",
@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "axios": "^1.6.8",
+    "bull": "^4.13.0",
     "chatgpt": "npm:@chatgptweb/chatgpt-api@5.3.0",
     "connect-history-api-fallback": "^2.0.0",
     "dayjs": "^1.11.11",

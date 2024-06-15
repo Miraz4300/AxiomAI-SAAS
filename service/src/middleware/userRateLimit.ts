@@ -1,10 +1,10 @@
-import { hashUserId } from '../utils/hashID'
+import { hashId } from '../utils/hashSecret'
 import redis from '../storage/redis'
 
 // Sliding window algorithm to limit the number of requests a user can make in a time window
 // Check if a request from a user is allowed under the rate limit cap
 export async function isAllowed(userId: string) {
-  const hashedUserId = hashUserId(userId)
+  const hashedUserId = `userRateLimit:${hashId(userId)}`
   const currentTime = new Date().getTime()
   const windowTime = currentTime - 2 * 60 * 60 * 1000 // 2 hours
 

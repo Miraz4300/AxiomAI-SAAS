@@ -1,14 +1,14 @@
 import dayjs from 'dayjs'
 import { md5 } from '../utils/security'
-import { ObjectId, client, dbName } from './mongoDB'
-import type { WithId } from './mongoDB'
+import { ObjectId, client, dbName } from './mongodb'
+import type { WithId } from './mongodb'
 import type { AdvancedConfig, ChatOptions, Config, KeyConfig, UsageResponse } from './model'
 import { ChatInfo, ChatRoom, ChatUsage, Status, UserConfig, UserInfo, UserRole } from './model'
 import { getCacheConfig } from './config'
 
 const chatCol = client.db(dbName).collection<ChatInfo>('chat')
 const roomCol = client.db(dbName).collection<ChatRoom>('chat_room')
-export const userCol = client.db(dbName).collection<UserInfo>('user')
+const userCol = client.db(dbName).collection<UserInfo>('user')
 const configCol = client.db(dbName).collection<Config>('config')
 const usageCol = client.db(dbName).collection<ChatUsage>('chat_usage')
 const keyCol = client.db(dbName).collection<KeyConfig>('key_config')
@@ -443,6 +443,22 @@ export async function updateUser(userId: string, roles: UserRole[], password: st
   else {
     await userCol.updateOne(query, { $set: { roles, verifyTime: new Date(), remark, message } })
   }
+}
+
+// For updateRole middleware
+export async function updateUserRole(userId: string, roles: UserRole[]) {
+  await userCol.updateOne(
+    { _id: new ObjectId(userId) },
+    { $set: { roles }, $unset: { remark: 1 } },
+  )
+}
+
+// For updateRole middleware
+export async function getFilterData() {
+  return userCol.find(
+    { remark: { $exists: true } },
+    { projection: { _id: 1, email: 1, name: 1, roles: 1, remark: 1 } },
+  ).toArray()
 }
 
 export async function getConfig(): Promise<Config> {

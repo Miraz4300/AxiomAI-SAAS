@@ -4,8 +4,9 @@ import { Status, UserRole } from '../storage/model'
 import { getUser, getUserById } from '../storage/storage'
 import { authProxyHeaderName, getCacheConfig } from '../storage/config'
 import type { AuthJwtPayload } from '../types'
+import { hashId } from '../utils/hashSecret'
 import logger from '../logger/winston'
-import { tokenMap } from './auth'
+import redis from '../storage/redis'
 
 dotenv.config()
 
@@ -41,11 +42,14 @@ async function rootAuth(req, res, next) {
       }
       // Custom authentication permissions
       const userId = info.userId.toString()
-      const mytoken = tokenMap.get(userId)
-      const timestamp2 = tokenMap.get(`${userId}time`)
+      const hashedUserId = `session:${hashId(userId)}`
+
+      const mytoken = await redis.get(hashedUserId)
+      const timestamp2 = await redis.get(`${hashedUserId}time`)
       const now = Date.now()
-      tokenMap.set(`${userId}time`, Date.now())
-      const seconds = (now - timestamp2) / 1000 / 60
+      await redis.set(`${hashedUserId}time`, Date.now())
+
+      const seconds = (now - Number.parseInt(timestamp2)) / 1000 / 60
       // default logout time is 10080 minutes or 7 days
       let logoutMin = Number.parseInt(process.env.LOGOUT_MIN, 10080)
       if (logoutMin == null)

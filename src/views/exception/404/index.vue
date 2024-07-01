@@ -23,7 +23,7 @@ const router = useRouter()
       Our astronomers are on it, but in the meantime, try a different route.
     </p>
     <br>
-    <NButton ghost type="default" @click="router.replace('/')">
+    <NButton ghost round type="default" @click="router.replace('/')">
       Back to Home
     </NButton>
   </div>

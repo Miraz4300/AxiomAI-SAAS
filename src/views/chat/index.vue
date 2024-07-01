@@ -571,7 +571,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
           <template v-if="!dataSources.length && chatStore.isSplash">
             <div class="flex items-center justify-center" :class="[isMobile ? 'mt-[8vh]' : 'mt-[16vh]']">
               <Splash v-if="!isFree" :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />
-              <OldSplash v-else :random-prompt="randomPrompt" @fill-textarea="fillTextarea" />
+              <OldSplash v-else />
             </div>
           </template>
           <div id="image-wrapper" class="relative bg-[var(--pbc)] dark:bg-[var(--pbc)]">
@@ -616,7 +616,7 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
               ref="inputRef"
               v-model:value="prompt"
               clearable
-              :size="isFree ? 'medium' : 'large'"
+              size="large"
               class="pb-11 px-1"
               :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled"
               type="textarea"

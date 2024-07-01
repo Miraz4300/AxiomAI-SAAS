@@ -2,12 +2,10 @@ import type { GlobalThemeOverrides } from 'naive-ui'
 import { computed, ref, watch } from 'vue'
 import { darkTheme, lightTheme, useOsTheme } from 'naive-ui'
 import { useAppStore, useUserStore } from '@/store'
-import { useisFree } from '@/utils/functions/isFree'
 
 export function useTheme() {
   const appStore = useAppStore()
   const userStore = useUserStore()
-  const { isFree } = useisFree()
 
   const OsTheme = useOsTheme()
   const isDark = computed(() => appStore.theme === 'auto' ? OsTheme.value === 'dark' : appStore.theme === 'dark')
@@ -31,22 +29,22 @@ export function useTheme() {
   const naiveTheme = ref<GlobalThemeOverrides>({ common: getCommonOverrides() })
   const naiveCustom = computed(() => ({
     Border: {
-      borderRadius: isFree.value ? '3px' : '8px',
+      borderRadius: '8px',
     },
     Input: {
       color: isDark.value ? 'rgb(22, 27, 34)' : 'rgba(255, 255, 255, 0.1)',
-      borderRadius: isFree.value ? '3px' : '12px',
+      borderRadius: '12px',
     },
     BInput: {
-      borderRadius: isFree.value ? '3px' : '5px',
+      borderRadius: '5px',
     },
     Button: {
-      borderRadiusSmall: isFree.value ? '3px' : '8px',
-      borderRadiusMedium: isFree.value ? '3px' : '20px',
+      borderRadiusSmall: '8px',
+      borderRadiusMedium: '20px',
     },
     Dropdown: {
       color: isDark.value ? 'rgb(29, 36, 45)' : 'rgb(255, 255, 255)',
-      borderRadius: isFree.value ? '3px' : '8px',
+      borderRadius: '8px',
     },
   }))
 

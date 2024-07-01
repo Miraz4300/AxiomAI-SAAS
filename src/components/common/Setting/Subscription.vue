@@ -66,7 +66,7 @@ function handleButtonClick(type: string) {
       </template>
       <div class="flex flex-col space-y-4 text-sm">
         <span v-html="subscription.details.value" />
-        <NButton v-if="Role === subscription.role" strong secondary type="primary">
+        <NButton v-if="Role === subscription.role" strong secondary round type="primary">
           {{ subscription.message.value }}
         </NButton>
         <NButton v-else strong secondary round type="primary" @click="handleButtonClick(subscription.type)">

@@ -20,10 +20,11 @@ const router = useRouter()
     <br>
     <p class="text-sm text-center text-gray-800 dark:text-gray-400">
       An unexpected error occurred. It's as mysterious as a black hole.<br>
-      Our developers are working to bring back the light.
+      Our developers are working to bring back the light.<br>
+      In the meantime, check the status of <a href="https://status.axiomaibd.com" target="_blank" class="text-[var(--primary-color)] dark:text-[var(--primary-color)]">services</a>.
     </p>
     <br>
-    <NButton ghost type="default" @click="router.replace('/')">
+    <NButton ghost round type="default" @click="router.replace('/')">
       Refresh
     </NButton>
   </div>

@@ -7,8 +7,10 @@ dotenv.config()
 
 const redis = new Redis({
   host: process.env.REDIS_HOST,
-  port: Number.parseInt(process.env.REDIS_PORT),
-  password: process.env.REDIS_PASSWORD,
+  port: Number.parseInt(process.env.REDIS_PORT || '6379'),
+  ...(process.env.REDIS_PASSWORD && process.env.REDIS_PASSWORD.trim() !== ''
+    ? { password: process.env.REDIS_PASSWORD }
+    : {}),
 })
 
 // Log Redis connection events

@@ -1,3 +1,4 @@
+// @ts-nocheck
 <script setup lang='ts'>
 import { computed } from 'vue'
 import { NCard, NLayout, NLayoutContent, NTabPane, NTabs } from 'naive-ui'

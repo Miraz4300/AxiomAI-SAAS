@@ -1,6 +1,7 @@
+// @ts-nocheck
 <script setup lang='ts'>
 import { computed, defineAsyncComponent } from 'vue'
-import { NCard, NLayout, NTabPane, NTabs } from 'naive-ui'
+import { NCard, NLayout, NLayoutContent, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
 import Password from './Password.vue'

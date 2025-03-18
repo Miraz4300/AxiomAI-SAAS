@@ -55,19 +55,19 @@ async function auth(req, res, next) {
 
       if (seconds > logoutMin) {
         logger.warn(`The user with ID ${userId} has been inactive for an extended period, and their token has expired.`)
-        res.send({ status: 'Unauthorized', message: 'Long time no login, token has expired' ?? 'Please authenticate.', data: null })
+        res.send({ status: 'Unauthorized', message: 'Long time no login, token has expired', data: null })
         return
       }
 
       if (mytoken == null) {
         logger.warn(`No token found in the local cache for user ${userId}.`)
-        res.send({ status: 'Unauthorized', message: 'Local cache did not find token' ?? 'Please authenticate.', data: null })
+        res.send({ status: 'Unauthorized', message: 'Local cache did not find token', data: null })
         return
       }
 
       if (mytoken !== token) {
         logger.warn(`Activity has been detected for user ${userId} from an old session. The old token has now expired.`)
-        res.send({ status: 'Unauthorized', message: 'Old session token has expired' ?? 'Please authenticate.', data: null })
+        res.send({ status: 'Unauthorized', message: 'Old session token has expired', data: null })
         return
       }
       next()

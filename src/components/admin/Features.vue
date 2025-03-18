@@ -96,24 +96,6 @@ onMounted(() => {
         </div>
       </div>
       <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Voice Enable</span>
-        <div class="flex-1">
-          <NSwitch
-            :round="false" :value="config && config.voiceEnabled"
-            @update:value="(val: boolean | undefined) => { if (config) config.voiceEnabled = val }"
-          />
-        </div>
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex-shrink-0 w-[100px]">Speech Enable</span>
-        <div class="flex-1">
-          <NSwitch
-            :round="false" :value="config && config.speechEnabled"
-            @update:value="(val: boolean | undefined) => { if (config) config.speechEnabled = val }"
-          />
-        </div>
-      </div>
-      <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">Vision Enable</span>
         <div class="flex-1">
           <NSwitch

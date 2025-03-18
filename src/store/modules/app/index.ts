@@ -34,8 +34,6 @@ export const useAppStore = defineStore('app-store', {
       this.merchEnabled = featuresConfig.merchEnabled
       this.internetAccessEnabled = featuresConfig.internetAccessEnabled
       this.cognitiveDocsEnabled = featuresConfig.cognitiveDocsEnabled
-      this.voiceEnabled = featuresConfig.voiceEnabled
-      this.speechEnabled = featuresConfig.speechEnabled
       this.visionEnabled = featuresConfig.visionEnabled
       this.recordState()
     },

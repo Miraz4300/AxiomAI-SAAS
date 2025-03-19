@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { computed, defineAsyncComponent } from 'vue'
-import { NCard, NLayout, NTabPane, NTabs } from 'naive-ui'
+import { NCard, NLayout, NLayoutContent, NTabPane, NTabs } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import General from './General.vue'
 import Password from './Password.vue'
@@ -8,20 +8,16 @@ import Security from './Security.vue'
 import Subscription from './Subscription.vue'
 import Statistics from './Statistics.vue'
 import About from './About.vue'
-import Speech from './Speech.vue'
 import Sidebar from '@/views/chat/components/Sidebar/index.vue'
 import { SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useSpeechStore } from '@/store/modules/speech'
 import { useAppStore } from '@/store'
 import { useTheme } from '@/hooks/useTheme'
 
 const { naiveCustom } = useTheme()
 const appStore = useAppStore()
 const merchEnabled = computed(() => appStore.merchEnabled)
-const speechEnabled = computed(() => appStore.speechEnabled)
 const { isMobile } = useBasicLayout()
-const speechStore = useSpeechStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -67,17 +63,6 @@ const Merch = defineAsyncComponent(() => import('./Merch.vue'))
                 <span class="ml-2">{{ $t('setting.MFAConfig') }}</span>
               </template>
               <Security />
-            </NTabPane>
-            <NTabPane v-if="!isMobile && speechStore.enable && speechEnabled" name="speech">
-              <template #tab>
-                <SvgIcon class="text-lg" icon="ri:voice-recognition-line" />
-                <span class="ml-2">{{ $t('setting.speech') }}</span>
-              </template>
-              <div class="mt-4 min-h-[100px] max-w-[720px]">
-                <NCard :theme-overrides="naiveCustom.Border">
-                  <Speech />
-                </NCard>
-              </div>
             </NTabPane>
             <NTabPane name="subscription">
               <template #tab>

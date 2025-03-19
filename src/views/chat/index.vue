@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { MessageReactive, UploadFileInfo } from 'naive-ui'
 import { NButton, NDivider, NInput, NSpace, NSwitch, NTooltip, NUpload } from 'naive-ui'
@@ -16,7 +16,6 @@ import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useAppStore, useAuthStore, useChatStore, useUserStore } from '@/store'
 import { fetchChatAPIProcess, fetchChatResponseoHistory, fetchChatStopResponding } from '@/api'
 import { t } from '@/locales'
-import { useSpeechStore } from '@/store/modules/speech'
 import { debounce } from '@/utils/functions/debounce'
 import { useTheme } from '@/hooks/useTheme'
 import { useisFree } from '@/utils/functions/isFree'
@@ -33,7 +32,6 @@ const appStore = useAppStore()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const chatStore = useChatStore()
-const speechStore = useSpeechStore()
 
 const { naiveCustom } = useTheme()
 const { isMobile } = useBasicLayout()
@@ -53,8 +51,6 @@ const chatFooterEnabled = computed(() => appStore.chatFooterEnabled)
 const chatFooterText = computed(() => appStore.chatFooterText)
 const internetAccessEnabled = computed(() => appStore.internetAccessEnabled)
 const visionEnabled = computed(() => appStore.visionEnabled)
-const voiceEnabled = computed(() => appStore.voiceEnabled)
-const speechEnabled = computed(() => appStore.speechEnabled)
 
 const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
@@ -512,15 +508,6 @@ const buttonDisabled = computed(() => {
   return loading.value || !prompt.value || prompt.value.trim() === ''
 })
 
-function handleVoiceChange(v: string[]) {
-  prompt.value = v.filter(item => !!item).join('')
-}
-const handleReset = () => chatStore.clearChatByUuid(+uuid)
-function handleVoiceSubmit() {
-  if (!loading.value)
-    handleSubmit()
-}
-
 // https://github.com/tusen-ai/naive-ui/issues/4887
 function handleFinish(options: { file: UploadFileInfo; event?: ProgressEvent }) {
   if (options.file.status === 'finished') {
@@ -557,9 +544,6 @@ onUnmounted(() => {
   if (loading.value)
     controller.abort()
 })
-
-const Speech = defineAsyncComponent(() => import('@/components/voice-output/auto-speak.vue'))
-const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.vue'))
 </script>
 
 <template>
@@ -650,8 +634,6 @@ const Voice = defineAsyncComponent(() => import('@/components/voice-input/index.
                       </span>
                     </NUpload>
                   </ToolButton>
-                  <Speech v-if="!isMobile && speechStore.enable && speechEnabled" />
-                  <Voice v-if="!isMobile && speechStore.enable && voiceEnabled" :is-loading="loading" @on-change="handleVoiceChange" @reset="handleReset" @submit="handleVoiceSubmit" />
                 </div>
                 <div class="flex items-center cursor-default" @click.stop>
                   <div v-if="!!authStore.token && internetAccessEnabled" class="flex items-center text-neutral-400">

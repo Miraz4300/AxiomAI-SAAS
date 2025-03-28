@@ -9,7 +9,6 @@ import speakeasy from 'speakeasy'
 import requestIp from 'request-ip'
 import logger from './logger/winston'
 import morganLogger from './logger/morgan'
-import { getAzureSubscriptionKey } from './middleware/speechToken'
 import { MFAConfig } from './types'
 import type { AuthJwtPayload, RequestProps } from './types'
 import type { ChatMessage } from './conversation-core'
@@ -1513,8 +1512,6 @@ router.post('/statistics/by-day', auth, async (req, res) => {
     res.send(error)
   }
 })
-
-router.post('/voice', [auth, limiter], getAzureSubscriptionKey)
 
 app.use(history())
 app.use(express.static('public'))

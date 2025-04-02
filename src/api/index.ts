@@ -51,12 +51,6 @@ export function fetchChatAPIProcess<T = any>(
   })
 }
 
-export function fetchAzureToken<T>() {
-  return post<T>({
-    url: '/voice',
-  })
-}
-
 export function fetchChatStopResponding<T = any>(text: string, messageId: string, conversationId: string) {
   return post<T>({
     url: '/chat-abort',

@@ -26,7 +26,7 @@
     "common:cleanup": "rimraf node_modules && rimraf pnpm-lock.yaml"
   },
   "dependencies": {
-    "axios": "^1.8.3",
+    "axios": "^1.8.4",
     "bull": "^4.16.5",
     "chatgpt": "npm:@chatgptweb/chatgpt-api@5.3.0",
     "connect-history-api-fallback": "^2.0.0",
@@ -40,7 +40,7 @@
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^3.1.2",
-    "mongodb": "^6.14.2",
+    "mongodb": "^6.15.0",
     "morgan": "^1.10.0",
     "multer": "1.4.5-lts.1",
     "node-cron": "^3.0.3",
@@ -60,7 +60,7 @@
     "@types/isomorphic-fetch": "^0.0.39",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/multer": "^1.4.12",
-    "@types/node": "^20.17.24",
+    "@types/node": "^20.17.30",
     "@types/nodemailer": "^6.4.17",
     "@types/request-ip": "^0.0.41",
     "@types/speakeasy": "^2.0.10",
